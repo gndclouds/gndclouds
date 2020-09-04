@@ -1,16 +1,13 @@
 ---
-layout: note
+layout: layouts/post.njk
 permalink: /browser-screen-readers-2019/
-externalurl: 
+externalurl:
 date: "2019-11-30"
 title: "Browser's with Screen Readers in 2019"
 catagories:
 tags:
 image: "https://cdn.glitch.com/2ff0e797-b09a-4778-b41b-6fd69beb7cb9%2FdirectNav_closeUp_v0.gif?v=1589715026860"
-
----
-
-# Extension to Web Flow
+---# Extension to Web Flow
 
 This report looks at how to improve the experience of the current chrome web extension in preparation of the Speechify Web App. I go over current screen readers in browsers which have come a long way this last year (2019) and how web extensions connect to their web app. Both from a content importing and full app.
 

@@ -1,10 +1,10 @@
 ---
-layout: note
+layout: layouts/post.njk
 permalink: /github2discord/
 externalurl:
 date: "2020-04-19"
 title: "github2discord guide"
-tags: [ webhook, discord, experiments ]
+tags: [webhook, discord, experiments]
 excerpt: "A preview of my first post"
 ---
 
