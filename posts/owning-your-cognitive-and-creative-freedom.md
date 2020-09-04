@@ -3,6 +3,8 @@ title: Owning Your Cognitive and Creative Freedom
 description:
 date: 2019-06-05
 tags:
+  - creative-freedom
+  - indiepreneur
 layout: layouts/post.njk
 ---
 

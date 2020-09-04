@@ -4,7 +4,7 @@ description:
 date: 2018-07-22
 tags:
   - ideo
-  - energy capital
+  - energy-capital
 layout: layouts/post.njk
 ---
 
