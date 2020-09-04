@@ -1,9 +1,9 @@
 ---
-title: webhooks2discord guide.
-description:
+title: webhooks2discord guide
+description: adsfasdf
 date: 2020-03-19
 tags:
-  - experiments
+  - experiment
 layout: layouts/post.njk
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: How we use Glitch, GitHub, & Vercel to collaborate remotely
 description:
-date:2020-08-01
+date: 2020-08-01
 tags:
   - vercel
   - github
