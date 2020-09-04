@@ -1,10 +1,10 @@
 ---
-layout: note
+layout: layouts/post.njk
 permalink: /owning-your-cognitive-and-creative-freedom/
 externalurl:
 date: "2019-06-05"
 title: "Owning Your Cognitive and Creative Freedom"
-tags: [ ]
+tags: []
 image: "https://d2w9rnfcy7mm78.cloudfront.net/8164059/large_d5790d1bdf2f2b184b0f3206a7184af0.png?1596009168?bc=0"
 ---
 

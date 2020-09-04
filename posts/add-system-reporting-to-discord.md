@@ -1,9 +1,9 @@
 ---
-layout: note
+layout: layouts/post.njk
 permalink: /add-system-reporting-to-discord/
 externalurl:
 date: "2020-03-19"
 title: "Add System Reporting to Discord"
-tags: [  ]
+tags: []
 image: ""
 ---
