@@ -1,12 +1,11 @@
 ---
+title: Screen Reader B2B Market
+description:
+date: 2019-11-24
+tags:
+  - research
+  - accessibility
 layout: layouts/post.njk
-permalink: /speechify-b2b/
-externalurl:
-date: "2019-11-24"
-title: "Screen Reader B2B Market"
-catagories:
-tags: [research, b2b, speechify, speech to text]
-image: "https://cdn.glitch.com/2ff0e797-b09a-4778-b41b-6fd69beb7cb9%2FdirectNav_closeUp_v0.gif?v=1589715026860"
 ---
 
 # Overview

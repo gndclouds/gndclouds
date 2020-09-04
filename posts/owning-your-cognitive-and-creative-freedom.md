@@ -1,11 +1,9 @@
 ---
+title: Owning Your Cognitive and Creative Freedom
+description:
+date: 2019-06-05
+tags:
 layout: layouts/post.njk
-permalink: /owning-your-cognitive-and-creative-freedom/
-externalurl:
-date: "2019-06-05"
-title: "Owning Your Cognitive and Creative Freedom"
-tags: []
-image: "https://d2w9rnfcy7mm78.cloudfront.net/8164059/large_d5790d1bdf2f2b184b0f3206a7184af0.png?1596009168?bc=0"
 ---
 
 Starting today, I will be shifting my focus to regaining my cognitive and creative freedom as an Entrepreneur. This means that instead of treating personal projects as side projects, they will be what I dedicate my time to daily. Over the next year, I will work with a group of people to launch small products as part of a tribe we are calling [Tiny Factories](). We are all writing about why we feel we need to make this jump and you can read more about the other team members’ [Tomo]() and [Weiwei](). For my take on why now is the right time for me to jump, keep reading!
