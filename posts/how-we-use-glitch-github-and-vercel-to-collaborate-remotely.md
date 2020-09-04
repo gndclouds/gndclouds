@@ -1,11 +1,12 @@
 ---
+title: How we use Glitch, GitHub, & Vercel to collaborate remotely
+description:
+date:2020-08-01
+tags:
+  - vercel
+  - github
+  - glitch
 layout: layouts/post.njk
-permalink: /how-we-use-glitch-github-and-vercel-to-collaborate-remotely/
-externalurl: "https://dev.to/gndclouds/how-we-use-glitch-github-vercel-to-collaborate-remotely-14k5"
-date: "2020-08-01"
-title: "How we use Glitch, GitHub, & Vercel to collaborate remotely"
-tags: [vercel, github, glitch]
-excerpt: "A preview of my first post"
 ---
 
 Possible Intro: (for twitter or a post?)

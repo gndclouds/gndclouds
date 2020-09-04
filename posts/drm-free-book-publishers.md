@@ -1,11 +1,10 @@
 ---
+title: DRM Free Book Publishers
+description:
+date: 2020-02-19
+tags:
+  - experiments
 layout: layouts/post.njk
-permalink: /drm-free-book-publishers/
-externalurl: "https://notion.so/tinyfactories/a9c391b2f0d94cc7b6a03cd9a7a4083f?v=65d645341e5f408eb9939003e6e98b7a"
-date: "2020-02-19"
-title: "DRM Free Book Publishers"
-tags: [note]
-image: "../assets/images/notes/drm-free-book-publishers.jpeg"
 ---
 
 ![Image of Notion's page of book publishers](../assets/images/notes/drm-free-book-publishers.jpeg)
