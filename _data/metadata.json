@@ -1,16 +1,16 @@
 {
   "title": "gndclouds blog",
-  "url": "https://example.com/",
+  "url": "https://blog.gndclouds.cc",
   "description": "I am writing about my experiences as a naval navel-gazer.",
   "feed": {
     "subtitle": "I am writing about my experiences as a naval navel-gazer.",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
-    "id": "https://example.com/"
+    "id": "https://blog.gndclouds.cc"
   },
   "jsonfeed": {
     "path": "/feed/feed.json",
-    "url": "https://example.com/feed/feed.json"
+    "url": "https://blog.gndclouds.cc/feed/"
   },
   "author": {
     "name": "William Felker",
