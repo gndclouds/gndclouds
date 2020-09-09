@@ -1,9 +1,9 @@
 {
-  "title": "gndclouds blog",
+  "title": "gndclouds' blog",
   "url": "https://blog.gndclouds.cc",
   "description": "I am writing about my experiences as a naval navel-gazer.",
   "feed": {
-    "subtitle": "I am writing about my experiences as a naval navel-gazer.",
+    "subtitle": "hi, this is the blog of gndclouds",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
     "id": "https://blog.gndclouds.cc"
@@ -15,6 +15,6 @@
   "author": {
     "name": "William Felker",
     "email": "gndclouds@icloud.com",
-    "url": "https://example.com/about-me/"
+    "url": "https://gndclouds.cc"
   }
 }
