@@ -1,5 +1,5 @@
 ---
-title: Thoughts on Mentoship vs Apprenticeship
+title: Thoughts on Mentorship vs Apprenticeship
 description:
 date: 2020-09-01
 tags:
