@@ -1,11 +1,14 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
-document.onreadystatechange = function () {
-  if (document.readyState === 'interactive') {
+document.onreadystatechange = function() {
+  if (document.readyState === "interactive") {
     console.log("document is ready");
     document.body.addEventListener("mousedown", event => {
       console.log(event);
-      if (event.target.tagName === "TEXTAREA" || event.target.tagName === "INPUT") {
+      if (
+        event.target.tagName === "TEXTAREA" ||
+        event.target.tagName === "INPUT"
+      ) {
         console.log("Clicked an input field, not adding new input element.");
         return;
       } else if (event.target.id.indexOf("-inline-comment-") !== -1) {
@@ -17,14 +20,14 @@ document.onreadystatechange = function () {
       const div = document.createElement("div");
       div.id = idPrefix + "div";
       Object.assign(div.style, {
-        position: 'absolute',
-        "z-index": 'auto',
+        position: "absolute",
+        "z-index": "auto",
         // border: '1px solid #d3d3d3',
         // width: '150px',
         // height: '20px',
-        float: 'inline-start',
-        top: event.layerY.toString() + 'px',
-        left: event.layerX.toString() + 'px'
+        float: "inline-start",
+        top: event.layerY.toString() + "px",
+        left: event.layerX.toString() + "px"
       });
       const headerDiv = document.createElement("div");
       headerDiv.id = idPrefix + "header";
@@ -32,8 +35,8 @@ document.onreadystatechange = function () {
         display: "inline-block",
         width: "90%",
         height: "15px",
-        cursor: 'move',
-        background: '#2196F3'
+        cursor: "move",
+        background: "#2196F3"
       });
       div.appendChild(headerDiv);
       const deleteElement = document.createElement("div");
@@ -44,25 +47,27 @@ document.onreadystatechange = function () {
         "text-align": "center",
         width: "15px",
         height: "15px",
-        margin: 0,
-
+        margin: 0
       });
       div.appendChild(deleteElement);
       const newTextInput = document.createElement("textarea");
       newTextInput.id = idPrefix + "textarea";
       Object.assign(newTextInput.style, {
         display: "block",
-        resize: 'both'
+        resize: "both"
       });
       div.appendChild(newTextInput);
       document.body.appendChild(div);
       dragElement(headerDiv, div);
     });
   }
-}
+};
 
 function dragElement(element, moveElement) {
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  let pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
   element.onmousedown = dragMouseDown;
 
   function dragMouseDown(event) {
@@ -83,8 +88,8 @@ function dragElement(element, moveElement) {
     pos3 = event.clientX;
     pos4 = event.clientY;
     // set the element's new position:
-    moveElement.style.top = (moveElement.offsetTop - pos2) + "px";
-    moveElement.style.left = (moveElement.offsetLeft - pos1) + "px";
+    moveElement.style.top = moveElement.offsetTop - pos2 + "px";
+    moveElement.style.left = moveElement.offsetLeft - pos1 + "px";
   }
 
   function closeDragElement() {
