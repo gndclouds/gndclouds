@@ -1,0 +1,13 @@
+---
+layout: layouts/home.njk
+permalink: /clips/
+eleventyNavigation:
+  key: Clips
+  order: 2
+---
+---
+
+<h1>Clips</h1>
+
+{% set postslist = collections.clips %}
+{% include "postslist.njk" %}
