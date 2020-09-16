@@ -15,7 +15,7 @@ So I made the first pass on our new domains site [Tiny Domains](https://domains.
 
 - \$1 fee per domain purchase
 - 30% will do to Namebase
-  7- 0% will do to Tiny Factories
+- 70% will do to Tiny Factories
 
 My ideal goal is to role out a few domains each month and uses all the proceeds to fund Tiny Factories in the following ways:
 
