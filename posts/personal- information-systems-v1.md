@@ -1,5 +1,5 @@
 ---
-title: personal information systems v1
+title: Personal Information Systems v1
 description:
 date: 2011-06-14
 updated: Last Modified
