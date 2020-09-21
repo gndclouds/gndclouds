@@ -29,7 +29,7 @@ The first information system I had was in high school when I mostly tracked my w
 
  + 🟦 Look up or check reference  
  + 🟨 Save this
- + 🟥Safe to Delete
+ + 🟥 Safe to Delete
 
 
 
