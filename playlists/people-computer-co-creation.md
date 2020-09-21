@@ -10,5 +10,3 @@ layout: layouts/post.njk
 
 # People Computer Co-creation
 
-{% set postslist = collections.gndclouds %}
-{% include "postslist.njk" %}
