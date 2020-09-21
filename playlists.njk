@@ -1,0 +1,12 @@
+---
+layout: layouts/home.njk
+permalink: /playlists/
+eleventyNavigation:
+  key: playlists
+  order: 2
+---
+
+<h1>Playlists</h1>
+
+{% set postslist = collections.playlists %}
+{% include "postslist.njk" %}

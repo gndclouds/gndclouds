@@ -1,0 +1,13 @@
+---
+title: People Computer Co-creation
+description:Playlist for learning about People Computer Co-creation
+date: 2019-11-24
+tags:
+  - playlist
+layout: layouts/post.njk
+---
+
+# People Computer Co-creation
+
+{% set postslist = collections.People Computer Co-creation %}
+{% include "postslist.njk" %}
