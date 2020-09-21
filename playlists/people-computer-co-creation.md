@@ -1,7 +1,7 @@
 ---
 title: People Computer Co-creation
-description: Playlist for learning about People Computer Co-creation
-date: 2019-11-24
+description: 
+date: 2020-09-24
 tags:
   - playlists
 layout: layouts/post.njk
