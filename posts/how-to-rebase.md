@@ -1,7 +1,7 @@
 ---
 title: How to Rebase on GitHub
 description:
-date: 2020-09-12
+date: 2020-09-08
 updated: Last Modified
 tags:
   - development
