@@ -1,5 +1,5 @@
 ---
-title: Interdependent Collaborations v1
+title: Interdependent Collaborations in 2020
 description: A list of principles for collaborating with others on interdependent projects.
 date: 2020-03-19
 tags:
