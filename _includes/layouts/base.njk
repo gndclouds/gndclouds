@@ -5,22 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title or metadata.title }}</title>
     <meta name="description" content="{{ description or metadata.description }}">
+    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
+
     <link rel="stylesheet" href="{{ '/css/index.css' | url }}">
     <link rel="stylesheet" href="{{ '/css/prism-base16-monokai.dark.css' | url }}">
     <link rel="alternate" href="{{ metadata.feed.path | url }}" type="application/atom+xml" title="{{ metadata.title }}">
     <link rel="alternate" href="{{ metadata.jsonfeed.path | url }}" type="application/json" title="{{ metadata.title }}">
     <script type="text/javascript" src="{{ '/comments.js' | url }}"></script>
+    <script type="text/javascript" src="{{ '/slate.js' | url }}"></script>
+
   </head>
   <body>
     <header>
-      <h1 class="home"><a href="{{ '/' | url }}">{{ metadata.title }}</a></h1>
 
-      {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
-      <ul class="nav">
-      {%- for entry in collections.all | eleventyNavigation %}
-        <li class="nav-item{% if entry.url == page.url %} nav-item-active{% endif %}"><a href="{{ entry.url | url }}">{{ entry.title }}</a></li>
-      {%- endfor %}
-      </ul>
+
+
+
+      <nav class="dt w-100 border-box pa3 ph3-ns">
+        {% if page.url == "/" %}
+        <div class="flex">
+          <a class="link dib" href="#">☁️ </a
+          ><input st class="dib" type="text" id="myInput" value="{{page.title}}" />
+          <button style="display: none;" id="myBtn" onclick="directNav()"></button>
+        </div>
+        {% else %}
+        <div class="flex">
+          <span class="link dib goback" onclick="goBack();"><- </span>
+          <input class="dib" type="text" id="myInput" value=" {{page.title}}" />
+          <button style="display: none;" id="myBtn" onclick="directNav()"></button>
+        </div>
+
+        {% endif %}
+
+        <div class="dtc v-mid w-75 tr">
+          {%- for entry in collections.all | eleventyNavigation %}
+            <div class="nav-item{% if entry.url == page.url %} nav-item-active{% endif %}"><a href="{{ entry.url | url }}">{{ entry.title }}</a></div>
+          {%- endfor %}
+      </nav>
     </header>
 
     <main{% if templateClass %} class="{{ templateClass }}"{% endif %}>

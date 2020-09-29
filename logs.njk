@@ -1,5 +1,5 @@
 ---
-layout: layouts/home.njk
+layout: layouts/base.njk
 permalink: /logs/
 eleventyNavigation:
   key: Logs
@@ -7,6 +7,7 @@ eleventyNavigation:
 ---
 
 <h1>Logs</h1>
+<p>A stream of conshinsess, of stors, from my Tiny Factoreis blog.</p>
 
 {% set postslist = collections.logs %}
 {% include "postslist.njk" %}

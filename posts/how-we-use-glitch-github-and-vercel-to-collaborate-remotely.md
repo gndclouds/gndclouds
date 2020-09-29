@@ -23,19 +23,19 @@ Here is an overview on how we publish content remotely with each other through u
 
 1. Head to [Glitch](https://glitch.com/@tinyfactories) and make any edits to the project.
 
-   ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bcadd01e-9047-4d8e-b3f9-b510aadc03da/Screen_Shot_2019-07-30_at_15.35.22.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bcadd01e-9047-4d8e-b3f9-b510aadc03da/Screen_Shot_2019-07-30_at_15.35.22.png)
+   ![](https://slate.textile.io/ipfs/bafkreid2yduqsw5xuhesz6eghmroi57ebrr7h7bwpqjuhxq4u4ipdccotu)
 
 2. Once edits are complete click `tools` button and then select `Git, Import and Export`.
 
-   ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/72ff6c15-b417-47a6-a8a8-1c6ebc3380a5/Screen_Shot_2019-07-30_at_15.37.23.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/72ff6c15-b417-47a6-a8a8-1c6ebc3380a5/Screen_Shot_2019-07-30_at_15.37.23.png)
+   ![](https://slate.textile.io/ipfs/bafkreicloyxdmvfj556cykg2eejw2akrvafi3lph23vmccqneeiwuxd3tm)
 
 3. If you see `Connect to Github` button then click it if not select `Export to GitHub`.
 
-   ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/eb7cf851-4a44-4432-8e05-665eba19fc24/Screen_Shot_2019-07-30_at_15.40.45.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/eb7cf851-4a44-4432-8e05-665eba19fc24/Screen_Shot_2019-07-30_at_15.40.45.png)
+   ![g](https://slate.textile.io/ipfs/bafkreiacos6raw3zn6pfdmu25kjabdx4wv42n6653cmbr36pkvwfnlt3mi)
 
 4. Next enter the GitHub-account/repo-name you would like to push to in the popup and click `ok`.
 
-   ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/43a033d9-bf8e-45d9-91b1-872d13961aa3/Screen_Shot_2019-07-30_at_15.42.04.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/43a033d9-bf8e-45d9-91b1-872d13961aa3/Screen_Shot_2019-07-30_at_15.42.04.png)
+   ![](https://slate.textile.io/ipfs/bafkreidqwh4d44qt463btzuftbxaxrhvtnphkgwglnvzxtlwfnje3p6uka)
 
 5. Enter a detailed decrition of what you are pushing. for example "Updated SEO with new branding" and click `ok`.
 
