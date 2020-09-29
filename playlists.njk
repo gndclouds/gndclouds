@@ -1,6 +1,6 @@
 ---
-layout: layouts/home.njk
-permalink: /clips/
+layout: layouts/base.njk
+permalink: /playlists/
 eleventyNavigation:
   key: playlists
   order: 2
@@ -8,5 +8,12 @@ eleventyNavigation:
 
 <h1>Playlists</h1>
 
-{% set postslist = collections.clip %}
-{% include "postslist.njk" %}
+<p>
+Playlists are specific collectiopns of knowlefreg which I'm interested in adcancing. A playlist consists of a series of artiles, book, podcast, and other media which to onbaord to a givne topi
+
+Somthign abtuo teal inpoited
+
+</p>
+
+{% set postslist = collections.playlists %}
+{% include "playlistgallery.njk" %}

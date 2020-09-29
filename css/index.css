@@ -12,33 +12,57 @@ html {
       "Segoe UI Symbol";
   }
 }
-
-
-:root {
-  --red: #ff7473;
-  --darkred: #7F0036;
-  --lightgray: #e0e0e0;
-  --gray: #C0C0C0;
-  --darkgray: #333;
-  --navy: #17050F;
-  --blue: #47b8e0;
-  --white: #ffda8e;
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f6edec;
+    --font-main: #0f25aa;
+    --font-links: #f6edec;
+    --font-highlight: #f6edec;
+    --red: #ff7473;
+    --darkred: #b5b6d7;
+    --lightgray: #b5b6d7;
+    --gray: #b5b6d7;
+    --darkgray: #b5b6d7;
+    --navy: #0f25aa;
+    --blue: #47b8e0;
+    --white: #feffff;
+  }
 }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #f6edec;
+    --font-main: #000;
+    --font-links: #f6edec;
+    --font-highlight: #f6edec;
+    --red: #ff7473;
+    --darkred: #b5b6d7;
+    --lightgray: #b5b6d7;
+    --gray: #b5b6d7;
+    --darkgray: #b5b6d7;
+    --navy: #0f25aa;
+    --blue: #47b8e0;
+    --white: #feffff;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
 html,
 body {
-  -webkit-font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  -moz-font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  -ms-font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  /* background-ima
+  -webkit-font-feature-settings: "liga" 1, "ss01" 1, "zero" 1, "cv11" 1,
+    "frac" 1, "calt" 1, "tnum" 1;
+  -moz-font-feature-settings: "liga" 1, "ss01" 1, "zero" 1, "cv11" 1, "frac" 1,
+    "calt" 1, "tnum" 1;
+  -ms-font-feature-settings: "liga" 1, "ss01" 1, "zero" 1, "cv11" 1, "frac" 1,
+    "calt" 1, "tnum" 1;
+  font-feature-settings: "liga" 1, "ss01" 1, "zero" 1, "cv11" 1, "frac" 1,
+    "calt" 1, "tnum" 1;
   padding: 0;
   margin: 0;
   font-family: system-ui, sans-serif;
-  color: var(--darkgray);
-  background-color: var(--white);
+  color: var(--font-main);
+  background-color: var(--background);
 }
 p:last-child {
   margin-bottom: 0;
@@ -64,13 +88,17 @@ main {
 main :first-child {
   margin-top: 0;
 }
-header {
-  border-bottom: 1px dashed var(--lightgray);
-}
-header:after {
-  content: "";
-  display: table;
-  clear: both;
+d nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  /* identical to box height */
+  letter-spacing: 0.09em;
 }
 table {
   margin: 1em 0;
@@ -82,7 +110,10 @@ table th {
 
 pre,
 code {
-  font-family: Consolas, Menlo, Monaco, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", "Courier New", Courier, monospace;
+  font-family: Consolas, Menlo, Monaco, "Andale Mono WT", "Andale Mono",
+    "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono",
+    "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L",
+    "Courier New", Courier, monospace;
   line-height: 1.5;
 }
 pre {
@@ -101,7 +132,7 @@ pre {
   -ms-hyphens: none;
   hyphens: none;
   padding: 1em;
-  margin: .5em 0;
+  margin: 0.5em 0;
   background-color: #f6f6f6;
 }
 .highlight-line {
@@ -126,7 +157,7 @@ pre {
 }
 .highlight-line-active {
   background-color: #444;
-  background-color: hsla(0, 0%, 27%, .8);
+  background-color: hsla(0, 0%, 27%, 0.8);
 }
 .highlight-line-add {
   background-color: #45844b;
@@ -200,7 +231,6 @@ pre {
   font-weight: 700;
 }
 
-
 /* Tags */
 .post-tag {
   display: inline-block;
@@ -233,7 +263,7 @@ a[href].post-tag:visited {
   font-family: sans-serif;
   text-decoration: none;
   font-style: normal;
-  margin-left: .1em;
+  margin-left: 0.1em;
 }
 a[href].direct-link,
 a[href].direct-link:visited {
@@ -243,5 +273,5 @@ a[href].direct-link:focus,
 a[href].direct-link:focus:visited,
 :hover > a[href].direct-link,
 :hover > a[href].direct-link:visited {
-  color: #aaa;
+  color: #b5b6d7;
 }
