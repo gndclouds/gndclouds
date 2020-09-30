@@ -1,0 +1,17 @@
+{
+  "title": "gndclouds",
+  "description": "A simple website built with the Beaker Browser",
+  "type": ["website"],
+  "links": {
+    "license": [{
+      "href": "http://creativecommons.org/licenses/by-nc/2.5/",
+      "title": "CC BY-NC 2.5"
+    }]
+  },
+  "fallback_page": "/404.html",
+  "web_root": "/public",
+  "content_security_policy": "default-src 'self'",
+  "experimental": {
+    "apis": ["datPeers", "globalFetch", "library"]
+  }
+}

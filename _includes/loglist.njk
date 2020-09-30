@@ -1,0 +1,15 @@
+{% for post in postslist | reverse %}
+  <div class="">
+
+  <h1>{{ post.data.title }}</h1>
+  <p>{{ post.data.content }}</p>
+    <a href="{{ post.url | url }}" class="postlist-link">
+      <div>
+
+      </div>
+
+
+      {% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
+      <hr />
+  </div>
+{% endfor %}
