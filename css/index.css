@@ -88,18 +88,43 @@ main {
 main :first-child {
   margin-top: 0;
 }
-d nav {
+
+nav{
   position: fixed;
   top: 0;
   width: 100%;
   font-family: Inter;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-  /* identical to box height */
-  letter-spacing: 0.09em;
+font-style: normal;
+font-weight: normal;
+font-size: 14px;
+line-height: 17px;
+/* identical to box height */
+letter-spacing: 0.09em;
 }
+
+input[type="text"] {
+  outline: none;
+  border: none;
+  background: none;
+  width:500px;
+}
+
+footer {
+  position: fixed;
+ top: 90vh;
+ width: 100vw;
+}
+
+footer select {
+  cursor: pointer;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-left: 1rem;
+  margin-left: -1rem;
+}
+
 table {
   margin: 1em 0;
 }

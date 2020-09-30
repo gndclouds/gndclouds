@@ -3,27 +3,18 @@ layout: layouts/base.njk
 templateClass: tmpl-home
 ---
 
-<div class="center w-100 pa3">
-  <h1>Growing a community at <a href="">Tiny Factories</a></h1>
-  <!-- <h1>Social file sharing platform for web3 at <a href="">Slate<a> </h1> -->
-  <h1>Researching <a href="">Biomimetic Manufacturing</a>, <a href="http://localhost:8080/playlists/people-computer-co-creation/">People Computer Co-creation</a>, and <a href="">Infrastructure Resiliency</a> </h1>
-  <!-- <h1>Reading <a href="">Slate<a> </h1> -->
-  <h1>Exploring <a href="">Invisible Infrastructure</a> </h1>
-</div>
-
 {{ content | safe }}
-<div class="fl w-100">
-  <div class="fl w-50">
-    <h2><a href="{{ '/posts/' | url }}">notes:</a></h2>
 
+<div class="fl w-100">
+  <div class="fl w-100 w-50-ns pa3">
+    <h2><a href="{{ '/posts/' | url }}">notes:</a></h2>
     {% set postslist = collections.posts | head(-5) %}
     {% set postslistCounter = collections.posts | length %}
     {% include "postslist.njk" %}
   </div>
 
-  <div class="fl w-50">
+  <div class="fl w-100 w-50-ns pa3">
     <h2><a href="{{ '/posts/' | url }}">log:</a></h2>
-
     {% set postslist = collections.logs | head(-5) %}
     {% set postslistCounter = collections.logs | length %}
     {% include "postslist.njk" %}
@@ -31,10 +22,8 @@ templateClass: tmpl-home
     </div>
   </div>
 
-<div class="fl w-100">
-<h2>Capatilist Skills:</h2>
-</div>
 
 
 
-,
+
+
