@@ -10,7 +10,7 @@ tags:
 layout: layouts/post.njk
 ---
 
-Over the last month I have been reworking how I filter the media sources I listen to, watch, and read. Typcially I read a mix of information friends send me, links in feedly, newsletters, podcasts, online communities. 
+Over the last month I have been reworking how I filter the media sources I listen to, watch, and read. Normally I read a mix of information friends send me, links in feedly, newsletters, podcasts, online communities. 
 
 It's tireing to track all these sources and to [keep them organized](blog.gndclouds.cc/personal-information-system-v3)
 

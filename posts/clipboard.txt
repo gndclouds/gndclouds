@@ -1,0 +1,4 @@
+This article was backdated to represent when I started a personal information system.
+The first information system I had was in high school when I mostly tracked my work in Evernote and Finder. The structure was heavily encouraged as part of my Theory of common knowledge course and the article recommended to me by Mark Wright (FIND PERSON AND ARTICLE) I was just learning about systems at a general level so my structure was pretty generalized. Any file could be grouped as being related to People, Places, or Things. Then I would have tags help me filter to more topic-based categories like IB Biology, or exam notes. Lastly, I used colors to indicate some form of action shown in the key below.
+File Structure: - Save everything to Evernote, articles, books, inspirational images, notes, papers, etc. - Main parent folders started with OrgName.Subtopic and then the first child was typically a year
+
