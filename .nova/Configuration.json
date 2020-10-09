@@ -1,4 +1,6 @@
 {
+  "cssvalidator.enabled" : false,
+  "prettier.format-on-save" : "Enable",
   "workspace.preview_type" : "custom",
   "workspace.preview_url" : "localhost:8080"
 }

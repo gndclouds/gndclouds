@@ -1,16 +1,16 @@
 {
-  "title": "gndclouds' blog",
-  "url": "https://blog.gndclouds.cc",
-  "description": "I am writing about my experiences as a naval navel-gazer.",
+  "title": "gndclouds",
+  "url": "https://gndclouds.cc",
+  "description": "a space for gndclouds to think",
   "feed": {
     "subtitle": "hi, this is the blog of gndclouds",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
-    "id": "https://blog.gndclouds.cc"
+    "id": "https://gndclouds.cc"
   },
   "jsonfeed": {
     "path": "/feed/feed.json",
-    "url": "https://blog.gndclouds.cc/feed/"
+    "url": "https://gndclouds.cc/feed/"
   },
   "author": {
     "name": "William Felker",
