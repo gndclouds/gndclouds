@@ -1,7 +1,5 @@
 /* FONTS */
 @import url("https://rsms.me/inter/inter.css");
-
-<<<<<<< HEAD
 @font-face {
   font-family: "ISO";
   src: url("fonts/ISOv0.8-Regular.woff2") format("woff2"),
@@ -68,82 +66,19 @@ nav {
   line-height: 17px;
   /* identical to box height */
   letter-spacing: 0.09em;
-=======
-html {
-  font-family: "Inter", sans-serif, "Segoe UI Emoji", "Apple Color Emoji",
-    "Segoe UI Symbol";
-}
-
-@supports (font-variation-settings: normal) {
-  html {
-    font-family: "Inter var", sans-serif, "Segoe UI Emoji", "Apple Color Emoji",
-      "Segoe UI Symbol";
-  }
-}
-
-:root {
-  --red: #C5004A;
-  --darkred: #7F0036;
-  --lightgray: #e0e0e0;
-  --gray: #C0C0C0;
-  --darkgray: #333;
-  --navy: #17050F;
-  --blue: #082840;
-  --white: #fff;
-}
-
-
-/* GENERAL CSS */
-body {
-  -webkit-font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  -moz-font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  -ms-font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  font-feature-settings: "liga"1, "ss01"1, "zero"1, "cv11"1, 'frac'1, 'calt'1, 'tnum'1;
-  /* background-image: url("https://source.unsplash.com/user/gndclouds"); */
-  background-repeat: no-repeat;
-  /* Do not repeat the image */
-  background-size: cover;
-  /* Resize the background image to cover the entire container */
-  line-height: 1.8;
-}
-a {
-  color:gray;
-}
-
-nav{
-  position: fixed;
-  top: 0;
-  width: 100%;
-  font-family: Inter;
-font-style: normal;
-font-weight: normal;
-font-size: 14px;
-line-height: 17px;
-/* identical to box height */
-letter-spacing: 0.09em;
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
 }
 
 input[type="text"] {
   outline: none;
   border: none;
   background: none;
-<<<<<<< HEAD
   width: 500px;
-=======
-  width:500px;
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
 }
 
 footer {
   position: fixed;
-<<<<<<< HEAD
   top: 90vh;
   width: 100vw;
-=======
- top: 90vh;
- width: 100vw;
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
 }
 
 footer select {
@@ -154,28 +89,18 @@ footer select {
   appearance: none;
   padding-left: 1rem;
   margin-left: -1rem;
-<<<<<<< HEAD
 }
+
 img {
   overflow: hidden;
   width: 100%;
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-=======
-
-}
-img{
-  overflow: hidden;
-    width: 100%;
-    border-radius: 4px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.1);
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
 }
 
 iframe {
   border: 0;
 }
-<<<<<<< HEAD
 
 h1 {
   font-size: 48px;
@@ -190,23 +115,10 @@ h2 {
 }
 
 h3 {
-=======
-h1{
-  font-family: Inter;
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 126.7%;
-}
-h3 {
-  font-family: Inter;
-  font-style: normal;
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
   font-weight: normal;
   font-size: 14px;
   line-height: 17px;
 }
-<<<<<<< HEAD
 h4 {
   text-transform: lowercase;
   font-weight: normal;
@@ -218,19 +130,11 @@ h4 {
 button {
   border-style: none;
   border-color: none;
-=======
-
-button {
-  border-style: none;
-  border-color:  none;
-
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
 }
 .search {
   width: 80vw;
   height: 40px;
 }
-<<<<<<< HEAD
 .hero-text {
   font-size: 1.25rem;
   line-height: 24px;
@@ -249,104 +153,3 @@ button {
 
 #hero-reading {
 }
-=======
-.hero-text{
-  font-size: 1.25rem;
-  line-height: 24px;
-
-}
-
-.minimal-card{
-
-}
-
-.mini-title{
-  font-family: Inter;
-font-style: normal;
-font-weight: normal;
-font-size: 10px;
-line-height: 12px;
-letter-spacing: 0.09em;
-text-transform: uppercase;
-}
-
-.mini-title-section{
-text-align: right;
-}
-
-
-
-
-
-/* LIGHT MODE */
-@media (prefers-color-scheme: light) {
-  body {
-    background: #EEEEEE;
-    /* background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%); */
-  }
-
-  h1, h2, h3, h4, h5, p, nav, footer {
-    color: black;
-  }
-
-  .imported-text {
-    color: black;
-  }
-
-  .box-border {
-    background: #FFFFFF;
-    border-color: #000000;
-  }
-
-  /* options {
-    border: 1px solid #e5e5e5;
-  } */
-  select {
-    border: none;
-    background: none;
-    color:#000000;
-  }
-}
-
-.card-hover:hover{
-  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.25);
-  /* border-radius: 3px; */
-}
-input[type="text"] {
-  color: black;
-}
-
-
-
-/* DARK MODE */
-/* @media (prefers-color-scheme: dark) {
-  body {
-    background: #222831;
-  }
-
-  h1, h2, h3, h4, h5, p, nav, footer {
-    color: white;
-  }
-
-  .imported-text {
-    color: white;
-  }
-
-  .box-border {
-    background: #000000;
-    border-color: #FFFFFF;
-  }
-
-  select {
-    border: none;
-    background: #000000;
-    color:#FFFFFF;
-  }
-  .card-hover:hover{
-    box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.25);
-  }
-  input[type="text"] {
-    color: white;
-  }
-} */
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae

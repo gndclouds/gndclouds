@@ -5,9 +5,8 @@ templateClass: tmpl-home
 
 {{ content | safe }}
 
-<<<<<<< HEAD
 <div class="fl w-100 pa3 pa4-m pa6-l">
-  <p><a>note</a> are part of how I document my workflow and share out my process with the tiny factories community. Those posts are shown here as logs.</p>
+  <p><a>note</a> represent my blog, </p>
   {% set postslist = collections.posts | head(-6) %}
   {% set postslistCounter = collections.posts | length %}
   {% include "postslist.njk" %}
@@ -20,24 +19,6 @@ templateClass: tmpl-home
   {% include "loglist.njk" %}
 
 </div>
-=======
-<div class="fl w-100">
-  <div class="fl w-100 w-50-ns pa3">
-    <h2><a href="{{ '/posts/' | url }}">notes:</a></h2>
-    {% set postslist = collections.posts | head(-5) %}
-    {% set postslistCounter = collections.posts | length %}
-    {% include "postslist.njk" %}
-  </div>
-
-  <div class="fl w-100 w-50-ns pa3">
-    <h2><a href="{{ '/posts/' | url }}">log:</a></h2>
-    {% set postslist = collections.logs | head(-5) %}
-    {% set postslistCounter = collections.logs | length %}
-    {% include "postslist.njk" %}
-
-    </div>
-  </div>
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
 
 
 

@@ -1,9 +1,7 @@
 {
-<<<<<<< HEAD
-  "cssvalidator.enabled" : false,
-  "prettier.format-on-save" : "Enable",
-=======
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
-  "workspace.preview_type" : "custom",
-  "workspace.preview_url" : "localhost:8080"
+  "cssvalidator.enabled": false,
+  "prettier.format-on-save": "Enable",
+
+  "workspace.preview_type": "custom",
+  "workspace.preview_url": "localhost:8080"
 }

@@ -1,23 +1,8 @@
 {% for post in postslist | reverse %}
-<<<<<<< HEAD
   <article class="fl w-100 w-50-m w-third-ns pa2-ns">
     <a class="" href="{{ post.url | url }}">
       <p class="mv0 pv2 ph3">{{ post.data.title }}</p>
     </a>
   </article>
-=======
-  <div class="">
 
-  <h1>{{ post.data.title }}</h1>
-  <p>{{ post.data.content }}</p>
-    <a href="{{ post.url | url }}" class="postlist-link">
-      <div>
-
-      </div>
-
-
-      {% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
-      <hr />
-  </div>
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
 {% endfor %}

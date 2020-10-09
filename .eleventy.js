@@ -6,17 +6,9 @@ const pluginNavigation = require("@11ty/eleventy-navigation");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const uuidv4 = require("uuid");
-<<<<<<< HEAD
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("js");
-
-=======
-
-module.exports = function(eleventyConfig) {
-  eleventyConfig.addPassthroughCopy("js");
-
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
   eleventyConfig.addPlugin(pluginRss);
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
   eleventyConfig.addPlugin(pluginNavigation);
@@ -25,22 +17,14 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addLayoutAlias("post", "layouts/post.njk");
 
-<<<<<<< HEAD
   eleventyConfig.addFilter("readableDate", (dateObj) => {
-=======
-  eleventyConfig.addFilter("readableDate", dateObj => {
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
       "dd LLL yyyy"
     );
   });
 
   // https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-date-string
-<<<<<<< HEAD
   eleventyConfig.addFilter("htmlDateString", (dateObj) => {
-=======
-  eleventyConfig.addFilter("htmlDateString", dateObj => {
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
   });
 
@@ -55,19 +39,11 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addCollection("tagList", function (collection) {
     let tagSet = new Set();
-<<<<<<< HEAD
     collection.getAll().forEach(function (item) {
       if ("tags" in item.data) {
         let tags = item.data.tags;
 
         tags = tags.filter(function (item) {
-=======
-    collection.getAll().forEach(function(item) {
-      if ("tags" in item.data) {
-        let tags = item.data.tags;
-
-        tags = tags.filter(function(item) {
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
           switch (item) {
             // this list should match the `filter` list in tags.njk
             case "all":
@@ -110,11 +86,7 @@ module.exports = function(eleventyConfig) {
   // Browsersync Overrides
   eleventyConfig.setBrowserSyncConfig({
     callbacks: {
-<<<<<<< HEAD
       ready: function (err, browserSync) {
-=======
-      ready: function(err, browserSync) {
->>>>>>> c1740463835ea0020c74e82ffa252a40bca93bae
         const content_404 = fs.readFileSync("_site/404.html");
 
         browserSync.addMiddleware("*", (req, res) => {
@@ -122,7 +94,7 @@ module.exports = function(eleventyConfig) {
           res.write(content_404);
           res.end();
         });
-      }
+      },
     },
     ui: false,
     ghostMode: false,
