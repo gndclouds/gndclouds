@@ -3,15 +3,12 @@ title: personal information systems v3
 description:
 date: 2020-04-19
 tags:
-  - webhook
-  - discord
-  - experiments
+  - gndclouds
+  - information systems
 layout: layouts/post.njk
 ---
 
-v1 was in school 
-
-v2 was our od school 
+ 
 
 v3 is new icons ans caragories both general ans lwesoanl and 
 
