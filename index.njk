@@ -6,19 +6,34 @@ eleventyNavigation:
 ---
 
 <div class="center w-100 pa3 pa4-m pa6-l">
-  <h1 class="f2">I create projects as part of <a href="https://tinyfactories.space">Tiny Factories</a> while thinking about strategies for climate mitigation. Some of my more recent explorations are:</h1>
-  <h2>
+  <h1>I create projects as part of <a href="https://tinyfactories.space">Tiny Factories</a> while thinking about strategies for climate mitigation. </h1>
+<br />
+<br />
+<br />
+  <h2>Recent explorations:<h2>
+  <h3>
     🌱 Growing a community of indiepreneurs <a href="https://tinyfactories.space">Tiny Factories</a>
-  </h2>
-  <h2>
-    🧗🏻‍♂️ Exploring <a href="https://ii.gndsclouds.cc">Invisible Infrastructure</a>
-  </h2>
-  <h2>
+  </h3>
+  <h3>
+    🧗🏻‍♂️ Exploring <a href="https://ii.gndclouds.cc">Invisible Infrastructure</a>
+  </h3>
+  <h3>
     ⚒️ Building web 3.0 at
     <a href="https://slate.host">Slate</a>
-  </h2>
-  <p>
-    💽 even more <a>projects</a>
-  </p>
+  </h3>
+</div>
+
+<div class="fl w-100 pa3 pa4-m pa6-l">
+  <h2><a>notes:</a></h2>
+  {% set postslist = collections.posts | head(-6) %}
+  {% set postslistCounter = collections.posts | length %}
+  {% include "postslist.njk" %}
+</div>
+
+<div class="fl w-100 pa3 pa4-m pa6-l">
+  <h2><a>logs:</a></h2>
+  {% set postslist = collections.logs | head(-9) %}
+  {% set postslistCounter = collections.logs | length %}
+  {% include "loglist.njk" %}
 </div>
 

@@ -2,8 +2,8 @@
 @import url("https://rsms.me/inter/inter.css");
 @font-face {
   font-family: "ISO";
-  src: url("fonts/ISOv0.8-Regular.woff2") format("woff2"),
-    url("fonts/ISOv0.8-Regular.woff") format("woff");
+  src: url("/fonts/ISOv0.8-Regular.woff2") format("woff2"),
+    url("/fonts/ISOv0.8-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
 }
@@ -11,10 +11,10 @@
 /* COLORS */
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #136d3b;
-    --font-main: #ffffff;
-    --font-links: #f6edec;
-    --font-highlight: #f6edec;
+    --background: #f6f3ea;
+    --font-main: #000000;
+    --font-links: #198948;
+    --font-highlight: #4eaa4c;
     --red: #ff7473;
     --darkred: #b5b6d7;
     --lightgray: #b5b6d7;
@@ -27,10 +27,10 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #223b71;
-    --font-main: #ffffff;
-    --font-links: #f6edec;
-    --font-highlight: #f6edec;
+    --background: #f6f3ea;
+    --font-main: #000000;
+    --font-links: #198948;
+    --font-highlight: #4eaa4c;
     --red: #ff7473;
     --darkred: #b5b6d7;
     --lightgray: #b5b6d7;
@@ -55,7 +55,7 @@ body {
 }
 a {
   text-decoration: none;
-  color: gray;
+  color: var(--font-links);
 }
 
 nav {
@@ -103,21 +103,19 @@ iframe {
 }
 
 h1 {
-  font-size: 48px;
+  font-size: 3rem;
   line-height: 1.4;
-  letter-spacing: -1.5px;
 }
 
 h2 {
   font-family: "ISO";
-  font-size: 48px;
-  line-height: 126.7%;
+  font-size: 2rem;
+  text-transform: uppercase;
 }
 
 h3 {
   font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 1.5rem;
 }
 h4 {
   text-transform: lowercase;
@@ -125,6 +123,10 @@ h4 {
   font-size: 14px;
   line-height: 17px;
   letter-spacing: 0.06em;
+}
+
+p {
+  font-size: 1rem;
 }
 
 button {
@@ -136,8 +138,6 @@ button {
   height: 40px;
 }
 .hero-text {
-  font-size: 1.25rem;
-  line-height: 24px;
 }
 
 /*Hero Hover Effects*/
