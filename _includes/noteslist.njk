@@ -1,0 +1,7 @@
+{% for note in noteslist | reverse %}
+<article class="fl w-100 w-50-m w-third-ns pa2-ns">
+  <a class="db pv4 ph3 ph0-l no-underline black dim" href="{{ note.url | url }}">
+        <img class="w-100" src="{% if note.data.image %}{{note.data.image }}{% else %}https://source.unsplash.com/user/gndclouds/800x600{% endif %}" alt=""><p class="w-100">{{note.data.title }}</p>
+  </a>
+</article>
+{% endfor %}

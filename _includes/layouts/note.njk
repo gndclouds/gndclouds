@@ -1,0 +1,19 @@
+---
+layout: layouts/base.njk
+templateClass: tmpl-note
+---
+
+<article class="center w-100 w-60-l pa3 pa5-ns">
+  <h1 class="">{{ title }}</h1>
+  {{ content | safe }}
+
+</article>
+
+
+<hr>
+<ul>
+  {%- set nextPost = collections.notes | getNextCollectionItem(page) %}
+  {%- if nextPost %}<li>Next: <a href="{{ nextPost.url | url }}">{{ nextPost.data.title }}</a></li>{% endif %}
+  {%- set previousPost = collections.notes | getPreviousCollectionItem(page) %}
+  {%- if previousPost %}<li>Previous: <a href="{{ previousPost.url | url }}">{{ previousPost.data.title }}</a></li>{% endif %}
+</ul>
