@@ -1,8 +1,5 @@
 ---
-layout: layouts/home.njk
-eleventyNavigation:
-  key: Home
-  order: 1
+layout: layouts/base.njk
 ---
 
 <div class="center w-100 pa3 pa4-m pa6-l">
@@ -24,14 +21,14 @@ eleventyNavigation:
 </div>
 
 <div class="fl w-100 pa3 pa4-m pa6-l">
-  <h2><a>notes:</a></h2>
+  <h2><a href="{{ '/notes/' | url }}">notes:</a></h2>
   {% set postslist = collections.posts | head(-6) %}
   {% set postslistCounter = collections.posts | length %}
   {% include "postslist.njk" %}
 </div>
 
 <div class="fl w-100 pa3 pa4-m pa6-l">
-  <h2><a>logs:</a></h2>
+  <h2><a href="{{ '/logs/' | url }}">logs:</a></h2>
   {% set postslist = collections.logs | head(-9) %}
   {% set postslistCounter = collections.logs | length %}
   {% include "loglist.njk" %}

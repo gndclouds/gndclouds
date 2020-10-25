@@ -1,7 +1,8 @@
 {
-  "cssvalidator.enabled": false,
-  "prettier.format-on-save": "Enable",
-
-  "workspace.preview_type": "custom",
-  "workspace.preview_url": "localhost:8080"
+  "cssvalidator.enabled" : false,
+  "prettier.format-on-save" : "Enable",
+  "workspace.art_style" : 0,
+  "workspace.color" : 2,
+  "workspace.preview_type" : "custom",
+  "workspace.preview_url" : "localhost:8080"
 }
