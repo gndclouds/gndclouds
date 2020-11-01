@@ -52,6 +52,7 @@ html {
 }
 body {
   line-height: 1.8;
+  padding-bottom: 250px;
 }
 a {
   text-decoration: none;
