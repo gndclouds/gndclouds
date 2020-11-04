@@ -1,19 +1,19 @@
 ---
+title: playlists
 layout: layouts/base.njk
 permalink: /playlists/
 eleventyNavigation:
   key: playlists
   order: 2
 ---
+<section class="center w-100 pa3 ph4-m ph6-l">
+  <p>
+  Playlists are specific collectiopns of knowlefreg which I'm interested in adcancing. A playlist consists of a series of artiles, book, podcast, and other media which to onbaord to a givne topi
 
-<h1>Playlists</h1>
 
-<p>
-Playlists are specific collectiopns of knowlefreg which I'm interested in adcancing. A playlist consists of a series of artiles, book, podcast, and other media which to onbaord to a givne topi
+  </p>
 
-Somthign abtuo teal inpoited
+  {% set postslist = collections.playlists %}
+  {% include "playlistgallery.njk" %}
+</section>
 
-</p>
-
-{% set postslist = collections.playlists %}
-{% include "playlistgallery.njk" %}

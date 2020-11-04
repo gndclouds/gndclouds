@@ -1,66 +1,17 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title or metadata.title }}</title>
-    <meta name="description" content="{{ description or metadata.description }}">
-    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
-
-    <link rel="stylesheet" href="{{ '/css/gndclouds.css' | url }}">
-
-    <link rel="stylesheet" href="{{ '/css/prism-base16-monokai.dark.css' | url }}">
-    <link rel="alternate" href="{{ metadata.feed.path | url }}" type="application/atom+xml" title="{{ metadata.title }}">
-    <link rel="alternate" href="{{ metadata.jsonfeed.path | url }}" type="application/json" title="{{ metadata.title }}">
-    <script type="text/javascript" src="{{ '/directNav.js' | url }}"></script>
-
-
-  </head>
+  {% include "components/head.njk" %}
   <body>
     <header>
-
-      <nav class="dt w-100 border-box pa3 ph3-ns">
-        {% if page.url == "/" %}
-        <!-- <div class="flex">
-          <a class="link dib" href="#">☁️ </a
-          ><input st class="dib" type="text" id="myInput" value={{metadata.title}} />
-          <button style="display: none;" id="myBtn" onclick="directNav()"></button>
-        </div> -->
-        {% else %}
-        <div class="flex">
-          <span class="link dib goback" onclick="goBack();"><- </span>
-          <input class="dib" type="text" id="myInput" value={{title}} />
-          <button style="display: none;" id="myBtn" onclick="directNav()"></button>
-        </div>
-
-        {% endif %}
-
-        <div class="dtc v-mid w-75 tr">
-
-
-        </div>
-
-
-      </nav>
+      {% include "components/nav.njk" %}
     </header>
 
     <main{% if templateClass %} class="{{ templateClass }}"{% endif %}>
       {{ content | safe }}
     </main>
 
-    <footer class="flex w-100 pa3 tl">
-        <div class="fl w-25 pa3 mr2">
-        <a href=“https://calendly.com/gndclouds/tea-time”>Tea Time</a>
-        </div>
-        <div class="center w-25 pa3 mr2 tc">
-          <a class="link dim dib pa2" href="https://webring.xxiivv.com/#random" rel="noreferrer" target="_blank"><img src="https://webring.xxiivv.com/icon.black.svg" style="max-width:15px;"></a>
-        </div>
-        <div class="fr w-25 pa3 mr2 tr">
-          <div class="select-wrapper">
-            <p><a href="hyper://b77c257e9d694a48acfb07c85881f7caa4082d074008dcc3c5ba83bec07fadfd/">p2p</a></p>
-          </div>
-        </div>
-      </footer>
+  {% include "components/footer.njk" %}
+
 
     <!-- Current page: {{ page.url | url }} -->
   </body>

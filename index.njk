@@ -2,14 +2,7 @@
 layout: layouts/base.njk
 ---
 
-<section class="center w-100 pa3 pa4-m pa6-l">
-  <h1>I create projects as part of <a href="https://tinyfactories.space">Tiny Factories</a>, while thinking about strategies for climate mitigation. </h1>
-</section>
-
-<br />
-
-<section class="center w-100 pa3 pa4-m pa6-l">
-  <h2>Recent explorations:<h2>
+<section class="center w-100 pa3 ph4-m ph6-l">
   <h3>
     🌱 Growing a community of indiepreneurs at <a href="https://tinyfactories.space">Tiny Factories</a>
   </h3>
@@ -23,36 +16,30 @@ layout: layouts/base.njk
 </section>
 
 <section class="center w-100 pa3 pa4-m pa6-l pb3">
-<h2>Space Explorations:<h2>
-
+  <h2>Spaces for Thought:<h2>
    <div class="fl w-100 w-50-ns">
-    <h4><a>Resilience</a> <i>(coming soon)</i></h4>
+    <h3><a>Resilience</a></h3>
     <p>Observation and Research around what makes cities r</p>
    </div>
 
    <div class="fl w-100 w-50-ns">
-    <h4><a>Evolutions</a> <i>(coming soon)</i></h4>
-    <p>Exploration of why the pase of technological evolution is not</p>
+    <h3><a>Evolutions</a></h3>
+    <p>Tracking the pase of technological growth.</p>
    </div>
 
    <div class="fl w-100 w-50-ns">
-    <h4><a>Field Notes</a> <i>(coming soon)</i></h4>
+    <h3><a>Field Notes</a></h3>
     <p>Observations and notes around projects I’m actively pursuing.</p>
    </div>
 
-
    <div class="fl w-100 w-50-ns">
-    <h4><a>Clips</a> <i>(coming soon)</i></h4>
+    <h3><a>Clips</a></h3>
     <p>Things that inspire me both online and offline.</p>
    </div>
-
 </section>
 
+<section class="center w-100 pa3 pa4-m pa6-l pb3">
+<h2>From this week:<h2>
 
-<section class="center w-100 pa3 pa4-m pa6-l">
-  <h2><a href="{{ '/posts/' | url }}">notes:</a></h2>
-  {% set postslist = collections.posts | head(-9) %}
-  {% set postslistCounter = collections.posts | length %}
-  {% include "loglist.njk" %}
 </section>
 

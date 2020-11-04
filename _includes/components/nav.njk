@@ -1,0 +1,19 @@
+<nav class="dt w-100 border-box pa3 ph3-ns">
+  {% if page.url == "/" %}
+    <div class="flex">
+    <span class="link dib goback" onclick="goBack();">{{metadata.title}}</span>
+    <input class="dib" type="text" id="myInput" value={{title}} />
+    <button style="display: none;" id="myBtn" onclick="directNav()"></button>
+    </div>
+  {% else %}
+  <div class="flex">
+    <span class="link dib goback" onclick="goBack();">⬅ </span>
+    <input class="dib" type="text" id="myInput" value={{data.title}} />
+    <button style="display: none;" id="myBtn" onclick="directNav()"></button>
+  </div>
+  {% endif %}
+  <div class="dtc v-mid w-75 tr">
+    <a class="link dib" href="/playlists/">playlists</a>
+
+  </div>
+</nav>
