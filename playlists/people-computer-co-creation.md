@@ -3,8 +3,7 @@ title: People Computer Co-creation
 description:
 date: 2019-11-24
 tags:
-  - research
-  - accessibility
+
 layout: layouts/post.njk
 ---
 
@@ -20,7 +19,7 @@ A playlist is a collection of examples to quickly onboard to a concept.
 
 More reources can be found on [Are.na](https://www.are.na/gndclouds/people-machine-co-creation)
 
-## Exploration around People Computer Co-Creation
+## Explorations around People Computer Co-Creation
 
 _Coming Soon_
 
