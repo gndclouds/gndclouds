@@ -1,4 +1,12 @@
-
+---
+title: Gaming as a service in 2020
+description: 
+date: 2020-11-06
+tags:
+  - service design
+  - gaming
+layout: layouts/post.njk
+---
 
 apple gaming oass 
 
