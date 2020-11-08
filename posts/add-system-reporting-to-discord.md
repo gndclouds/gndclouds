@@ -4,5 +4,5 @@ description:
 date: 2020-03-19
 tags:
   - guide
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---

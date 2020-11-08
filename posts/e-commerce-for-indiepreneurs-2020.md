@@ -1,11 +1,11 @@
 ---
 title: E-commerce for Indiepreneurs 2020
-description: This is a post on My Blog about agile frameworks.
+description: This is a note on My Blog about agile frameworks.
 date: 2019-05-07
 tags:
   - Indiepreneur
   - E-commerce
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
 This year my focus has shifted to doing projects that amplify my learning and help me rebuild my creative confidence. In the spirit of this I have been looking at setting up a small online store and wanted to research what some of the best options are for indie makers.

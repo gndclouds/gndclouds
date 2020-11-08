@@ -5,5 +5,5 @@ date: 2019-09-10
 tags:
   - Julia Watson
   - notes
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---

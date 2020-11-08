@@ -6,10 +6,10 @@ tags:
   - vercel
   - github
   - glitch
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
-Possible Intro: (for twitter or a post?)
+Possible Intro: (for twitter or a note?)
 
 Over the past few months our team has been working interdependently and remotely on some web project which we are going to share soon but in the mean time I wanted to share a bit about our current pipeline.
 

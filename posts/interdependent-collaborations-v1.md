@@ -5,7 +5,7 @@ date: 2020-03-19
 tags:
   - collaboration
   - Tiny Factories
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
 One of the joys of building [Tiny Factoreis](https://tinyfactories.space) has been working with different tiny teams of people to build and ship projects. The more projects we have worked on the better I feel about gauging what is needed for us to make the collaboration successful. I wanted to summarize some of the principles that have become most helpful from our past collaborations:

@@ -4,7 +4,7 @@ description:
 date: 2019-11-30
 tags:
   - research
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
 # Extension to Web Flow

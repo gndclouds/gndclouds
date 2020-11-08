@@ -4,7 +4,7 @@ description:
 date: 2019-04-26
 tags:
   -
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
 # Background

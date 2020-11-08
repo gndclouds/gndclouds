@@ -5,7 +5,7 @@ date: 2019-11-24
 tags:
   - research
   - accessibility
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
 # Overview

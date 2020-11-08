@@ -1,11 +1,11 @@
 ---
 title: Tiny Weeknotes 20200412
-description: This is a post on My Blog about agile frameworks.
+description: This is a note on My Blog about agile frameworks.
 date: 2020-04-12
 updated: Last Modified
 tags:
   - weeknotes
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
 Most of my work is typically done with two monitors. One is a more standsrd sipaly and other pther child monitor is my iPad.

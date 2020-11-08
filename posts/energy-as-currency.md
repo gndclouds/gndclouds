@@ -5,7 +5,7 @@ date: 2018-07-22
 tags:
   - ideo
   - energy-capital
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 
 In January of 2018 I spent 8 Days with IDEO’s CoLab during the winter build sprint investigating the opportunity space between cryptocurrency and the production of solar energy. With the goal of bringing subsidized power to the last 1.2 Billion people who do not have access. Our primary focus was on rural communities in India and Africa. I wanted to share three points which stuck with me.

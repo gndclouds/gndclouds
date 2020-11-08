@@ -6,7 +6,7 @@ tags:
   - squads
   - co-op
   - community
-layout: layouts/post.njk
+layout: layouts/note.njk
 ---
 I'm pretty excited about a conversation with all of the tiny garden members this past week. And I have been thinking a lot about what it would mean to create a co-op style community. I wanted to drop down some thoughts to share them with you here in the hopes that they can create a foundation that was shared with the larger community as we figure out what this next transition looks like for the tiny garden.
 
