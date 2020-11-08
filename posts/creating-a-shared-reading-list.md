@@ -9,8 +9,7 @@ tags:
 layout: layouts/post.njk
 ---
 
-For a while, I have wanted to create a social reading list to share notes, links, comments, and highlights with friends at a new conversational pace.
-There are existing tools in this space, Hypothesis, collective network, and even Twitter to name a few. But non-strike the [pace of conversation](https://paper.dropbox.com/doc/Pace-layering-for-communication-and-messaging--A_AGMqTduRXMy7nq4vEfpi6_Ag-6MiaurO6u6l9g9SDkqO8O) that enables passive to active asynchronous communication to take place. To start, the goal is just to save links to a group feed of some sort. Then from there expand little by little with tiny experiments.
+For a while, I have wanted to create a social reading list to share notes, links, comments, and highlights with friends at a new conversational pace. There are existing tools in this space, Hypothesis, collective network, and even Twitter to name a few. But non-strike the [pace of conversation](https://paper.dropbox.com/doc/Pace-layering-for-communication-and-messaging--A_AGMqTduRXMy7nq4vEfpi6_Ag-6MiaurO6u6l9g9SDkqO8O) that enables passive to active asynchronous communication to take place. To start, the goal is just to save links to a group feed of some sort. Then from there expand little by little with tiny experiments.
 
 ## v0 built for friends
 
@@ -37,4 +36,4 @@ Some other reference project for inspiration:
 
 -
 
-_For more writing on this project over time you can check [here](https://gndclouds.cc/tags/Commons/)_
+_For more writing on this project over time you can check [here](https://gndclouds.cc/tags/commons/)_

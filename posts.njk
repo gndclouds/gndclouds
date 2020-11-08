@@ -5,7 +5,10 @@ eleventyNavigation:
   key: posts
   order: 2
 ---
+<section class="fl w-100 pa3 ph4-m ph6-l">
 
-<h1>Blog</h1>
-{% set postslist = collections.posts %}
-{% include "postslist.njk" %}
+  <h1>Note</h1>
+  <p>I'm a curious person and tend to go deep on topics of interest. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments,  and Guides.</p>
+  {% set postslist = collections.posts %}
+  {% include "postslist.njk" %}
+</section>
