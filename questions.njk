@@ -1,0 +1,18 @@
+---
+title: playlists
+layout: layouts/base.njk
+permalink: /playlists/
+eleventyNavigation:
+  key: playlists
+  order: 2
+---
+<section class="center w-100 pa3 ph4-m ph6-l" style=“margin-top: 20vh;“>
+  <p>Playlists are specific collections of knowledge that I’m interested in advancing through my work and collaborations. The form consists of a series of articles, books, podcasts, and other media which help onboard you to a given topic. 
+
+The notion of a knowledge playlist was first introduced to me by <a href=“https://tealprocess.net“>teal processing &  company</a>.
+</p>
+
+  {% set postslist = collections.playlists %}
+  {% include "playlistgallery.njk" %}
+</section>
+

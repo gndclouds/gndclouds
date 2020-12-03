@@ -74,7 +74,7 @@ nav {
   letter-spacing: 0.09em;
 }
 
-input[type="text"] {
+input[type="search"] {
   outline: none;
   border: none;
   background: none;
@@ -146,7 +146,23 @@ button {
 .hero-text {
 }
 
+/*Lists*/
+
+.list {
+}
+
+.project-hero {
+  background-image: none;
+}
+.project-hero:hover {
+  background-image: url({{post.data.hero}});
+}
 /*Hero Hover Effects*/
+
+.search-results {
+  background-color: green;
+  backdrop-filter: blur(5px);
+}
 
 #hero-tiny-factories {
 }

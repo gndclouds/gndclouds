@@ -6,7 +6,9 @@ eleventyNavigation:
   order: 2
 ---
 
-<h1>projects</h1>
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+  <h1>projects</h1>
 
-{% set postslist = collections.projects %}
-{% include "clipsgallery.njk" %}
+  {% set postslist = collections.projects %}
+  {% include "projectsgallery.njk" %}
+</section>

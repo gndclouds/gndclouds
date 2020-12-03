@@ -6,9 +6,9 @@ const pluginNavigation = require("@11ty/eleventy-navigation");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const uuidv4 = require("uuid");
+const searchFilter = require("./filters/searchFilter");
 
 module.exports = function (eleventyConfig) {
-  eleventyConfig.addPassthroughCopy("js");
   eleventyConfig.addPlugin(pluginRss);
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
   eleventyConfig.addPlugin(pluginNavigation);
@@ -68,6 +68,7 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("css");
+  eleventyConfig.addPassthroughCopy("js");
   eleventyConfig.addPassthroughCopy("fonts");
   eleventyConfig.addPassthroughCopy("files");
 
@@ -99,6 +100,11 @@ module.exports = function (eleventyConfig) {
     ui: false,
     ghostMode: false,
   });
+  eleventyConfig.addFilter("search", searchFilter);
+
+  eleventyConfig.addCollection("posts", (collection) => {
+    return [...collection.getFilteredByGlob("./posts/**/*.md")];
+  });
 
   return {
     templateFormats: ["md", "njk", "html", "liquid"],
@@ -124,5 +130,6 @@ module.exports = function (eleventyConfig) {
       data: "_data",
       output: "_site",
     },
+    passthroughFileCopy: true,
   };
 };
