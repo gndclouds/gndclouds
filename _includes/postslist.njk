@@ -1,7 +1,7 @@
 {% for post in postslist | reverse %}
 <article class="fl w-100 w-50-m w-third-ns pa2-ns">
   <a class="db pv4 ph3 ph0-l no-underline black dim" href="{{ post.url | url }}">
-        <img class="w-100" src="{% if post.data.image %}{{post.data.image }}{% else %}https://source.unsplash.com/user/gndclouds/800x600{% endif %}" alt=""><p class="w-100">{{post.data.title }}</p>
+   <p class="w-100">{{post.data.title }}</p>
   </a>
 </article>
 
