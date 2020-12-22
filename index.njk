@@ -6,17 +6,32 @@ layout: layouts/base.njk
   <h3>
     🌱 Indiepreneuring at <a href="https://tinyfactories.space">Tiny Factories</a>
   </h3>
-  <!-- <h3>
-    ⚒️ Building web 3.0 at
-    <a href="https://slate.host">Slate</a>
-  </h3> -->
-  <h3>
-    🔖 Crafting a social
-    <a href="https://commons.tinyfactories.space">Commons</a>
-  </h3>
+  <p class="">The atmosphere of a studio if often hard to find after graduation. So a few friends and I co-founded a community of coders, artists, designers, videographers, writers (and more). Here we build, collaborate, and ship projects.</p>
+  <h4>Recent and In progress work:</h4>
+  
+    {% set postslist = collections.posts | limit:3 %}
+    {% include "loglist.njk" %}
+  
+</section>
+
+<section class="center w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
     <h3>
     📚 Reading <a href="https://www.plethora-project.com/architecture-for-the-commons"><i>Architecture for the Commons</i></a> and <a href="https://en.wikipedia.org/wiki/Ball_Lightning_(novel)"><i>Ball Lighting</i></a>
   </h3>
+  <p>I tend to flip between a few books at a time and am working towards reading 24 books a year. You can find more things I have been reading <a>here</a>.</p>
+  <h4>Recent and In progress work:</h4>
+  
+    
+  {% for article in reading | reverse %}
+    <div>
+    <h1 class="f4 bg-near-black white mv0 pv2 ph3">{{ article.title}}</h1>
+    <a href="../reading/{{ article.title | slug}}/">
+      
+      </a>
+    </div>
+  {% endfor %}
+
+
 </section>
 
 <!--<section class="center w-100 pa3 pa4-m pa6-l pb3">
