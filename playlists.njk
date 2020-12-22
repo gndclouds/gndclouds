@@ -1,11 +1,30 @@
 ---
-title: questions
+title: playlists
 layout: layouts/base.njk
-permalink: /questions/
+permalink: /playlists/
 eleventyNavigation:
   key: playlists
   order: 2
 ---
 
-Questions
 
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+<h1>Playlist</h1>
+
+  <p>Playlists are specific collections of knowledge that I’m interested in advancing through my work and collaborations. The form consists of a series of articles, books, podcasts, and other media which help onboard you to a given topic.
+
+The notion of a knowledge playlist was first introduced to me by <a href=“https://tealprocess.net“>teal processing & company</a>.
+</p>
+<div class="cf">
+  {% for playlist in playlists | reverse %}
+    <div class="fl w-100 w-50-ns black pa3 ba">
+      <h3 class=" mv0 pv2">{{ playlist.title}}</h3>
+      <p>{{ playlist.description}}</p>
+      <a href="../playlists/{{ playlist.title | slug}}/">
+        </a>
+    </div>
+  {% endfor %}
+</div>
+
+
+</section>

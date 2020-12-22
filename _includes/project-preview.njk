@@ -1,0 +1,12 @@
+{% for project in postslist | reverse %}
+<article class="fl w-100 w-50-ns pa2-ns ">
+  <a class="db pv4 ph3 ph0-l no-underline black dim ba b--green"
+  {% if project.external == null %}href="{{ project.data.external | url }}"{% else %}href="{{ project.url | url }}"{% endif %}
+>
+   <p class="w-100">{{project.data.title }}</p>
+   <p class="w-100">{{project.data.description }}</p>
+
+  </a>
+</article>
+
+{% endfor %}
