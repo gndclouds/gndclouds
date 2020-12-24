@@ -1,0 +1,8 @@
+{% for post in postslist | reverse %}
+<article class="fl w-100">
+  <a class="db no-underline black dim" href="{{ post.url | url }}">
+   <p class="w-100"><span>→</span> {{post.data.title }}</p>
+  </a>
+</article>
+
+{% endfor %}

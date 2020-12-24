@@ -1,29 +1,58 @@
 ---
 layout: layouts/base.njk
 ---
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+ <span>🌱</span>
+ <h3>Indiepreneuring at <a href="https://tinyfactories.space">Tiny Factories</a></h3>
+ <p>The atmosphere of a studio is often hard to find after graduation. So a few friends and I co-founded a community to help keep a studio experience alive. Here is a collection of recent and <a href="">not so recent</a> work.</p>
 
-<section class="center w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
-  <h3 class="ba b--green">
-    🌱 Indiepreneuring at <a href="https://tinyfactories.space">Tiny Factories</a>
-  </h3>
-  <p>The atmosphere of a studio is often hard to find after graduation. So a few friends and I co-founded a <a href="https://tinyfactories.space/members">community</a> to help keep a studio experience alive.</p>
-
-  <h4>Recent and In progress work:</h4>
-
-  {% set postslist = collections.projects | head(-4) %}
-  {% set postslistCounter = collections.projects | length %}
-  {% include "project-preview.njk" %}
+ {% set postslist = collections.projects | head(-6) %}
+ {% set postslistCounter = collections.projects | length %}
+ {% include "project-preview.njk" %}
 
 </section>
 
-<section class="center w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
-    <h3>
-    📚 Reading <a href="https://www.plethora-project.com/architecture-for-the-commons"><i>Architecture for the Commons</i></a> and <a href="https://en.wikipedia.org/wiki/Ball_Lightning_(novel)"><i>Ball Lighting</i></a>
-  </h3>
-  <p>I tend to flip between a few books at a time and am working towards reading 24 books a year. You can find more things I have been reading <a>here</a>.</p>
-  <h4>Recent and In progress work:</h4>
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+ <span>🔬</span>
+ <h3>Research Writting and More</h3>
+ <p>I'm a curious person and tend to go deep on topics of interest. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments, and Guides.</p>
 
-  !! THIS WEEK PSOTS FROM COMMON !!
-
+  <div class="fl w-100 w-30-ns">
+     <p class="w-100">Mini Title</p>
+     <div class="w-100">
+       {% set postslist = collections.projects | head(-3) %}
+      {% set postslistCounter = collections.projects | length %}
+      {% include "posts-preview.njk" %}
+      </div>
+   </div>
+   <div class="fl w-100 w-30-ns">
+      <p class="w-100">Mini Title</p>
+      <div class="w-100">
+        {% set postslist = collections.projects | head(-3) %}
+       {% set postslistCounter = collections.projects | length %}
+       {% include "posts-preview.njk" %}
+       </div>
+    </div>
+      <div class="fl w-100 w-30-ns">
+         <p class="w-100">Mini Title</p>
+         <div class="w-100">
+           {% set postslist = collections.projects | head(-3) %}
+          {% set postslistCounter = collections.projects | length %}
+          {% include "posts-preview.njk" %}
+          </div>
+       </div>
 </section>
+
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+ <span>📚</span>
+ <h3>A Collection of things from my friend</h3>
+ <p>I tend to flip between a few books at a time and am working towards reading 24 books a year. You can find more things I have been reading here.</p>
+</section>
+
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+ <span>🔗</span>
+ <h3>Site Map</h3>
+ <p>There is a lot of experiemnts on!! MAKE THIS A MESH !! or CLUSTER FO LINKS !!</p>
+</section>
+
 

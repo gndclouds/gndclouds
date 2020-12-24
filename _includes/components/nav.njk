@@ -1,4 +1,4 @@
-<nav class="dt w-100 border-box pa3 ph3-ns">
+<nav class="dt w-100 border-box pa1 ph3-ns bb b--green">
   {% if page.url == "/" %}
     <div class="flex">
     <span class="link dib goback" onclick="goBack();"></span>
@@ -13,11 +13,9 @@
   </div>
   {% endif %}
   <div class="dtc v-mid w-15 tr">
-    <a class="link dib" href="/posts/">notes</a>
-    <a class="link dib" href="/projects/">projects</a>
-    <a class="link dib" href="/playlists/">playlists</a>
-    <a class="link dib" href="/garden/">garden</a>
-  </div>
+    <a class="link dib{% if entry.url == page.url %}link dib b{% endif %}" href="/posts/">notes</a> ·
+    <a class="link dib{% if entry.url == page.url %}link dib b{% endif %}" href="/projects/">projects</a> ·
+    <a class="link dib{% if entry.url == page.url %}link dib b{% endif %}" href="/playlists/">playlists</a>  </div>
 </nav>
 
 
