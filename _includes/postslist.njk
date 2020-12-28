@@ -3,6 +3,15 @@
   <a class="db pv4 ph3 ph0-l no-underline black dim" href="{{ post.url | url }}">
    <p class="w-100">{{post.data.title }}</p>
   </a>
+  {% for tag in post.data.tags %}
+  {%- if collections.tagList.indexOf(tag) != -1 -%}
+  {% set tagUrl %}/tags/{{ tag }}/{% endset %}
+  <a href="{{ tagUrl | url }}" class="post-tag">{{ tag }}</a>
+  {%- endif -%}
+{% endfor %}
 </article>
 
 {% endfor %}
+
+
+

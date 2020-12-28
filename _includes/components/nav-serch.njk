@@ -1,0 +1,20 @@
+<nav class="dt w-100 border-box pa1 ph3-ns bb b--green">
+  {% if page.url == "/" %}
+    <div class="dtc v-mid w-15 tr">
+    <span class="link v-mid dib goback" onclick="goBack();"></span>
+    {% include "components/search.njk" %}
+    <button style="display: none;" id="myBtn" onclick="directNav()"></button>
+    </div>
+  {% else %}
+  <div class="dtc v-mid w-15 tl">
+    <span class="link v-mid dib goback" onclick="goBack();"></span>
+    {% include "components/search.njk" %}
+    <button style="display: none;" id="myBtn" onclick="directNav()"></button>
+  </div>
+  {% endif %}
+  <div class="dtc v-mid w-15 tl">
+    <a class="link dib{% if entry.url == page.url %}link dib b{% endif %}" href="/posts/">notes</a> ·
+    <a class="link dib{% if entry.url == page.url %}link dib b{% endif %}" href="/projects/">projects</a></div>
+</nav>
+
+

@@ -1,13 +1,11 @@
 {% for project in postslist | reverse %}
 <article class="fl w-100 w-third-ns pa2-ns ">
-  <a class="db pv4 ph3 ph0-l no-underline black dim ba b--green"
-  {% if project.external == null %}href="{{ project.data.external | url }}"{% else %}href="{{ project.url | url }}"{% endif %}
->
-  <div>
-    <p class="w-100">{{project.data.title }}</p>
-    <p class="w-100">{{project.data.state }}</p>
+  <a class="db no-underline black dim ba br3 b--green" href="{{ project.url | url }}"}>
+  <div class="w-100 bb">
+    <p class="dib tl">{{project.data.title }}</p>
+    <p class="dib tr gray">{{project.data.state }}</p>
   </div>
-  <img class="cover" src="{{project.data.hero }}" />
+  <img class="cover" src="{{project.data.hero }}" alt="Hero image for {{project.title}} project"/>
   </a>
 </article>
 
