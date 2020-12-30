@@ -1,10 +1,12 @@
 ---
-title: Tiny Text
+title: Slate
 description:
-date: 2020-04-25
+hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
+date: 2020-09-01
+state: Active
 tags:
-  - workshop
   - research
 layout: layouts/project.njk
 ---
 
+[Slate](https://slate.host) is an experimental file storage system built on the [Filecoin]() cryptographic protocol.

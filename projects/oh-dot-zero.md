@@ -1,7 +1,9 @@
 ---
 title: Oh Dot Zero
-description:
+description: Bringing the impact of humans living on earth down to zero. Though long term technology research.
+hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
 date: 2020-04-25
+state: Active
 tags:
   - workshop
   - research

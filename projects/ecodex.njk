@@ -1,0 +1,30 @@
+---
+title: Ecodex
+description: A collection of products and brands who are trying to do better by the enviorment.
+hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
+date: 2020-12-01
+state: In-Progress
+tags:
+  - gndclouds
+  - FigPug
+layout: layouts/project.njk
+---
+
+<section>
+<p>In over the course of 2018-2019 I activly stopped sourcing products and services from companies who where activly harming the enviroement. This was much harder then I thought it would be to source the goods I needed espically after moving out of San Franciso. That's when I started making the inital list which turned into the [Ecodex]() project. It's a small and growing list of products, services, and brands who are not harming the enviorment or who are on an active anf transpaternt pathc to become less harmful. The best thing we can do it extend the life of prodicts by preshcaing used produicts. But thats will require behaivhor changes whiuch I dont know how to foster. So for now this here is a save list to source from.
+
+Each brand has a score derived from the X Y V C A ccatagories. The proeduca are have a similar scoring system and links when againle to their impace.
+</p>
+
+<h2>evaluation</h2>
+
+<h2>design and dev</h2>
+
+
+<h2>logs</h2>
+<div class="w-100">
+  {% set postslist = collections.gndclouds | head(-3) %}
+  {% set postslistCounter = collections.projects | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>

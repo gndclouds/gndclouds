@@ -1,12 +1,11 @@
 {% for project in postslist | reverse %}
 <article class="fl w-100 w-third-ns pa2-ns ">
-  <a class="db no-underline black dim ba br3 b--green" href="{{ project.url | url }}"}>
-  <div class="w-100 bb">
-    <p class="dib tl">{{project.data.title }}</p>
-    <p class="dib tr gray">{{project.data.state }}</p>
+  <a class="db no-underline black dim ba b--green" href="{{ project.url | url }}" style="height:250px; background-image:url({{project.data.hero }}); background-position: center; background-repeat: no-repeat; background-size: cover; "/>
+  <div class="w-100 bb b--black" style="background-color: var(--background)">
+    <p class="dib tl ph3 pv1">{{project.data.title }}</p>
+    <p class="dib fr tr ph3 pv1 gray">{{project.data.state }}</p>
   </div>
-  <img class="cover" src="{{project.data.hero }}" alt="Hero image for {{project.title}} project"/>
+  <p class="dib fr tr ph3 pv1 gray">{{project.data.description }}</p>
   </a>
 </article>
-
 {% endfor %}
