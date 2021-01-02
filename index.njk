@@ -24,39 +24,41 @@ function define_indie() {
 </section>
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
- <span>🔬</span>
- <h3>Research Writting and More</h3>
- <p>Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping Learning Logs, Dev Notes, Climate Research, and some Experiments.</p>
-  <div class="fl w-100 w-30-ns mv3">
-    <a class="w-100 b" href="/tags/logs/">📮 Learning Logs</a>
+ <span class="ph1 ph3-ns" >🔬</span>
+ <h3 class="ph1 ph3-ns">Notes and Research</h3>
+ <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping Learning Logs, Dev Notes, Climate Research, and some Experiments.</p>
+ <div class="ph1 ph3-ns">
+  <div class="fl w-100 w-third-ns">
+    <a class="w-100 b" href="/logs/">📮 Learning Logs</a>
     <p class="w-100 b"></p>
-    <div class="w-100">
+    <div class="w-100 ">
       {% set postslist = collections.log | head(-3) %}
-      {% set postslistCounter = collections.loglog | length %}
+      {% set postslistCounter = collections.posts | length %}
       {% include "posts-preview.njk" %}
     </div>
   </div>
 
-  <div class="fl w-100 w-30-ns mv3">
-   <a class="w-100 b" href="/tags/experiments/">⚗️ Experiments</a>
+  <div class="fl w-100 w-third-ns">
+   <a class="w-100 b" href="/experiments/">⚗️ Experiments</a>
     <div class="w-100">
       {% set postslist = collections.experiments | head(-3) %}
-      {% set postslistCounter = collections.projects | length %}
+      {% set postslistCounter = collections.posts | length %}
       {% include "posts-preview.njk" %}
     </div>
   </div>
 
-  <div class="fl w-100 w-30-ns mv3">
-    <a class="w-100 b" href="/tags/climate/">🌻 Climate Landscape</a>
+  <div class="fl w-100 w-third-ns">
+    <a class="w-100 b" href="/climate/">🌻 Climate Research</a>
     <div class="w-100">
       {% set postslist = collections.climate | head(-3) %}
-      {% set postslistCounter = collections.projects | length %}
+      {% set postslistCounter = collections.posts | length %}
       {% include "posts-preview.njk" %}
     </div>
   </div>
+ </div>
 
-  {# <div class="fl w-100 w-30-ns mv3">
-    <a class="w-100 b" href="/tags/hardware/">🕹 Ambient Hardware</a>
+   <div class="fl w-100 w-30-ns mv3">
+    <a class="w-100 b" href="/hardware/">🕹 Ambient Hardware</a>
     <div class="w-100">
       {% set postslist = collections.experiments | head(-3) %}
       {% set postslistCounter = collections.projects | length %}
@@ -74,14 +76,7 @@ function define_indie() {
     </div>
   </div>
 
-  <div class="fl w-100 w-30-ns mv3">
-    <a class="w-100 b" href="/tags/experiments/">Other</a>
-    <div class="w-100">
-      {% set postslist = collections.experiments | head(-3) %}
-      {% set postslistCounter = collections.projects | length %}
-      {% include "posts-preview.njk" %}
-    </div>
-  </div> #}
+
 </section>
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">

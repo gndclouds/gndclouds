@@ -1,0 +1,15 @@
+---
+title: Experiments
+description: Write one Please
+layout: layouts/base.njk
+permalink: /experiments/
+---
+
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+  <h1>experiments</h1>
+  <p>{{page.data.description}}</p>
+
+  {% set postslist = collections.posts %}
+  {% set postslistCounter = collections.posts | length %}
+  {% include "posts-preview.njk" %}
+</section>
