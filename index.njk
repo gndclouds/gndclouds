@@ -2,10 +2,22 @@
 layout: layouts/base.njk
 ---
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
- <h3 class="ph1 ph3-ns"><span class="section-icon">🌱</span>
- Indiepreneuring at <a href="https://tinyfactories.space">Tiny Factories</a></h3>
- <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">The atmosphere of a studio is often hard to find after graduation. So a few friends and I co-founded a community to help keep a studio experience alive. Here is a collection of recent and <a href="/projects/">not so recent</a> work.</p>
+  <span class="section-icon ph1 ph3-ns">🌱</span>
+   <h3 class="ph1 ph3-ns"><span id="indiepreneuring" onclick="define_indie()">Indiepreneuring</span> at <a href="https://tinyfactories.space">Tiny Factories</a></h3>
+   <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">The atmosphere of a studio is often hard to find after graduation. So <span id="a-few-friends" onclick = "define_friends()">a few friends</span> and I co-founded a community of Indiepreneurs to help keep a studio experience alive. The projects shown are from the past year with older work <a href="/projects/">here</a>.
+  </p>
 
+<script>
+
+function define_indie() {
+  var span = document.getElementById("indiepreneuring");
+    span.innerText = "In·die·​pre·​neur·ing";
+}
+  function define_friends() {
+    var span = document.getElementById("a-few-friends");
+      span.innerText = "Weiwei, Tomo, ";
+  }
+</script>
  {% set postslist = collections.projects | head(-6) %}
  {% set postslistCounter = collections.projects | length %}
  {% include "project-preview.njk" %}
@@ -14,7 +26,7 @@ layout: layouts/base.njk
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
  <span>🔬</span>
  <h3>Research Writting and More</h3>
- <p>I'm a curious person and tend to go deep on topics of interest. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments, and Guides.</p>
+ <p>Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping Learning Logs, Dev Notes, Climate Research, and some Experiments.</p>
   <div class="fl w-100 w-30-ns mv3">
     <a class="w-100 b" href="/tags/logs/">📮 Learning Logs</a>
     <p class="w-100 b"></p>
@@ -78,12 +90,12 @@ layout: layouts/base.njk
  <p>I tend to flip between a few books at a time and am working towards reading 24 books a year. You can find more things I have been reading here.</p>
 </section>
 
-<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+{# <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
  <span>🔗</span>
  <h3>Site Map</h3>
  <p>There is a lot of experiemnts on!! MAKE THIS A MESH !! or CLUSTER FO LINKS !!</p>
 
 
-</section>
+</section> #}
 
 
