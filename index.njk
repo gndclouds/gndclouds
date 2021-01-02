@@ -2,9 +2,9 @@
 layout: layouts/base.njk
 ---
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
- <span>🌱</span>
- <h3>Indiepreneuring at <a href="https://tinyfactories.space">Tiny Factories</a></h3>
- <p>The atmosphere of a studio is often hard to find after graduation. So a few friends and I co-founded a community to help keep a studio experience alive. Here is a collection of recent and <a href="/projects/">not so recent</a> work.</p>
+ <h3 class="ph1 ph3-ns"><span class="section-icon">🌱</span>
+ Indiepreneuring at <a href="https://tinyfactories.space">Tiny Factories</a></h3>
+ <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">The atmosphere of a studio is often hard to find after graduation. So a few friends and I co-founded a community to help keep a studio experience alive. Here is a collection of recent and <a href="/projects/">not so recent</a> work.</p>
 
  {% set postslist = collections.projects | head(-6) %}
  {% set postslistCounter = collections.projects | length %}
@@ -16,10 +16,11 @@ layout: layouts/base.njk
  <h3>Research Writting and More</h3>
  <p>I'm a curious person and tend to go deep on topics of interest. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments, and Guides.</p>
   <div class="fl w-100 w-30-ns mv3">
-    <a class="w-100 b" href="/posts/">Recent</a>
+    <a class="w-100 b" href="/tags/logs/">📮 Learning Logs</a>
+    <p class="w-100 b"></p>
     <div class="w-100">
-      {% set postslist = collections.projects | head(-3) %}
-      {% set postslistCounter = collections.projects | length %}
+      {% set postslist = collections.log | head(-3) %}
+      {% set postslistCounter = collections.loglog | length %}
       {% include "posts-preview.njk" %}
     </div>
   </div>
@@ -36,13 +37,13 @@ layout: layouts/base.njk
   <div class="fl w-100 w-30-ns mv3">
     <a class="w-100 b" href="/tags/climate/">🌻 Climate Landscape</a>
     <div class="w-100">
-      {% set postslist = collections.experiments | head(-3) %}
+      {% set postslist = collections.climate | head(-3) %}
       {% set postslistCounter = collections.projects | length %}
       {% include "posts-preview.njk" %}
     </div>
   </div>
 
-  <div class="fl w-100 w-30-ns mv3">
+  {# <div class="fl w-100 w-30-ns mv3">
     <a class="w-100 b" href="/tags/hardware/">🕹 Ambient Hardware</a>
     <div class="w-100">
       {% set postslist = collections.experiments | head(-3) %}
@@ -68,7 +69,7 @@ layout: layouts/base.njk
       {% set postslistCounter = collections.projects | length %}
       {% include "posts-preview.njk" %}
     </div>
-  </div>
+  </div> #}
 </section>
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">

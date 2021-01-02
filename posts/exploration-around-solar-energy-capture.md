@@ -3,8 +3,7 @@ title: Exploration around Solar Energy Capture
 description:
 date: 2020-12-02
 tags:
-  - experiemnt
-  - accessibility
+  - climate
 layout: layouts/post.njk
 ---
 

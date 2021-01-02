@@ -178,3 +178,26 @@ button {
 
 #hero-reading {
 }
+.section-icon{
+
+}
+
+/* project-preview-card */
+.project-preview-card a {
+  border-radius: 3px 3px 3px 3px;
+}
+.project-preview-card a:hover {
+  color: var(--font-links);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.17);
+}
+.project-preview-card .banner{
+  border-radius: 3px 3px 0px 0px;
+  border: 1px solid var(--font-main);
+}
+.project-preview-card .preview{
+  border-radius: 0px 0px 3px 3px;
+  border: 1px solid var(--font-main);
+  border-top: none;
+  height: 212px;
+  width: 100%;
+}

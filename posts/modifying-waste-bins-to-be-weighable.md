@@ -6,7 +6,7 @@ tags:
   - waste
   - systems
   - computer-vision
-  - resilience
+  - climate
 layout: layouts/note.njk
 ---
 
