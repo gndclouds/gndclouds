@@ -1,7 +1,7 @@
 ---
 title: Frienda
 description:
-date: 2020-04-25
+date: 2019-04-25
 tags:
   - Figma Plug-in
   - FigPug

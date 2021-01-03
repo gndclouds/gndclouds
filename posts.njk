@@ -1,27 +1,17 @@
 ---
+title: notes
+description: Spaces of thought
 layout: layouts/base.njk
-permalink: /posts/
+permalink: /notes/
 eleventyNavigation:
-  key: posts
+  key: notes
   order: 2
 ---
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
 
-  <h1>Space for thougths</h1>
-  <p>My curiousocity spans a lot of topics which I ocaassionally write about. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments,  and Guides.</p>
-
-  <h3 class="fl w-100">Current Mental Threads:</h3>
-  <p>
-<a href="/tags/resilience/">[🌻 Climate Landscape]</a>
-<a href="/tags/experiments/">⚗️ Experiments</a>
-<a href="/tags/hardware/">🕹  Ambient Hardware</a>
-<a href="garden.tinydatories.space/gndclouds">📮 Learning Logs</a>
-<a href="garden.tinydatories.space/gndclouds">📮 Learning Logs</a>
-<a href="garden.tinydatories.space/gndclouds">📮 Learning Logs</a>
-<a href="garden.tinydatories.space/gndclouds">📮 Learning Logs</a>
-<a href="garden.tinydatories.space/gndclouds">📮 Learning Logs</a>
-  </p>
+  <h1>{{description}}</h1>
+  <p>Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping <a href="/climate/">[📮 Learning Logs]</a>, <a href="/tags/resilience/">[Dev Notes]</a>, <a href="/tags/resilience/">[🌻 Climate Research]</a>, and some <a href="/experiments/">[⚗️ Experiments]</a>.</p>
 
   {% set postslist = collections.posts %}
-  {% include "postslist.njk" %}
+  {% include "notes-list.njk" %}
 </section>

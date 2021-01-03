@@ -1,5 +1,5 @@
 {% for project in postslist | reverse %}
-<article class="project-preview-card grow fl w-100 w-third-ns pa1 pa3-ns">
+<article class="project-preview-card fl w-100 w-third-ns pa1 pa3-ns">
   <a class="db no-underline black" href="{{ project.url | url }}" style="height:250px; background-image:url({{project.data.hero }}); background-position: center; background-repeat: no-repeat; background-size: cover; "/>
   <div class="project-preview-card banner w-100" style="background-color: var(--background)">
     <p class="dib tl ph3 pv1">{{project.data.title }}</p>

@@ -1,0 +1,35 @@
+---
+title: Tiny Hardware
+description: Open Source doesn’t need to be hard to source
+hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
+date: 2021-01-03
+state: LIVE
+tags:
+  - workshop
+  - research
+layout: layouts/project.njk
+---
+
+
+
+<section>
+<span>{{page.data.state}}</span>
+<p>In school, the physical form of my craft tended to manifest in building small electronic things. And I feel that I have been spending a lot of time on the screen lately and want to reconnect with physical projects. So I'm going to source some small electronics kits for others to make. For now, I'm trying to work with existing open hardware projects to sell my own over time.</p>
+
+<p>For context, there are a lot of amazing open-source hardware keyboards, computers, cameras, and more. But sourcing all the parts (especially when getting started) is kinda hard and expensive since most PCB makers have 3-100 board minimums. So I want to make it easier for people to start making and level up the design of the hardware kits along the way.</p>
+
+<p>So today I made some wireframes and started making the landing page. Last week I sourced the material for the first kit. And later this week I'm looking to render the products in Blender.</p>
+
+</p>
+
+<h2>evaluation</h2>
+
+<h2>design and dev</h2>
+
+<h2>logs</h2>
+<div class="w-100">
+  {% set postslist = collections.hardware | head(-3) %}
+  {% set postslistCounter = collections.hardware | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>
