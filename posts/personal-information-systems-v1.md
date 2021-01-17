@@ -5,7 +5,7 @@ date: 2011-06-14
 updated: Last Modified
 tags:
   - gndclouds
-  - information systems
+  - log
 layout: layouts/post.njk
 ---
 
@@ -15,22 +15,17 @@ The first information system I had was in high school when I mostly tracked my w
 
 **File Structure:**
 
-+ Save everything to Evernote, articles, books, inspirational iamges, notes, papers, etc.
-+ Main parent folders started with OrgName.Subtopic and then the first child was typically a year
-
+- Save everything to Evernote, articles, books, inspirational iamges, notes, papers, etc.
+- Main parent folders started with OrgName.Subtopic and then the first child was typically a year
 
 **Tags:**
 
-+ Course Names
-+ Subject (Ethics, Theater, Etc)
-+ Conent Type (Exam, Paper, Notes)
+- Course Names
+- Subject (Ethics, Theater, Etc)
+- Conent Type (Exam, Paper, Notes)
 
 **v1 Color Key:**
 
- + 🟦 Look up or check reference  
- + 🟨 Save this
- + 🟥 Safe to Delete
-
-
-
-
+- 🟦 Look up or check reference
+- 🟨 Save this
+- 🟥 Safe to Delete

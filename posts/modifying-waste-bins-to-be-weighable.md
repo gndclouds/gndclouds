@@ -7,7 +7,7 @@ tags:
   - systems
   - computer-vision
   - climate
-layout: layouts/note.njk
+layout: layouts/post.njk
 ---
 
 _This note is a personal exercise for me to think more actively about climate change. You can see a full list of related thoughts _[_here_](http://gndclouds.cc)_._

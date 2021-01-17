@@ -60,8 +60,8 @@ a {
 }
 a:hover {
   text-decoration: none;
-  color: var(--background);
-  background-color: var(--font-links);
+  /* color: var(--background);
+  background-color: var(--font-links); */
 }
 
 nav {
@@ -178,8 +178,7 @@ button {
 
 #hero-reading {
 }
-.section-icon{
-
+.section-icon {
 }
 
 /* project-preview-card */
@@ -190,11 +189,11 @@ button {
   color: var(--font-links);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.17);
 }
-.project-preview-card .banner{
+.project-preview-card .banner {
   border-radius: 3px 3px 0px 0px;
   border: 1px solid var(--font-main);
 }
-.project-preview-card .preview{
+.project-preview-card .preview {
   border-radius: 0px 0px 3px 3px;
   border: 1px solid var(--font-main);
   border-top: none;

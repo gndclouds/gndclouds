@@ -3,16 +3,16 @@ title: E-commerce for Indiepreneurs 2020
 description: This is a note on My Blog about agile frameworks.
 date: 2019-05-07
 tags:
-  - Indiepreneur
-  - E-commerce
-layout: layouts/note.njk
+  - indiepreneur
+  - ecommerce
+layout: layouts/post.njk
 ---
 
 This year my focus has shifted to doing projects that amplify my learning and help me rebuild my creative confidence. In the spirit of this I have been looking at setting up a small online store and wanted to research what some of the best options are for indie makers.
 
 | Company             |     Free      |                    Paid |
-| ------------------- | :-----------: | ----------------------: |
-| [Small Victories]() |       —       |                    2.9% | + 30¢ |
+| ------------------- | :-----------: | ----------------------: | -------- |
+| [Small Victories]() |       —       |                    2.9% | + 30¢    |
 | [Gumroad]()         |               |         8.5% + 30¢/sale | \$10/mo. |
 | [Storenvy]()        | Direct sales  | 10%/sale on marketplace |
 | [Jimdo]()           | Branded store |               \$7.50/mo |

@@ -6,7 +6,8 @@ tags:
   - vercel
   - github
   - glitch
-layout: layouts/note.njk
+  - dev
+layout: layouts/post.njk
 ---
 
 Possible Intro: (for twitter or a note?)

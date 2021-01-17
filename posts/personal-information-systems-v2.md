@@ -4,7 +4,7 @@ description:
 date: 2016-04-19
 tags:
   - gndclouds
-  - information systems
+  - log
 layout: layouts/post.njk
 ---
 
@@ -17,20 +17,21 @@ General: org.subcategory.details/
 School example: cca.undergrad.class/
 
 **v1 Tags:**
+
 - Course Names
 - Subject (Ethics, Theater, Etc)
 - Content-Type (Exam, Paper, Notes)
 
 **v1 Color Key:**
 
-+ 🟦 Lookup or check the reference  
-+ 🟨 Save this
-+ 🟥 Safe to Delete
+- 🟦 Lookup or check the reference
+- 🟨 Save this
+- 🟥 Safe to Delete
 
 **v1 Emoji Key**
 
-+ 🏛 Knowledge - Collections of more established knowledge.
-+ 💎 Collections - Anything which inspired me. 
-+ 🔬 Research - Buckets to archive content I find when researching topics.
-+ ☁️ Personal - Content related to me.
-+ 💾 Archive - Old work that I can remove from my computer and keep just in the cloud.
+- 🏛 Knowledge - Collections of more established knowledge.
+- 💎 Collections - Anything which inspired me.
+- 🔬 Research - Buckets to archive content I find when researching topics.
+- ☁️ Personal - Content related to me.
+- 💾 Archive - Old work that I can remove from my computer and keep just in the cloud.

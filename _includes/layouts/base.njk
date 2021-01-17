@@ -6,13 +6,12 @@
       {% include "components/nav.njk" %}
     </header>
 
-    <main{% if templateClass %} class="{{ templateClass }}"{% endif %}>
+    <main{% if templateClass %} class=" {{ templateClass }}"{% endif %} style="padding-bottom: 5vh;">
       {{ content | safe }}
     </main>
 
   {% include "components/footer.njk" %}
 
-
-    <!-- Current page: {{ page.url | url }} -->
+    {# <!-- Current page: {{ page.url | url }} --> #}
   </body>
 </html>
