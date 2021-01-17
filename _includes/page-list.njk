@@ -1,0 +1,8 @@
+{%- for page in collections.all %}
+{% set absoluteUrl %}{{ page.url | url | absoluteUrl(metadata.url) }}{% endset %}
+
+<a href="{{ page.url | url }}">
+  <p{{ absoluteUrl }}</p>
+  <p>Last updated: {{ page.date | htmlDateString }}</p>
+</a>
+{%- endfor %}

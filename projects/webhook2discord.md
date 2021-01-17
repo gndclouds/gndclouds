@@ -1,7 +1,9 @@
 ---
 title: webhook 2 discord
 description:
+hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
 date: 2020-04-25
+state: Active
 tags:
   - workshop
   - research

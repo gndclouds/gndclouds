@@ -1,19 +1,13 @@
-<nav class="dt w-100 border-box pa3 ph3-ns">
-  {% if page.url == "/" %}
-    <div class="flex">
-    <span class="link dib goback" onclick="goBack();"></span>
+<nav class="dt w-100 pa3-ns">
+  <div class="dtc v-mid w-50 tl">
+
     {% include "components/search.njk" %}
-    <button style="display: none;" id="myBtn" onclick="directNav()"></button>
-    </div>
-  {% else %}
-  <div class="flex">
-    <span class="link dib goback" onclick="goBack();"></span>
-    {% include "components/search.njk" %}
-    <button style="display: none;" id="myBtn" onclick="directNav()"></button>
+
   </div>
-  {% endif %}
-  <div class="dtc v-mid w-75 tr">
-    <a class="link dib" href="/posts/">notes</a>
+  <div class="dtc v-mid w-15 tr">
+    <a class="link dib{% if entry.url === page.url %}link dib b{% endif %}" href="/notes/">notes</a>
+    {# <a class="link dib{% if entry.url === page.url %}link dib b{% endif %}" href="/projects/">projects</a> ·
+    <a class="link dib{% if entry.url === page.url %}link dib b{% endif %}" href="/playlists/">playlists</a> #}
   </div>
 </nav>
 

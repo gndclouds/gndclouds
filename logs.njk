@@ -1,0 +1,16 @@
+---
+title: 📮 Learning Logs
+layout: layouts/base.njk
+permalink: /logs/
+---
+
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top:20vh;">
+  <h1>📮 Learning Logs</h1>
+  <p>My curiousocity spans a lot of topics which I ocaassionally write about. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments,  and Guides.</p>
+
+  <div class="fl w-100 ">
+    {% set postslist = collections.logs %}
+    {% set postslistCounter = collections.logs | length %}
+    {% include "logs-preview.njk" %}
+  </div>
+</section>

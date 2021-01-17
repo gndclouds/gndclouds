@@ -1,10 +1,11 @@
 ---
-title: Experimenting with directNavigation()
+title: Experimenting with directNavigation
 description:
 date: 2020-07-22
 tags:
   - experiments
-layout: layouts/note.njk
+  - dev
+layout: layouts/post.njk
 ---
 
 In an early build of [are.na](http://are.na), you could click on the channel name to edit it. Although it was a little hard to discover this feature and it was ultimately removed. It always felt rather delightful to edit content without the need for clicking on an icon or opening an editor.

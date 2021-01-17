@@ -1,14 +1,17 @@
 ---
+title: notes
+description: Spaces of thought
 layout: layouts/base.njk
-permalink: /posts/
+permalink: /notes/
 eleventyNavigation:
-  key: posts
+  key: notes
   order: 2
 ---
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
 
-  <h1>Note</h1>
-  <p>I'm a curious person and tend to go deep on topics of interest. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments,  and Guides.</p>
+  <h1>{{description}}</h1>
+  <p>Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping <a href="/logs/">[📮 Learning Logs]</a>, <a href="/dev/">[Dev Notes]</a>, <a href="/climate/">[🌻 Climate Research]</a>, and some <a href="/experiments/">[⚗️ Experiments]</a>.</p>
+
   {% set postslist = collections.posts %}
-  {% include "postslist.njk" %}
+  {% include "notes-list.njk" %}
 </section>
