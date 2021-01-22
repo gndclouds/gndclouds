@@ -1,0 +1,16 @@
+<div class="list">
+{% for post in postslist | reverse %}
+  <div class="postlist-item{% if post.url == url %} postlist-item-active{% endif %}">
+    <a href="{{ post.url | url }}" class="postlist-link">{% if post.data.title %}<h3>{{ post.data.title }}</h3>{% else %}<code>{{ post.url }}</code>{% endif %}</a>
+    [{{ post.data.project }}]
+    {{post.data.body}}
+    {{ post.data.content | safe }}
+    {{ post.content | safe }}
+
+{{ content | safe }}
+
+  </div>
+
+{% endfor %}
+</div>
+
