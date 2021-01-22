@@ -4,7 +4,7 @@ description:
 date: 2019-04-26
 tags:
   -
-layout: layouts/note.njk
+layout: layouts/post.njk
 ---
 
 # Background
@@ -19,7 +19,7 @@ This report looked at the broader view of online education in terms of degrees a
 
 **Tools** - There is a growing number of online tools focused on creating the next best online IDE through freemium experiences. Many of these platform like GitHub, CodePen, [Now.sh](http://now.sh/), and Glitch offer free learn to code courses on their platform to promote its use.
 
-**Academia** - Many large or well-known *colleges* and *universities* now have their course catalogs, and degree programmes offered online. However, their offerings ramin broad and nontopical. For example, you can find Computer Science degrees that focus on Machine Learning. But the degree is still Computer Science whereas *platforms* and *tools* break up their offerings by Job type like Machine Learning for Self Driving Cars or React for Designers.
+**Academia** - Many large or well-known _colleges_ and _universities_ now have their course catalogs, and degree programmes offered online. However, their offerings ramin broad and nontopical. For example, you can find Computer Science degrees that focus on Machine Learning. But the degree is still Computer Science whereas _platforms_ and _tools_ break up their offerings by Job type like Machine Learning for Self Driving Cars or React for Designers.
 
 **Boot Camps** - Many boot camps are focused on quick learning often in person or for a set/scheduled time for group practice.
 

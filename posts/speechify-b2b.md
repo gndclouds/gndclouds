@@ -5,7 +5,7 @@ date: 2019-11-24
 tags:
   - research
   - accessibility
-layout: layouts/note.njk
+layout: layouts/post.njk
 ---
 
 # Overview
@@ -54,10 +54,7 @@ Figma does a great job at communicating how they are team first, based on how it
 
   - [https://platform.ifttt.com](https://platform.ifttt.com/) and [https://ifttt.com](https://ifttt.com/)
   - [https://www.uber.com/us/en/business/](https://www.uber.com/us/en/business/) and [https://www.uber.com](https://www.uber.com/)
-  -
-
-
-        [Figma: the collaborative interface design tool.](https://www.figma.com)
+  -      [Figma: the collaborative interface design tool.](https://www.figma.com)
 
 ---
 
