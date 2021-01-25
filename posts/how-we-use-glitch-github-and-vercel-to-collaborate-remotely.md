@@ -6,7 +6,6 @@ tags:
   - vercel
   - github
   - glitch
-  - dev
 layout: layouts/post.njk
 ---
 
