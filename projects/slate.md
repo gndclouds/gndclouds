@@ -10,4 +10,12 @@ tags:
 layout: layouts/project.njk
 ---
 
-[Slate](https://slate.host) is an experimental file storage system built on the [Filecoin]() cryptographic protocol.
+[Slate](https://slate.host) is an experimental file storage system built on the [Filecoin]() cryptographic protocol. I worked on Slate over thier V1 launch in 2020. Much of my work was around inproving the initial interface. 
+
+<h2>Related Notes:</h2>
+<div class="w-100">
+  {% set postslist = collections.hardware | head(-3) %}
+  {% set postslistCounter = collections.hardware | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>
