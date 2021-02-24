@@ -14,3 +14,11 @@ layout: layouts/project.njk
 ## project notes
 
 → [Funding work with TLDs](/notes/funding-work-with-tlds/)
+
+<h2>logs</h2>
+<div class="w-100">
+  {% set postslist = collections.hardware | head(-3) %}
+  {% set postslistCounter = collections.hardware | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>

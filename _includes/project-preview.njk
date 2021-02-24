@@ -1,19 +1,22 @@
 {% for project in postslist | reverse %}
-<article class="project-preview-card fl w-100 w-third-ns pa1 pa3-ns">
-  {# <a class="db no-underline black" href="{{ project.url | url }}" style="height:250px; background-image:url({{project.data.hero }}); background-position: center; background-repeat: no-repeat; background-size: cover; "/>
-  <div class="project-preview-card banner w-100" style="background-color: var(--background)">
-    <p class="dib tl ph3 pv1">{{project.data.title }}</p>
-    <p class="dib fr tr ph3 pv1 gray">{{project.data.state }}</p>
-  </div>
-  <p class="project-preview-card preview dib fr tr ph3 pv1 gray">{{project.data.description }}</p>
-  </a> #}
-  <a class="db no-underline black" href="{{ project.data.externalUrl }}" target="_blank" rel="noopener noreferrer" style="height:250px;"/>
-  <div class="project-preview-card banner w-100" style="background-color: var(--background)">
-    <p class="dib tl ph3 pv1">{{project.data.title }}</p>
-    {# <p class="dib fr tr ph3 pv1 gray">{{project.data.state }}</p> #}
-  </div>
-  <p class="project-preview-card preview dib fr ph3 pv1 gray">{{project.data.description }}</p>
 
-  </a>
-</article>
+   <article class="fl w-100 w-third-ns pa1 pa3-ns">
+    <div class="">
+      <div class="  w-100" style="background-color: var(--background)">
+        <img class="db no-underline black" href="{{ project.url | url }}" style="height:180px; background-image:url({{project.data.hero }}); background-position: center; background-repeat: no-repeat; background-size: cover; "/>
+      </div>
+
+      <div class="fr ph3 pv1">
+        <h3>{{project.data.title }}</h3>
+        <p>{{project.data.description }}</p>
+      </div>
+
+      <div class="ph3 pv1">
+        <a href="{{ project.url | url }}" class="fl w-50">
+        <button class="ph3 pv1">About</button></a>
+        <a href="{{ project.data.externalUrl }}" class="fr w-50">
+        <button class="ph3 pv1">Try ↗</button></a>
+      </div>
+    </div>
+  </article>
 {% endfor %}

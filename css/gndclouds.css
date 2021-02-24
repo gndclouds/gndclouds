@@ -11,7 +11,7 @@
 /* COLORS */
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #f6f3ea;
+    --background: #ffffff;
     --font-main: #000000;
     --font-links: #198948;
     --font-highlight: #4eaa4c;
@@ -27,7 +27,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #f6f3ea;
+    --background: #ffffff;
     --font-main: #000000;
     --font-links: #198948;
     --font-highlight: #4eaa4c;
@@ -51,8 +51,6 @@ html {
   color: var(--font-main);
 }
 body {
-  line-height: 1.8;
-  padding-bottom: 250px;
 }
 a {
   text-decoration: none;
@@ -83,8 +81,8 @@ input[type="search"] {
 }
 
 footer {
-  position: fixed;
-  top: 90vh;
+  /* position: fixed;
+  top: 90vh; */
   width: 100vw;
 }
 
@@ -101,8 +99,8 @@ footer select {
 img {
   overflow: hidden;
   width: 100%;
-  border-radius: 4px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  /* border-radius: 4px; */
+  /* box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); */
 }
 
 iframe {
@@ -112,17 +110,23 @@ iframe {
 h1 {
   font-size: 2rem;
   line-height: 1.4;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
 h2 {
   font-family: "ISO";
   font-size: 1.5rem;
   text-transform: uppercase;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
 h3 {
   font-weight: normal;
   font-size: 1.5rem;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 h4 {
   text-transform: lowercase;
@@ -141,6 +145,8 @@ p {
 button {
   border-style: none;
   border-color: none;
+  border: 1px solid var(--font-main);
+  background-color: var(--background);
 }
 .search {
   width: 80vw;
@@ -184,19 +190,16 @@ button {
 /* project-preview-card */
 .project-preview-card a {
   border-radius: 3px 3px 3px 3px;
+  border: 1px solid var(--font-main);
 }
 .project-preview-card a:hover {
   color: var(--font-links);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.17);
 }
 .project-preview-card .banner {
-  border-radius: 3px 3px 0px 0px;
-  border: 1px solid var(--font-main);
 }
 .project-preview-card .preview {
-  border-radius: 0px 0px 3px 3px;
-  border: 1px solid var(--font-main);
+  /* border-radius: 0px 0px 3px 3px; */
   border-top: none;
-  height: 212px;
   width: 100%;
 }

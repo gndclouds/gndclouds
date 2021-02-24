@@ -5,10 +5,18 @@ hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
 externalUrl: https://commons.vercel.app
 date: 2021-02-03
 state: In-Progress
-tags:
+tag:
   - workshop
   - research
 layout: layouts/project.njk
 ---
 
 In the wake of too many video calls and a lack of in-person conversation, we are experimenting with a social reading experience. So we can better stay connected and in each other's peripheral vision without digital fatigue.
+
+<h2>logs</h2>
+<div class="w-100">
+  {% set postslist = collections.hardware | head(-3) %}
+  {% set postslistCounter = collections.hardware | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>

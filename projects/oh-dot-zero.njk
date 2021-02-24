@@ -44,3 +44,11 @@ As we build towards our deadline we want to continue to keep our research tackti
 
 Next Steps
 This project is on going and will be updated from now until April 2019.
+
+<h2>logs</h2>
+<div class="w-100">
+  {% set postslist = collections.hardware | head(-3) %}
+  {% set postslistCounter = collections.hardware | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>

@@ -1,7 +1,7 @@
 ---
 layout: layouts/base.njk
 ---
-<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+<section class="fl w-100 pa3 ph4-m ph6-l">
   <span class="section-icon ph1 ph3-ns">🌱</span>
    <h3 class="ph1 ph3-ns"><span id="indiepreneuring" onclick="define_indie()">Indiepreneuring</span> at <a href="https://tinyfactories.space">Tiny Factories</a></h3>
    <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">The atmosphere of a studio is often hard to find after graduation. So <span id="a-few-friends" onclick = "define_friends()">a few friends</span> and I co-founded a community of Indiepreneurs to help keep a studio experience alive. Recent work is shown below with older work on the <a href="/projects/">project page</a>.
@@ -18,9 +18,20 @@ function define_indie() {
       span.innerText = "Weiwei, Tomo, ";
   }
 </script>
+<div>
+<p>Recent</p>
  {% set postslist = collections.projects | head(-6) %}
  {% set postslistCounter = collections.projects | length %}
  {% include "project-preview.njk" %}
+</div>
+
+</script>
+<div>
+<p>Featured</p>
+ {% set postslist = collections.projects | head(-3) %}
+ {% set postslistCounter = collections.projects | length %}
+ {% include "project-preview.njk" %}
+</div>
 </section>
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh; margin-bottom: 10vh;">
@@ -103,7 +114,6 @@ function define_indie() {
  <span>🔗</span>
  <h3>Site Map</h3>
  <p>There is a lot of experiemnts on!! MAKE THIS A MESH !! or CLUSTER FO LINKS !!</p>
-
 
 </section> #}
 
