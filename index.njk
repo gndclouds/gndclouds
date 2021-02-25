@@ -18,19 +18,19 @@ function define_indie() {
       span.innerText = "Weiwei, Tomo, ";
   }
 </script>
+
+
+<div>
+<p>Highlights</p>
+ {% set postslist = collections.highlight | head(-3) %}
+ {% set postslistCounter = collections.highlight | length %}
+ {% include "projects-preview.njk" %}
+</div>
 <div>
 <p>Recent</p>
  {% set postslist = collections.projects | head(-6) %}
  {% set postslistCounter = collections.projects | length %}
- {% include "project-preview.njk" %}
-</div>
-
-</script>
-<div>
-<p>Featured</p>
- {% set postslist = collections.projects | head(-3) %}
- {% set postslistCounter = collections.projects | length %}
- {% include "project-preview.njk" %}
+ {% include "projects-list.njk" %}
 </div>
 </section>
 
@@ -38,68 +38,30 @@ function define_indie() {
  <span class="ph1 ph3-ns" >🔬</span>
  <h3 class="ph1 ph3-ns">Spaces of thought</h3>
  <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping Learning Logs, Dev Notes, Climate Research, and some Hardware Experiments.</p>
+
  <div class="ph1 ph3-ns">
-  <div class="fl w-100 w-third-ns">
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
     <a class="w-100 b" href="/logs/">📮 Learning Logs</a>
-    <p class="w-100 b"></p>
-    {# <div class="w-100 ">
-      {% set postslist = collections.log | head(-3) %}
-      {% set postslistCounter = collections.posts | length %}
-      {% include "posts-preview.njk" %}
-    </div> #}
   </div>
 
-  <div class="fl w-100 w-third-ns">
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
    <a class="w-100 b" href="/dev/">👾 Dev Notes</a>
-   <p class="w-100 b"></p>
-
-    {# <div class="w-100">
-      {% set postslist = collections.experiments | head(-3) %}
-      {% set postslistCounter = collections.posts | length %}
-      {% include "posts-preview.njk" %}
-    </div> #}
   </div>
 
-  <div class="fl w-100 w-third-ns">
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
     <a class="w-100 b" href="/climate/">🌻 Climate Research</a>
-    <p class="w-100 b"></p>
-
-    {# <div class="w-100">
-      {% set postslist = collections.climate | head(-3) %}
-      {% set postslistCounter = collections.posts | length %}
-      {% include "posts-preview.njk" %}
-    </div> #}
   </div>
 
-  <div class="fl w-100 w-third-ns">
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
     <a class="w-100 b" href="/hardware/">🕹 Ambient Hardware</a>
-    <p class="w-100 b"></p>
-
-    {# <div class="w-100">
-      {% set postslist = collections.experiments | head(-3) %}
-      {% set postslistCounter = collections.projects | length %}
-      {% include "posts-preview.njk" %}
-    </div> #}
   </div>
 
-  <div class="fl w-100 w-third-ns">
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
   <a class="w-100 b" href="/experiments/">⚗️ Experiments</a>
-    <p class="w-100 b"></p>
-    {# <div class="w-100">
-      {% set postslist = collections.experiments | head(-3) %}
-      {% set postslistCounter = collections.projects | length %}
-      {% include "posts-preview.njk" %}
-    </div> #}
   </div>
 
-  <div class="fl w-100 w-third-ns">
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
     <a class="w-100 b" href="/notes/">🗂 Everything Else</a>
-      <p class="w-100 b"></p>
-      {# <div class="w-100">
-        {% set postslist = collections.experiments | head(-3) %}
-        {% set postslistCounter = collections.projects | length %}
-        {% include "posts-preview.njk" %}
-      </div> #}
     </div>
  </div>
 </section>

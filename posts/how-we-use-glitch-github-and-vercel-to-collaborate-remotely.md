@@ -6,6 +6,7 @@ tags:
   - vercel
   - github
   - glitch
+  - slate
 layout: layouts/post.njk
 ---
 

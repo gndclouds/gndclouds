@@ -3,8 +3,8 @@ title: Creating a scene in Slate
 description:
 date: 2020-02-26
 tags:
-  - Slate
-  - Tutorial
+  - slate
+  - guide
 layout: layouts/post.njk
 ---
 
@@ -37,7 +37,6 @@ In order to create a Scene you need to create/update three files.
 
 1. Make a new Scene in `scenes/SceneName`
 
-
 2. Import the decorator to `components/core/Application.js`
 
 ```javascript
@@ -53,29 +52,3 @@ const SCENES = {
 ```
 
 3. Add the decorator to the `common/navagation-data.js`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,8 +3,7 @@ title: Slate Community Page V1
 description:
 date: 2020-03-02
 tags:
-  - code
-  -
+  - slate
 layout: layouts/post.njk
 ---
 

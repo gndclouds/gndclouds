@@ -188,12 +188,36 @@ button {
 }
 
 /* project-preview-card */
-.project-preview-card a {
+.project-preview-card {
+  display: flex;
+  flex-direction: column;
   border-radius: 3px 3px 3px 3px;
   border: 1px solid var(--font-main);
 }
-.project-preview-card a:hover {
-  color: var(--font-links);
+.project-preview-card img {
+  border-radius: 3px 3px 0px 0px;
+  border: none;
+  border-bottom: 1px solid var(--font-main);
+}
+.project-preview-card button {
+  text-align: center;
+  border: none;
+  border-top: 1px solid var(--font-main);
+}
+.project-preview-card .left {
+  border-right: 1px solid var(--font-main);
+  border-radius: 0px 0px 0px 3px;
+}
+.project-preview-card .right {
+  border-radius: 0px 0px 3px 0px;
+}
+
+/* .project-preview-card a {
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid var(--font-main);
+} */
+.project-preview-card:hover {
+  /* color: var(--font-links); */
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.17);
 }
 .project-preview-card .banner {

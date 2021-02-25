@@ -1,14 +1,12 @@
 ---
 title: Spacal Navagation
-description: 
+description:
 date: 2020-04-12
 tags:
-  - development
-  - collobration 
-  - Slate
+  - development  - slate
 layout: layouts/post.njk
 ---
 
-soft canvas 
+soft canvas
 
 what would is feel like to navigate through an ambient env by moving your phone their space?
