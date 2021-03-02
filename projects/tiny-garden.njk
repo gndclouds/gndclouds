@@ -1,0 +1,27 @@
+---
+title: Tiny Garden
+description: A microblog for the Tiny Factories community.
+hero: https://d2w9rnfcy7mm78.cloudfront.net/10090121/original_381148e1f1ea511b2f098d2eb6c7da5f.png?1609695573?bc=0
+externalUrl: https://tiny.garden
+date: 2021-02-01
+state: Ongoing
+tags:
+  -
+  -
+layout: layouts/project.njk
+---
+
+<p>
+<a href="https://tinyfactories.space">Tiny Factories</a> has been growing at a cautious pace and in this process we have wanted to start to build a way to engage with friends, alumni, and collonrators in a better way. Our first experiment is TinyGarden. A microblog hosted by TinyFactories for our greater community to endage with.
+</p>
+
+
+
+
+<h2>Notes:</h2>
+<div class="w-100">
+  {% set postslist = collections.hardware | head(-3) %}
+  {% set postslistCounter = collections.hardware | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>

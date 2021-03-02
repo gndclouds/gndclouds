@@ -1,6 +1,7 @@
 ---
 title: personal information systems v3
-description:
+description: v3 is new icons ans caragories both general ans lwesoanl and
+
 date: 2020-04-19
 tags:
   - gndclouds

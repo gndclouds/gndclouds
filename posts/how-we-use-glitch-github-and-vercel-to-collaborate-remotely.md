@@ -1,11 +1,13 @@
 ---
 title: How we use Glitch, GitHub, & Vercel to collaborate remotely
-description:
+description: Possible Intro for twitter or a note
+
 date: 2020-08-01
 tags:
   - vercel
   - github
   - glitch
+  - slate
 layout: layouts/post.njk
 ---
 

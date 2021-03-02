@@ -1,6 +1,6 @@
 ---
 title: Energy as Currency
-description:
+description: In January of 2018 I spent 8 Days with IDEO’s CoLab during the winter build sprint investigating the opportunity space between cryptocurrency and the production of solar energy.
 date: 2018-07-22
 tags:
   - climate

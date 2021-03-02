@@ -15,7 +15,7 @@ html {
 
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #f6edec;
+    --background: #ffffff;
     --font-main: #0f25aa;
     --font-links: #f6edec;
     --font-highlight: #f6edec;
@@ -80,8 +80,7 @@ nav {
   letter-spacing: 0.09em;
 }
 
-<<<<<<< HEAD
-input[type="text"] {
+<<<<<<< HEAD input[type="text"] {
   outline: none;
   border: none;
   background: none;

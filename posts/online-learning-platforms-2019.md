@@ -1,6 +1,6 @@
 ---
 title: Online Learning Platforms 2019
-description:
+description: This report looked at the broader view of online education in terms of degrees and certificate programs that are currently available.
 date: 2019-04-26
 tags:
   -

@@ -3,17 +3,16 @@ layout: layouts/base.njk
 templateClass: tmpl-post
 ---
 
-<article class="center w-100 w-80-l pa3 pa5-ns">
-  <h1 class="">{{ title }}</h1>
-  {{ content | safe }}
+<article class="h-entry center w-100 w-80-l pa3 pa5-ns">
+  <h1 class="p-name">{{ title }}</h1>
+  <div class="e-content">  {{ content | safe }}
+</div>
 
 </article>
 
+{% include "webmentionlist.njk" %}
 
 <hr>
-<ul>
-  {%- set nextPost = collections.posts | getNextCollectionItem(page) %}
-  {%- if nextPost %}<li>Next: <a href="{{ nextPost.url | url }}">{{ nextPost.data.title }}</a></li>{% endif %}
-  {%- set previousPost = collections.posts | getPreviousCollectionItem(page) %}
-  {%- if previousPost %}<li>Previous: <a href="{{ previousPost.url | url }}">{{ previousPost.data.title }}</a></li>{% endif %}
-</ul>
+
+{% include "components/follow.njk" %}
+

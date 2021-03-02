@@ -1,6 +1,6 @@
 ---
 title: Personal Information Systems v1
-description:
+description: he first information system I had was in high school when I mostly tracked my work in Evernote.
 date: 2011-06-14
 updated: Last Modified
 tags:

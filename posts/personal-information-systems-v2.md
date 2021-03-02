@@ -1,6 +1,6 @@
 ---
 title: personal information systems v2
-description:
+description: I made some small tweaks in the structure of my files within finder largely because it was not practical to keep a large video or Sketch files in Evernote.
 date: 2016-04-19
 tags:
   - gndclouds

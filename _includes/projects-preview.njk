@@ -1,0 +1,23 @@
+{% for project in postslist | reverse %}
+ <article class="fl w-100 w-50-m w-50-l w-50-ns pa1 pa3-ns">
+
+  <div class="project-preview-card">
+
+     <img class="fl w-100" href="{{ project.url | url }}" style="height:180px; background-image:url({{project.data.hero }}); background-position: center; background-repeat: no-repeat; background-size: cover; "/>
+
+    <div class=" project-preview-meta fl w-100 pv3">
+      <h3>{{project.data.title }}</h3>
+      <br />
+      <p>{{project.data.description }}</p>
+    </div>
+    <div class="project-preview-links">
+      <a href="{{ project.url | url }}" class="fl w-50">
+      <button class="fl w-100 pv2 left">About</button></a>
+      <a href="{{ project.data.externalUrl }}" class="fr w-50">
+      <button class="fl w-100 pv2 right">Try ↗</button></a>
+      </div>
+
+    </div>
+</article>
+{% endfor %}
+

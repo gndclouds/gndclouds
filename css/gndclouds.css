@@ -11,7 +11,7 @@
 /* COLORS */
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #f6f3ea;
+    --background: #ffffff;
     --font-main: #000000;
     --font-links: #198948;
     --font-highlight: #4eaa4c;
@@ -23,11 +23,17 @@
     --navy: #0f25aa;
     --blue: #47b8e0;
     --white: #feffff;
+    --shadow-applet: 0px 6px 30px rgba(0, 0, 0, 0.08);
+    --shadow-applet-2: 0px 4px 24px rgba(0, 0, 0, 0.14),
+      0px 2px 12px rgba(0, 0, 0, 0.06);
+    --shadow-applet-3: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-half-pixel-border: 0px 0px 0px 0.6px var(--c-black-10);
+    --shadow-two-pixel-border: 0px 0px 0px 2px var(--c-black);
   }
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #f6f3ea;
+    --background: #ffffff;
     --font-main: #000000;
     --font-links: #198948;
     --font-highlight: #4eaa4c;
@@ -39,6 +45,12 @@
     --navy: #0f25aa;
     --blue: #47b8e0;
     --white: #feffff;
+    --shadow-applet: 0px 6px 30px rgba(0, 0, 0, 0.08);
+    --shadow-applet-2: 0px 4px 24px rgba(0, 0, 0, 0.14),
+      0px 2px 12px rgba(0, 0, 0, 0.06);
+    --shadow-applet-3: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-half-pixel-border: 0px 0px 0px 0.6px var(--c-black-10);
+    --shadow-two-pixel-border: 0px 0px 0px 2px var(--c-black);
   }
 }
 
@@ -51,8 +63,6 @@ html {
   color: var(--font-main);
 }
 body {
-  line-height: 1.8;
-  padding-bottom: 250px;
 }
 a {
   text-decoration: none;
@@ -83,8 +93,8 @@ input[type="search"] {
 }
 
 footer {
-  position: fixed;
-  top: 90vh;
+  /* position: fixed;
+  top: 90vh; */
   width: 100vw;
 }
 
@@ -101,8 +111,8 @@ footer select {
 img {
   overflow: hidden;
   width: 100%;
-  border-radius: 4px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  /* border-radius: 4px; */
+  /* box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); */
 }
 
 iframe {
@@ -112,17 +122,23 @@ iframe {
 h1 {
   font-size: 2rem;
   line-height: 1.4;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
 h2 {
   font-family: "ISO";
   font-size: 1.5rem;
   text-transform: uppercase;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
 h3 {
   font-weight: normal;
   font-size: 1.5rem;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 h4 {
   text-transform: lowercase;
@@ -141,6 +157,8 @@ p {
 button {
   border-style: none;
   border-color: none;
+  border: 1px solid var(--font-main);
+  background-color: var(--background);
 }
 .search {
   width: 80vw;
@@ -182,21 +200,96 @@ button {
 }
 
 /* project-preview-card */
-.project-preview-card a {
+.project-preview-card {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
   border-radius: 3px 3px 3px 3px;
-}
-.project-preview-card a:hover {
-  color: var(--font-links);
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.17);
-}
-.project-preview-card .banner {
-  border-radius: 3px 3px 0px 0px;
   border: 1px solid var(--font-main);
 }
+.project-preview-card article {
+  box-sizing: border-box;
+}
+.project-preview-card img {
+  margin: 0;
+  width: auto;
+  border-bottom: 1px solid var(--font-main);
+}
+.project-preview-card button {
+  text-align: center;
+  border: none;
+  border-top: 1px solid var(--font-main);
+}
+.project-preview-card .left {
+  border-right: 1px solid var(--font-main);
+  border-radius: 0px 0px 0px 3px;
+}
+.project-preview-card .right {
+  border-radius: 0px 0px 3px 0px;
+}
+
+.project-preview-meta {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 32px;
+}
+.project-preview-links {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  position: relative;
+  bottom: 0px;
+}
+
+/* .project-preview-card a {
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid var(--font-main);
+} */
+.project-preview-card:hover {
+  box-shadow: var(--shadow-applet-2);
+  -webkit-backdrop-filter: blur(8px);
+}
+
 .project-preview-card .preview {
-  border-radius: 0px 0px 3px 3px;
-  border: 1px solid var(--font-main);
+  /* border-radius: 0px 0px 3px 3px; */
   border-top: none;
-  height: 212px;
   width: 100%;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  /* background-color: #f1f1f1; */
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid var(--lightgray);
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  border: none;
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid var(--font-main);
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  color: var(--font-highlight);
+  /* text-decoration-color: var(--font-highlight); */
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
 }

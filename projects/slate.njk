@@ -1,0 +1,29 @@
+---
+title: Slate
+description: A new file-sharing network that makes it possible for people to collect, organize, and link files together.
+hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
+externalUrl: https://slate.host
+date: 2020-09-01
+state: Active
+tags:
+  - development
+layout: layouts/project.njk
+---
+
+<p>
+<a href="https://slate.host">Slate</a> is an experimental file storage system built on the <a href="https://Filecoin.io">Filecoin</a> cryptographic protocol. I worked on Slate over their V1 launch in 2020. Much of my work was around improving the initial interface and initial website.
+</p>
+<p>
+This was the first time I was full time on an open source project. And as a software engierre instead of a designer. The Primary focus was to prove that you could make an application on Filcoin protocol available to those outside of the crypto space.
+</p>
+
+
+
+<br />
+<h2>Development Notes:</h2>
+<div class="w-100">
+  {% set postslist = collections.slate %}
+  {% set postslistCounter = collections.slate | length %}
+  {% include "posts-preview.njk" %}
+</div>
+</section>
