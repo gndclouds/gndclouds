@@ -1,15 +1,15 @@
 ---
 title: Memory Scarf
 description:
+hero:
+externalUrl:
 date: 2014-04-25
+state:
 tags:
   - workshop
   - research
 layout: layouts/project.njk
 ---
-
-Memory Scarf
-Scroll Down
 
 Enable heirlooms to act as vessels for memories that connect generations.
 

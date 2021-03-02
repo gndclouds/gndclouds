@@ -200,20 +200,19 @@ button {
 }
 
 /* project-preview-card */
+.project-preview-card {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid var(--font-main);
+}
 .project-preview-card article {
   box-sizing: border-box;
 }
 .project-preview-card img {
-  box-sizing: border-box;
   margin: 0;
-  min-width: 0;
-  max-width: 100%;
-  height: auto;
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
+  width: auto;
   border-bottom: 1px solid var(--font-main);
 }
 .project-preview-card button {
@@ -234,6 +233,13 @@ button {
   margin: 0;
   min-width: 0;
   padding: 32px;
+}
+.project-preview-links {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  position: relative;
+  bottom: 0px;
 }
 
 /* .project-preview-card a {

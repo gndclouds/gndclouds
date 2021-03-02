@@ -1,7 +1,10 @@
 ---
 title: Impact Hub Ambassadors
 description:
+hero:
+externalUrl:
 date: 2014-04-25
+state:
 tags:
   - Community
 layout: layouts/project.njk

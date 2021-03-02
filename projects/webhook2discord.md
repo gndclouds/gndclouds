@@ -2,6 +2,7 @@
 title: webhook 2 discord
 description:
 hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
+externalUrl:
 date: 2020-04-25
 state: Active
 tags:

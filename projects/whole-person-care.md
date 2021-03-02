@@ -1,7 +1,10 @@
 ---
 title: Whole Person Care
 description:
+hero:
+externalUrl:
 date: 2018-04-25
+state:
 tags:
   - workshop
   - research
@@ -33,4 +36,3 @@ View PDF
 ![]()
 San Francisco General Hospital
 View PDF
-

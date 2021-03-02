@@ -2,6 +2,7 @@
 title: Nomad
 description:
 hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
+externalUrl:
 date: 2018-04-25
 state: Archived
 tags:
