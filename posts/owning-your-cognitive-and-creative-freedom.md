@@ -1,6 +1,6 @@
 ---
 title: Owning Your Cognitive and Creative Freedom
-description:
+description: Starting today, I will be shifting my focus to regaining my cognitive and creative freedom as an Entrepreneur.
 date: 2019-06-05
 tags:
   - creative-freedom

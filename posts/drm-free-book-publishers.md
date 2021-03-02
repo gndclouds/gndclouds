@@ -1,6 +1,6 @@
 ---
 title: DRM Free Book Publishers
-description:
+description: A collection of DRM free book publishers and related resources.
 date: 2020-02-19
 tags:
   - log

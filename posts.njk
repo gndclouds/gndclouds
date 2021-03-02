@@ -8,10 +8,60 @@ eleventyNavigation:
   order: 2
 ---
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 10vh;">
-
   <h1>{{title}}</h1>
-  <p>Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping <a href="/logs/">[📮 Learning Logs]</a>, <a href="/dev/">[Dev Notes]</a>, <a href="/climate/">[🌻 Climate Research]</a>, and some <a href="/experiments/">[⚗️ Experiments]</a>.</p>
+  <br/>
+  <p>My curiousocity spans a lot of topics which I ocaassionally write about. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments, and Guides.</p>
+  <br/>
 
-  {% set postslist = collections.posts %}
-  {% include "notes-list.njk" %}
+  <div class="dib v-mid ">
+    <p>Filter:</p>
+  </div>
+  <div class="tab dib v-mid ">
+    <button class="tablinks" onclick="openCity(event, 'All')" id="defaultOpen">All</button>
+    <button class="tablinks" onclick="openCity(event, 'Learning-Logs')">📮 Learning Logs</button>
+    <button class="tablinks" onclick="openCity(event, 'Dev-Notes')">Dev Notes</button>
+    <button class="tablinks" onclick="openCity(event, 'Climate-Research')">🌻 Climate Research</button>
+    <button class="tablinks" onclick="openCity(event, 'Experiments')">⚗️ Experiments</button>
+  </div>
+
+  <div id="All" class="tabcontent">
+    <br/>
+    <p>Learning-LogsWORDS ALL</p>
+    <br/>
+    {% set postslist = collections.posts %}
+    {% include "notes-list.njk" %}
+  </div>
+
+  <div id="Learning-Logs" class="tabcontent">
+    <br/>
+    <p>Learning-Logs ALL</p>
+    <br/>
+    {% set postslist = collections.posts %}
+    {% include "notes-list.njk" %}
+  </div>
+
+  <div id="Dev-Notes" class="tabcontent">
+    <br/>
+    <p>All projects are a mix of research, design, and development.</p>
+    <br  />
+
+  </div>
+
+  <div id="Climate-Research" class="tabcontent">
+    <br/>
+    <p>Climate projects are a mix of research, design, and development.</p>
+    <br  />
+
+
+  <div id="Experiments" class="tabcontent">
+    <br/>
+    <p>All projects are a mix of research, design, and development.</p>
+    <br  />
+
+
+
+  </div>
 </section>
+
+
+

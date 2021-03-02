@@ -9,7 +9,129 @@ eleventyNavigation:
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 10vh;">
 <h1>{{title}}</h1>
-<p>Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping <a href="/logs/">[📮 Learning Logs]</a>, <a href="/dev/">[Dev Notes]</a>, <a href="/climate/">[🌻 Climate Research]</a>, and some <a href="/experiments/">[⚗️ Experiments]</a>.</p>
-  {% set postslist = collections.projects %}
-  {% include "projects-list.njk" %}
+<br/>
+<p>My recent work has focused on building small tools for the indie web and transatioing intofocusing climate crisis through focusing on communicating its complexistie through the centerlaizing of information. I also like to tinker with ambient hardware as a way to draw myslef asawy from screens every now and then. </p>
+<br/>
+
+  <div class="dib v-mid ">
+    <p>Filter:</p>
+  </div>
+  <div class="tab dib v-mid ">
+  <button class="tablinks" onclick="openCity(event, 'All')" id="defaultOpen">Everything</button>
+    <button class="tablinks" onclick="openCity(event, 'Indieweb')">Indieweb</button>
+    <button class="tablinks" onclick="openCity(event, 'Ambient-Hardware')">Ambient Hardware</button>
+    <button class="tablinks" onclick="openCity(event, 'Climate')">Climate</button>
+  </div>
+
+  <div id="All" class="tabcontent">
+  <p>All projects are a mix of research, design, and development.</p>
+  <br  />
+    {% set postslist = collections.projects %}
+    {% for project in postslist | reverse %}
+     <article class="project-preview-card">
+       <a class="db pv4 ph3 ph0-l no-underline black " href="{{project.data.url }}">
+         <div class="flex flex-column flex-row-ns">
+
+           <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
+             <img src="{{project.data.hero }}" alt=" terminal.">
+           </div>
+
+           <div class="db v-mid w-100 w-60-ns pl3-ns">
+             <h1>{{project.data.title }}</h1>
+             <p class="">
+              {{project.data.description }}
+             </p>
+           </div>
+
+         </div>
+       </a>
+     </article>
+    {% endfor %}
+  </div>
+
+  <div id="Indieweb" class="tabcontent"><br  />
+    <p><b>Indieweb</b> projects focus on indivusla to a few thousand people</p>
+    <br  />
+    {% set postslist = collections.projects %}
+    {% for project in postslist | reverse %}
+      {% if post.data.type == "indieweb" %}
+        <article class="project-preview-card">
+           <a class="db pv4 ph3 ph0-l no-underline black " href="{{project.data.url }}">
+             <div class="flex flex-column flex-row-ns">
+
+               <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
+                 <img src="{{project.data.hero }}" alt=" terminal.">
+               </div>
+
+               <div class="db v-mid w-100 w-60-ns pl3-ns">
+                 <h1>{{project.data.title }}</h1>
+                 <p class="">
+                  {{project.data.description }}
+                 </p>
+               </div>
+
+             </div>
+           </a>
+         </article>
+       {% else %}
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <div id="Ambient-Hardware" class="tabcontent">
+  <br  />
+  <p><b>Ambient hardware</b> projects focus on indivusla to a few thousand people</p><br  />
+    {% set postslist = collections.projects %}
+    {% for project in postslist | reverse %}
+      {% if post.data.type == "hardware" %}
+        <article class="project-preview-card">
+           <a class="db pv4 ph3 ph0-l no-underline black " href="{{project.data.url }}">
+             <div class="flex flex-column flex-row-ns">
+
+               <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
+                 <img src="{{project.data.hero }}" alt=" terminal.">
+               </div>
+
+               <div class="db v-mid w-100 w-60-ns pl3-ns">
+                 <h1>{{project.data.title }}</h1>
+                 <p class="">
+                  {{project.data.description }}
+                 </p>
+               </div>
+
+             </div>
+           </a>
+         </article>
+       {% else %}
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <div id="Climate" class="tabcontent">
+  <br  />
+  <p><b>Ckiamte things</b> projects focus on indivusla to a few thousand people</p><br  />
+    {% set postslist = collections.projects %}
+    {% for project in postslist | reverse %}
+      {% if post.data.type == "climate" %}
+         <article class="project-preview-card">
+            <a class="db pv4 ph3 ph0-l no-underline black " href="{{project.data.url }}">
+              <div class="flex flex-column flex-row-ns">
+
+                <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
+                  <img src="{{project.data.hero }}" alt=" terminal.">
+                </div>
+
+                <div class="db v-mid w-100 w-60-ns pl3-ns">
+                  <h1>{{project.data.title }}</h1>
+                  <p class="">
+                   {{project.data.description }}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </article>
+       {% else %}
+    {% endif %}
+    {% endfor %}
+  </div>
 </section>

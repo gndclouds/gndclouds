@@ -19,49 +19,65 @@ function define_indie() {
   }
 </script>
 
+<div>
+  <div>
+  <div class="dib v-mid "><p>Filter:</p></div>
+  <div class="tab dib v-mid ">
+    <button class="tablinks" onclick="openCity(event, 'Recent' )" id="defaultOpen">Recent</button>
+    <button class="tablinks" onclick="openCity(event, 'Favorites')">Favorites</button>
+  </div>
+  <div id="Recent" class="tabcontent">
+    {% set postslist = collections.projects | head(-6) %}
+    {% set postslistCounter = collections.projects | length %}
+    {% include "projects-preview.njk" %}
+  </div>
+  <div id="Favorites" class="tabcontent">
+   {% for projects in postslist | reverse %}
 
-<div>
-<p>Highlights</p>
- {% set postslist = collections.highlight | head(-3) %}
- {% set postslistCounter = collections.highlight | length %}
- {% include "projects-preview.njk" %}
-</div>
-<div>
-<p>Recent</p>
- {% set postslist = collections.projects | head(-6) %}
- {% set postslistCounter = collections.projects | length %}
- {% include "projects-list.njk" %}
-</div>
+   {% if projects.data.flag == "fun" %}
+    {% set postslist = collections.projects | head(-6) %}
+    {% set postslistCounter = collections.projects | length %}
+    {% include "projects-preview.njk" %}
+   {% else %}
+
+   {% endif %}
+
+
+   {% endfor %}
+
+  </div>
+
+  </div>
 </section>
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh; margin-bottom: 10vh;">
- <span class="ph1 ph3-ns" >🔬</span>
+ <span class="icons ph1 ph3-ns" >🔬</span>
  <h3 class="ph1 ph3-ns">Spaces of thought</h3>
  <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Notes are a way for me to think in public about what I'm learning and new areas of interest. Some of my current mental threads are keeping Learning Logs, Dev Notes, Climate Research, and some Hardware Experiments.</p>
 
- <div class="ph1 ph3-ns">
-  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
-    <a class="w-100 b" href="/logs/">📮 Learning Logs</a>
+ <div class="">
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
+    <a class="project-preview-card fl w-100 b pa3" href="/logs/">📮 Learning Logs</a>
   </div>
 
-  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
-   <a class="w-100 b" href="/dev/">👾 Dev Notes</a>
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
+   <a class="project-preview-card fl w-100 b pa3" href="/dev/">👾 Dev Notes</a>
   </div>
 
-  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
-    <a class="w-100 b" href="/climate/">🌻 Climate Research</a>
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
+    <a class="project-preview-card fl w-100 b pa3" href="/climate/">🌻 Climate Research</a>
   </div>
 
-  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
-    <a class="w-100 b" href="/hardware/">🕹 Ambient Hardware</a>
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
+    <a class="project-preview-card fl w-100 b pa3" href="/hardware/">🕹 Ambient Hardware</a>
   </div>
 
-  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
-  <a class="w-100 b" href="/experiments/">⚗️ Experiments</a>
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
+  <a class="project-preview-card fl w-100 b pa3" href="/experiments/">⚗️ Experiments</a>
   </div>
 
-  <div class="fl w-100 w-50-m w-thirds-l w-third-ns">
-    <a class="w-100 b" href="/notes/">🗂 Everything Else</a>
+  <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
+    <a class="project-preview-card fl w-100 b pa3" href="/notes/">🗂 Everything Else</a>
     </div>
  </div>
 </section>

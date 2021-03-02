@@ -8,10 +8,11 @@ tags:
 layout: layouts/project.njk
 ---
 
-##Sumary
+## Sumary
+
 At Intel Labs, I worked on the User Experience Research Group's Open Design Team where I focused on researching how Intel could make hardware more approachable to novice makers. Our goal was to deliver a comprehensive research summary of the space surrounding Galileo and a final prototype of our recommended solution. Our team conducted a comprehensive research phase focusing on building a comprehensive ecosystem surrounding Galileo to enable it to become an educational platform for individuals new to the maker space.
 
-##Principles
+## Principles
 
 Collaborative
 The product should allow for more than one user at the same time.
