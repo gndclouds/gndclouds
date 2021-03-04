@@ -1,36 +1,37 @@
 ---
 title: Tiny Hardware
-description: Open Source doesn’t need to be hard to source
+description: Open Source doesn’t need to be hard to source.
 hero: https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif
 externalUrl: https://tinyhardware.club
 date: 2021-01-03
 state: LIVE
 tags:
-  - workshop
-  - research
+  - hardware
+  - community
+  - design
+  - development
 layout: layouts/project.njk
 ---
 
-
-
 <section>
-<span>{{page.data.state}}</span>
-<p>In school, the physical form of my craft tended to manifest in building small electronic things. And I feel that I have been spending a lot of time on the screen lately and want to reconnect with physical projects. So I'm going to source some small electronics kits for others to make. For now, I'm trying to work with existing open hardware projects to sell my own over time.</p>
+  <p>There is a large barrier around getting started in the open hardware community when it comes to sourcing and ordering components at reasonable volumes. I often found myself ordering two or three times the quantity I needed or spending ridiculous premiums at radio shack. <a href="https://tinyhardware.club">Tiny Hardware Club</a> maintains a community-sourced list of open hardware projects and creates kits of parts when an item gets enough community interest.</p>
+  <br />
 
-<p>For context, there are a lot of amazing open-source hardware keyboards, computers, cameras, and more. But sourcing all the parts (especially when getting started) is kinda hard and expensive since most PCB makers have 3-100 board minimums. So I want to make it easier for people to start making and level up the design of the hardware kits along the way.</p>
+  <p>There are a lot of wonderful existing sites in this space! Platforms like <a href="https://www.tindie.com">Tindie</a> and <a href="https://www.crowdsupply.com">Crowd Supply</a> offer great ways to fund initial runs of hardware. While <a href="https://www.adafruit.com">Adafruit</a> and <a href="https://shop.pimoroni.com">Pimoroni</a> make friendly beginner and DIY components hardware with good documentation. </p>
+  <br />
 
-<p>So today I made some wireframes and started making the landing page. Last week I sourced the material for the first kit. And later this week I'm looking to render the products in Blender.</p>
+  <p>The complexity of open hardware is growing, and we are there to create a centralized place for decentralized open hardware to be discovered, sourced, and shared. Hopefully to empower more people to have agency over the things they buy, make, and use.</p>
+  <br />
 
-</p>
+  <p>We are starting simple, with a website of projects you can upvote and a mailing list that gets sent out when we start accepting orders for a new project. You can <a href="https://tinyhardware.substack.com/embed">join the mailing lis</a>t, <a>submit your favorite hardware</a>, or <a>upvote an existing project</a>.</p>
+  <br />
 
-<h2>evaluation</h2>
 
-<h2>design and dev</h2>
-
-<h2>logs</h2>
-<div class="w-100">
-  {% set postslist = collections.hardware | head(-3) %}
-  {% set postslistCounter = collections.hardware | length %}
-  {% include "posts-preview.njk" %}
-</div>
+  <h2>Related Notes</h2>
+  <br />
+  <div class="w-100">
+    {% set postslist = collections.hardware %}
+    {% set postslistCounter = collections.hardware | length %}
+    {% include "posts-preview.njk" %}
+  </div>
 </section>

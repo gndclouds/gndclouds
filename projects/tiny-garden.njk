@@ -10,18 +10,35 @@ tags:
   -
 layout: layouts/project.njk
 ---
-
-<p>
-<a href="https://tinyfactories.space">Tiny Factories</a> has been growing at a cautious pace and in this process we have wanted to start to build a way to engage with friends, alumni, and collonrators in a better way. Our first experiment is TinyGarden. A microblog hosted by TinyFactories for our greater community to endage with.
-</p>
-
-
-
-
-<h2>Notes:</h2>
-<div class="w-100">
-  {% set postslist = collections.hardware | head(-3) %}
-  {% set postslistCounter = collections.hardware | length %}
-  {% include "posts-preview.njk" %}
-</div>
+<section>
+  <p>We have been receiving growing interest in individuals wanting to join our <a href="https://tinyfactories.space">Tiny Factories</a> community and wanted to start thinking of a more frictionless way to engage with friends, alumni, and collaborators. We have kept the community growth intentionally slow to ensure that everyone gets to know each other and builds relationships. </p>
+  <br />
+  <img src="" alt="Screenshot of Tiny Garden's main feed"/>
+  <p>Tiny Garden will act as a public side to our community where indiepreneurs, coders, artists, designers, musicians, videographers, writers, animators (and more) can maintain their microblog around their practice. One goal is to allow these Gardens to aggregate an individual's presence from across the internet into one central place. For example, my Twitter, Unsplash, and newsletters all show up in my garden giving people a singular view of <a href="https://tiny.garden/user/MQc2aPSY0763">my practice</a>.</p>
+  <br />
+  <img src="" alt="Screenshot of tiny Garden profiles"/>
+  <p>To start we have a feed view with a few optional filters by source. Later additions will include more views and additional media formats.</p>
+  <br />
+  <img src="" alt="Screenshot of Postman discord bot"/>
+  <p>We use <a href="">Postman</a>, a discord bot + helper API, to handle posting from less conventional sources. For example our members of Tiny Factories can post to their Tiny Garden profiles directly from discord.</p>
+  <br />
+  <p>We are still building out different parts of Tiny Garden so please <a>join the community</a> and experiment with the profiles and share any feedback you would like to see on our <a>Github</a>.</p>
+  <br />
+  <h2>Notes on Tiny Garden:</h2>
+  <br />
+  <div class="w-100">
+    {% set postslist = collections.posts %}
+    {% set postslistCounter = collections.posts | length %}
+    {% include "posts-preview.njk" %}
+  </div>
+  <br />
+  <h2>Resources:</h2>
+  <br />
+  <ul>
+    <li>Tiny Garden's is open source and can be found on <a href="">Github</a></li>
+    <li><a href="">NextJS</a></li>
+    <li><a href="">Mongo</a></li>
+    <li><a href=""></a></li>
+  </ul>
+  <br />
 </section>
