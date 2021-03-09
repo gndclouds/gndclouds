@@ -1,12 +1,18 @@
 ---
 title: Intel Galileo Starter Kit
 description:
+hero: /img/intel/gsk.hero_open.png
+externalUrl:
 date: 2017-04-25
+state: Archived
 tags:
   - hardware
   - research
 layout: layouts/project.njk
 ---
+
+<iframe title="vimeo-player" src="https://player.vimeo.com/video/108603283" width="100%" height="360" frameborder="0" allowfullscreen></iframe>
+
 
 ## Sumary
 
