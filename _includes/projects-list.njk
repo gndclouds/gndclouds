@@ -1,11 +1,23 @@
-{% for project in postslist | reverse %}
- <article class="fl w-100 w-50-m w-third-l w-third-ns pa1 pa3-ns">
-  <div class="">
+<article class="">
+   <div class="db pv4 ph3 ph0-l no-underline black">
+     <div class="flex flex-column flex-row-ns">
 
-    <div class="fr ph3 pv1">
-      <h3>{{project.data.title }}</h3>
-      <p>{{project.data.description }}</p>
-    </div>
-  </div>
-</article>
-{% endfor %}
+       <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
+         <img src="{{project.data.hero }}" alt=" terminal.">
+       </div>
+
+       <div class="db v-mid w-100 w-60-ns pl3-ns">
+         <a href="{{ project.data.externalUrl }}" class="">
+         <h1>{{project.data.title }} ↗</h1>
+         </a>
+         <p class="">
+          {{project.data.description }}
+         </p>
+         <p> </p>
+
+
+       </div>
+
+     </div>
+   </div>
+ </article>

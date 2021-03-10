@@ -2,8 +2,8 @@
 @import url("https://rsms.me/inter/inter.css");
 @font-face {
   font-family: "ISO";
-  src: url("/fonts/ISOv0.8-Regular.woff2") format("woff2"),
-    url("/fonts/ISOv0.8-Regular.woff") format("woff");
+  src: url("/fonts/FiraCode-Regular.woff2") format("woff2"),
+    url("/fonts/FiraCode-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
 }
@@ -290,6 +290,6 @@ button {
 /* Style the tab content */
 .tabcontent {
   display: none;
-  padding: 6px 12px;
+  /* padding: 6px 12px; */
   border-top: none;
 }

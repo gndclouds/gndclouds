@@ -1,12 +1,17 @@
 ---
 title: Intel Galileo Starter Kit
-description:
-date: 2017-04-25
+description: Our goal was to deliver a comprehensive research summary of the space surrounding Galileo and a final prototype of our recommended solution
+hero: /img/intel/gsk.hero_open.png
+externalUrl: https://vimeo.com/108603283
+date: 2014-04-25
+state: Archived
 tags:
   - hardware
   - research
 layout: layouts/project.njk
 ---
+
+<iframe title="vimeo-player" src="https://player.vimeo.com/video/108603283" width="100%" height="360" frameborder="0" allowfullscreen></iframe>
 
 ## Sumary
 
