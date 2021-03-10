@@ -2,23 +2,24 @@
 layout: layouts/base.njk
 templateClass: tmpl-post
 ---
-<article>
+<article  class="center w-100 w-60-l pa3 pa5-ns style="margin-top: 10vh;">
 
-<header class="bg-gold" style=" background-image:url({{hero }}); background-position: center; background-repeat: no-repeat; background-size: cover; ">
-  <div class="center w-100 w-60-l pa3 pa5-ns">
-    <h3 class="f2 f1-m f-headline-l measure-narrow lh-title mv0">
-      <span class="bg-black-90 lh-copy white pa1 tracked-tight">
-        {{ title }}
-      </span>
-    </h3>
-    <h4 class="f3 fw1 georgia i">{{ description }}</h4>
-    <time class="f6 mb2 dib ttu tracked"><small>Shipped{{ date }}</small></time>
-    <time class="f6 mb2 dib ttu tracked"><small>start{{ date }}</small></time>
+<header class=""  >
 
-  </div>
 </header>
-<div class="center w-100 w-60-l pa3 pa5-ns">
+<div ">
+  <h3 class="measure-narrow mv0">
+      {{ title }}
 
+
+  </h3>
+  <br/>
+  <p class="">{{ description }}</p>
+  <br/>
+  <time class="mb2 dib ttu tracked"><small>{{ date }}</small></time>
+{#    <time class="f6 mb2 dib ttu tracked"><small>start{{ date }}</small></time>
+#}
+</div>
   {{ content | safe }}
 </div>
 </article>

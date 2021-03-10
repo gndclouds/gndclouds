@@ -40,39 +40,8 @@ eleventyNavigation:
     {% set postslist = collections.projects %}
     {% for project in postslist | reverse %}
       {% if post.data.type == "indieweb" %}
-        <article class="">
-           <div class="db pv4 ph3 ph0-l no-underline black">
-             <div class="flex flex-column flex-row-ns">
-
-               <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
-                 <img src="{{project.data.hero }}" alt=" terminal.">
-               </div>
-
-               <div class="db v-mid w-100 w-60-ns pl3-ns">
-                 <h1>{{project.data.title }}</h1>
-                 <p class="">
-                  {{project.data.description }}
-                 </p>
-                 {% if project.data.url != null %}
-                  <div class="">
-                     <a href="{{ project.url | url }}" class="fl w-100">
-                     <button class="fl w-100 pv2 left">About</button></a>
-
-                   </div>
-                  {% else %}
-                  <div class="">
-                    <a href="{{ project.url | url }}" class="fl w-60">
-                    <button class="fl w-100 pv2 left">About</button></a>
-                    <a href="{{ project.data.externalUrl }}" class="fr w-40">
-                    <button class="fl w-100 pv2 right">Try ↗</button></a>
-                  </div>
-                     {% endif %}
-               </div>
-
-             </div>
-           </div>
-         </article>
-       {% else %}
+        {% include "projects-preview.njk" %}
+      {% else %}
     {% endif %}
     {% endfor %}
   </div>
@@ -83,108 +52,30 @@ eleventyNavigation:
     {% set postslist = collections.projects %}
     {% for project in postslist | reverse %}
       {% if post.data.type == "hardware" %}
-        <article class="">
-           <div class="db pv4 ph3 ph0-l no-underline black">
-             <div class="flex flex-column flex-row-ns">
-
-               <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
-                 <img src="{{project.data.hero }}" alt=" terminal.">
-               </div>
-
-               <div class="db v-mid w-100 w-60-ns pl3-ns">
-                 <h1>{{project.data.title }}</h1>
-                 <p class="">
-                  {{project.data.description }}
-                 </p>
-                 {% if project.data.url != null %}
-                  <div class="">
-                     <a href="{{ project.url | url }}" class="fl w-100">
-                     <button class="fl w-100 pv2 left">About</button></a>
-
-                   </div>
-                  {% else %}
-                  <div class="">
-                    <a href="{{ project.url | url }}" class="fl w-60">
-                    <button class="fl w-100 pv2 left">About</button></a>
-                    <a href="{{ project.data.externalUrl }}" class="fr w-40">
-                    <button class="fl w-100 pv2 right">Try ↗</button></a>
-                  </div>
-                     {% endif %}
-               </div>
-
-             </div>
-           </div>
-         </article>
-       {% else %}
+        {% include "projects-list.njk" %}
+      {% else %}
     {% endif %}
     {% endfor %}
   </div>
 
   <div id="Climate" class="tabcontent">
   <br  />
-  <p><b>Climate things</b> projects focus on indivusla to a few thousand people</p><br  />
+  <p><b>Climate</b> work will start to grow as a section over this next year. Area's I would love to push further are urban systems and biomimetic materials.</p><br />
     {% set postslist = collections.projects %}
     {% for project in postslist | reverse %}
-      {% if post.data.type == "climate" %}
-         <article class="">
-            <div class="db pv4 ph3 ph0-l no-underline black">
-              <div class="flex flex-column flex-row-ns">
-
-                <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
-                  <img src="{{project.data.hero }}" alt=" terminal.">
-                </div>
-
-                <div class="db v-mid w-100 w-60-ns pl3-ns">
-                  <h1>{{project.data.title }}</h1>
-                  <p class="">
-                   {{project.data.description }}
-                  </p>
-                  {% if project.data.url != null %}
-                   <div class="">
-                      <a href="{{ project.url | url }}" class="fl w-100">
-                      <button class="fl w-100 pv2 left">About</button></a>
-
-                    </div>
-                   {% else %}
-                   <div class="">
-                     <a href="{{ project.url | url }}" class="fl w-60">
-                     <button class="fl w-100 pv2 left">About</button></a>
-                     <a href="{{ project.data.externalUrl }}" class="fr w-40">
-                     <button class="fl w-100 pv2 right">Try ↗</button></a>
-                   </div>
-                      {% endif %}
-                </div>
-
-              </div>
-            </div>
-          </article>
+      {% if project.data.flag == "climate" %}
+        {% include "projects-list.njk" %}
        {% else %}
     {% endif %}
     {% endfor %}
   </div>
   <div id="Research" class="tabcontent">
     <br  />
-    <p><b>Research things</b> projects focus on indivusla to a few thousand people</p><br  />
+    <p><b>Research things</b> across sectors and from consulting work and trend reports</p><br  />
       {% set postslist = collections.projects %}
       {% for project in postslist | reverse %}
         {% if project.data.type === "research" %}
-           <article class="project-preview-card">
-              <a class="db pv4 ph3 ph0-l no-underline black " href="{{project.data.url }}">
-                <div class="flex flex-column flex-row-ns">
-
-                  <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
-                    <img src="{{project.data.hero }}" alt=" terminal.">
-                  </div>
-
-                  <div class="db v-mid w-100 w-60-ns pl3-ns">
-                    <h1>{{project.data.title }}</h1>
-                    <p class="">
-                     {{project.data.description }}
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </article>
+          {% include "projects-list.njk" %}
          {% else %}
       {% endif %}
       {% endfor %}

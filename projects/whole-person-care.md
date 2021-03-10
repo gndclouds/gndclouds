@@ -1,10 +1,11 @@
 ---
 title: Whole Person Care
-description:
-hero:
-externalUrl:
+description: A field guide for the new role which summarized our research and best practices for enrolling housing-insure people in Medi-Cal.
+hero: /img/whole-person-care/whole-person-care-hero.jpg
+externalUrl: https://sf-wpc.gitbooks.io/fieldguide/content/
 date: 2018-04-25
 state:
+type: research
 tags:
   - workshop
   - research

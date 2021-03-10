@@ -20,13 +20,15 @@ function define_indie() {
       span.innerText = "Weiwei, Tomo, ";
   }
 </script>
-
+  {% set postslist = collections.projects | head(-4) %}
+  {% set postslistCounter = collections.projects | length %}
+  {% include "projects-preview.njk" %}
   <div class="ph1 ph3-ns">
-  <div class="dib v-mid "><p>Filter:</p></div>
+  <!-- <div class="dib v-mid "><p>Filter:</p></div>
   <div class="tab dib v-mid ">
     <button class="tablinks ml2" onclick="openCity(event, 'Recent' )" id="defaultOpen">Recent</button>
     <button class="tablinks ml2" onclick="openCity(event, 'Favorites')">Favorites</button>
-  </div>
+  </div> -->
   <div id="Recent" class="tabcontent">
     {% set postslist = collections.projects | head(-6) %}
     {% set postslistCounter = collections.projects | length %}
@@ -35,12 +37,11 @@ function define_indie() {
   <div id="Favorites" class="tabcontent">
    {% for projects in postslist | reverse %}
 
-   {% if projects.data.flag == "fun" %}
     {% set postslist = collections.projects | head(-6) %}
     {% set postslistCounter = collections.projects | length %}
-    {% include "projects-preview.njk" %}
-   {% else %}
+    {% if projects.data.flag == "highlight" %}
 
+    {% include "projects-preview.njk" %}
    {% endif %}
 
 
@@ -51,6 +52,7 @@ function define_indie() {
   </div>
 </section>
 
+{#
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
  <span class="icons ph1 ph3-ns" >🔬</span>
  <br/>
@@ -85,8 +87,9 @@ function define_indie() {
     </div>
  </div>
 </section>
-
- <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+#}
+{#
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
  <span class="icons ph1 ph3-ns">📚</span>
  <br  />
  <br  />
@@ -94,6 +97,7 @@ function define_indie() {
  <br  />
  <p class="ph1 ph3-ns">I tend to flip between a few books at a time and am working towards reading 24 books a year. You can find more things I have been reading here.</p>
 </section>
+#}
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh; margin-bottom: 10vh;">
  <span class="icons ph1 ph3-ns">🔗</span>
@@ -106,19 +110,19 @@ function define_indie() {
 
 <div class="">
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-    <a class="fl w-100 b" href="/logs/">My Garden</a>
+    <a class="fl w-100" href="https://tiny.garden/user/MQc2aPSY0763">My Garden</a>
   </div>
 <div class="">
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-    <a class="fl w-100 b" href="/logs/">Multiverse</a>
+    <a class="fl w-100" href="https://multiverse.plus/gndclouds">Multiverse</a>
   </div>
 <div class="">
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-    <a class="fl w-100 b" href="/logs/">Books I'm Reading</a>
+    <a class="fl w-100" href="https://beta.readng.co/user/gndclouds">Books I'm Reading</a>
   </div>
   <div class="">
     <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-      <a class="fl w-100 b" href="/logs/">Developer </a>
+      <a class="fl w-100" href="https://dev.to/gndclouds">Dev.to</a>
     </div>
 
 </section>
