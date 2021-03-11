@@ -31,6 +31,10 @@ eleventyNavigation:
   <div id="All" class="tabcontent">
     <br/>
     <p>🛠 <b>All</b> notes Coming Soon</p>
+    {% set postslist = collections.posts %}
+    {% for post in postslist | reverse %}
+     {% include "posts-list.njk" %}
+    {% endfor %}
 
     <br/>
 
