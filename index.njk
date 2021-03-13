@@ -2,6 +2,15 @@
 layout: layouts/base.njk
 ---
 <section class="fl w-100 pa3 ph4-m ph6-l">
+<h3><span class="section-icon ph1 ph3-ns">☁️</span></<h3>
+<br /> <br />
+ <h1 class="ph1 ph3-ns"><span>Hi</span></h1>
+ <br/>
+ <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Thinking about the climate, building tools for the indie web and Indiepreneur
+
+</p>
+</section>
+<section class="fl w-100 pa3 ph4-m ph6-l">
   <h3><span class="section-icon ph1 ph3-ns">🌱</span></<h3>
   <br /> <br />
    <h3 class="ph1 ph3-ns"><span id="indiepreneuring" onclick="define_indie()">Indiepreneuring</span> at <a href="https://tinyfactories.space">Tiny Factories</a></h3>
@@ -22,7 +31,7 @@ function define_indie() {
 </script>
   {% set postslist = collections.projects | head(-4) %}
   {% set postslistCounter = collections.projects | length %}
-  {% include "projects-preview.njk" %}
+  <!-- {% include "projects-preview.njk" %} -->
   <div class="ph1 ph3-ns">
   <!-- <div class="dib v-mid "><p>Filter:</p></div>
   <div class="tab dib v-mid ">
@@ -52,42 +61,42 @@ function define_indie() {
   </div>
 </section>
 
-{#
+
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
  <span class="icons ph1 ph3-ns" >🔬</span>
  <br/>
  <br/>
- <h3 class="ph1 ph3-ns">Spaces of thought (WIP)</h3>
+ <h3 class="ph1 ph3-ns">Spaces of thought</h3>
  <br/>
  <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Notes are a way for me to think in public about what I'm learning and new areas of interest. All spaces feed into my <a href="/notes/">blog</a> or are summarized in my <a href="https://gndclouds.substack.com/embed">newsletter</a> Some of my current mental threads are: </p>
 
  <div class="">
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-    <a class=" fl w-100 b" href="/logs/">📮 Learning Logs</a>
+    <a class=" fl w-100 " href="/logs/">📮 Learning Logs</a>
   </div>
 
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-   <a class=" fl w-100 b" href="/dev/">👾 Dev Notes</a>
+   <a class=" fl w-100 " href="/dev/">👾 Dev Notes</a>
   </div>
 
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-    <a class="fl w-100 b" href="/climate/">🌻 Climate Research</a>
+    <a class="fl w-100 " href="/climate/">🌻 Climate Research</a>
   </div>
 
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-    <a class="fl w-100 b" href="/hardware/">🕹 Ambient Hardware</a>
+    <a class="fl w-100 " href="/hardware/">🕹 Ambient Hardware</a>
   </div>
 
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-  <a class=" fl w-100 b" href="/experiments/">⚗️ Experiments</a>
+  <a class=" fl w-100 " href="/experiments/">⚗️ Experiments</a>
   </div>
 
   <div class="fl w-100 w-50-m w-thirds-l w-third-ns pa1 pa3-ns">
-    <a class=" fl w-100 b" href="/notes/">🗂 Everything Else</a>
+    <a class=" fl w-100 " href="/notes/">🗂 Everything Else</a>
     </div>
  </div>
 </section>
-#}
+
 {#
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
  <span class="icons ph1 ph3-ns">📚</span>

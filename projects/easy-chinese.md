@@ -4,6 +4,7 @@ description: Carefully curated, fun, and pretty flashcards to accelerate your Ch
 hero: /img/easy-chinese/easy-chinese-hero.png
 externalUrl: https://easy-chinese.now.sh
 date: 2020-03-30
+type: indieweb
 tags:
   - learning
 layout: layouts/project.njk

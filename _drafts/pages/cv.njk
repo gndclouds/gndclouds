@@ -1,0 +1,26 @@
+---
+title: cv
+layout: layouts/base.njk
+permalink: /cv/
+
+---
+
+<section class="center w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+  <p>Out of school I worked at a wide range of compmanies to understand how different enviorments used design. Most roles have been fulltime as a designer or design research. When each role growing a little more technical. Each of these experiences feed my curisoty and lead to me starting something new.</p>
+
+  <p>For Freelancing I have been working as a freelance Interaction Designer and UX Researcher for IDEO, Xerox PARC, Audi Air, Future Partners, Workshop Cafe, Udacity, California College of the Arts, Eleven Eleven Journal, and Palace Games. In these roles, I have worked in Medical, IOT, Energy, Ed-Tech, P2P, and Blockchain.</p>
+
+  {% for place in cv | reverse %}
+    <div>
+
+      <h3>{{ place.title}} at <a href="{{ place.company.site}}">{{ place.company.name}}</a></h3>
+      <p>{{ place.date.start}} to {{ place.date.end}}</p>
+      <p>{{ place.description}}</p>
+      <p class="">{{ place.title}}</p>
+      <div>
+      <p>{{ place.projects}}</p>
+      </div>
+    </div>
+  {% endfor %}
+
+</section>

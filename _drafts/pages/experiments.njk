@@ -1,0 +1,15 @@
+---
+title: ⚗️ Experiments
+description: Small speculations and investigations into questions or itches I need to explore.
+layout: layouts/base.njk
+permalink: /experiments/
+---
+
+<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 20vh;">
+  <h1>{{title}}</h1>
+  <p>{{description}}</p>
+
+  {% set postslist = collections.experiments %}
+  {% set postslistCounter = collections.experiments | length %}
+  {% include "posts-preview.njk" %}
+</section>

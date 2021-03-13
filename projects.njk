@@ -13,7 +13,7 @@ eleventyNavigation:
 <p>Recent work has focused on building small tools for the indie web through Tiny Factories and climate research projects with oh dot zero. I have chosen to grow generalist skills across research, design, and development while becoming a specialist in specific topics like distributed biomimetic systems, software that enables user agency, and climate research.</p>
 <br/>
   <div class="dib v-mid ">
-    <p>Filter:</p>
+    <p>Filter by:</p>
   </div>
   <div class="tab dib v-mid ">
   <button class="tablinks" onclick="openCity(event, 'All')" id="defaultOpen">Everything</button>
@@ -39,9 +39,9 @@ eleventyNavigation:
     <br  />
     {% set postslist = collections.projects %}
     {% for project in postslist | reverse %}
-      {% if post.data.type == "indieweb" %}
-        {% include "projects-preview.njk" %}
-      {% else %}
+      {% if project.data.type === "indieweb" %}
+        {% include "projects-list.njk" %}
+       {% else %}
     {% endif %}
     {% endfor %}
   </div>
@@ -49,25 +49,25 @@ eleventyNavigation:
   <div id="Ambient-Hardware" class="tabcontent">
   <br  />
   <p><b>Ambient Hardware</b> helps get me away from the screen and back into the real world. These projects have been less frequent since I have been away from my lab/studio this past year.</p><br  />
-    {% set postslist = collections.projects %}
-    {% for project in postslist | reverse %}
-      {% if post.data.type == "hardware" %}
-        {% include "projects-list.njk" %}
+   {% set postslist = collections.projects %}
+   {% for project in postslist | reverse %}
+     {% if project.data.type === "hardware" %}
+       {% include "projects-list.njk" %}
       {% else %}
-    {% endif %}
-    {% endfor %}
+   {% endif %}
+   {% endfor %}
   </div>
 
   <div id="Climate" class="tabcontent">
   <br  />
   <p><b>Climate</b> work will start to grow as a section over this next year. Area's I would love to push further are urban systems and biomimetic materials.</p><br />
-    {% set postslist = collections.projects %}
-    {% for project in postslist | reverse %}
-      {% if project.data.flag == "climate" %}
-        {% include "projects-list.njk" %}
-       {% else %}
-    {% endif %}
-    {% endfor %}
+  {% set postslist = collections.projects %}
+  {% for project in postslist | reverse %}
+    {% if project.data.type === "climate" %}
+      {% include "projects-list.njk" %}
+     {% else %}
+  {% endif %}
+  {% endfor %}
   </div>
   <div id="Research" class="tabcontent">
     <br  />
