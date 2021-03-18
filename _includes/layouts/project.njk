@@ -10,7 +10,8 @@ templateClass: tmpl-post
 <br/>
 <p class="">{{ description }}</p>
 <br/>
-<time class="mb2 dib ttu tracked"><small>{{ date }}</small></time></div>
+<time class="mb2 dib ttu tracked">        {{date | displayDateYearMonthDay }}
+</time></div>
 </header>
 
 <div class="fl w-100">{{ content | safe }}</div>

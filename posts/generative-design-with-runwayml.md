@@ -6,34 +6,71 @@ tags: [machine learning, generative design, people machine collobration]
 layout: layouts/post.njk
 ---
 
-My motivation for becoming an interaction designer was rooted in wanting to help us have better relations ships with the object we craft both digitally and phyicsll. Most of my recent for has constuned to use my design knowledge but the increased focus has been to beuild more technical capacity with in myself. This motivation is heavuly conneted to the kneldge hat people machine collobration will continy to become more ubiquisiouse.
+For a few months, I have read and made a few small machine learning projects to understand the space a bit more. One way to keep these experiments quick has been to use [RunwayML](http://runwayml.com/) for some low-level design tasks. Like creating textures, gradients, or iconography with various levels of success. This post is a mini summary of what I have learned and what it may say about the future of generative design tools and workflows as of 2020. For each exploration, I needed to start with a dataset to feed to the computer. In this example, I will be training a StyleGAN model to make gradients.
+&nbsp;
 
-Today we are a ways from the harmoney and agency I would like to see in tools. But For the last few weeks I have started to use [runwayml]() for some generative design excerises. Ciurrentl there is still a battier to knowing what ML does to get the most out of thier tooling. But I wanted ot share a bit about my workflow today.
+There are many datasets available (see a list of my favorite below) for things like weather data, satellite images, etc but for generative design data, it has been a little hard. There aren't a lot of repositories with pre-sorted design datasets yet. So the curation process is a little manual at the moment.
+&nbsp;
 
-Many of my experiemnts have been around training a model to make more of a ceritan type of image. For exmple I give a computer 100 images of a fish and then tell it to learn what makes a fish a fish. Then I come back after a few hours and ask it to make me 5000 new fishes.
+First, we need some sample gradients, I started with 25 images from Unicorn Gradients. Typically using 500+ images would be better but since the gradients have such a heavy blur it worked out. Next, upload them to your assets folder on Runway ML.
+&nbsp;
 
-Finding Data
+![](/img/generative-design-with-runwayml/runway-step-0.png)
+&nbsp;
 
-If we want to train a computer we need to give it some data. The models I have been experiemnting with are stypically betwren 100-500 iamges. But if possible I woudl recommend you start with 1000 minimum.
+There is already a lot of templates in RunwayML! So we need to train the model but don't need to create it from scratch. Choose the Image Generator template from the model's section and then selected the files I uploaded earlier.
+&nbsp;
 
-As an exmple we are going to create a SANGAN2 model around graidnents.
-![]()
-For images data I tent to use [Same.Energy]() to search for and then download more neich images sets. For larger and oftn older iamge sets I
+![](/img/generative-design-with-runwayml/runway-step-1.png)
+&nbsp;
 
-- Googl
-  Archine
-  Other
-  0ther
-  Slate
-  are.na
+The process is still slow. The model took 3 hours at 3000 steps. So I would start it before heading to bed.
+&nbsp;
 
-- Same.energy
+![](/img/generative-design-with-runwayml/runway-step-2.png)
+&nbsp;
 
-Graidents
+When your model is complete you will be able to have RunwayML create thousands of new images!
+&nbsp;
 
-texture maps
-https://www.youtube.com/watch?v=arvhK4tvYuY
+![](/img/generative-design-with-runwayml/runwayml-gradients.jpg)
+&nbsp;
 
-Texture msps from teal building via instaam photograpner
+Now that was a quick overview but it shows how the tooling is still being made more non-developer friendly. In 1-2 years more plugins and local first tools should make experimenting and mainstream use easier. Especially for the inspiration of synthesis of screen design. Some other but less successful experiments of mine have been:
+&nbsp;
 
-ed objects
+**Emoji Generator** - Training on Twitter's open-source emoji set. The thinking was if it could create something like [Emoji Mashup Bot](https://twitter.com/emojimashupbot?lang=en). The results looked more like something from Watchman.
+&nbsp;
+
+![ML Generated image of emojis](/img/generative-design-with-runwayml/runwayml-emoji.jpg)
+&nbsp;
+
+**Townscaper Generator** - A popular game called [Townscaper](https://store.steampowered.com/app/1291340/Townscaper/) used [waveform collapse functions](https://github.com/mxgmn/WaveFunctionCollapse) to perdurably generate grids. I downloaded all the images I could find on Twitter of the game, cleaned them up, and made a StyleGAN model.
+&nbsp;
+
+![ML Generated image of Townscaper game scenes](/img/generative-design-with-runwayml/runwayml-townscaper.jpg)
+&nbsp;
+
+&nbsp;
+
+## Resources for ML:
+
+### Reading:
+
+- [Using Artificial Intelligence to Augment Human Intelligence](https://distill.pub/2017/aia/)
+- [BEING THE MACHINE| Making Home](http://beingthemachine.com)
+- [curriculum⁄Machine Listening](https://machinelistening.exposed/curriculum/?utm_source=SPACE10&utm_campaign=500764c4f9-EMAIL_CAMPAIGN_2020_04_28_01_23_COPY_01&utm_medium=email&utm_term=0_35b5972dbe-500764c4f9-364911269&mc_cid=500764c4f9&mc_eid=c02ec90a8e)
+- [Terrain Generation With Deep Learning | Two Minute Papers #208​](https://www.youtube.com/watch?v=NEscK5RCtlo)
+
+&nbsp;
+
+### Public Datasets:
+
+- [Data Gov](https://www.data.gov)
+- [Google Dataset Search](https://datasetsearch.research.google.com)
+
+&nbsp;
+
+### Runway Models:
+
+- [RunwayMl Gradients](https://app.runwayml.com/models/gndclouds/Gradients)

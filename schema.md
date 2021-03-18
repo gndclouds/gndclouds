@@ -1,11 +1,14 @@
-Schema Projects
---- title: A Short Title description: Designing Future Cities
-Symposium heroStatic: /img/k2/k2-hero.png heroMotion: externalUrl:
-https://www.kidnext.design.kyushu-u.ac.jp/k2/ internallUrl:
-https://www.kidnext.design.kyushu-u.ac.jp/k2/
+## Schema Projects
+
+title: A Short Title
+description: Designing Future Cities
+Symposium heroStatic: /img/k2/k2-hero.png heroMotion:
+externalUrl: https://www.kidnext.design.kyushu-u.ac.jp/k2/
+internallUrl: https://www.kidnext.design.kyushu-u.ac.jp/k2/
 flag: date: 2017-02-08 state:
 archived /avitve, ..., ,,,/
-Type: [Research, Design, D ev] tags: [ont, two]
+Type: [Research, Design, D ev]
+tags: [ont, two]
 layout: layouts/project.njk
 
 ---
@@ -23,8 +26,7 @@ externalUrl:
 https://tinyhardware.club
 date: 2021-01-03
 life: Growing
-realtedTo: [] type:
-indieweb
+vindieweb
 tags: - hardware - community - design - development
 layout:
 layouts/project.njk
@@ -39,7 +41,10 @@ title: Onboarding Trends 2020 Q1
 description: How to improve the experience of the current chrome web extension in preparation
 for the Speechify Web App
 date: 2020-02-18
-tags: - research layout:
+postDate: [Tag, Tag2,]
+tags: [Tag, Tag2,]
+
+layout:
 layouts/post.njk ---
 
 Clip

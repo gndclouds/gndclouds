@@ -6,6 +6,8 @@ tags: [machine learning, generative design, people machine collobration]
 layout: layouts/post.njk
 ---
 
+The entire time I was at college I didn't understand the Adobe color picker. Until this past week when a profess walked students though the history of how computers render color and now I have a new dimention of understanding. So here is a quck summery of what I found helpful.
+
 ## Color Pickers
 
 When learning about visual design in school high school and college I was always introduced to color through the traditional color wheel. Which broke colors into three main sections Primary, Secondary, and Tertiary.
