@@ -115,6 +115,21 @@ img {
   /* box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); */
 }
 
+img[src*="#left"] {
+  float: left;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+}
+img[src*="#right"] {
+  float: right;
+  margin-left: 2rem;
+  margin-bottom: 2rem;
+}
+img[src*="#center"] {
+  display: block;
+  margin: auto;
+}
+
 iframe {
   border: 0;
 }
@@ -171,7 +186,13 @@ button {
 
 .list {
 }
-
+.post {
+  width: 600px;
+}
+.post img {
+  max-height: 80vh;
+  width: auto;
+}
 .project-hero {
   background-image: none;
 }

@@ -3,16 +3,18 @@ layout: layouts/base.njk
 templateClass: tmpl-post
 ---
 
-<article class="h-entry center w-100 w-80-l pa3 pa5-ns">
+<article class="h-entry post center w-100 w-80-l pa3 pa5-ns">
   <h1 class="p-name">{{ title }}</h1>
   <div class="e-content">  {{ content | safe }}
 </div>
+<hr>
+{% include "webmentionlist.njk" %}
+{% include "components/follow.njk" %}
+
 
 </article>
 
-{% include "webmentionlist.njk" %}
 
-<hr>
 
-{% include "components/follow.njk" %}
+
 

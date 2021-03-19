@@ -15,7 +15,7 @@ eleventyNavigation:
   <br/>
 
   <div class="dib v-mid">
-    <p>Filter:</p>
+    <p>Filter by:</p>
   </div>
   <div class="tab dib v-mid">
     <button class="tablinks ml2" onclick="openCity(event, 'All')" id="defaultOpen">All</button>
@@ -30,7 +30,10 @@ eleventyNavigation:
 
   <div id="All" class="tabcontent">
     <br/>
-    <p>🛠 <b>All</b> notes Coming Soon</p>
+    {% set postslist = collections.posts %}
+    {% for post in postslist | reverse %}
+     {% include "posts-list.njk" %}
+    {% endfor %}
 
     <br/>
 
