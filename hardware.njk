@@ -10,6 +10,7 @@ permalink: /hardware/
   <p>{{description}}</p>
 
   {% set postslist = collections.hardware %}
-  {% set postslistCounter = collections.hardware | length %}
-  {% include "posts-preview.njk" %}
+  {% for post in postslist | reverse %}
+   {% include "posts-list.njk" %}
+  {% endfor %}
 </section>

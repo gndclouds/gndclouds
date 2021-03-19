@@ -4,11 +4,9 @@ layout: layouts/base.njk
 <section class="fl w-100 pa3 ph4-m ph6-l">
 <h3><span class="section-icon ph1 ph3-ns">☁️</span></<h3>
 <br /> <br />
-<h3 class="ph1 ph3-ns"><span id="indiepreneuring" onclick="define_indie()">Hi, I'm Will</h3>
+<h3 class="ph1 ph3-ns"><span id="indiepreneuring" onclick="define_indie()">Heya, </h3>
  <br/>
- <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">I split my time between freelancing and building tools for the indie web tools at Tiny Factories.
-
-</p>
+ <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">I'm building tools for the indie-web at <a href="https://tinyfactories.space">Tiny Factories</a> while working on strategies for climate mitigation. My past roles have been a mix of Research, Design, and Development at research labs within IDEO, PARC, Intel, Fjord, and Protocol Labs.</p>
 </section>
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 10vh;">
   <h3><span class="section-icon ph1 ph3-ns">🌱</span></<h3>
@@ -31,13 +29,13 @@ function define_indie() {
 </script>
   {% set postslist = collections.projects | head(-4) %}
   {% set postslistCounter = collections.projects | length %}
-  <!-- {% include "projects-preview.njk" %} -->
-  <div class="ph1 ph3-ns">
-  <!-- <div class="dib v-mid "><p>Filter:</p></div>
+  {% include "projects-preview.njk" %}
+  <!-- <div class="ph1 ph3-ns">
+ <div class="dib v-mid "><p>Filter:</p></div>
   <div class="tab dib v-mid ">
     <button class="tablinks ml2" onclick="openCity(event, 'Recent' )" id="defaultOpen">Recent</button>
     <button class="tablinks ml2" onclick="openCity(event, 'Favorites')">Favorites</button>
-  </div> -->
+  </div>-->
   <div id="Recent" class="tabcontent">
     {% set postslist = collections.projects | head(-6) %}
     {% set postslistCounter = collections.projects | length %}

@@ -10,7 +10,8 @@ permalink: /dev/
   <p>{{description}}</p>
 
   {% set postslist = collections.dev %}
-  {% set postslistCounter = collections.dev | length %}
-  {% include "dev-list.njk" %}
+  {% for post in postslist | reverse %}
+   {% include "posts-list.njk" %}
+  {% endfor %}
 </section>
 

@@ -7,7 +7,7 @@
     "subtitle": "hi, this is the blog of gndclouds",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
-    "id": "https://gndclouds.cc"
+    "id": "https://gndclouds.cc/"
   },
   "jsonfeed": {
     "path": "/feed/feed.json",
