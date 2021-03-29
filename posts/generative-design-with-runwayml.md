@@ -2,7 +2,10 @@
 title: Generative Design with Runwayml
 description: Field notes on infrastructure, urban planning, and architecture details from the streets of Taiwan.
 date: 2021-03-14
-tags: [machine learning, generative design, people machine collobration]
+tags:
+  - machine learning
+  - generative design
+  - people machine collobration
 layout: layouts/post.njk
 ---
 
