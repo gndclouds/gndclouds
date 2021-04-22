@@ -1,7 +1,7 @@
 ---
 title: It's time for a new Bauhaus.
 description: The Bauhaus school was founded over a hundred years ago
-date: 2021-01-03
+date: 2021-04-01
 tags:
   -
 layout: layouts/post.njk

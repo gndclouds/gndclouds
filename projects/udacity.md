@@ -1,7 +1,7 @@
 ---
 title: Udacity
 description:
-hero:
+hero: /img/udacity/udacity-hero.png
 externalUrl:
 flag: highlight
 date: 2019-03-01
