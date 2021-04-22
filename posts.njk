@@ -1,5 +1,5 @@
 ---
-title: Notes
+title: Thoughts
 description: Spaces of thought
 layout: layouts/base.njk
 permalink: /notes/
@@ -42,7 +42,13 @@ eleventyNavigation:
   <div id="Learning-Logs" class="tabcontent">
     <br/>
     <p>🛠 <b>Learning Logs</b> Coming Soon</p>
-
+  {% set postslist = collections.posts %}
+  {% for post in postslist | reverse %}
+    {% if post.tags === "log" %}
+      {% include "projects-list.njk" %}
+     {% else %}
+  {% endif %}
+  {% endfor %}
     <br/>
 
   </div>
