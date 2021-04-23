@@ -9,8 +9,14 @@ permalink: /experiments/
   <h1>{{title}}</h1>
   <p>{{description}}</p>
 
-  {% set postslist = collections.experiments %}
+  {% set postslist = collections.design %}
   {% for post in postslist | reverse %}
    {% include "posts-list.njk" %}
   {% endfor %}
 </section>
+
+
+
+Make a series of filter includes!?
+
+IE import this file sd [FILE NAME i] into the main file

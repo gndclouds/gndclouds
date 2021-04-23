@@ -8,14 +8,21 @@ const markdownItAnchor = require("markdown-it-anchor");
 const uuidv4 = require("uuid");
 const searchFilter = require("./filters/searchFilter");
 
-module.exports = function (eleventyConfig) {
+module.exports = function(eleventyConfig) {
   eleventyConfig.addPlugin(pluginRss);
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
   eleventyConfig.addPlugin(pluginNavigation);
 
   eleventyConfig.setDataDeepMerge(true);
 
+
   eleventyConfig.addLayoutAlias("post", "layouts/post.njk");
+  // Filters
+
+  eleventyConfig.addFilter("filterTagList", tags => {
+    // should match the list in tags.njk
+    return (tags || []).filter(tag => ["all", "nav", "post", "posts"].indexOf(tag) === -1);
+  })
 
   eleventyConfig.addFilter("readableDate", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
@@ -45,13 +52,13 @@ module.exports = function (eleventyConfig) {
     return array.slice(0, n);
   });
 
-  eleventyConfig.addCollection("tagList", function (collection) {
+  eleventyConfig.addCollection("tagList", function(collection) {
     let tagSet = new Set();
-    collection.getAll().forEach(function (item) {
+    collection.getAll().forEach(function(item) {
       if ("tags" in item.data) {
         let tags = item.data.tags;
 
-        tags = tags.filter(function (item) {
+        tags = tags.filter(function(item) {
           switch (item) {
             // this list should match the `filter` list in tags.njk
             case "all":
@@ -95,7 +102,7 @@ module.exports = function (eleventyConfig) {
   // Browsersync Overrides
   eleventyConfig.setBrowserSyncConfig({
     callbacks: {
-      ready: function (err, browserSync) {
+      ready: function(err, browserSync) {
         const content_404 = fs.readFileSync("_site/404.html");
 
         browserSync.addMiddleware("*", (req, res) => {
@@ -133,9 +140,9 @@ module.exports = function (eleventyConfig) {
       if (html) {
         // really long html mentions, usually newsletters or compilations
         entry.content.value =
-          html.length > 2000
-            ? `mentioned this in <a href="${entry["wm-source"]}">${entry["wm-source"]}</a>`
-            : sanitizeHTML(html, allowedHTML);
+          html.length > 2000 ?
+          `mentioned this in <a href="${entry["wm-source"]}">${entry["wm-source"]}</a>` :
+          sanitizeHTML(html, allowedHTML);
       } else {
         entry.content.value = sanitizeHTML(text, allowedHTML);
       }
@@ -161,7 +168,6 @@ module.exports = function (eleventyConfig) {
       .sort(orderByDate)
       .map(clean);
   });
-
   eleventyConfig.addCollection("posts", (collection) => {
     return [...collection.getFilteredByGlob("./posts/**/*.md")];
   });

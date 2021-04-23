@@ -1,6 +1,6 @@
 ---
 title: Generative Design with Runwayml
-description: Field notes on infrastructure, urban planning, and architecture details from the streets of Taiwan.
+description:
 date: 2021-03-14
 externalURL:
 tags:
@@ -9,6 +9,8 @@ tags:
   - people machine collobration
 layout: layouts/post.njk
 ---
+For a few months, I have read and made a few small machine learning projects to understand the space a bit more.
+<!-- excerpt -->
 
 For a few months, I have read and made a few small machine learning projects to understand the space a bit more. One way to keep these experiments quick has been to use [RunwayML](http://runwayml.com/) for some low-level design tasks. Like creating textures, gradients, or iconography with various levels of success. This post is a mini summary of what I have learned and what it may say about the future of generative design tools and workflows as of 2020. For each exploration, I needed to start with a dataset to feed to the computer. In this example, I will be training a StyleGAN model to make gradients.
 &nbsp;

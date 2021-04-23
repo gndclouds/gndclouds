@@ -1,18 +1,13 @@
 <article class="fl w-100">
-{% if post.data.externalURL != null %}
-<a class="db pv4  ph0-l no-underline black dim" href="{{ post.data.externalURL | url }}">
-
- <h3 class="w-100">{{post.data.title }} ↗</h3>
- <br />
- <p class="w-100">{{post.date | displayDateYearMonthDay }}</p>
-</a>
-{% else %}
-<a class="db pv4  ph0-l no-underline black dim" href="{{ post.url | url }}">
- <h3 class="w-100">{{post.data.title }}</h3>
- <br />
- <p class="w-100">{{post.date | displayDateYearMonthDay }}</p>
-</a>
-{% endif %}
-
+  {% if post.data.externalURL != null %}
+  <a class="db pv4  ph0-l no-underline black dim" href="{{ post.data.externalURL | url }}">
+    <h3 class="w-100">{{post.data.title }} ↗</h3>
+    {% else %}
+    <a class="db pv4  ph0-l no-underline black dim" href="{{ post.url | url }}">
+      <h3 class="w-100">{{post.data.title }}</h3>
+      {% endif %}
+      <br />
+    </a>
+    <p class="w-100">{{post.date | displayDateYearMonthDay }}</p>
 
 </article>

@@ -1,0 +1,7 @@
+{% set postslist = collections.research | head(-4) %}
+{% set postslistCounter = collections.research | length %}
+
+{% for post in postslist | reverse %}
+ {% include "projects-list.njk" %}
+{% endfor %}
+

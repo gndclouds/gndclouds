@@ -16,7 +16,7 @@
 /* COLORS */
 @media (prefers-color-scheme: light) {
   :root {
-    --background: #ffffff;
+    --background: #ebf5f0;
     --font-main: #000000;
     --font-links: #198948;
     --font-highlight: #4eaa4c;
@@ -38,7 +38,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffffff;
+    --background: #ebf5f0;
     --font-main: #000000;
     --font-links: #198948;
     --font-highlight: #4eaa4c;
@@ -146,10 +146,10 @@ iframe {
 
 h1 h2 h3 h4 {
   font-family: 'IBM Plex Serif', sans-serif, "Segoe UI Emoji", "Apple Color Emoji";
-
 }
 h1 {
   font-family: 'IBM Plex Serif', sans-serif, "Segoe UI Emoji", "Apple Color Emoji";
+  font-weight: normal;
 
   font-size: 2rem;
   line-height: 1.4;
@@ -159,6 +159,7 @@ h1 {
 
 h2 {
   font-family: 'IBM Plex Serif', sans-serif, "Segoe UI Emoji", "Apple Color Emoji";
+font-weight: normal;
 
   font-family: "ISO";
   font-size: 1.5rem;
@@ -330,4 +331,18 @@ button:hover {
   display: none;
   /* padding: 6px 12px; */
   border-top: none;
+}
+
+.filter-toolbar{
+  border-radius: 3px 3px 3px 3px;
+
+  background-color: var(--white);
+
+}
+
+
+
+/*Brands*/
+.brand-ideo{
+  height: 14px
 }

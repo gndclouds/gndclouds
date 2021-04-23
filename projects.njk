@@ -1,83 +1,82 @@
 ---
 title: Things
 layout: layouts/base.njk
-permalink: /projects/
-eleventyNavigation:
-  key: projects
-  order: 2
+permalink: /things/
 ---
 
 <section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 10vh;">
-<h1>{{title}}</h1>
-<br/>
-<p>Recent work has focused on building small tools for the indie web through Tiny Factories and climate research projects with oh dot zero. I have chosen to grow generalist skills across research, design, and development while becoming a specialist in specific topics like distributed biomimetic systems, software that enables user agency, and climate research.</p>
-<br/>
-  <div class="dib v-mid ">
-    <p>Filter by:</p>
-  </div>
-  <div class="tab dib v-mid ">
-  <button class="tablinks" onclick="openCity(event, 'All')" id="defaultOpen">Everything</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Indieweb')">Indieweb</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Ambient-Hardware')">Ambient Hardware</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Climate')">Climate</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Research')">Research</button>
-  </div>
-  <div id="All" class="tabcontent">
-    <br  />
-  <p><b>All</b> projects are a mix of research, design, and development.
-</p>
-  <br  />
-    {% set postslist = collections.projects %}
-    {% for project in postslist | reverse %}
-     {% include "projects-list.njk" %}
-    {% endfor %}
-  </div>
-  <div id="Indieweb" class="tabcontent">
-    <br  />
-    <p><b>Indieweb</b> projects focus on personal tools and small communities with a focus on building for the members of Tiny Factories.
-</p>
-    <br  />
-    {% set postslist = collections.projects %}
-    {% for project in postslist | reverse %}
-      {% if project.data.type === "indieweb" %}
-        {% include "projects-list.njk" %}
-       {% else %}
-    {% endif %}
-    {% endfor %}
-  </div>
-
-  <div id="Ambient-Hardware" class="tabcontent">
-  <br  />
-  <p><b>Ambient Hardware</b> helps get me away from the screen and back into the real world. These projects have been less frequent since I have been away from my lab/studio this past year.</p><br  />
-   {% set postslist = collections.projects %}
-   {% for project in postslist | reverse %}
-     {% if project.data.type === "hardware" %}
-       {% include "projects-list.njk" %}
-      {% else %}
-   {% endif %}
-   {% endfor %}
-  </div>
-
-  <div id="Climate" class="tabcontent">
-  <br  />
-  <p><b>Climate</b> work will start to grow as a section over this next year. Area's I would love to push further are urban systems and biomimetic materials.</p><br />
-  {% set postslist = collections.projects %}
-  {% for project in postslist | reverse %}
-    {% if project.data.type === "climate" %}
-      {% include "projects-list.njk" %}
-     {% else %}
-  {% endif %}
-  {% endfor %}
-  </div>
-  <div id="Research" class="tabcontent">
-    <br  />
-    <p><b>Research things</b> across sectors and from consulting work and trend reports</p><br  />
-      {% set postslist = collections.projects %}
-      {% for project in postslist | reverse %}
-        {% if project.data.type === "research" %}
-          {% include "projects-list.njk" %}
-         {% else %}
-      {% endif %}
-      {% endfor %}
+  <h1>{{title}}</h1>
+  <br />
+  <p>Recent work has focused on building small tools for the indie web through Tiny Factories and climate research projects with oh dot zero. I have chosen to grow generalist skills across research, design, and development while becoming a specialist in specific topics like distributed biomimetic systems, software that enables user agency, and climate research.</p>
+  <br />
+  <div class="filter-toolbar">
+    <p class="dib v-mid ml2 mv1">Filters:</p>
+    <div class="tab dib v-mid ">
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'All')" id="defaultOpen">All</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Design')">Design</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Research')">Research</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Development')">Development</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Experiments')">Experiments</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Indieweb')">Indieweb</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Hardware')">Hardware</button>
     </div>
+  </div>
+
+  <div id="All" class="tabcontent">
+    <br />
+    <p><b>All</b> projects are a mix of research, design, and development.
+    </p>
+    <br />
+    {% set postslist = collections.projects %}
+    {% for project in postslist | reverse %}
+    {% include "projects-list.njk" %}
+    {% endfor %}
+  </div>
+  <div id="Design" class="tabcontent">
+    <br />
+    {% set postslist = collections.design %}
+    {% for project in postslist | reverse %}
+    {% include "projects-list.njk" %}
+    {% endfor %}
+  </div>
+
+  <div id="Research" class="tabcontent">
+    <br />
+    {% set postslist = collections.research %}
+    {% for project in postslist | reverse %}
+    {% include "projects-list.njk" %}
+    {% endfor %}
+  </div>
+
+  <div id="Development" class="tabcontent">
+    <br />
+    {% set postslist = collections.development %}
+    {% for project in postslist | reverse %}
+    {% include "projects-list.njk" %}
+    {% endfor %}
+  </div>
+
+  <div id="Experiments" class="tabcontent">
+    <br />
+    {% set postslist = collections.experiments %}
+    {% for project in postslist | reverse %}
+    {% include "projects-list.njk" %}
+    {% endfor %}
+  </div>
+
+  <div id="Indieweb" class="tabcontent">
+    <br />
+    {% set postslist = collections.indieweb %}
+    {% for project in postslist | reverse %}
+    {% include "projects-list.njk" %}
+    {% endfor %}
+  </div>
+
+  <div id="hardware" class="tabcontent">
+    <br />
+    {% set postslist = collections.projects %}
+    {% for project in postslist | reverse %}
+    {% include "projects-list.njk" %}
+    {% endfor %}
+  </div>
 </section>

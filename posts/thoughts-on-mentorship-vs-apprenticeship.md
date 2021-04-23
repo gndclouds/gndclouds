@@ -2,9 +2,10 @@
 title: Thoughts on Mentorship vs Apprenticeship
 description: My curiousocity spans a lot of topics which I ocaassionally write about. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments, and Guides.
 date: 2020-09-01
+externalURL: https://reading.supply/post/19995642-74dd-4af6-b98b-b444b1b00b49
 tags:
-  - mentorship
-  - log
+  - personal growth
+  - notes
 layout: layouts/post.njk
 ---
 
