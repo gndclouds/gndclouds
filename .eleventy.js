@@ -8,6 +8,7 @@ const markdownItAnchor = require("markdown-it-anchor");
 const uuidv4 = require("uuid");
 const searchFilter = require("./filters/searchFilter");
 
+
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPlugin(pluginRss);
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
@@ -15,10 +16,17 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.setDataDeepMerge(true);
 
+    eleventyConfig.setFrontMatterParsingOptions({
+      excerpt: true,
+      excerpt_separator: "<!-- excerpt -->",
+      excerpt_alias: 'my_custom_excerpt'
+    });
 
   eleventyConfig.addLayoutAlias("post", "layouts/post.njk");
   // Filters
-
+eleventyConfig.addFilter("md", function (content = "") {
+  return markdownIt({ html: true }).render(content);
+});
   eleventyConfig.addFilter("filterTagList", tags => {
     // should match the list in tags.njk
     return (tags || []).filter(tag => ["all", "nav", "post", "posts"].indexOf(tag) === -1);
