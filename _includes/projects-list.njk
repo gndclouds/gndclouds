@@ -1,21 +1,17 @@
-{% for project in postslist | reverse %}
-
 <article class="fl w-100 w-50-m w-50-l w-50-ns pa1 pa3-ns">
-  <img class="fl w-100" src="" style="height:200px; background-image:url({{project.data.hero }}); background-position: center; background-repeat: no-repeat; background-size: cover; "/>
-  {% if project.data.externalURL != null %}
+  <img class="fl w-100 pb3" src="{{project.data.hero }}" />
 
-  <a class="db pv4  ph0-l no-underline black dim" href="{{ project.data.externalURL | url }}">
-    <h3 class="w-100">{{project.data.title }} ↗</h3>
+  {% if project.data.externalURL != null %}
+  <a class="no-underline black dim" href="{{ project.data.externalURL | url }}">
+    <h3 class="dib v-mid w-50">{{project.data.title }} ↗</h3>    <p class="dib v-mid w-50">{{project.date | displayDateYear }}</p>
+
     {% else %}
     <a class="db pv4  ph0-l no-underline black dim" href="{{ project.url | url }}">
-      <h3 class="w-100">{{project.data.title }}</h3>
+      <h3 class="dib v-mid w-50">{{project.data.title }}</h3> <p class="dib v-mid w-50">{{project.date | displayDateYear }}</p>
       {% endif %}
       <p class="w-100">{{project.data.description }}</p>
 
       <br />
     </a>
-    <div class="fl"><p class="fl w-50">{{project.date | displayDateYear}}</p>    <p class="fr w-50">{{project.date | displayDateYear}}</p></div>
-
 
 </article>
-{% endfor %}

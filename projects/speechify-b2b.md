@@ -3,7 +3,6 @@ title: Screen Reader B2B Market
 description: This report is a high level summery of how Speechify would fit into the various sub markets of the B2B marketplace.
 date: 2019-11-24
 tags:
-  - research
   - accessibility
 layout: layouts/post.njk
 ---

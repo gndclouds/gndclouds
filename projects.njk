@@ -4,7 +4,7 @@ layout: layouts/base.njk
 permalink: /things/
 ---
 
-<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 10vh;">
+<section class="fl w-100 pa3" style="margin-top: 10vh;">
   <h1>{{title}}</h1>
   <br />
   <p>Recent work has focused on building small tools for the indie web through Tiny Factories and climate research projects with oh dot zero. I have chosen to grow generalist skills across research, design, and development while becoming a specialist in specific topics like distributed biomimetic systems, software that enables user agency, and climate research.</p>
@@ -27,39 +27,39 @@ permalink: /things/
     <p><b>All</b> projects are a mix of research, design, and development.
     </p>
     <br />
-    {% set postslist = collections.projects %}
-    {% for project in postslist | reverse %}
+    {% set projectslist = collections.projects %}
+    {% for project in projectslist | reverse %}
     {% include "projects-list.njk" %}
     {% endfor %}
   </div>
   <div id="Design" class="tabcontent">
     <br />
-    {% set postslist = collections.design %}
-    {% for project in postslist | reverse %}
+    {% set projectslist = collections.design %}
+    {% for project in projectslist | reverse %}
     {% include "projects-list.njk" %}
     {% endfor %}
   </div>
 
   <div id="Research" class="tabcontent">
     <br />
-    {% set postslist = collections.research %}
-    {% for project in postslist | reverse %}
+    {% set projectslist = collections.research %}
+    {% for project in projectslist | reverse %}
     {% include "projects-list.njk" %}
     {% endfor %}
   </div>
 
   <div id="Development" class="tabcontent">
     <br />
-    {% set postslist = collections.development %}
-    {% for project in postslist | reverse %}
+    {% set projectslist = collections.development %}
+    {% for project in projectslist | reverse %}
     {% include "projects-list.njk" %}
     {% endfor %}
   </div>
 
   <div id="Experiments" class="tabcontent">
     <br />
-    {% set postslist = collections.experiments %}
-    {% for project in postslist | reverse %}
+    {% set projectslist = collections.experiments %}
+    {% for project in projectslist | reverse %}
     {% include "projects-list.njk" %}
     {% endfor %}
   </div>

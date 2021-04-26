@@ -6,11 +6,9 @@ externalUrl: https://getspeechify.com
 flag: highlight
 date: 2020-03-01
 state:
-type: research
 tags:
-  - highlight
-  - workshop
   - research
+  - workshop
 layout: layouts/project.njk
 ---
 

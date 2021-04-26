@@ -2,22 +2,21 @@
 layout: layouts/base.njk
 templateClass: tmpl-post
 ---
-<article  class="center w-100 w-60-l pa3 pa5-ns style="margin-top: 10vh;">
-<header class=""  >
-<div class="fl w-100 w-50-ns"><img src={{heroImage}}/></div>
-<div class="fl w-100 w-50-ns">
-<h3 class="measure-narrow mv0">{{ title }}</h3>
-<br/>
-<p class="">{{ description }}</p>
-<br/>
-<time class="mb2 dib ttu tracked">        {{date | displayDateYearMonthDay }}
-</time></div>
-</header>
+<article class="center w-100 pa3" style="margin-top: 10vh;">
+  <header class="">
+    <img class="dib v-mid-ns" src="{{ hero }}" />
+    <div class="dib v-mid-ns pl3-ns ">
+      <h1 class="">{{ title }}</h1>
+      <p class="">{{ description }}</p>
+      <time class=""> {{date | displayDateYearMonthDay }}
+      </time>
+    </div>
+  </header>
+  <br  />
 
-<div class="fl w-100">{{ content | safe }}</div>
+<section class="fl w-100">{{ content | safe }}</section>
 </article>
-{% include "webmentionlist.njk" %}
-{% include "components/related.njk" %}
+<!-- {% include "webmentionlist.njk" %} -->
+<!-- {% include "components/related.njk" %} -->
 
-<hr>
 {% include "components/follow.njk" %}

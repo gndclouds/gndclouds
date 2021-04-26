@@ -1,7 +1,0 @@
-{% set postslist = collections.design | head(-4) %}
-{% set postslistCounter = collections.design | length %}
-
-{% for post in postslist | reverse %}
- {% include "posts-list.njk" %}
-{% endfor %}
-
