@@ -9,7 +9,7 @@ tags:
 layout: layouts/post.njk
 ---
 
-One of the joys of building [Tiny Factoreis](https://tinyfactories.space) has been working with different tiny teams of people to build and ship projects. The more projects we have worked on the better I feel about gauging what is needed for us to make the collaboration successful. I wanted to summarize some of the principles that have become most helpful from our past collaborations:
+One of the joys of building [Tiny Factoreis](https://tinyfactories.space) has been working with different tiny teams of people to build and ship projects.<!-- excerpt --> The more projects we have worked on the better I feel about gauging what is needed for us to make the collaboration successful. I wanted to summarize some of the principles that have become most helpful from our past collaborations:
 <br/>
 **Independent** - The ability to take on ownership of a task, and find the best solution within their means.
 <br/>

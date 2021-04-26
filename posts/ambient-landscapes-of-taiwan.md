@@ -9,7 +9,7 @@ tags:
 layout: layouts/post.njk
 ---
 
-Field notes of infrastructure, urban planning, and architecture details from the streets of Taiwan. (A thread!)
+Field notes of infrastructure, urban planning, and architecture details from the streets of Taiwan. (A thread!)<!-- excerpt -->
 
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Field notes of infrastructure, urban planning, and architecture details from the streets of Taiwan. (A thread!)</p>&mdash; William Felker (@gndclouds) <a href="https://twitter.com/gndclouds/status/1327600966628044806?ref_src=twsrc%5Etfw">November 14, 2020</a></blockquote>

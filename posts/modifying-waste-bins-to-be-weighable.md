@@ -10,10 +10,7 @@ tags:
   - climate
 layout: layouts/post.njk
 ---
-
-_This note is a personal exercise for me to think more actively about climate change. You can see a full list of related thoughts _[_here_](http://gndclouds.cc)_._
-
-A few months back, I learned about how [Recology](https://www.recology.com), a San Francisco based recycling company, uses computer vision to help [sort our waste](https://www.recyclingproductnews.com/article/32257/recology-adds-max-ai-robotic-sorting-technology-to-pier-96-recycling-center-in-san-francisco). As a result, I did a mini-exploration into how we might hold people more accountable for the waste they generate by charging by weight or ideally by materials with the help of computer vision. The idea would be to put a camera system on the truck to track which address is discarding the most waste, recycling, or compost. Then when the material is deposited into the truck, look to see which corporations are contributing the most to the local waste system.
+A few months back, I learned about how [Recology](https://www.recology.com), a San Francisco based recycling company, uses computer vision to help [sort our waste](https://www.recyclingproductnews.com/article/32257/recology-adds-max-ai-robotic-sorting-technology-to-pier-96-recycling-center-in-san-francisco). <!-- excerpt -->As a result, I did a mini-exploration into how we might hold people more accountable for the waste they generate by charging by weight or ideally by materials with the help of computer vision. The idea would be to put a camera system on the truck to track which address is discarding the most waste, recycling, or compost. Then when the material is deposited into the truck, look to see which corporations are contributing the most to the local waste system.
 
 **Modifying Waste Bins**
 

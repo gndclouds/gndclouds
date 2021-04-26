@@ -7,7 +7,7 @@ tags:
 layout: layouts/post.njk
 ---
 
-In 2018 I was working on an [energy grant](https://www.cca.edu/newsroom/2018-impact-award-winners/) focused on Affordable and Sustainable Living Environments throughout the one-year research project, we generated lots of directions around new and combined methods for solar capture. We ended up focusing on other areas of Sustainable Living and didn't push the solar concepts further in the end. But after seeing the [James Dyson Awards](https://www.jamesdysonaward.org) 2020 climate award went to [AUREUS](https://www.jamesdysonaward.org/en-US/2020/project/aureus-aurora-renewable-energy-uv-sequestration/), a new type of solar panel which captures UV-light I wanted to give them another look. Here are seven possible methods to increase the efficiency of solar panels through the increased capture of waste heat and light.
+In 2018 I was working on an [energy grant](https://www.cca.edu/newsroom/2018-impact-award-winners/) focused on Affordable and Sustainable Living Environments throughout the one-year research project,<!-- excerpt --> we generated lots of directions around new and combined methods for solar capture. We ended up focusing on other areas of Sustainable Living and didn't push the solar concepts further in the end. But after seeing the [James Dyson Awards](https://www.jamesdysonaward.org) 2020 climate award went to [AUREUS](https://www.jamesdysonaward.org/en-US/2020/project/aureus-aurora-renewable-energy-uv-sequestration/), a new type of solar panel which captures UV-light I wanted to give them another look. Here are seven possible methods to increase the efficiency of solar panels through the increased capture of waste heat and light.
 &nbsp;
 &nbsp;
 

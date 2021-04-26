@@ -10,7 +10,7 @@ layout: layouts/post.njk
 
 _This article was backdated to represent when I started a personal information system in practice._
 
-Through college, my system was largely the [same as in high school](gndclouds.cc/personal-information-system-v1). But I made some small tweaks in the structure of my files within finder largely because it was not practical to keep a large video or Sketch files in Evernote. So I created a new structure and started to keep content outside of Evernote except for minor notes from class. I also found that accessing some content types from Evernote was hard because I was using it for a way to much. So I started to move research, inspiration, and other content I wanted to save in [Are.na](https://are.na) and implemented the new v1 Emoji Key.
+Through college, my system was largely the [same as in high school](gndclouds.cc/personal-information-system-v1). But I made some small tweaks in the structure of my files within finder largely because it was not practical to keep a large video or Sketch files in Evernote. <!-- excerpt -->So I created a new structure and started to keep content outside of Evernote except for minor notes from class. I also found that accessing some content types from Evernote was hard because I was using it for a way to much. So I started to move research, inspiration, and other content I wanted to save in [Are.na](https://are.na) and implemented the new v1 Emoji Key.
 
 **File Structure:**
 General: org.subcategory.details/
