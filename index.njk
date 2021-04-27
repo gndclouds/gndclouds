@@ -25,13 +25,7 @@ layout: layouts/base.njk
     <br /> -->
   <h2 class="ph1 ph3-ns"><span id="hello" onclick="define_hello()">☁️ Heya, </h2>
   <br />
-  <p class="ph1 ph3-ns">I co-founded <a href="https://tinyfactories.space">Tiny Factories</a>, a studio, and community which helps establish individuals' creative footings. In my spare time, I read climate research with a focus on better urban planning and biodegradable waste systems. My past roles have been a mix of research, design, and frontend development at research labs within <span class="brand-ideo"><svg class="brand-ideo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283 65" alt="IDEO">
-        <path d="M104.5 2.6H75.4v59.6h28.6c18.5-0.2 31.2-13.2 31.2-29.9C135.2 15.8 122.7 3.1 104.5 2.6zM104 52V52H86.1V12.9h18.1c11.7 0.3 19.4 8.5 19.4 19.6C123.5 43.7 115.8 51.8 104 52z"></path>
-        <polygon points="59.6 13.1 59.6 2.6 0 2.6 0 13.1 24.5 13.1 24.5 51.8 0 51.8 0 62.3 59.6 62.3 59.6 51.8 35.2 51.8 35.2 13.1 "></polygon>
-        <polygon points="208.4 13.1 208.4 2.6 148.2 2.6 148.2 62.3 208.4 62.3 208.4 51.8 159 51.8 159 37.7 197.5 37.7 197.5 27.2 159 27.2 159 13.1 "></polygon>
-        <path d="M250.7 0c-18.1 0-32.8 14.5-32.8 32.4 0 17.9 14.7 32.4 32.8 32.4 18.1 0 32.8-14.5 32.8-32.4C283.5 14.5 268.8 0 250.7 0zM250.7 53.7c-11.8 0-21.5-9.5-21.5-21.2 0-11.7 9.6-21.2 21.5-21.2 11.8 0 21.5 9.5 21.5 21.2C272.2 44.2 262.5 53.7 250.7 53.7z"></path>
-      </svg>
-    </span>, PARC, Intel, Fjord, and Protocol Labs.
+  <p class="ph1 ph3-ns">I co-founded <a href="https://tinyfactories.space">Tiny Factories</a>, a studio, and community which helps establish individuals' creative footings. In my spare time, I read climate research with a focus on better urban planning and biodegradable waste systems. My past roles have been a mix of research, design, and frontend development at research labs within IDEO, PARC, Intel, Fjord, and Protocol Labs.
   </p>
 
 </section>
@@ -88,7 +82,7 @@ layout: layouts/base.njk
   </div>
   <div id="Experiments" class="tabcontent">
    {% set projectslist = collections.experiment  | head(-4) %}
-   {% for post in projectslist | reverse %}
+   {% for project in projectslist | reverse %}
    {% include "projects-list.njk" %}
    {% endfor %}
   </div>
@@ -133,27 +127,27 @@ layout: layouts/base.njk
     <br /> -->
   <h2 class="ph1 ph3-ns">🔗 Across the Internet</h2>
   <br />
-  <p class="ph1 ph3-ns" style="margin-bottom: 3vh">I explore a lot of tools, projects, and serviecs which can make it hard to put a record of my work in one place. I maintain a daily feed of my digital footprint and below you can find a few places I like to dwell.</p>
+  <p class="ph1 ph3-ns" style="margin-bottom: 3vh">I explore a lot of tools, projects, and services which can make it hard to put a record of my work in one place. I maintain a daily feed of my digital footprint and below you can find a few places I like to dwell.</p>
 
   <div>
     <div class="fl w-100 w-50-ns pa1 pa3-ns">
       <p><b>🌐 Other Spaces</b></p>
-      <p class="fl w-100"><a href="https://tiny.garden/user/MQc2aPSY0763">Tiny Garden</a> is an experimental space which collects my digital presence in one palace.
+      <p class="pv3"><a href="https://tiny.garden/user/MQc2aPSY0763">Tiny Garden</a> is an experimental space which collects my digital presence in one palace.
       </p>
-      <p class="fl w-100"><a href="https://multiverse.plus/gndclouds">Multiverse</a> is a visual authoring environment where I write more visual essays.</p>
-      <p class="fl w-100"><a href="https://beta.readng.co/user/gndclouds">Books</a> I'm reading</p>
-      <p class="fl w-100"><a href="https://www.notion.so/tinyfactories/e73aa12c27434407b8bd0a480ff99947?v=29d2da1d06044dc995447461c391fd7b">Questions</a> is a list of open questions I have.</p>
-      <p class="fl w-100"><a href="https://www.notion.so/tinyfactories/aaf1ba5708e44ff5a7f35b9d47aca92e?v=2a66246f3c78412a9c03efb7aea632d9">Open Project Parking lot</a> is a collections of concrete and scattered ideas which I may or may-not make some day.
+      <p class="pv3"><a href="https://multiverse.plus/gndclouds">Multiverse</a> is a visual authoring environment where I write more visual essays.</p>
+      <p class="pv3"><a href="https://beta.readng.co/user/gndclouds">Books</a> I'm reading</p>
+      <p class="pv3"><a href="https://www.notion.so/tinyfactories/e73aa12c27434407b8bd0a480ff99947?v=29d2da1d06044dc995447461c391fd7b">Questions</a> is a list of open questions I have.</p>
+      <p class="pv3"><a href="https://www.notion.so/tinyfactories/aaf1ba5708e44ff5a7f35b9d47aca92e?v=2a66246f3c78412a9c03efb7aea632d9">Parking lot</a> is a collections of concrete and scattered ideas which I may or may-not make some day.
       </p>
     </div>
 
     <div class="fl w-100 w-50-ns pa1 pa3-ns">
       <p><b>🤝 Open Collaborations:</b></p>
-      <p class="fl w-100"> <a href="https://commons.vercel.app">Commons</a> is a</p>
-      <p class="fl w-100"> <a href="/treehouse/">Treehouse</a>
+      <p class="pv3"> <a href="https://commons.vercel.app">Playlist</a> is a tool for creating shared playlist of media.</p>
+      <p class="pv3"> <a href="/treehouse/">Treehouse</a> is a personalized dynamic-dashboard meant to be shown when you open a new browser tab.
       </p>
-      <p class="fl w-100"><a href="/tiny-hardware-club/">Tiny Hardware Club</a></p>
-      <p class="fl w-100"> <a href="/Ökohaus/">Ökohaus</a>
+      <p class="pv3"><a href="/tiny-hardware-club/">Tiny Hardware Club</a> helps catalog open hardware project and one day will make them into kits.</p>
+      <p class="pv3"> <a href="/Ökohaus/">Ökohaus</a> is a community focused on the climate in the spirit of a new Bauhaus.
       </p>
     </div>
 

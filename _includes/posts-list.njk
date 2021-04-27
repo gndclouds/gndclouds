@@ -11,7 +11,7 @@
       <h3 class="fl dib v-mid">{{post.data.title }}</h3>    <p class="fr dib v-mid gray">{{post.date | displayDateYearMonthDay }}</p>
       </div>
       {% endif %}
-      <p>{{post.data.my_custom_excerpt | md | safe }}</p>
+      <p class="preview-text">{{post.data.my_custom_excerpt | md | safe }}</p>
       <br />
     </a>
 
