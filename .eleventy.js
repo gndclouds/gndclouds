@@ -23,6 +23,8 @@ module.exports = function(eleventyConfig) {
     });
 
   eleventyConfig.addLayoutAlias("post", "layouts/post.njk");
+eleventyConfig.addLayoutAlias("project", "layouts/project.njk");
+
   // Filters
 eleventyConfig.addFilter("md", function (content = "") {
   return markdownIt({ html: true }).render(content);
@@ -179,6 +181,7 @@ eleventyConfig.addFilter("md", function (content = "") {
   eleventyConfig.addCollection("posts", (collection) => {
     return [...collection.getFilteredByGlob("./posts/**/*.md")];
   });
+
 
   return {
     templateFormats: ["md", "njk", "html", "liquid"],

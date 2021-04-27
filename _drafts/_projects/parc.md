@@ -7,10 +7,6 @@ flag:
 date: 2017-02-08
 state: archived
 tags:
-  - urban planning
-  - cities
-  - urbanism
-  - workshop
-  - research
+
 layout: layouts/project.njk
 ---

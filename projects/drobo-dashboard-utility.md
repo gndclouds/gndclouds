@@ -2,7 +2,7 @@
 title: Drobo Dashboard Mac App
 description: A quick one day redesign of the Drobo's native macOS app based on the update macOS design principles.
 hero: /img/drobo-dashboard/drobodashboardlight.png
-externalUrl: https://easy-chinese.now.sh
+externalUrl:
 date: 2019-03-30
 tags:
   - design

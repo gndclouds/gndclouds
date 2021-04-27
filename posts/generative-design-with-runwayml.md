@@ -2,7 +2,7 @@
 title: Generative Design with Runwayml
 description:
 date: 2021-03-14
-externalURL:
+externalUrl:
 tags:
   - machine learning
   - generative design

@@ -1,8 +1,10 @@
+
+
 <article class="fl w-100 w-50-m w-50-l w-50-ns pa1 pa3-ns">
   <img class="fl w-100 pb3" src="{{project.data.hero }}" />
 
-  {% if project.data.externalURL != null %}
-  <a class="no-underline black dim" href="{{ project.data.externalURL | url }}">
+{% if project.data.externalUrl  != null %}
+  <a class="no-underline black dim" href="{{ project.data.externalUrl | url }}">
     <div class="fl w-100">
 
     <h3 class="dib v-mid">{{project.data.title }} ↗</h3>    <p class="dib v-mid w-50">{{project.date | displayDateYear }}</p>
@@ -17,5 +19,4 @@
 
       <br />
     </a>
-
 </article>

@@ -2,7 +2,7 @@
 title: Modifying Waste Bins to be Weighable
 description:
 date: 2020-01-14
-externalURL: https://reading.supply/@gndclouds/20200114-c3qoxb
+externalUrl: https://reading.supply/@gndclouds/20200114-c3qoxb
 tags:
   - waste
   - systems

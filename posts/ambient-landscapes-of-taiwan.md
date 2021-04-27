@@ -2,7 +2,7 @@
 title: Ambient Landscapes of Taiwan
 description: Field notes on infrastructure, urban planning, and architecture details from the streets of Taiwan.
 date: 2020-11-14
-externalURL: https://twitter.com/gndclouds/status/1327600966628044806?s=20
+externalUrl: https://twitter.com/gndclouds/status/1327600966628044806?s=20
 tags:
   - Taiwan
   - Ambient Landscapes
