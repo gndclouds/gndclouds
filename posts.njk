@@ -1,73 +1,58 @@
 ---
-title: Notes
+title: Spaces of thought
 description: Spaces of thought
 layout: layouts/base.njk
 permalink: /notes/
-eleventyNavigation:
-  key: notes
-  order: 2
 ---
-<section class="fl w-100 pa3 ph4-m ph6-l" style="margin-top: 10vh;">
+<section class="fl w-100 pa3" style="margin-top: 10vh;">
   <h1>{{title}}</h1>
-  <br/>
+  <br />
   <p>My curiosity drives me to learn, read, and write. This blog is about a reflection of my mind and the mental threads I have been thinking about.
-</p>
-  <br/>
+  </p>
+  <br />
+  <div class="filter-toolbar">
+    <p class="dib v-mid ml2 mv1">Filters:</p>
+    <div class="tab dib v-mid ">
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'All')" id="defaultOpen">All</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Logs')">Logs</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Notes')">Notes</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Clips')">Clips</button>
 
-  <div class="dib v-mid">
-    <p>Filter by:</p>
+    </div>
   </div>
-  <div class="tab dib v-mid">
-    <button class="tablinks ml2" onclick="openCity(event, 'All')" id="defaultOpen">All</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Learning-Logs')">📮 Logs</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Dev-Notes')">👾 Dev</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Climate-Research')">🌻 Climate</button>
-    <button class="tablinks ml2" onclick="openCity(event, 'Experiments')">⚗️ Experiments</button>
-  </div>
-<br/>
-
-<br/>
-
+  <br />
+  <br />
   <div id="All" class="tabcontent">
-    <br/>
+    <!-- <p><b>All</b> </p> -->
     {% set postslist = collections.posts %}
+    {% for post in postslist | reverse %}
+    {% include "posts-list.njk" %}
+    {% endfor %}
+    <br />
+  </div>
+
+  <div id="Logs" class="tabcontent">
+    <p><b>Learning Logs</b>  coming soon.</p>
+    {% set postslist = collections.logs %}
     {% for post in postslist | reverse %}
      {% include "posts-list.njk" %}
     {% endfor %}
-
-    <br/>
-
   </div>
 
-  <div id="Learning-Logs" class="tabcontent">
-    <br/>
-    <p>🛠 <b>Learning Logs</b> Coming Soon</p>
-
-    <br/>
-
+  <div id="Notes" class="tabcontent">
+    <p><b>Notes</b> coming soon.</p>
+    {% set postslist = collections.notes %}
+    {% for post in postslist | reverse %}
+     {% include "posts-list.njk" %}
+    {% endfor %}
   </div>
 
-  <div id="Dev-Notes" class="tabcontent">
-    <br/>
-    <p>🛠 <b>Dev Notes</b> Coming Soon</p>
-
-    <br  />
-  </div>
-
-  <div id="Climate-Research" class="tabcontent">
-    <br/>
-    <p>🛠 <b>Climate Notes</b> Coming Soon</p>
-
-    <br  />
-</div>
-
-  <div id="Experiments" class="tabcontent">
-    <br/>
-<p>🛠 <b>Experiments</b> Coming Soon</p>
-    <br  />
+  <div id="Clips" class="tabcontent">
+    <p><b>Clips</b>  coming soon.</p>
+    {% set postslist = collections.clips %}
+    {% for post in postslist | reverse %}
+     {% include "posts-list.njk" %}
+    {% endfor %}
   </div>
 
 </section>
-
-
-

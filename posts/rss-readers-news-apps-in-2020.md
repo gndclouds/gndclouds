@@ -3,7 +3,6 @@ title: RSS Readers + News Apps in 2020
 description:
 date: 2020-02-01
 tags:
-  - research
 layout: layouts/post.njk
 ---
 

@@ -1,8 +1,6 @@
-  <div style="margin-top: 20vh;" class="flex w-100 pa3">
-   <div class="w-100">
-     {% set postslist = collections.hardware | head(-3) %}
-     {% set postslistCounter = collections.hardware | length %}
-     {% include "posts-preview.njk" %}
-   </div>
-
-  </div>
+<!-- <div style="margin-top: 20vh;" class="flex w-100 pa3">
+  {% set postslist = collections.treehouse %}
+  {% for post in postslist | reverse %}
+   {% include "posts-list.njk" %}
+  {% endfor %}
+</div> -->

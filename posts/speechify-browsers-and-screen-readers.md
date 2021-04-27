@@ -2,8 +2,7 @@
 title: Browser's with Screen Readers in 2019.
 description: How to improve the experience of the current chrome web extension in preparation for the Speechify Web App
 date: 2019-11-30
-tags:
-  [research, speechify, text-to-speech, accessabuility, browsers, annotations]
+tags: [speechify, text-to-speech, accessabuility, browsers, annotations]
 layout: layouts/post.njk
 ---
 

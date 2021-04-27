@@ -5,10 +5,10 @@ date: 2020-11-08
 tags: [text-to-speech, reading list]
 layout: layouts/post.njk
 ---
+For a while, I have wanted to create a social reading list to share notes, links, comments, and highlights with friends at a new conversational pace.
+<!-- excerpt --> There are existing tools in this space, Hypothesis, collective network, and even Twitter to name a few.
 
-&nbsp;
-
-For a while, I have wanted to create a social reading list to share notes, links, comments, and highlights with friends at a new conversational pace. There are existing tools in this space, Hypothesis, collective network, and even Twitter to name a few. But non-strike the [pace of conversation](https://paper.dropbox.com/doc/Pace-layering-for-communication-and-messaging--A_AGMqTduRXMy7nq4vEfpi6_Ag-6MiaurO6u6l9g9SDkqO8O) that enables passive to active asynchronous communication to take place. To start, the goal is just to save links to a group feed of some sort. Then from there expand little by little with tiny experiments.
+But non-strike the [pace of conversation](https://paper.dropbox.com/doc/Pace-layering-for-communication-and-messaging--A_AGMqTduRXMy7nq4vEfpi6_Ag-6MiaurO6u6l9g9SDkqO8O) that enables passive to active asynchronous communication to take place. To start, the goal is just to save links to a group feed of some sort. Then from there expand little by little with tiny experiments.
 &nbsp;
 
 ## v0 built for friends

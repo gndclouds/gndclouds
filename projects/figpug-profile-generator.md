@@ -1,5 +1,5 @@
 ---
-title: FigPug Profile Generator
+title: Profile Generator
 description: Resize your profile and cover images for various social media apps in seconds.
 hero: https://images.are.na/eyJidWNrZXQiOiJhcmVuYV9pbWFnZXMiLCJrZXkiOiIxMDk5MDcxOS9vcmlnaW5hbF81MjUxYWZlMjU5NTZhYjQ1NjllNWE3MTY2OTdmMjk1ZS5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjE4MDAsImhlaWdodCI6MTgwMCwiZml0IjoiaW5zaWRlIiwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfSwid2VicCI6eyJxdWFsaXR5Ijo5MH0sInJvdGF0ZSI6bnVsbCwianBlZyI6eyJxdWFsaXR5Ijo5MH19fQ==?bc=0
 externalUrl: https://www.figma.com/community/plugin/861623210715693719/FigPug-Profile-Generator

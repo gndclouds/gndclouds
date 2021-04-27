@@ -1,23 +1,22 @@
-<article class="">
-   <div class="db pv4 ph3 ph0-l no-underline black">
-     <div class="flex flex-column flex-row-ns">
-
-       <div class="db v-mid pr3-ns mb4 mb0-ns w-100 w-40-ns">
-         <img src="{{project.data.hero }}" alt=" terminal.">
-       </div>
-
-       <div class="db v-mid w-100 w-60-ns pl3-ns">
-         <a href="{{ project.data.externalUrl }}" class="">
-         <h2>{{project.data.title }} ↗</h2>
-         </a>
-         <p class="">
-          {{project.data.description }}
-         </p>
-         <p>{{project.date | displayDateYear }}</p>
 
 
-       </div>
+<article class="fl w-100 w-50-m w-50-l w-50-ns pa1 pa3-ns">
+  <img class="fl w-100 pb3" src="{{project.data.hero }}" />
 
-     </div>
-   </div>
- </article>
+{% if project.data.externalUrl  != null %}
+  <a class="no-underline black dim" href="{{ project.data.externalUrl | url }}">
+    <div class="fl w-100">
+
+    <h3 class="dib v-mid">{{project.data.title }} ↗</h3>    <p class="dib v-mid w-50">{{project.date | displayDateYear }}</p>
+
+    {% else %}
+    <a class="no-underline black dim" href="{{ project.url | url }}">
+      <div class="fl w-100">
+      <h3 class="fl dib v-mid">{{project.data.title }}</h3> <p class="fr dib v-mid">{{project.date | displayDateYear }}</p>
+      {% endif %}
+      <div  />
+      <p class="fl w-100 preview-text">{{project.data.description }}</p>
+
+      <br />
+    </a>
+</article>

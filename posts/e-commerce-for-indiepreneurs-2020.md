@@ -6,7 +6,7 @@ tags: [indiepreneur, ecommerce]
 layout: layouts/post.njk
 ---
 
-This year my focus has shifted to doing projects that amplify my learning and help me rebuild my creative confidence. In the spirit of this I have been looking at setting up a small online store and wanted to research what some of the best options are for indie makers.
+This year my focus has shifted to doing projects that amplify my learning and help me rebuild my creative confidence. <!-- excerpt --> In the spirit of this I have been looking at setting up a small online store and wanted to research what some of the best options are for indie makers.
 &nbsp;
 
 | Company             |     Free      |                    Paid |

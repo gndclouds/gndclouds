@@ -2,13 +2,14 @@
 title: Thoughts on Mentorship vs Apprenticeship
 description: My curiousocity spans a lot of topics which I ocaassionally write about. Here I blog about things on my mind and try to focus on some of these mental threads such as, Resilience, Field Notes, Experiments, and Guides.
 date: 2020-09-01
+externalUrl: https://reading.supply/post/19995642-74dd-4af6-b98b-b444b1b00b49
 tags:
-  - mentorship
-  - log
+  - personal growth
+  - notes
 layout: layouts/post.njk
 ---
 
-I started to seek mentorship this past year after feeling stuck in my career. In college, mentorship always felt natural, I reached out to professors and kept reaching out to the ones whom I shared similar headspace with. But after graduation, those relationships evolved and I tended to get assigned a mentor from work. In my experience, it often felt like a forced relationship especially when your manager is made your mentor. For me, this always created an uncomfortable power dynamic, especially if I’m seeking advice that might involve me leaving that company. Which is why I have been seeking mentorship outside of my place of work.
+I started to seek mentorship this past year after feeling stuck in my career. In college, mentorship always felt natural, I reached out to professors and kept reaching out to the ones whom I shared similar headspace with.<!-- excerpt --> But after graduation, those relationships evolved and I tended to get assigned a mentor from work. In my experience, it often felt like a forced relationship especially when your manager is made your mentor. For me, this always created an uncomfortable power dynamic, especially if I’m seeking advice that might involve me leaving that company. Which is why I have been seeking mentorship outside of my place of work.
 &nbsp;
 
 ## Types of Mentorship

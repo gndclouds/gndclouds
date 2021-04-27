@@ -2,7 +2,7 @@
 title: Intel Galileo Starter Kit
 description: Our goal was to deliver a comprehensive research summary of the space surrounding Galileo and a final prototype of our recommended solution
 hero: /img/intel/gsk.hero_open.png
-externalUrl: https://vimeo.com/108603283
+externalUrl:
 date: 2014-04-25
 state: Archived
 tags:

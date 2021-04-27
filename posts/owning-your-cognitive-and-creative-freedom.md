@@ -8,7 +8,7 @@ tags:
 layout: layouts/post.njk
 ---
 
-Starting today, I will be shifting my focus to regaining my cognitive and creative freedom as an Entrepreneur. This means that instead of treating personal projects as side projects, they will be what I dedicate my time to daily. Over the next year, I will work with a group of people to launch small products as part of a tribe we are calling [Tiny Factories](). We are all writing about why we feel we need to make this jump and you can read more about the other team members’ [Tomo]() and [Weiwei](). For my take on why now is the right time for me to jump, keep reading!
+Starting today, I will be shifting my focus to regaining my cognitive and creative freedom as an Entrepreneur. <!-- excerpt -->This means that instead of treating personal projects as side projects, they will be what I dedicate my time to daily. Over the next year, I will work with a group of people to launch small products as part of a tribe we are calling [Tiny Factories](). We are all writing about why we feel we need to make this jump and you can read more about the other team members’ [Tomo]() and [Weiwei](). For my take on why now is the right time for me to jump, keep reading!
 
 Growing up, the notion of having a job that required me to invent new things sounded fantastic. Because invention seemed to require exploration, which guaranteed I would learn. Especially when I was a kid, I was always wondering why things worked that way they did. So when I discovered a designers job was to design all these things that I was questioning, my path became clear. As my interests matured Design felt like the best available path and was a way to start regaining my creative freedom.
 

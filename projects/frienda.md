@@ -12,4 +12,4 @@ layout: layouts/project.njk
 
 We are starting to develop our developer footing and wanted to ecperiemnt with a funny project around the idea of making a frienda with someone.
 
-\_If you need a binding contract you should seek the appropriate legal counsel
+If you need a binding contract you should seek the appropriate legal counsel
