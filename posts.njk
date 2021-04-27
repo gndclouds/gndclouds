@@ -23,7 +23,7 @@ permalink: /notes/
   <br />
   <br />
   <div id="All" class="tabcontent">
-    <p><b>All</b> </p>
+    <!-- <p><b>All</b> </p> -->
     {% set postslist = collections.posts %}
     {% for post in postslist | reverse %}
     {% include "posts-list.njk" %}
@@ -32,7 +32,7 @@ permalink: /notes/
   </div>
 
   <div id="Logs" class="tabcontent">
-    <p><b>Learning Logs</b> </p>
+    <p><b>Learning Logs</b>  coming soon.</p>
     {% set postslist = collections.logs %}
     {% for post in postslist | reverse %}
      {% include "posts-list.njk" %}
