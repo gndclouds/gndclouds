@@ -24,7 +24,7 @@ We created a field guide for the new role which summarized our research and best
 As part of our research we conducted 42 interviews with various medical service groups which handled Medi-Cal enrollment. Then after identifying the three main entry points, we created service blueprints to understand were "falling off" the Medi-Cal system.
 &nbsp;
 
-![Human Services Agency Services Blueprint](/img/whole-person-care/blueprint_hsa.webp)
+![Human Services Agency Services Blueprint](/img/whole-person-care/blueprint_hsa.png)
 Human Services Agency
 [View PDF](/img/whole-person-care/blueprint_hsa.pdf)
 &nbsp;
