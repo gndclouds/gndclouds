@@ -1,7 +1,7 @@
 ---
 title: Whole Person Care
 description: A field guide for the new role which summarized our research and best practices for enrolling housing-insure people in Medi-Cal.
-hero: /img/whole-person-care/whole-person-care-hero.jpg
+hero: /img/whole-person-care/whole-person-care-hero.webp
 externalUrl:
 date: 2018-04-25
 state:
@@ -29,11 +29,11 @@ Human Services Agency
 [View PDF](/img/whole-person-care/blueprint_hsa.pdf)
 &nbsp;
 
-![Behavioral Health Access Centers Service Blueprint](/img/whole-person-care/blueprint_bhac.png)
+![Behavioral Health Access Centers Service Blueprint](/img/whole-person-care/blueprint_bhac.webp)
 Behavioral Health Access Centers
 [View PDF](/img/whole-person-care/blueprint_bhac.pdf)
 &nbsp;
 
-![San Francisco General Hospital Service Blueprint](/img/whole-person-care/blueprint_sfgh.png)
+![San Francisco General Hospital Service Blueprint](/img/whole-person-care/blueprint_sfgh.webp)
 San Francisco General Hospital
 [View PDF](/img/whole-person-care/blueprint_sfgh.pdf)

@@ -14,13 +14,13 @@ A few months back, I learned about how [Recology](https://www.recology.com), a S
 
 **Modifying Waste Bins**
 
-![Untitled](https://storage.googleapis.com/reading-supply-assets/reading.supply.37eff7aa-4736-4d5d-be24-af28747785c9.png)
+![Untitled](https://storage.googleapis.com/reading-supply-assets/reading.supply.37eff7aa-4736-4d5d-be24-af28747785c9.webp)
 
 Step one modify bins with QR codes to identify who owns it and who should be charged for the disposal of its contents.
 
 **Measuring Weight Bin**
 
-![Untitled](https://storage.googleapis.com/reading-supply-assets/reading.supply.d01efd05-082e-4b6f-b553-40b17ebcdfc2.png)
+![Untitled](https://storage.googleapis.com/reading-supply-assets/reading.supply.d01efd05-082e-4b6f-b553-40b17ebcdfc2.webp)
 
 Step two would be using a camera on the collection truck and a scale built into the lift arm to scan the bin and then determines the weight of the bin. Then using another camera in the collection portion of the truck, before compression of the waste, we could scan to see what was inside the bin. Then we can look at what types of material are being thrown away. However, this would prove complex if items are in bags and raise many privacy concerns regarding the data that would be collected.
 

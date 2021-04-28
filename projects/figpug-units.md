@@ -1,7 +1,7 @@
 ---
 title: Units
 description: A Figma plugin for easily designing with units more than just pixels
-hero: https://d2w9rnfcy7mm78.cloudfront.net/10990655/original_c9b00a7831fc03227eab99d621b55681.png?1614674372?bc=0
+hero: https://d2w9rnfcy7mm78.cloudfront.net/10990655/original_c9b00a7831fc03227eab99d621b55681.webp?1614674372?bc=0
 externalUrl: https://www.figma.com/community/plugin/887509948778878570/FigPug-Units
 date: 2020-08-25
 state: Maintained

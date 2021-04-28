@@ -4,11 +4,11 @@
 
   {% include "components/head.njk" %}
   <body>
-    <header>
+    <header aria-hidden="true">
       {% include "components/nav.njk" %}
     </header>
 
-    <main style="margin-bottom: 20vh;">
+    <main  style="margin-bottom: 20vh;">
       {{ content | safe }}
     </main>
 

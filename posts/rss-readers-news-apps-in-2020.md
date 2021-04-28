@@ -50,13 +50,13 @@ Instapaper
 ## Multi-Media RSS
 
 &nbsp;
-![Firefox Browser when using text-to-speech](/img/speechify/browser-firefox-text-to-speech.png)
+![Firefox Browser when using text-to-speech](/img/speechify/browser-firefox-text-to-speech.webp)
 &nbsp;
 
 **Firefox** - uses a native pocket integration to track the articles for offline and for multi-media RSS management.
 &nbsp;
 
-![Safari offline reading list](/img/speechify/browser-safari-reading-list.png)
+![Safari offline reading list](/img/speechify/browser-safari-reading-list.webp)
 &nbsp;
 **Safari** - on the left-hand side there is an option to save articles for later via your reading list.
 &nbsp;
@@ -96,7 +96,7 @@ For this, we should look at how services like Feedly, for example, have a save t
 &nbsp;
 The next phase, after better integrations, could be adding an RSS import option to our app. Articles appear on the main home screen in a new section. Similar to Google News but more relevant to a given Listener.
 &nbsp;
-![Google News Card](/img/speechify/C57F6895-A9DF-458A-8145-C213066AFD5C.jpeg#left)
+![Google News Card](/img/speechify/C57F6895-A9DF-458A-8145-C213066AFD5C.webp#left)
 In this example, we could keep the same card style the current Google News Card.
 &nbsp;
 
@@ -105,7 +105,7 @@ But away we could take it even further would be to support RSS feeds right in th
 
 ![gif](https://thumbs.gfycat.com/DesertedCriminalDuckbillplatypus-size_restricted.gif#left)
 
-<iframe src='https://gfycat.com/ifr/DesertedCriminalDuckbillplatypus' frameborder='0' scrolling='no' allowfullscreen  height='500'></iframe>
+<iframe title="Gif" src='https://gfycat.com/ifr/DesertedCriminalDuckbillplatypus' frameborder='0' scrolling='no' allowfullscreen  height='500'></iframe>
 &nbsp;
 
 Lastly, a yet-to-be-adopted feature for news apps is social feeds. Yes, you can share articles, and some feed management services even let you share articles you have saved with people that follow you. But none let you automatically share articles once they have read, or share notes/highlights from an article by default.
