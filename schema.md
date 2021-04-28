@@ -2,7 +2,7 @@
 
 title: A Short Title
 description: Designing Future Cities
-Symposium heroStatic: /img/k2/k2-hero.png heroMotion:
+Symposium heroStatic: /img/k2/k2-hero.webp heroMotion:
 externalUrl: https://www.kidnext.design.kyushu-u.ac.jp/k2/
 internallUrl: https://www.kidnext.design.kyushu-u.ac.jp/k2/
 flag: date: 2017-02-08 state:

@@ -1,7 +1,7 @@
 ---
 title: Speechify
 description: Turn any text into audio with Speechify’s AI-powered listening assistant
-hero: /img/speechify/speechify-hero.png
+hero: /img/speechify/speechify-hero.webp
 externalUrl: https://speechify.com
 flag: highlight
 date: 2020-03-01

@@ -1,7 +1,7 @@
 ---
 title: Nomad
 description: At CoLab I worked with an in house team to build prototypes for a decentralized messaging protocol called Nomad.
-hero: /img/colab/nomad_energyexample.jpg
+hero: /img/colab/nomad_energyexample.webp
 externalUrl: https://www.ideocolab.com
 date: 2018-04-25
 state: Archived
