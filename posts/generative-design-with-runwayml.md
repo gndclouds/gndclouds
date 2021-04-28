@@ -18,25 +18,25 @@ There are many datasets available (see a list of my favorite below) for things l
 First, we need some sample gradients, I started with 25 images from Unicorn Gradients. Typically using 500+ images would be better but since the gradients have such a heavy blur it worked out. Next, upload them to your assets folder on Runway ML.
 &nbsp;
 
-![](/img/generative-design-with-runwayml/runway-step-0.png)
+![runway-step-0](/img/generative-design-with-runwayml/runway-step-0.png)
 &nbsp;
 
 There is already a lot of templates in RunwayML! So we need to train the model but don't need to create it from scratch. Choose the Image Generator template from the model's section and then selected the files I uploaded earlier.
 &nbsp;
 
-![](/img/generative-design-with-runwayml/runway-step-1.png)
+![runway-step-1](/img/generative-design-with-runwayml/runway-step-1.png)
 &nbsp;
 
 The process is still slow. The model took 3 hours at 3000 steps. So I would start it before heading to bed.
 &nbsp;
 
-![](/img/generative-design-with-runwayml/runway-step-2.png)
+![runway-step-2](/img/generative-design-with-runwayml/runway-step-2.png)
 &nbsp;
 
 When your model is complete you will be able to have RunwayML create thousands of new images!
 &nbsp;
 
-![](/img/generative-design-with-runwayml/runwayml-gradients.jpg)
+![runway-gradients-grid](/img/generative-design-with-runwayml/runwayml-gradients.jpg)
 &nbsp;
 
 Now that was a quick overview but it shows how the tooling is still being made more non-developer friendly. In 1-2 years more plugins and local first tools should make experimenting and mainstream use easier. Especially for the inspiration of synthesis of screen design. Some other but less successful experiments of mine have been:

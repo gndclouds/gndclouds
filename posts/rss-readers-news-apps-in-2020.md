@@ -37,13 +37,13 @@ I think adding audio indicators at Then end of an article, chapter titles, end o
 
 Pocket
 &nbsp;
-![](https://thumbs.gfycat.com/RedAlertCattle-size_restricted.gif)
+![Pocket](https://thumbs.gfycat.com/RedAlertCattle-size_restricted.gif)
 
 &nbsp;
 
 Instapaper
 &nbsp;
-![](https://thumbs.gfycat.com/ShadySplendidFurseal-size_restricted.gif)
+![Instapaper](https://thumbs.gfycat.com/ShadySplendidFurseal-size_restricted.gif)
 
 &nbsp;
 
@@ -70,13 +70,13 @@ A few apps have started to allow customers to follow others within the app. Outs
 
 Breaker
 &nbsp;
-![](https://thumbs.gfycat.com/DesertedCriminalDuckbillplatypus-size_restricted.gif)
+![Breaker](https://thumbs.gfycat.com/DesertedCriminalDuckbillplatypus-size_restricted.gif)
 
 &nbsp;
 
 Pocket
 &nbsp;
-![](https://thumbs.gfycat.com/PastelWarpedGroundhog-size_restricted.gif)
+![Pocket](https://thumbs.gfycat.com/PastelWarpedGroundhog-size_restricted.gif)
 
 &nbsp;
 
@@ -86,7 +86,7 @@ Pocket
 
 One of the biggest things we can do is reduce friction points of importing content. But if you look at our current import methods, it's mostly going to a cloud storage platform, selecting a file, and importing it, which is very practical. Or adding content from the iOS share menu. These are both great ways, but they don't allow us to redirect to our app from other news systems very well, and they are all manual ways of importing content. I want to encourage us to look more at how we fit into existing news aggregation systems. Then the media importing into the app is semi-automated.
 &nbsp;
-![](https://thumbs.gfycat.com/SmoggyBadAstarte-size_restricted.gif)
+![App Example](https://thumbs.gfycat.com/SmoggyBadAstarte-size_restricted.gif)
 
 &nbsp;
 
@@ -96,14 +96,14 @@ For this, we should look at how services like Feedly, for example, have a save t
 &nbsp;
 The next phase, after better integrations, could be adding an RSS import option to our app. Articles appear on the main home screen in a new section. Similar to Google News but more relevant to a given Listener.
 &nbsp;
-![](/img/speechify/C57F6895-A9DF-458A-8145-C213066AFD5C.jpeg#left)
+![Google News Card](/img/speechify/C57F6895-A9DF-458A-8145-C213066AFD5C.jpeg#left)
 In this example, we could keep the same card style the current Google News Card.
 &nbsp;
 
 But away we could take it even further would be to support RSS feeds right in the app. This would help provide a constant feed of content for our Listeners to listen to.
 &nbsp;
 
-![](https://thumbs.gfycat.com/DesertedCriminalDuckbillplatypus-size_restricted.gif#left)
+![gif](https://thumbs.gfycat.com/DesertedCriminalDuckbillplatypus-size_restricted.gif#left)
 
 <iframe src='https://gfycat.com/ifr/DesertedCriminalDuckbillplatypus' frameborder='0' scrolling='no' allowfullscreen  height='500'></iframe>
 &nbsp;

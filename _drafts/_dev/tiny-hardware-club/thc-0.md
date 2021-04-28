@@ -7,6 +7,5 @@ tags:
 layout: layouts/post.njk
 ---
 
-![]()
 
 I created a draft of the wireframes today with placeholder graphics. I have been learning Blendar in an attempt to make the renders next week.
