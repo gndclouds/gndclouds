@@ -16,7 +16,7 @@ So I experimented a bit with how to apply this concept to my wiki and created a 
   <iframe
     src="https://glitch.com/embed/#!/embed/direct-navagation?path=README.md&previewSize=100"
     title="direct-navagation on Glitch"
-    allow="geolocation; microphone; camera; midi; vr; encrypted-media"
+    allow="geolocation; encrypted-media"
     style="height: 100%; width: 100%; border: 0;">
   </iframe>
 </div>

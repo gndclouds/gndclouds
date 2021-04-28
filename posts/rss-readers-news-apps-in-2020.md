@@ -105,7 +105,7 @@ But away we could take it even further would be to support RSS feeds right in th
 
 ![gif](https://thumbs.gfycat.com/DesertedCriminalDuckbillplatypus-size_restricted.gif#left)
 
-<iframe src='https://gfycat.com/ifr/DesertedCriminalDuckbillplatypus' frameborder='0' scrolling='no' allowfullscreen  height='500'></iframe>
+<iframe title="Gif" src='https://gfycat.com/ifr/DesertedCriminalDuckbillplatypus' frameborder='0' scrolling='no' allowfullscreen  height='500'></iframe>
 &nbsp;
 
 Lastly, a yet-to-be-adopted feature for news apps is social feeds. Yes, you can share articles, and some feed management services even let you share articles you have saved with people that follow you. But none let you automatically share articles once they have read, or share notes/highlights from an article by default.
