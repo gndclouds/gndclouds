@@ -1,5 +1,17 @@
   <div class="flex w-100 mv3">
-      <form class="center pa3 br2-ns ba ">
+      <div class="center pa3 br2-ns ba ">
         <p>Want to learn more about what I'm working on? Get daily updates on <a href="https://twitter.com/gndclouds">Twitter</a>, weekly updates over <a href="https://gndclouds.cc/feed/feed.xml">RSS</a>, and monthly updates from my <a href="https://gndclouds.substack.com/embed">newsletter</a>.</p>
+        <form
+        action="https://buttondown.email/api/emails/embed-subscribe/Gndclouds"
+        method="post"
+        target="popupwindow"
+        onsubmit="window.open('https://buttondown.email/Gndclouds', 'popupwindow')"
+        class="embeddable-buttondown-form"
+      >
+        <input type="email" name="email" id="bd-email" />
+        <input type="hidden" value="1" name="embed" />
+        <input type="submit" value="Subscribe" />
+
       </form>
+      </div>
   </div>

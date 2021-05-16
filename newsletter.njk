@@ -1,0 +1,25 @@
+---
+title: Newsletter
+description: Hey, welcome to the newsletter. I tend to not write much at the moment and wanted to make a way to keep friends, family, and collaborators in the loop. My goal is to have this be a different pace of conversation, one that’s slower than Twitter, but faster than my typical blogging pace. The structure I want to experiment with over time but the current starting categories of thought organization will be Learnings, Conversations, Creations, and Recommendations. So here we go.
+layout: layouts/base.njk
+permalink: /newsletter/
+---
+
+<section class="fl w-100 pa3" style="margin-top: 20vh;">
+  <h1>{{title}}</h1>
+  <p>{{description}}</p>
+  <br />
+<form
+action="https://buttondown.email/api/emails/embed-subscribe/Gndclouds"
+method="post"
+target="popupwindow"
+onsubmit="window.open('https://buttondown.email/Gndclouds', 'popupwindow')"
+class="embeddable-buttondown-form"
+>
+<label for="bd-email">Enter your email</label>
+<input type="email" name="email" id="bd-email" />
+<input type="hidden" value="1" name="embed" />
+<input type="submit" value="Subscribe" />
+
+</form>
+</section>
