@@ -1,13 +1,12 @@
 ---
 title: RSS Readers + News Apps in 2020
-description:
+description: News aggregation has just started to evolve again after being a list of RSS links for the last decade.
 date: 2020-02-01
 tags:
 layout: layouts/post.njk
 ---
 
-&nbsp;
-_For me, this article is a series of personal experiments. Focused on translating my own and client research into an essay inspired by the format of [Justino Beirne]()_
+_For me, this article is a series of personal experiments. Focused on translating my own and client research into an essay inspired by the format of [Justino Beirne](https://www.justinobeirne.com/)_ <!-- excerpt -->
 &nbsp;
 
 ---

@@ -1,7 +1,7 @@
 {
   "name": "gndclouds",
   "version": "5.0.3",
-  "description": "A starter repository for a blog web site using the Eleventy static site generator.",
+  "description": "A website for William Felker",
   "scripts": {
     "build": "eleventy",
     "watch": "eleventy --watch",
@@ -15,7 +15,7 @@
   },
   "author": {
     "name": "William Felker",
-    "email": "",
+    "email": "gndclouds@icloud.comnpm ",
     "url": "https://gndclouds.cc"
   },
   "license": "MIT",
