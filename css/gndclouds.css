@@ -29,9 +29,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #363937;
+    --background: #ebf5f0;
     --background-secondary: #e2ece7;
-    --font-main: #ffffff;
+    --font-main: #000000;
     --font-secondary: #8a9b92;
     --font-links: #198948;
     --font-highlight: #4eaa4c;
@@ -334,7 +334,7 @@ button.active {
 button:hover {
   border: none;
   border-radius: 3px 3px 3px 3px;
-  border: 1px solid var(--font-main);
+  /* border: 1px solid var(--font-main); */
 }
 
 /* Style the tab */

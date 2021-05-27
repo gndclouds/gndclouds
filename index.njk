@@ -1,125 +1,75 @@
 ---
 layout: layouts/base.njk
 ---
-<script>
-  function define_indie() {
-    var span = document.getElementById("indiepreneuring");
-    span.innerText = "In·die·​pre·​neur·ing";
-  }
-
-  function define_hello() {
-    var span = document.getElementById("hello");
-    span.innerText = "☁️ Hey, Hi, Hello!";
-  }
-
-  function define_friends() {
-    var span = document.getElementById("a-few-friends");
-    span.innerText = "Weiwei, Tomo, ";
-  }
-</script>
 
 
-<section class="fl w-100 pa3">
-  <!-- <h2><span class="section-icon ph1 ph3-ns">☁️</span></<h2>
-    <br />
-    <br /> -->
-  <h2 class="ph1 ph3-ns"><span id="hello" onclick="define_hello()">☁️ Heya, </h2>
-  <br />
-  <p class="ph1 ph3-ns">I co-founded <a href="https://tinyfactories.space">Tiny Factories</a>, a studio, and community which helps establish individuals' creative footings. In my spare time, I read climate research with a focus on better urban planning and biodegradable waste systems. My past roles have been a mix of research, design, and front-end development at research labs within IDEO, PARC, Intel, Fjord, and Protocol Labs.
-  </p>
 
-</section>
+
+<p class="fl w-100 pa3">Hi, I'm Will.
+</p>
+<p class="fl w-100 pa3">Recently I have been building <a>Tiny.Garden</a> and co-running <a>Tiny Factories</a>.
+</p>
+<p class="fl w-100 pa3">I spend any additional time researching and learning about climate mitigation strategies to move more into that space in the coming years.
+</p>
+<p class="fl w-100 pa3"> My past roles have been a mix of research, design, and front-end development at research labs within IDEO, PARC, Intel, Fjord, and Protocol Labs.
+</p>
 <section class="fl w-100 pa3" style="margin-top: 10vh;">
-  <!-- <h2><span class="section-icon ph1 ph3-ns">🌱</span></<h2>
-    <br />
-    <br /> -->
-  <h2 class="ph1 ph3-ns">🌱 Things and Experiments</h2>
+<!-- <h2><span class="section-icon ph1 ph3-ns">🌱</span></<h2>
   <br />
-  <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Recent work has focused on indie-web tools along side Tiny Factories clients, and research with oh dot zero. I thrive as generalist but think of myself as a specialist in specific domains.
-  </p>
+  <br /> -->
+<h2 class="ph1 ph3-ns">🌱 Things and Experiments</h2>
+<br />
+<p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Recent work has focused on indie-web tools along side Tiny Factories clients, and research with oh dot zero. I thrive as generalist but think of myself as a specialist in specific domains.
+</p>
 
-  <div class=" ph1 ph3-ns">
-    <div class="filter-toolbar">
-      <p class="dib v-mid ml2">Filter:</p>
-      <div class="tab dib v-mid ">
-        <button class="tablinks ml2 mv1" onclick="openCity(event, 'Recent' )" id="defaultOpen">All</button>
-        <button class="tablinks ml2 mv1" onclick="openCity(event, 'Research')">Research</button>
-        <button class="tablinks ml2 mv1" onclick="openCity(event, 'Design')">Design</button>
-        <button class="tablinks ml2 mv1" onclick="openCity(event, 'Development')">Development</button>
-        <button class="tablinks ml2 mv1" onclick="openCity(event, 'Experiments')">Experiments</button>
-      </div>
+<div class=" ph1 ph3-ns">
+  <div class="filter-toolbar">
+    <p class="dib v-mid ml2">Filter:</p>
+    <div class="tab dib v-mid ">
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Recent' )" id="defaultOpen">All</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Research')">Research</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Design')">Design</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Development')">Development</button>
+
     </div>
   </div>
-  <div id="Recent" class="tabcontent">
-    <!-- {% set postslist = collections.projects | head(-4) %}
-    {% set postslistCounter = collections.projects | length %}
-    {% include "projects-list.njk" %} -->
-    {% set projectslist = collections.projects  | head(-4) %}
-    {% for project in projectslist | reverse %}
-    {% include "projects-list.njk" %}
-    {% endfor %}
-  </div>
-  <div id="Research" class="tabcontent">
+</div>
+<div id="Recent" class="tabcontent">
+  <!-- {% set postslist = collections.projects | head(-4) %}
+  {% set postslistCounter = collections.projects | length %}
+  {% include "projects-list.njk" %} -->
+  {% set projectslist = collections.projects  | head(-2) %}
+  {% for project in projectslist | reverse %}
+  {% include "projects-list.njk" %}
+  {% endfor %}
+</div>
+<div id="Research" class="tabcontent">
 
-    {% set projectslist = collections.research  | head(-4) %}
-    {% for project in projectslist | reverse %}
-    {% include "projects-list.njk" %}
-    {% endfor %}
-  </div>
+  {% set projectslist = collections.research  | head(-4) %}
+  {% for project in projectslist | reverse %}
+  {% include "projects-list.njk" %}
+  {% endfor %}
+</div>
 
-  <div id="Design" class="tabcontent">
+<div id="Design" class="tabcontent">
 {% set projectslist = collections.design  | head(-4) %}
 {% for project in projectslist | reverse %}
 {% include "projects-list.njk" %}
 {% endfor %}
-  </div>
+</div>
 
-  <div id="Development" class="tabcontent">
-  {% set projectslist = collections.development  | head(-4) %}
-  {% for project in projectslist | reverse %}
-  {% include "projects-list.njk" %}
-  {% endfor %}
-  </div>
-  <div id="Experiments" class="tabcontent">
-   {% set projectslist = collections.experiment  | head(-4) %}
-   {% for project in projectslist | reverse %}
-   {% include "projects-list.njk" %}
-   {% endfor %}
-  </div>
-</section>
-
-
-<section class="fl w-100 pa3" style="margin-top: 10vh;">
-  <!-- <h2><span class="section-icon ph1 ph3-ns">🔬</span></<h2>
-    <br />
-    <br /> -->
-  <h2 class="ph1 ph3-ns">🔬 Thought Spaces</h2>
-  <br />
-  <p class="ph1 ph3-ns" style="margin-bottom: 3vh;">Notes are a way for me to think in public about what I'm learning and new areas of interest. All spaces feed into my <a href="/notes/">blog</a> or are summarized in my <a href="https://gndclouds.substack.com/embed">newsletter</a> Some of my current mental threads are: </p>
-
-  <div class=" ph1 ph3-ns">
-    <div>
-
-      {% set postslist = collections.posts  | head(-4) %}
-      {% for post in postslist | reverse %}
-      {% include "posts-list.njk" %}
-      {% endfor %}
-    </div>
-  </div>
-
-
-
-  <!-- <div id="Logs" class="tabcontent">
-    {% set postslist = collections.posts | head(-6) %}
-    {% set postslistCounter = collections.posts | length %}
-    {% include "posts-preview.njk" %}
-  </div>
-  <div id="Notes" class="tabcontent">
-    {% set postslist = collections.posts | head(-6) %}
-    {% set postslistCounter = collections.posts | length %}
-    {% include "posts-preview.njk" %}
-  </div> -->
-
+<div id="Development" class="tabcontent">
+{% set projectslist = collections.development  | head(-4) %}
+{% for project in projectslist | reverse %}
+{% include "projects-list.njk" %}
+{% endfor %}
+</div>
+<div id="Experiments" class="tabcontent">
+ {% set projectslist = collections.experiment  | head(-4) %}
+ {% for project in projectslist | reverse %}
+ {% include "projects-list.njk" %}
+ {% endfor %}
+</div>
 </section>
 <section class="fl w-100 pa3" style="margin-top: 10vh; margin-bottom: 10vh;">
   <!-- <h2><span class="section-icon ph1 ph3-ns">🔗</span></<h2>
@@ -127,7 +77,8 @@ layout: layouts/base.njk
     <br /> -->
   <h2 class="ph1 ph3-ns">🔗 Across the Internet</h2>
   <br />
-  <p class="ph1 ph3-ns" style="margin-bottom: 3vh">I explore a lot of tools, projects, and services which can make it hard to put a record of my work in one place. I maintain a daily feed of my digital footprint and below you can find a few places I like to dwell.</p>
+  <p class="ph1 ph3-ns" style="margin-bottom: 3vh">I explore a lot of tools and services which can make it hard to put a record of my work in one place. So this section has a few other places I tend to dwell.
+</p>
 
   <div>
     <div class="fl w-100 w-50-ns pa1 pa3-ns">
