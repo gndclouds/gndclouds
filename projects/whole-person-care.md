@@ -16,15 +16,17 @@ Over the course of eight weeks with the City of San Francisco's Department of Pu
 &nbsp;
 
 ## Field Guide
-![Field Guide Preview]()
+
+![Field Guide Preview](/img/whole-person-care/whole-person-care-field-guide.webp)
 We created a field guide for the new role which summarized our research and best practices for enrolling housing-insure people in Medi-Cal. The [Field Guide](https://sf-wpc.gitbooks.io/fieldguide/content/) is public and available on GitBook.
 &nbsp;
 
 ## Mapping Services
+
 As part of our research we conducted 42 interviews with various medical service groups which handled Medi-Cal enrollment. Then after identifying the three main entry points, we created service blueprints to understand were "falling off" the Medi-Cal system.
 &nbsp;
 
-![Human Services Agency Services Blueprint](/img/whole-person-care/blueprint_hsa.png)
+![Human Services Agency Services Blueprint](/img/whole-person-care/blueprint_bhac.webp)
 Human Services Agency
 [View PDF](/img/whole-person-care/blueprint_hsa.pdf)
 &nbsp;
