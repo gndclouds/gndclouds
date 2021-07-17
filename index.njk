@@ -26,7 +26,7 @@ layout: layouts/base.njk
   <div class="filter-toolbar">
     <p class="dib v-mid ml2">Filter:</p>
     <div class="tab dib v-mid ">
-      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Recent' )" id="defaultOpen">All</button>
+      <button class="tablinks ml2 mv1" onclick="openCity(event, 'Recent' )" id="defaultOpen">Recent</button>
       <button class="tablinks ml2 mv1" onclick="openCity(event, 'Research')">Research</button>
       <button class="tablinks ml2 mv1" onclick="openCity(event, 'Design')">Design</button>
       <button class="tablinks ml2 mv1" onclick="openCity(event, 'Development')">Development</button>
@@ -38,7 +38,7 @@ layout: layouts/base.njk
   <!-- {% set postslist = collections.projects | head(-4) %}
   {% set postslistCounter = collections.projects | length %}
   {% include "projects-list.njk" %} -->
-  {% set projectslist = collections.projects  | head(-2) %}
+  {% set projectslist = collections.projects  | head(-4) %}
   {% for project in projectslist | reverse %}
   {% include "projects-list.njk" %}
   {% endfor %}
