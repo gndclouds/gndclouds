@@ -1,7 +1,7 @@
 ---
 title: arena2slides
 description: Convert your are.na channel into a slideshow to share!
-hero: https://d2w9rnfcy7mm78.cloudfront.net/10090286/original_9399de9cc8f96ae7204fe9c39c838168.jpeg?1609696528?bc=0
+hero: /img/arena2slide/arena2slide-hero.jpeg
 externalUrl: https://arena2slides.herokuapp.com
 date: 2019-09-12
 state: Active
