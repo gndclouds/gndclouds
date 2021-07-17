@@ -1,7 +1,7 @@
 ---
 title: Udacity
 description: I worked on a User Ecaperine Research Team to fine discover new directions and identify dropoff points to encourage new project directions.
-hero: /img/udacity/udacity-hero.webp
+hero: /img/udacity/udacity-hero.jpeg
 externalUrl: https://www.udacity.com
 flag: highlight
 date: 2019-03-01

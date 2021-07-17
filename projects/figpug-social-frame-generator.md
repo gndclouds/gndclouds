@@ -1,7 +1,7 @@
 ---
 title: Social Frame Generator
 description: Easily resize your frames for various social media apps in seconds.
-hero: /img/figpug/figpug-social-frame-hero.webp
+hero: /img/figpug/figpug-social-frame-hero.jpeg
 externalUrl: https://www.figma.com/community/plugin/879918470199444084/FigPug-Social-Frame-Generator
 date: 2020-09-01
 state: Maintained

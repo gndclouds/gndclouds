@@ -1,7 +1,7 @@
 ---
 title: Whole Person Care
 description: A field guide for the new role which summarized our research and best practices for enrolling housing-insure people in Medi-Cal.
-hero: /img/whole-person-care/whole-person-care-hero.webp
+hero: /img/whole-person-care/whole-person-care-hero.jpeg
 externalUrl:
 date: 2018-04-25
 state:
@@ -17,7 +17,7 @@ Over the course of eight weeks with the City of San Francisco's Department of Pu
 
 ## Field Guide
 
-![Field Guide Preview](/img/whole-person-care/whole-person-care-field-guide.webp)
+![Field Guide Preview](/img/whole-person-care/whole-person-care-field-guide.jpeg)
 We created a field guide for the new role which summarized our research and best practices for enrolling housing-insure people in Medi-Cal. The [Field Guide](https://sf-wpc.gitbooks.io/fieldguide/content/) is public and available on GitBook.
 &nbsp;
 
@@ -26,16 +26,16 @@ We created a field guide for the new role which summarized our research and best
 As part of our research we conducted 42 interviews with various medical service groups which handled Medi-Cal enrollment. Then after identifying the three main entry points, we created service blueprints to understand were "falling off" the Medi-Cal system.
 &nbsp;
 
-![Human Services Agency Services Blueprint](/img/whole-person-care/blueprint_bhac.webp)
+![Human Services Agency Services Blueprint](/img/whole-person-care/blueprint_bhac.jpeg)
 Human Services Agency
 [View PDF](/img/whole-person-care/blueprint_hsa.pdf)
 &nbsp;
 
-![Behavioral Health Access Centers Service Blueprint](/img/whole-person-care/blueprint_bhac.webp)
+![Behavioral Health Access Centers Service Blueprint](/img/whole-person-care/blueprint_bhac.jpeg)
 Behavioral Health Access Centers
 [View PDF](/img/whole-person-care/blueprint_bhac.pdf)
 &nbsp;
 
-![San Francisco General Hospital Service Blueprint](/img/whole-person-care/blueprint_sfgh.webp)
+![San Francisco General Hospital Service Blueprint](/img/whole-person-care/blueprint_sfgh.jpeg)
 San Francisco General Hospital
 [View PDF](/img/whole-person-care/blueprint_sfgh.pdf)

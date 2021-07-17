@@ -76,4 +76,4 @@ Some thoughts on how we can get from where we are not to where we would love to 
   - Big decisions can be through online forms and a few days
     &nbsp;
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2c255676-628a-40a6-9340-a5940bd38e74/8E7C8672-730F-4AFC-87F4-EB9178928322.webp](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2c255676-628a-40a6-9340-a5940bd38e74/8E7C8672-730F-4AFC-87F4-EB9178928322.webp)
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2c255676-628a-40a6-9340-a5940bd38e74/8E7C8672-730F-4AFC-87F4-EB9178928322.jpeg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2c255676-628a-40a6-9340-a5940bd38e74/8E7C8672-730F-4AFC-87F4-EB9178928322.jpeg)

@@ -9,7 +9,7 @@ layout: layouts/post.njk
 
 This report looked at the broader view of online education in terms of degrees and certificate programs that are currently available.<!-- excerpt --> The institution included a range of ed-tech startups, nonprofits, and traditional college and universities. You can view a summery of the research bellow or checkout the [database of the 64 institutions researched here](https://www.notion.so/ab7e10741b5b4a59b4a2d352e8562eeb?v=cbf781769dd8499eab2ebc823acab761).
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3f306558-e651-4d7d-86b1-e63bb116e660/41B0080B-87E9-449A-94DB-32154450ABC2.webp](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3f306558-e651-4d7d-86b1-e63bb116e660/41B0080B-87E9-449A-94DB-32154450ABC2.webp)
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3f306558-e651-4d7d-86b1-e63bb116e660/41B0080B-87E9-449A-94DB-32154450ABC2.jpeg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3f306558-e651-4d7d-86b1-e63bb116e660/41B0080B-87E9-449A-94DB-32154450ABC2.jpeg)
 
 ---
 

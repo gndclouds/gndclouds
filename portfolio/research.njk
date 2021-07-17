@@ -1,0 +1,27 @@
+---
+title: Research Portfolio
+description:
+layout: layouts/base.njk
+permalink: /portfolio/research/
+---
+
+<section class="fl w-100 pa3" style="margin-top: 20vh;">
+  <h1>{{title}}</h1>
+  <p>{{description}}</p>
+  <p>Research ... in Startups, often as the first researcher, and at labs with in large companies. In both enviroemnts I use my knowlede od design and development to communcate fidninges across teams</p>
+<div>
+{% set projectslist = collections.research  | head(-4) %}
+{% for project in projectslist | reverse %}
+{% include "projects-list.njk" %}
+{% endfor %}
+</div>
+
+Older work
+<div>
+{% set projectslist = collections.research  | head(+4) %}
+{% for project in projectslist | reverse %}
+{% include "projects-list.njk" %}
+{% endfor %}
+</div>
+
+</section>
