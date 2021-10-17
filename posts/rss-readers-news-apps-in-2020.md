@@ -49,13 +49,13 @@ Instapaper
 ## Multi-Media RSS
 
 &nbsp;
-![Firefox Browser when using text-to-speech](/img/speechify/browser-firefox-text-to-speech.webp)
+![Firefox Browser when using text-to-speech](/img/speechify/browser-firefox-text-to-speech.jpeg)
 &nbsp;
 
 **Firefox** - uses a native pocket integration to track the articles for offline and for multi-media RSS management.
 &nbsp;
 
-![Safari offline reading list](/img/speechify/browser-safari-reading-list.webp)
+![Safari offline reading list](/img/speechify/browser-safari-reading-list.jpeg)
 &nbsp;
 **Safari** - on the left-hand side there is an option to save articles for later via your reading list.
 &nbsp;
@@ -95,7 +95,7 @@ For this, we should look at how services like Feedly, for example, have a save t
 &nbsp;
 The next phase, after better integrations, could be adding an RSS import option to our app. Articles appear on the main home screen in a new section. Similar to Google News but more relevant to a given Listener.
 &nbsp;
-![Google News Card](/img/speechify/C57F6895-A9DF-458A-8145-C213066AFD5C.webp#left)
+![Google News Card](/img/speechify/C57F6895-A9DF-458A-8145-C213066AFD5C.jpeg#left)
 In this example, we could keep the same card style the current Google News Card.
 &nbsp;
 

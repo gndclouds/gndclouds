@@ -11,7 +11,7 @@ layout: layouts/post.njk
 
 Since 2020.08 I have been contributing to a social file storage system called [Slate](https://slate.host) which will launch its [beta](https://www.producthunt.com/posts/slate-f195dcdd-18e2-4dc2-8c70-45208ccbb862) on 2020.09.14 🎉. This project has been reinforced some good practices for me in how I collaborate and communicate work over GitHub. One key change for me has been how to rebase, which take the work you have done and places it in the current work tree if changes.
 
-![A verity of GitHub worktree modifications](https://res.cloudinary.com/practicaldev/image/fetch/s--BTsRd9V4--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://jason.pureconcepts.net/images/tree-progressing-git-rebase.webp)
+![A verity of GitHub worktree modifications](https://res.cloudinary.com/practicaldev/image/fetch/s--BTsRd9V4--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://jason.pureconcepts.net/images/tree-progressing-git-rebase.jpeg)
 
 📷 [source Jason McCreary](https://dev.to/gonedark)
 

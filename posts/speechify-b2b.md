@@ -130,7 +130,7 @@ I spoke with 5 Speechify users that mostly use Speechify for work. They where a 
 
 In the next 1-3 year, is the goal to make speechify a service or a platform?
 
-![B2B/Untitled.webp](B2B/Untitled.webp)
+![B2B/Untitled.jpeg](B2B/Untitled.jpeg)
 
 If its a Service it would look a lot more like us being the reader you can use everywhere. This is the full on chrome extensions, plugins to existing apps, native feeling apps, shoud
 

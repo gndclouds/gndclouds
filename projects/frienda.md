@@ -1,7 +1,7 @@
 ---
 title: Frienda
 description: Ever wanted to share a confidential secret? Now you can!
-hero: /img/frienda/frienda-hero.webp
+hero: /img/frienda/frienda-hero.jpeg
 externalUrl: https://www.frienda.space
 date: 2019-04-25
 state: Archived

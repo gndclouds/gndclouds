@@ -1,7 +1,7 @@
 ---
 title: Profile Generator
 description: Resize your profile and cover images for various social media apps in seconds.
-hero: /img/figpug/figpug-profile-generator.webp
+hero: /img/figpug/figpug-profile-generator.jpeg
 externalUrl: https://www.figma.com/community/plugin/861623210715693719/FigPug-Profile-Generator
 date: 2020-09-01
 state: Maintained

@@ -18,25 +18,25 @@ There are many datasets available (see a list of my favorite below) for things l
 First, we need some sample gradients, I started with 25 images from Unicorn Gradients. Typically using 500+ images would be better but since the gradients have such a heavy blur it worked out. Next, upload them to your assets folder on Runway ML.
 &nbsp;
 
-![runway-step-0](/img/generative-design-with-runwayml/runway-step-0.webp)
+![runway-step-0](/img/generative-design-with-runwayml/runway-step-0.jpeg)
 &nbsp;
 
 There is already a lot of templates in RunwayML! So we need to train the model but don't need to create it from scratch. Choose the Image Generator template from the model's section and then selected the files I uploaded earlier.
 &nbsp;
 
-![runway-step-1](/img/generative-design-with-runwayml/runway-step-1.webp)
+![runway-step-1](/img/generative-design-with-runwayml/runway-step-1.jpeg)
 &nbsp;
 
 The process is still slow. The model took 3 hours at 3000 steps. So I would start it before heading to bed.
 &nbsp;
 
-![runway-step-2](/img/generative-design-with-runwayml/runway-step-2.webp)
+![runway-step-2](/img/generative-design-with-runwayml/runway-step-2.jpeg)
 &nbsp;
 
 When your model is complete you will be able to have RunwayML create thousands of new images!
 &nbsp;
 
-![runway-gradients-grid](/img/generative-design-with-runwayml/runwayml-gradients.webp)
+![runway-gradients-grid](/img/generative-design-with-runwayml/runwayml-gradients.jpeg)
 &nbsp;
 
 Now that was a quick overview but it shows how the tooling is still being made more non-developer friendly. In 1-2 years more plugins and local first tools should make experimenting and mainstream use easier. Especially for the inspiration of synthesis of screen design. Some other but less successful experiments of mine have been:
@@ -45,13 +45,13 @@ Now that was a quick overview but it shows how the tooling is still being made m
 **Emoji Generator** - Training on Twitter's open-source emoji set. The thinking was if it could create something like [Emoji Mashup Bot](https://twitter.com/emojimashupbot?lang=en). The results looked more like something from Watchman.
 &nbsp;
 
-![ML Generated image of emojis](/img/generative-design-with-runwayml/runwayml-emoji.webp)
+![ML Generated image of emojis](/img/generative-design-with-runwayml/runwayml-emoji.jpeg)
 &nbsp;
 
 **Townscaper Generator** - A popular game called [Townscaper](https://store.steampowered.com/app/1291340/Townscaper/) used [waveform collapse functions](https://github.com/mxgmn/WaveFunctionCollapse) to perdurably generate grids. I downloaded all the images I could find on Twitter of the game, cleaned them up, and made a StyleGAN model.
 &nbsp;
 
-![ML Generated image of Townscaper game scenes](/img/generative-design-with-runwayml/runwayml-townscaper.webp)
+![ML Generated image of Townscaper game scenes](/img/generative-design-with-runwayml/runwayml-townscaper.jpeg)
 &nbsp;
 
 &nbsp;

@@ -1,0 +1,37 @@
+---
+title: Research Portfolio
+description:
+layout: layouts/base.njk
+permalink: /portfolio/research/
+---
+
+<section class="fl w-100 pa3" style="margin-top: 20vh;">
+  <h1>{{title}}</h1>
+<br/>
+  <p>
+    Hi, I'm Will. As a researcher, I have worked on large teams inside research labs and as the only researcher at small startups. Although I spend most of my time doing UX Research, I find that my background as a Designer and Developer helps me better understand the technical issues while making sure the product still retains its form and function.
+  </p>
+  <br/>
+    <p>
+    Some of my favorite work takes me into the entanglement of complex systems within the healthcare, transportation, and urban planning spaces.  Below you will find a collection of smaller independent case studies and summaries of research work from clients.
+    </p>
+    <br/>
+
+    <h3>Recent Work</h3>
+<div>
+{% set projectslist = collections.research  | head(-4) %}
+{% for project in projectslist | reverse %}
+{% include "projects-list.njk" %}
+{% endfor %}
+</div>
+<br/>
+
+<h3>Past Work</h3>
+<div>
+{% set projectslist = collections.research  | head(+4) %}
+{% for project in projectslist | reverse %}
+{% include "projects-list.njk" %}
+{% endfor %}
+</div>
+
+</section>

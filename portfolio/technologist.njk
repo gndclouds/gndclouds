@@ -1,0 +1,84 @@
+---
+title: Technologist
+description:
+layout: layouts/base.njk
+permalink: /portfolio/technologist/
+---
+
+<section class="fl w-100 pa3" style="margin-top: 20vh;">
+  <h1>Design {{title}} Portfolio</h1>
+  <p>{{description}}</p>
+
+  Recently I have been building tools for a community co-run called Tiny Factories and experimenting with webring of recipet printers.
+  My past roles have focused on protyping for testing and teaching.
+
+  been a mix of research, design, and front-end development at research labs within IDEO, PARC, Intel, Fjord, and Protoco
+
+  l Labs.
+
+  Teaching others how to bulf with hardware CCA + Make
+
+
+
+
+</section>
+
+<section>
+<h2>Some highlighted work</h2>
+<article>Tiny Factories</article>
+<article>Slate</article>
+<article></article>
+<article>Smart Packaging</article>
+
+<article>Ideo CoLab</article>
+<article>Intel Galileo</article>
+
+<div class="container">
+
+
+</div>
+
+</section>
+<hr  />
+<section>
+  <h2>Development based Writing</h2>
+  <p>Sometimes these evolve into more concreate guides for others and sometimes the are looser threads documenting my process.
+</p>
+  {% set postslist = collections.dev %}
+  {% for post in postslist | reverse %}
+  {% include "posts-list.njk" %}
+  {% endfor %}
+</section>
+
+<section>
+<div>
+<h2 class="ph1 ph3-ns">🔗 Across the Internet</h2>
+<br />
+<p class="ph1 ph3-ns" style="margin-bottom: 3vh">I explore a lot of tools and services which can make it hard to put a record of my work in one place. So this section has a few other places I tend to dwell.
+</p>
+  <div class="fl w-100 w-50-ns pa1 pa3-ns">
+    <p><b>🌐 Other Spaces</b></p>
+    <p class="pv3"><a href="https://tiny.garden/user/MQc2aPSY0763">Tiny Garden</a>  is an experimental space that collects my digital presence in one location.
+    </p>
+    <p class="pv3"><a href="https://multiverse.plus/gndclouds">Multiverse</a> is a visual authoring environment where I write more visual essays.</p>
+    <p class="pv3"><a href="https://beta.readng.co/user/gndclouds">Books</a> I'm reading and plan to read.</p>
+    <p class="pv3"><a href="https://www.notion.so/tinyfactories/e73aa12c27434407b8bd0a480ff99947?v=29d2da1d06044dc995447461c391fd7b">Questions</a> is a list of open questions I have.</p>
+    <p class="pv3"><a href="https://www.notion.so/tinyfactories/aaf1ba5708e44ff5a7f35b9d47aca92e?v=2a66246f3c78412a9c03efb7aea632d9">The parking lot</a> is a collection of concrete and scattered ideas that I may or may not make someday.
+    </p>
+    <p class="pv3"><a href="https://fieldnotes.gndclouds.cc">Field Notes</a> are collections of observations from me as I explore the world.
+    </p>
+  </div>
+
+  <div class="fl w-100 w-50-ns pa1 pa3-ns">
+    <p><b>🤝 Open Collaborations:</b></p>
+    <p class="pv3"> <a href="https://commons.vercel.app">Playlist</a> is a tool for creating shared playlist of media.</p>
+    <p class="pv3"> <a href="/projects/treehouse/">Treehouse</a> is a personalized dynamic dashboard meant to be shown when you open a new browser tab.
+    </p>
+    <p class="pv3"><a href="/projects/tiny-hardware-club/">Tiny Hardware Club</a> helps catalog open hardware projects and one day will make them into kits.</p>
+    <p class="pv3"> <a href="/projects/Ökohaus/">Ökohaus</a> is a community focused on the climate in the spirit of an ecologically focused Bauhaus.
+    </p>
+  </div>
+
+</div>
+
+</section>

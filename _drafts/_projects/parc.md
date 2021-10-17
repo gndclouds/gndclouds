@@ -1,7 +1,7 @@
 ---
 title: Parc
 description: Designing Future Cities Symposium
-hero: /img/k2/k2-hero.webp
+hero: /img/k2/k2-hero.jpeg
 externalUrl: https://www.kidnext.design.kyushu-u.ac.jp/k2/
 flag:
 date: 2017-02-08

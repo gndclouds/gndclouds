@@ -1,7 +1,7 @@
 ---
 title: Social Distancing Works
 description: Encourage your friends to self-quarantine. Put a mask on your profile pic!
-hero: /img/social-distancing-works/social-distancing-works-hero.webp
+hero: /img/social-distancing-works/social-distancing-works-hero.jpeg
 externalUrl: https://socialdistancing.works
 date: 2020-04-25
 state: Active

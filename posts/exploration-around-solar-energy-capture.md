@@ -20,25 +20,25 @@ These solutions focus on reducing and capturing the heat from solar panels to in
 **Ceramic Substrate Heat Capture**
 Current solar panels contain a back sheet that supports the frame and holds the junction box. We could replace the back sheet with a Ceramic capacitor to absorb the waste heat from the panels. Reducing the temperature of the solar cells and converts the waste heat into useable energy.
 &nbsp;
-![Ceramic Substrate Heat Capture Sketch](/img/exploration-around-solar-energy-capture/ceramic-substrate-heat-capture-panel.webp) <br><br>
+![Ceramic Substrate Heat Capture Sketch](/img/exploration-around-solar-energy-capture/ceramic-substrate-heat-capture-panel.jpeg) <br><br>
 &nbsp;
 
 **One-way Infinity Mirror**
 The efficacy of a panel is dependent on the angle the sunlight hits contacts the solar cell. By using a one-way mirror the light would be traped and reflected into the solar cell at a more optimal capture angle.
 &nbsp;
-![One-way Infinity Mirror Panel Sketch](/img/exploration-around-solar-energy-capture/one-way-infinity-mirror-panel.webp) <br><br>
+![One-way Infinity Mirror Panel Sketch](/img/exploration-around-solar-energy-capture/one-way-infinity-mirror-panel.jpeg) <br><br>
 &nbsp;
 
 **Focused Lenses**
 Through warping the top isolating glass plate which covers the solar cell we change the speed and angle of light entering the solar cell to create a more focused capture. And increase the degree of capture.
 <br>
-![Focused Lense Panel Sketch](/img/exploration-around-solar-energy-capture/focused-lenses-panel.webp) <br><br>
+![Focused Lense Panel Sketch](/img/exploration-around-solar-energy-capture/focused-lenses-panel.jpeg) <br><br>
 &nbsp;
 
 **Prism Lens**
 Current panels absorb a spectrum of light typically in the same spectrum we can see with a little wiggle room on each side of the spectrum. If built on the idea of Multi-junction solar cells we may be able to break up solar cells and create clusters cells and use the prism to focus the bands of light to the cluster which matches the band of light.
 &nbsp;
-![Prism Lens Panel Sketch](/img/exploration-around-solar-energy-capture/prism-lenses-panel.webp) <br><br>
+![Prism Lens Panel Sketch](/img/exploration-around-solar-energy-capture/prism-lenses-panel.jpeg) <br><br>
 &nbsp;
 &nbsp;
 
@@ -49,14 +49,14 @@ Current panels absorb a spectrum of light typically in the same spectrum we can 
 **Corrugated Panels**
 Since the peak capture of a solar panel is limited in the degrees that light is captured, we could combine some of the above concepts around light scattering to increase the surface area of a solar cell by staggering them to increase the panel density.
 &nbsp;
-![Corrugated Panel Sketch](/img/exploration-around-solar-energy-capture/corrugated-panel.webp) <br><br>
+![Corrugated Panel Sketch](/img/exploration-around-solar-energy-capture/corrugated-panel.jpeg) <br><br>
 &nbsp;
 &nbsp;
 
 **Light Reflection Solar Disk**
 Through combining the heat capture and light scattering methods we could create a pipe filled with water and surrounded by a large mirror. This would focus light towards the pip which a curved solar cell, and capture the waste heat from both sides by the water in the pipe.
 &nbsp;
-![Light Reflection Solar Disk Panel Sketch](/img/exploration-around-solar-energy-capture/solar-cylinder-panel.webp) <br><br>
+![Light Reflection Solar Disk Panel Sketch](/img/exploration-around-solar-energy-capture/solar-cylinder-panel.jpeg) <br><br>
 &nbsp;
 
 Next, I'm testing out scaled-down versions of all these panels to get data around whether or not they would be viable to try at scale.
