@@ -1,14 +1,7 @@
 {
   "name": "gndclouds",
-  "version": "5.0.3",
+  "version": "7.0.3",
   "description": "A website for William Felker",
-  "scripts": {
-    "build": "eleventy",
-    "watch": "eleventy --watch",
-    "dev": "eleventy --serve",
-    "start": "eleventy --serve",
-    "debug": "DEBUG=* eleventy"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/11ty/eleventy-base-blog.git"
@@ -22,22 +15,26 @@
   "bugs": {
     "url": "https://github.com/gndclouds/gndclouds/issues"
   },
-  "homepage": "https://github.com/gndclouds/gndclouds#readme",
-  "devDependencies": {
-    "@11ty/eleventy": "^0.12.1",
-    "@11ty/eleventy-navigation": "^0.1.6",
-    "@11ty/eleventy-plugin-rss": "^1.1.1",
-    "@11ty/eleventy-plugin-syntaxhighlight": "^3.0.1",
-    "dotenv": "^6.2.0",
-    "lodash": "^4.17.11",
-    "luxon": "^1.21.3",
-    "markdown-it": "^8.4.2",
-    "markdown-it-anchor": "^5.2.5",
-    "node-fetch": "^2.3.0",
-    "uuid": "^8.3.0"
+  "private": true,
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "elasticlunr": "^0.9.5",
-    "uuid": "^8.3.0"
+    "@notionhq/client": "^0.4.9",
+    "classnames": "2.2.6",
+    "date-fns": "2.16.1",
+    "gray-matter": "4.0.2",
+    "next": "latest",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "remark": "13.0.0",
+    "remark-html": "13.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.1",
+    "postcss": "^8.2.4",
+    "tailwindcss": "^2.0.2"
   }
 }
