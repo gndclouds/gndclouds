@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import { getDatabase } from "../lib/notion";
@@ -8,11 +10,18 @@ export const databaseId = process.env.NOTION_DATABASE_GNDCLOUDS_QUESTIONS;
 
 const pageData = {
   title: "questions",
-  ogDescription: "words",
+  ogDescription:
+    "I keep a list of open question which I hope to better understand through conversation with others and my work.",
   ogImage: "",
 };
 
-export default function Daily({ posts }) {
+export default function Questions({ posts }) {
+  const [searchValue, setSearchValue] = useState("");
+
+  const questionData = posts.filter((questionData) => {
+    const searchContent = questionData.properties.Name.title;
+    return searchContent.toString().includes(searchValue.toLowerCase());
+  });
   return (
     <Layout>
       <Head>
@@ -32,26 +41,35 @@ export default function Daily({ posts }) {
                   {pageData.ogDescription}
                 </p>
               </div>
+              <input
+                aria-label='Search'
+                type='text'
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder='Search'
+                className='block w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-md dark:border-gray-900 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:text-gray-100'
+              />
             </div>
             <div className='mt-6 pt-10 grid gap-16 lg:grid-cols-2 lg:gap-x-5 lg:gap-y-12'>
-              {posts.map((post) => {
-                const date = new Date(post.last_edited_time).toLocaleString(
-                  "en-US",
-                  {
-                    month: "short",
-                    day: "2-digit",
-                    year: "numeric",
-                  }
-                );
+              {!questionData.length && "No Laws found."}
+
+              {questionData.map((questionData, questionDataIdx) => {
+                const { title } = questionData;
+                const date = new Date(
+                  questionData.last_edited_time
+                ).toLocaleString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                });
                 return (
                   <div key=''>
                     <p className='text-sm text-gray-500'>
                       <time dateTime='2020-02-12'>{date}</time>
                     </p>
 
-                    <Link href={`/${post.id}`}>
+                    <Link href={`/${questionData.id}`}>
                       <a className='mt-2 block'>
-                        <Text text={post.properties.Name.title} />
+                        <Text text={questionData.properties.Name.title} />
                       </a>
                     </Link>
 
@@ -60,21 +78,10 @@ export default function Daily({ posts }) {
                       <p className='mt-3 text-base text-gray-500'></p>
                     </a>
                     <div className='mt-3'>
-                      <p>Realted</p>
-                      <p>Tags</p>
-                      <p>status</p>
-                    </div>
-                    <div className='mt-3'>
-                      <Link href={`/${post.id}`}>
+                      <Link href={`/${questionData.id}`}>
                         <a className='text-base font-semibold text-indigo-600 hover:text-indigo-500'>
                           {" "}
                           Read post →
-                        </a>
-                      </Link>
-                      <Link href={`/${post.id}`}>
-                        <a className='text-base font-semibold text-indigo-600 hover:text-indigo-500'>
-                          {" "}
-                          👋 I Know!
                         </a>
                       </Link>
                     </div>
