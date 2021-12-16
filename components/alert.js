@@ -11,13 +11,13 @@ export default function Alert({ preview }) {
       })}
     >
       <Container>
-        <div className="py-2 text-center text-sm">
+        <div className='py-2 text-center text-sm'>
           {preview ? (
             <>
               ✴︎ This is a Preview of gndclouds.cc{" "}
               <a
-                href="https://gndclouds.cc"
-                className="underline hover:text-cyan duration-200 transition-colors"
+                href='https://gndclouds.cc'
+                className='underline hover:text-cyan duration-200 transition-colors'
               >
                 Click here
               </a>{" "}
@@ -25,11 +25,10 @@ export default function Alert({ preview }) {
             </>
           ) : (
             <>
-              ✨ I'm half way through a refresh, you can find the last version
-              at{" "}
+              ✨ Im half way through a refresh, you can find the last version at{" "}
               <a
-                href="https://v6.gndclouds.cc"
-                className="underline hover:text-success duration-200 transition-colors"
+                href='https://v6.gndclouds.cc'
+                className='underline hover:text-success duration-200 transition-colors'
               >
                 v6.gndclouds.cc
               </a>
