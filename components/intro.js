@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CMS_NAME } from "../lib/constants";
+import { OG_NAME } from "../lib/constants";
 
 export default function Intro() {
   return (

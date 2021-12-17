@@ -7,9 +7,9 @@ export default function Layout({ preview, children }) {
   return (
     <>
       <Meta />
-      <div className="min-h-screen">
+      <div className='min-h-screen'>
         <Navigation />
-        <main className="container mx-auto px-5">{children}</main>
+        <main className='container mx-auto px-5'>{children}</main>
       </div>
       <Footer />
     </>

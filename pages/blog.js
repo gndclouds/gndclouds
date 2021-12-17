@@ -8,7 +8,7 @@ import Intro from "../components/intro";
 import Layout from "../components/layout";
 import { getAllPosts } from "../lib/api";
 import Head from "next/head";
-import { CMS_NAME } from "../lib/constants";
+import { OG_NAME } from "../lib/constants";
 
 export default function Index({ allPosts }) {
   const { asPath, pathname } = useRouter();
@@ -26,7 +26,7 @@ export default function Index({ allPosts }) {
       <Layout>
         <Head>
           <title>
-            {CMS_NAME} {asPath}
+            {OG_NAME} {asPath}
           </title>
         </Head>
         <Container>
