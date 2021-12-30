@@ -12,7 +12,7 @@ const navigation = {
 export default function Navigation() {
   const { asPath, pathname } = useRouter();
   return (
-    <nav className='flex px-5 py-2'>
+    <nav className='sticky top-0 z-50 flex bg-white px-5 py-2'>
       <Link href='/'>
         <a className='flex-none'>gndclouds</a>
       </Link>

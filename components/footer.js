@@ -18,7 +18,7 @@ export default function Footer() {
       <div className=''>
         {footerLinks.main.map((item) => (
           <Link key={item.name} href={item.href}>
-            <a className='inline-block pl-5'>{item.name}</a>
+            <a className='inline-block pr-5'>{item.name}</a>
           </Link>
         ))}
       </div>
