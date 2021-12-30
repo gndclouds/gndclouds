@@ -10,9 +10,9 @@ import { OG_NAME } from "../lib/constants";
 
 const quickLinks = {
   main: [
-    { name: "blog", description: "webring ↗", href: "/" },
-    { name: "logs", description: "webring ↗", href: "/newsletter" },
     { name: "blog", description: "webring ↗", href: "/blog" },
+    { name: "logs", description: "webring ↗", href: "/newsletter" },
+    { name: "blog", description: "webring ↗", href: "/" },
   ],
 };
 

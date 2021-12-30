@@ -3,8 +3,8 @@ import { OG_NAME } from "../lib/constants";
 
 export default function Intro() {
   return (
-    <section className=' text-6xl md:text-6xl font-bold tracking-tighter leading-tight md:pr-8'>
-      <section className=' inline-block'>
+    <section className=' text-6xl md:text-6xl font-bold md:pr-8'>
+      <section className=' inline-block align-middle'>
         Decarbonizing humanity at{" "}
         <Link href='https://anthropogenic.com'>
           <a className='font-serif underline text-green-600'>Anthropogenic</a>
