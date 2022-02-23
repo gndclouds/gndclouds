@@ -117,7 +117,7 @@ Here are some wireframes that could become directions we take when updating the 
 ![plugin or app feature](/img/speechify/69935E8D-4E88-4695-8588-A62D4DD1A5A4.jpeg)
 &nbsp;
 Additional Layouts
-One of our strengths is how quickly you can highlight some text on a page and have it read back to you. But if we look at Evernote there could be a significant benefit to having a more advanced screen reader. One that allowed for annotations without leaving the webpage. There is also a wide range of options around how we signal which word, sentence, or section is spoken. Do we underline, highlight, or isolate the text?
+One of our strengths is how quickly you can highlight some text on a page and have it read back to you. But if we look at Evernote there could be a significant benefit to having a more advanced screen reader. One that allowed for annotations without leaving the webpage. There is also a wide range of options around how we signal which word, sentence, or div is spoken. Do we underline, highlight, or isolate the text?
 &nbsp;
 Adding content to the web app from chrome extension might look like, starting with launching a mini-player. ⤵
 &nbsp;

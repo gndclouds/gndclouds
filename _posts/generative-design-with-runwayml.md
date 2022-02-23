@@ -22,7 +22,7 @@ First, we need some sample gradients, I started with 25 images from Unicorn Grad
 ![runway-step-0](/img/generative-design-with-runwayml/runway-step-0.jpeg)
 &nbsp;
 
-There is already a lot of templates in RunwayML! So we need to train the model but don't need to create it from scratch. Choose the Image Generator template from the model's section and then selected the files I uploaded earlier.
+There is already a lot of templates in RunwayML! So we need to train the model but don't need to create it from scratch. Choose the Image Generator template from the model's div and then selected the files I uploaded earlier.
 &nbsp;
 
 ![runway-step-1](/img/generative-design-with-runwayml/runway-step-1.jpeg)

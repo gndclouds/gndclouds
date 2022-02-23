@@ -96,7 +96,7 @@ For this, we should look at how services like Feedly, for example, have a save t
 &nbsp;
 👀 Sidenote: Some of the top news services currently are: [Feedly](http://feedly.com/), [Google News](https://news.google.com/), [Instapaper](https://www.instapaper.com) [Pocket](Pocket), [Flipboard](https://flipboard.com/), [Apple News](https://www.apple.com/apple-news/), and [Panda](http://usepanda.com/).
 &nbsp;
-The next phase, after better integrations, could be adding an RSS import option to our app. Articles appear on the main home screen in a new section. Similar to Google News but more relevant to a given Listener.
+The next phase, after better integrations, could be adding an RSS import option to our app. Articles appear on the main home screen in a new div. Similar to Google News but more relevant to a given Listener.
 &nbsp;
 ![Google News Card](/img/speechify/C57F6895-A9DF-458A-8145-C213066AFD5C.jpeg#left)
 In this example, we could keep the same card style the current Google News Card.

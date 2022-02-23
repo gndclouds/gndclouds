@@ -23,18 +23,18 @@ export default function Index({ allPosts }) {
   return (
     <>
       <Layout>
-        <div className='bg-white pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8'>
+        <div className='bg-white pt-16 pb-20'>
           <h2 className='text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl'>
             {pathname}
           </h2>
-          <p>
+          <p className='text-lg py-3'>
             Recent work has focused on building small tools for the indie web
             through Tiny Factories and climate research projects with oh dot
             zero. I have chosen to grow generalist skills across research,
             design, and development while becoming a specialist in specific
             topics.
           </p>
-          <section className='flex space-x-4'>
+          {/*           <div className='flex space-x-4'>
             {quickLinks.main.map((item) => (
               <Link key={item.name} href={item.href}>
                 <a className='rounded border-2 px-4 py-4'>
@@ -44,7 +44,7 @@ export default function Index({ allPosts }) {
                 </a>
               </Link>
             ))}
-          </section>
+          </div> */}
         </div>
       </Layout>
     </>

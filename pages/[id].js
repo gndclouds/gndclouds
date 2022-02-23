@@ -132,14 +132,14 @@ export default function Post({ page, blocks }) {
                 <h1>
                   <Text text={page.properties.Name.title} />
                 </h1>
-                <section>
+                <div>
                   {blocks.map((block) => (
                     <Fragment key={block.id}>{renderBlock(block)}</Fragment>
                   ))}
                   <Link href='/'>
                     <a>← Go home</a>
                   </Link>
-                </section>
+                </div>
               </article>
             </div>
           </div>

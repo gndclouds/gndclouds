@@ -11,7 +11,7 @@ export default function HeroPost({
   slug,
 }) {
   return (
-    <section>
+    <div>
       <div className='mb-8 md:mb-16'>
         <CoverImage
           title={title}
@@ -36,6 +36,6 @@ export default function HeroPost({
           <p className='text-lg leading-relaxed mb-4'>{excerpt}</p>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

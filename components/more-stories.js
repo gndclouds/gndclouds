@@ -2,7 +2,7 @@ import PostPreview from '../components/post-preview'
 
 export default function MoreStories({ posts }) {
   return (
-    <section>
+    <div>
       <h2 className="mb-8 text-6xl md:text-7xl font-bold tracking-tighter leading-tight">
         More Stories
       </h2>
@@ -19,6 +19,6 @@ export default function MoreStories({ posts }) {
           />
         ))}
       </div>
-    </section>
+    </div>
   )
 }
