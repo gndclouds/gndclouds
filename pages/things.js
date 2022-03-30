@@ -1,67 +1,43 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import MoreStories from "../components/more-stories";
-import HeroPost from "../components/hero-post";
-import Intro from "../components/intro";
+import { useState } from "react";
+
+import PageHero from "../components/section-hero";
 import Layout from "../components/layout";
-import { getAllPosts } from "../lib/api";
-import Head from "next/head";
-import { OG_NAME } from "../lib/constants";
 
-const quickLinks = {
-  main: [
-    { name: "Projects", description: "webring ↗", href: "/blog" },
-    { name: "Books", description: "webring ↗", href: "/newsletter" },
-    { name: "CV", description: "webring ↗", href: "/" },
-  ],
-};
+const quickLinks = [
+  {
+    name: "projects",
+    description: "webring ↗",
+    href: "/blog",
+    color: "border-indigo-600 rounded border-2 px-4 py-4",
+    font: "",
+  },
+  {
+    name: "collections",
+    description: "webring ↗",
+    href: "/newsletter",
+    color: "border-indigo-600 rounded border-2 px-4 py-4",
+    font: "",
+  },
+  {
+    name: "TBD",
+    description:
+      "a list of open questions which I hope to better under stand throught my work",
+    href: "/questions",
+    color: "border-indigo-600 rounded border-2 px-4 py-4",
+    font: "",
+  },
+];
 
-export default function Index({ allPosts }) {
-  const { asPath, pathname } = useRouter();
-  const heroPost = allPosts[0];
-  const morePosts = allPosts.slice(1);
+export default function Things() {
   return (
     <>
       <Layout>
-        <div className='bg-white pt-16 pb-20'>
-          <h2 className='text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl'>
-            {pathname}
-          </h2>
-          <p className='text-lg py-3'>
-            Recent work has focused on building small tools for the indie web
-            through Tiny Factories and climate research projects with oh dot
-            zero. I have chosen to grow generalist skills across research,
-            design, and development while becoming a specialist in specific
-            topics.
-          </p>
-          {/*           <div className='flex space-x-4'>
-            {quickLinks.main.map((item) => (
-              <Link key={item.name} href={item.href}>
-                <a className='rounded border-2 px-4 py-4'>
-                  <div>{item.name}</div>
-                  <div>{item.description}</div>
-                  {item.name}
-                </a>
-              </Link>
-            ))}
-          </div> */}
-        </div>
+        <PageHero
+          PageDescription="My curiosity drives me to learn, read, and write. This blog is about a reflection of my mind and the mental threads I have been thinking about."
+          quickLinks={quickLinks}
+        />
       </Layout>
     </>
   );
-}
-
-export async function getStaticProps() {
-  const allPosts = getAllPosts([
-    "title",
-    "date",
-    "slug",
-    "author",
-    "coverImage",
-    "excerpt",
-  ]);
-
-  return {
-    props: { allPosts },
-  };
 }

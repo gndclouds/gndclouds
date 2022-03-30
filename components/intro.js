@@ -36,12 +36,14 @@ const intros = [
 export default function Intro() {
   return (
     <>
-      <div className='py-12 w-auto grid grid-cols-1 gap-x-9 gap-y-9 sm:grid-cols-3 content-center'>
+      <div className="py-12 w-auto grid grid-cols-1 gap-x-9 gap-y-9 sm:grid-cols-3 content-center">
         {intros.map((intro) => (
           <Link key={intro.name} href={intro.href}>
             <a className={intro.color}>
-              <div className=''>{intro.blurb}</div>
-              <div className=''>{intro.company}</div>
+              <div className="">{intro.blurb}</div>
+              <div className="">
+                <b>{intro.company}</b>
+              </div>
             </a>
           </Link>
         ))}
@@ -56,6 +58,6 @@ export function HeroCard(props) {
   const [isPress, setIsPress] = useState(false);
 
   return (
-    <div className='grid grid-cols-1 gap-x-9 gap-y-9 sm:grid-cols-3 '></div>
+    <div className="grid grid-cols-1 gap-x-9 gap-y-9 sm:grid-cols-3 "></div>
   );
 }

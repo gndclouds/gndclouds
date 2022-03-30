@@ -15,16 +15,16 @@ const footerLinks = {
 export default function Footer() {
   return (
     <>
-      <footer className='invisible md:visible flex px-5 py-2'>
-        <div className=''>
+      <footer className="invisible md:visible flex px-5 py-2 bg-background text-green">
+        <div className="">
           {footerLinks.main.map((item) => (
             <Link key={item.name} href={item.href}>
-              <a className='inline-block pr-5'>{item.name}</a>
+              <a className="inline-block pr-5">{item.name}</a>
             </Link>
           ))}
         </div>
       </footer>
-      <footer className=' visible md:invisible'></footer>
+      <footer className=" visible md:invisible"></footer>
     </>
   );
 }

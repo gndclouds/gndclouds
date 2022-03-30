@@ -6,21 +6,21 @@ import Layout from "../components/layout";
 
 const quickLinks = [
   {
-    name: "blogs",
+    name: "small",
     description: "webring ↗",
     href: "/blog",
     color: "border-indigo-600 rounded border-2 px-4 py-4",
     font: "",
   },
   {
-    name: "journals",
+    name: "medium",
     description: "webring ↗",
-    href: "/journals",
+    href: "/newsletter",
     color: "border-indigo-600 rounded border-2 px-4 py-4",
     font: "",
   },
   {
-    name: "questions",
+    name: "large",
     description:
       "a list of open questions which I hope to better under stand throught my work",
     href: "/questions",
@@ -29,12 +29,12 @@ const quickLinks = [
   },
 ];
 
-export default function Thoughts() {
+export default function Things() {
   return (
     <>
       <Layout>
         <PageHero
-          PageDescription="... My curiosity drives me to learn, read, and write. This blog is about a reflection of my mind and the mental threads I have been thinking about."
+          PageDescription="My curiosity drives me to learn, read, and write. This blog is about a reflection of my mind and the mental threads I have been thinking about."
           quickLinks={quickLinks}
         />
       </Layout>
