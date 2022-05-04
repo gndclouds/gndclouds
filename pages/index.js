@@ -5,6 +5,7 @@ import MoreStories from "../components/more-stories";
 import HeroPost from "../components/hero-post";
 import Intro from "../components/intro";
 import Layout from "../components/layout";
+import Emissions from "../components/a";
 import { getAllPosts } from "../lib/api";
 import Head from "next/head";
 import { OG_NAME } from "../lib/constants";
@@ -65,7 +66,7 @@ export default function Index({ allPosts }) {
       blurb: "Reducing human generated emissions at",
       company: "Anthropogenic",
       href: "https://anthropogenic.com",
-      color: "border-indigo-600 rounded border-2 px-4 py-4",
+      color: "border-[#AFCFC5] rounded rounded border-2 px-4 py-4",
       font: "",
       current: true,
     },
@@ -73,7 +74,7 @@ export default function Index({ allPosts }) {
       blurb: "Exploring contracting with care at",
       company: "Dark Matter Labs",
       href: "https://darkmatterlabs.org",
-      color: "border-indigo-600 rounded border-2 px-4 py-4",
+      color: "border-[#AFCFC5] rounded rounded border-2 px-4 py-4",
       font: "",
       current: true,
     },
@@ -81,7 +82,7 @@ export default function Index({ allPosts }) {
       blurb: "Co-running a community of",
       company: "Tiny Factories",
       href: "https://tinyfactories.space",
-      color: "border-indigo-600 rounded border-2 px-4 py-4",
+      color: "border-[#AFCFC5] rounded rounded border-2 px-4 py-4",
       font: "",
       current: true,
     },
@@ -97,7 +98,7 @@ export default function Index({ allPosts }) {
           <title>{OG_NAME}</title>
         </Head>
         <div className="pb-5">
-          <div className="col-span-3 border-indigo-600 rounded border-2">
+          <div className="col-span-3 border-[#AFCFC5] rounded rounded border-2">
             <div className=" inset-0">
               {/* <img
               className="h-1/2 w-full object-cover"
@@ -106,12 +107,15 @@ export default function Index({ allPosts }) {
             /> */}
             </div>
             <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
-              <div className="text-xl font-bold">IDK</div>
+              <div className="text-xl font-bold">
+                Creating a protocol for reducing human-generated emissions and
+                exploring the edges of biomimetic systems.
+              </div>
             </div>
           </div>
           <div className="flex py-1 ">
             {hero.map((d) => (
-              <div className="pr-4 h-6 w-6 border-indigo-600 rounded border-2"></div>
+              <div className="pr-4 h-6 w-6 border-[#AFCFC5] rounded rounded border-2"></div>
             ))}
           </div>
         </div>
@@ -126,25 +130,25 @@ export default function Index({ allPosts }) {
               </a>
             </Link>
           ))}
-          <div className="col-span-2 border-indigo-600 rounded border-2 px-4 py-4">
-            Reading Now
+          <div className="col-span-2 border-[#AFCFC5] rounded border-2 px-4 py-4">
+            {/* Reading Now */}
           </div>
-          <div className="border-indigo-600 rounded border-2 px-4 py-4">
-            Listening Now
+          <div className="border-[#AFCFC5] rounded rounded border-2 px-4 py-4">
+            {/* Listening Now */}
           </div>
-          <div className="border-indigo-600 rounded border-2 px-4 py-4">
-            Born at 357 PPM, today we are at 419.05 PPM
+          <div className="border-[#AFCFC5] rounded rounded border-2 px-4 py-4">
+            {/* <Emissions /> */}
           </div>
-          <div className="col-span-2 border-indigo-600 rounded border-2 px-4 py-4">
-            Reading Now
+          <div className="col-span-2 border-[#AFCFC5] rounded rounded border-2 px-4 py-4">
+            {/* Reading Now */}
           </div>
-          <div className="col-span-2 border-indigo-600 rounded border-2 px-4 py-4">
-            Tweeting About
+          <div className="col-span-2 border-[#AFCFC5] rounded rounded border-2 px-4 py-4">
+            {/* Tweeting About */}
           </div>
-          <div className="border-indigo-600 rounded border-2 px-4 py-4">
-            Newsletter
+          <div className="border-[#AFCFC5] rounded rounded border-2 px-4 py-4">
+            {/* Newsletter */}
           </div>
-          {/* <div className="col-span-3 border-indigo-600 rounded border-2 px-4 py-4">
+          {/* <div className="col-span-3 border-[#AFCFC5] rounded rounded border-2 px-4 py-4">
             Recent Thoughts
             {!postData.length && "No Laws found."}
             <div className="grid grid-cols-3 gap-4">
@@ -153,7 +157,7 @@ export default function Index({ allPosts }) {
                 return (
                   <div
                     key={postDataIdx}
-                    className="border-indigo-600 rounded border-2 px-4 py-4"
+                    className="border-[#AFCFC5] rounded rounded border-2 px-4 py-4"
                   >
                     <Link
                       as={`/posts/${slug}`}

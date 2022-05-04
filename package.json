@@ -19,7 +19,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@notionhq/client": "^0.4.9",
@@ -35,6 +36,7 @@
     "react-map-gl": "^7.0.6",
     "remark": "13.0.0",
     "remark-html": "13.0.1",
+    "swr": "^1.2.2",
     "three": "^0.136.0"
   },
   "devDependencies": {

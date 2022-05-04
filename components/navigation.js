@@ -13,7 +13,7 @@ export default function Navigation() {
   const { asPath, pathname } = useRouter();
   return (
     <>
-      <nav className="invisible md:visible sticky top-0 z-50 flex px-5 py-2 bg-background text-green">
+      <nav className="invisible md:visible sticky top-0 z-50 flex px-5 py-2 bg-background text-textlight">
         <Link href="/">
           <a className="flex-none">gndclouds</a>
         </Link>
@@ -22,13 +22,13 @@ export default function Navigation() {
           id="myInput"
           placeholder={asPath}
         />
-        <div className="right">
+        {/* <div className="right">
           {navigation.main.map((item) => (
             <Link key={item.name} href={item.href}>
               <a className="inline-block pl-5 ">{item.name}</a>
             </Link>
           ))}
-        </div>
+        </div> */}
       </nav>
       <nav
         className="visible md:invisible fixed bg-background text-green
