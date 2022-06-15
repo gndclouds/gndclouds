@@ -13,12 +13,12 @@ export default function Navigation() {
   const { asPath, pathname } = useRouter();
   return (
     <>
-      <nav className="invisible md:visible sticky top-0 z-50 flex px-5 py-2 bg-background text-textlight">
+      <nav className="invisible md:visible sticky top-0 z-50 flex p-8 bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark">
         <Link href="/">
           <a className="flex-none">gndclouds</a>
         </Link>
         <input
-          className="grow bg-background"
+          className="grow pl-1 bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark"
           id="myInput"
           placeholder={asPath}
         />

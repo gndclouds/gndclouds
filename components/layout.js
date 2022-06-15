@@ -7,9 +7,9 @@ export default function Layout({ preview, children }) {
   return (
     <>
       <Meta />
-      <div className="min-h-screen bg-backgroundlight dark:bg-backgrounddark text-textlight  dark:text-textdark">
+      <div className="bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark">
         <Navigation />
-        <main className="max-w-screen-xl mx-auto px-3 py-50">{children}</main>
+        <main className="mx-auto p-8 py-50 font-mono">{children}</main>
       </div>
       <Footer />
     </>

@@ -15,7 +15,7 @@ const footerLinks = {
 export default function Footer() {
   return (
     <>
-      <footer className="invisible md:visible flex px-5 py-2 bg-background text-green">
+      <footer className="bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark invisible md:visible flex p-8 bg-background text-green">
         <div className="">
           {footerLinks.main.map((item) => (
             <Link key={item.name} href={item.href}>
