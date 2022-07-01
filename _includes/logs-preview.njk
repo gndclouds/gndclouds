@@ -1,9 +1,0 @@
-{% for post in postslist | reverse %}
-<article class="fl w-100">
-  <a class="db no-underline black" href="{{ post.url | url }}">
-  <p>  <span class="dib w-10">→ </span><span class="dib w-90">{{post.data.title }}</span></p>
-
-  </a>
-</article>
-
-{% endfor %}
