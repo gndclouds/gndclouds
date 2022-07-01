@@ -15,7 +15,7 @@ const footerLinks = {
 export default function Footer() {
   return (
     <>
-      <footer className="bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark invisible md:visible flex p-8 bg-background text-green">
+      <footer className="bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark invisible md:visible flex p-8 ">
         <div className="">
           {footerLinks.main.map((item) => (
             <Link key={item.name} href={item.href}>
@@ -24,7 +24,7 @@ export default function Footer() {
           ))}
         </div>
       </footer>
-      <footer className=" visible md:invisible"></footer>
+      <footer className="visible md:invisible"></footer>
     </>
   );
 }

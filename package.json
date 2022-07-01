@@ -4,7 +4,7 @@
   "description": "A website for William Felker",
   "repository": {
     "type": "git",
-    "url": "git://github.com/11ty/eleventy-base-blog.git"
+    "url": "git://github.com/gndclouds/gndclouds"
   },
   "author": {
     "name": "William Felker",
@@ -25,6 +25,7 @@
   "dependencies": {
     "@notionhq/client": "^0.4.9",
     "@react-three/fiber": "^7.0.24",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
     "classnames": "2.2.6",
     "date-fns": "2.16.1",
     "framer-motion": "^5.5.5",
@@ -45,7 +46,7 @@
     "@tailwindcss/line-clamp": "^0.3.0",
     "@tailwindcss/typography": "^0.5.2",
     "autoprefixer": "^10.4.0",
-    "eslint": "8.4.1",
+    "eslint": "^8.18.0",
     "eslint-config-next": "12.0.7",
     "postcss": "^8.4.5",
     "tailwindcss": "^3.0.5"

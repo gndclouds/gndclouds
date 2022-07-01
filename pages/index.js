@@ -86,11 +86,11 @@ export default function Index({ allPosts }) {
               alt="People working on laptops"
             /> */}
             </div>
-            <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
+            {/* <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8 bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark ">
               <div className="text-xl font-bold">
                 reducing human-generated emissions
               </div>
-            </div>
+            </div> */}
           </div>
           {/* <div className="flex py-1 ">
             {hero.map((d) => (
@@ -126,9 +126,19 @@ export default function Index({ allPosts }) {
           </div>
           <div className="">
             <div className="">
-              Currently focused on decarbonizing human system at Anthopogenic,
-              exploring decentralized governance at Dark Matter Labs co-running
-              a community of Tiny Factories.
+              Currently focused on decarbonizing human system at{" "}
+              <Link href="https://www.anthopogenic.com">
+                <a>Anthopogenic</a>
+              </Link>
+              , exploring decentralized governance at{" "}
+              <Link href="https://www.darkmatterlabs.org">
+                <a>Dark Matter Labs</a>
+              </Link>{" "}
+              co-running a community of{" "}
+              <Link href="https://www.tinyfactories.space">
+                <a>Tiny Factories</a>
+              </Link>
+              .
               <br />
               <br />
               My past roles have been a mix of research, design, and front-end
@@ -139,7 +149,7 @@ export default function Index({ allPosts }) {
         </div>
 
         <div className="py-8">
-          <div className="flex flex-auto text-mono uppercase border-b-2 mb-4">
+          <div className="flex flex-auto text-mono uppercase  border-backgrounddark dark:border-backgroundlight border-b-2 mb-3">
             <div>Thoughts</div>
           </div>
           <div className="grid grid-cols-3 gap-4">

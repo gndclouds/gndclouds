@@ -3,10 +3,7 @@ import Container from "./container";
 import { EXAMPLE_PATH } from "../lib/constants";
 import { useRouter } from "next/router";
 const navigation = {
-  main: [
-    { name: "thoughts", href: "/thoughts" },
-    { name: "things", href: "/things" },
-  ],
+  main: [{ name: "about", href: "/about" }],
 };
 
 export default function Navigation() {
@@ -22,13 +19,13 @@ export default function Navigation() {
           id="myInput"
           placeholder={asPath}
         />
-        {/* <div className="right">
+        <div className="right">
           {navigation.main.map((item) => (
             <Link key={item.name} href={item.href}>
               <a className="inline-block pl-5 ">{item.name}</a>
             </Link>
           ))}
-        </div> */}
+        </div>
       </nav>
       <nav
         className="visible md:invisible fixed bg-background text-green
