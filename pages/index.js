@@ -26,21 +26,29 @@ export default function Index({ allPosts }) {
   const hero = [
     {
       title: "Anthropogenic",
-      description: "Co-running a community of",
-      href: "Tiny Factories",
-      time: "https://tinyfactories.space",
+      description: "Working",
+      href: "https://anthropogenic.com",
+      time: "2021 to Present",
+      logo: "https://tinyfactories.space",
+      color: "",
     },
     {
       title: "Tiny Factories",
-      description: "Co-running a community of",
-      href: "Tiny Factories",
+      description:
+        "a tribe of creatives, consisting of indiepreneurs, coders, artists, designers, musicians, videographers, writers, animators (and more) supporting each other in establishing both creative autonomy and financial stability.",
+      href: "2019 to Present",
       time: "https://tinyfactories.space",
+      logo: "",
+      color: "",
     },
     {
       title: "Dark Matter Labs",
-      description: "Co-running a community of",
-      href: "Tiny Factories",
-      time: "https://tinyfactories.space",
+      description:
+        "A design technologist with a principal interest is creating interventions for the rapid decarbonization of the earth. Through better understanding how natural systems work, he hopes to help shift how we think about systems so they can better evolve with us and the planet.",
+      href: "https://darkmatterlabs.org",
+      time: "2021 to 2022",
+      logo: "",
+      color: "",
     },
   ];
 
@@ -79,28 +87,29 @@ export default function Index({ allPosts }) {
         </Head>
         <div className="py-8">
           <div className="col-span-3 bg-[#2E2E2E] rounded">
-            <div className=" inset-0">
-              {/* <img
-              className="h-1/2 w-full object-cover"
-              src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2830&q=80&sat=-100"
-              alt="People working on laptops"
-            /> */}
-            </div>
-            {/* <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8 bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark ">
-              <div className="text-xl font-bold">
-                reducing human-generated emissions
-              </div>
+            {/* <div className=" inset-0">
+              <img
+                className="h-1/2 w-full object-cover"
+                src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2830&q=80&sat=-100"
+                alt="People working on laptops"
+              />
             </div> */}
+            <div className="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8 bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark ">
+              <div className="text-xl font-bold">
+                learning how to build systems which support the health of
+                bioregions
+              </div>
+            </div>
           </div>
-          {/* <div className="flex py-1 ">
+          <div className="flex py-1 ">
             {hero.map((d) => (
               <div className="pr-4 h-6 w-6 border-[#AFCFC5] rounded rounded border-2"></div>
             ))}
-          </div> */}
+          </div>
         </div>
-        {/* <div className="py-8">
+        <div className="py-8">
           <div className="flex flex-auto text-mono uppercase  border-backgrounddark dark:border-backgroundlight border-b-2 mb-3">
-            <div className="">Things</div>
+            <div className="font-bold">Places</div>
           </div>
           ​
           <div className="grid grid-cols-3 gap-4">
@@ -110,7 +119,7 @@ export default function Index({ allPosts }) {
                 <div key={i} className="">
                   <Link href={href} key={i}>
                     <a className="">
-                      <div className="">{title}</div>
+                      <span className="font-bold">{title} ↗</span>
                       <div className="">{description}</div>
                     </a>
                   </Link>
@@ -118,39 +127,10 @@ export default function Index({ allPosts }) {
               );
             })}
           </div>
-        </div> */}
-
-        <div className="py-8">
-          <div className="flex flex-auto text-mono uppercase  border-backgrounddark dark:border-backgroundlight border-b-2 mb-3">
-            <div className="">Hey Hi Hello</div>
-          </div>
-          <div className="">
-            <div className="">
-              Currently focused on decarbonizing human system at{" "}
-              <Link href="https://www.anthopogenic.com">
-                <a>Anthopogenic</a>
-              </Link>
-              , exploring decentralized governance at{" "}
-              <Link href="https://www.darkmatterlabs.org">
-                <a>Dark Matter Labs</a>
-              </Link>{" "}
-              co-running a community of{" "}
-              <Link href="https://www.tinyfactories.space">
-                <a>Tiny Factories</a>
-              </Link>
-              .
-              <br />
-              <br />
-              My past roles have been a mix of research, design, and front-end
-              development at research labs within IDEO, PARC, Intel, Fjord, and
-              Protocol Labs.
-            </div>
-          </div>
         </div>
-
         <div className="py-8">
           <div className="flex flex-auto text-mono uppercase  border-backgrounddark dark:border-backgroundlight border-b-2 mb-3">
-            <div>Thoughts</div>
+            <div className="font-bold">Thoughts</div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             {postData.slice(0, 5).map((d, i) => {
@@ -159,22 +139,32 @@ export default function Index({ allPosts }) {
                 <div key={i} className="">
                   <Link as={`/posts/${slug}`} href="/posts/[slug]" key={i}>
                     <a className="">
-                      {/* <div className="rounded bg-red">image</div> */}
-                      {title}
+                      <div className="rounded bg-red">
+                        <Image
+                          src={image}
+                          alt="Picture of the author"
+                          width={500}
+                          height={500}
+                        />
+                      </div>
+                      <span className="font-bold">{title} </span>
                       {description}
                     </a>
                   </Link>
                 </div>
               );
             })}
-            <Link href="/blog">
-              <a className=" border-2 border-black col-span-3 items-center justify-between">
-                read more
-              </a>
-            </Link>
+            <div className="">
+              <Link href="/blog">
+                <a className="">
+                  <div className="rounded bg-red">Gray Box</div>
+                  read more
+                </a>
+              </Link>
+            </div>
           </div>
         </div>
-        {/* <div className="py-8">
+        <div className="py-8">
           <div className="flex flex-auto text-mono uppercase border-b-2">
             <div>readings</div>
             <div>↗</div>
@@ -189,7 +179,7 @@ export default function Index({ allPosts }) {
               );
             })}
           </div>
-        </div> */}
+        </div>
       </Layout>
     </>
   );

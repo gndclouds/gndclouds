@@ -1,9 +1,11 @@
 import Link from "next/link";
-import Container from "./container";
-import { EXAMPLE_PATH } from "../lib/constants";
 import { useRouter } from "next/router";
 const navigation = {
-  main: [{ name: "about", href: "/about" }],
+  main: [
+    { name: "about", href: "/about" },
+    { name: "thoughts", href: "/thoughts" },
+    { name: "things", href: "/things" },
+  ],
 };
 
 export default function Navigation() {
