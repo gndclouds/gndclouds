@@ -5,137 +5,145 @@ import { OG_NAME } from "../lib/constants";
 
 const cvData = [
   {
-    title: "Cheif Design Offisor",
     company: "Anthropogenic",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://anthropogenic.com",
+    status: true,
   },
   {
-    title: "daily",
     company: "Tiny Factories",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://tinyfactories.space",
+    status: true,
   },
   {
-    title: "Design Technologist",
     company: "Dark Matter Labs",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://darkmatterlabs.org/",
+    status: false,
   },
   {
-    title: "Software Engineer",
     company: "Reduct Video",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://reduct.video",
+    status: false,
   },
   {
-    title: "Software Engineer",
     company: "Protocol Labs",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://protocol.ai",
+    status: false,
   },
   {
-    title: "UX Researcher",
     company: "Udacity",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://www.udacity.com",
+    status: false,
   },
   {
-    title: "Member",
     company: "CCA Secret Project",
-    start: "2015",
-    end: "2018",
-    url: "",
+    href: "https://",
+    status: false,
   },
   {
-    title: "Creative Technologiest / Interaction Designer",
     company: "Fjord",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://www.accenture.com",
+    status: false,
   },
   {
-    title: "Product Consultant",
     company: "IFTTT",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://ifttt.com",
+    status: false,
   },
   {
-    title: "Interaction Designer",
     company: "IDEO CoLab",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://www.ideocolab.com",
+    status: false,
   },
   {
-    title: "C",
     company: "California College of the Arts",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://www.cca.edu",
+    status: false,
   },
   {
-    title: "Interaction Design Intern",
     company: "IDEO",
-    start: "",
-    end: "",
-    url: "",
+    href: "https://ideo.com",
+    status: false,
   },
   {
-    title: "Creative Technologist Intern",
     company: "Maker Media",
-    start: "",
-    end: "",
-    url: "words",
+    href: "https://make.co",
+    status: false,
   },
   {
-    title: "UXR Hardware & Software Prototyper",
     company: "Intel Labs",
-    start: "",
-    end: "",
-    url: "",
+    href: "",
+    status: false,
   },
 ];
 
 export default function About() {
-  // Create an image state
-  // update when box is pressed
-
   return (
     <>
       <Layout>
         <Head>
           <title>{OG_NAME}</title>
         </Head>
-        <p>hi,</p>
-        <br />
-        <p>this is will's corner of the 🌐.</p>
-        <br />
-        <p>
-          he is currently building a monitoring and verification company for
-          greenhouse gas emissions called{" "}
-          <a href="https://anthropogenic.com">Anthropogenic</a>.
-        </p>
-        <br />
-        <p>
-          when not thinking, reading, or learning about the climate, he can be
-          found climbing, hiking, forging, or building tiny electronics.
-        </p>
-        <br />
+        <div className="w-full sm:w-2/3">
+          <div className="pb-9">Hey I’m Will,</div>
+          <div className="pb-9">
+            My day-to-day focuses are on implementing web3 technologies to help
+            monitor greenhouse gas emissions. Currently, this takes the form of{" "}
+            <Link href="https://hge.earth">
+              <a>Earth API</a>
+            </Link>
+            , a data management and visualization tool for bioregions, built-in
+            collaboration with{" "}
+            <Link href="https://anthropogenic.com">
+              <a>Anthropogenic</a>
+            </Link>
+            .
+          </div>
 
-        <p>
-          Preiviousely he worked as a design/developer in research groups at{" "}
-          <a hfre="">Dark Matter Labs</a>, <a hfre="">Xero PARC</a>,{" "}
-          <a hfre=""> Protocal Labs</a>, <a hfre="">IDEO</a>, <a>Intel</a>, and{" "}
-          <a hfre="">Intel</a>
-        </p>
+          <div className="pb-9">
+            I also{" "}
+            <Link href="https://tinyfactories.space">
+              <a>co-run a community</a>
+            </Link>{" "}
+            of creatives, consisting of indiepreneurs, coders, artists,
+            designers, musicians, videographers, writers, animators (and more)
+            who are working to support each other in establishing both creative
+            autonomy and financial stability. This space allows me to tinker
+            with smaller ideas to keep my creative thoughts flowing in a way
+            that is not always sustainable at work.
+          </div>
+
+          <div className="pb-9">
+            In the before times, I worked as a design technologist at research
+            labs across all types of companies. In these roles, I translated
+            emerging technologies into prototypes in which the core tech was
+            abstracted away so that we could focus on the intended function.
+            Before that was college at CCA.
+          </div>
+
+          <div className="pb-3">A more detailed view of where I have been:</div>
+        </div>
+        <div className=""></div>
+        <div className="">Present:</div>
+        {cvData.map((data, i) => (
+          <>
+            {data.status === true && (
+              <Link key={i} href={data.href}>
+                <a className="block pb-3">{data.company} ↗</a>
+              </Link>
+            )}
+          </>
+        ))}
+        <div className="py-3"></div>
+        <div className="pb-1">Previous:</div>{" "}
+        {cvData.map((data, i) => (
+          <>
+            {data.status === false && (
+              <Link key={i} href={data.href}>
+                <a className="block pb-3">{data.company} ↗</a>
+              </Link>
+            )}
+          </>
+        ))}
       </Layout>
     </>
   );
