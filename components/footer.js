@@ -13,14 +13,7 @@ const footerLinks = {
 };
 
 function PPM({ stars }) {
-  return (
-    <div>
-      <p>Next.js has {stars} ⭐️</p>
-      <Link href="/preact-stars">
-        <a>How about preact?</a>
-      </Link>
-    </div>
-  );
+  return <div></div>;
 }
 
 export default function Footer() {
