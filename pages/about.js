@@ -3,7 +3,7 @@ import Image from "next/image";
 import Layout from "../components/layout";
 import Head from "next/head";
 import { OG_NAME } from "../lib/constants";
-import WilliamFelker from "../public/assets/williamfelker.jpg";
+import WilliamFelker from "../public/assets/williamfelker.JPG";
 
 const cvData = [
   {
