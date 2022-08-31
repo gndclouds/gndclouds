@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 const navigation = {
-  main: [
-    { name: "about", href: "/about" },
-    { name: "thoughts", href: "/thoughts" },
-    { name: "things", href: "/things" },
-  ],
+  main: [{ name: "about", href: "/about" }],
 };
 
 export default function Navigation() {

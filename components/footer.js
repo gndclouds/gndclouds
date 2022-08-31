@@ -1,14 +1,12 @@
 import Link from "next/link";
-import Container from "./container";
 import { EXAMPLE_PATH } from "../lib/constants";
 
 const footerLinks = {
   main: [
     { name: "webring ↗", href: "https://webring.xxiivv.com/#random" },
-    { name: "newsletter", href: "/newsletter" },
-    { name: "blog", href: "/blog" },
+    { name: "newsletter ↗", href: "https://buttondown.email/gndclouds" },
     { name: "twitter ↗", href: "https://twitter.com/gndclouds" },
-    { name: "arena ↗", href: "https://www.are.na/gndclouds" },
+    { name: "are.na ↗", href: "https://www.are.na/gndclouds" },
   ],
 };
 

@@ -1,4 +1,4 @@
-import Alert from "../components/alert";
+import ErrorPage from "next/error";
 import Footer from "../components/footer";
 import Navigation from "../components/navigation";
 import Meta from "../components/meta";
