@@ -7,7 +7,7 @@ import { getAllPosts } from "../lib/api";
 
 import Head from "next/head";
 import { OG_NAME } from "../lib/constants";
-import WilliamFelker from "../public/assets/williamfelker.jpg";
+import WilliamFelker from "../public/assets/williamfelker.JPG";
 
 export default function Index({ allPosts }) {
   const [searchValue, setSearchValue] = useState("");
