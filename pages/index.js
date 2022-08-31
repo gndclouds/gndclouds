@@ -26,12 +26,12 @@ export default function Index({ allPosts }) {
         </Head>
         <div className="py-8">
           <div className="grid gap-4 grid-cols-3 grid-rows-3">
-            <div className="col-span-3 p-10 rounded">
+            <div className="bg-backgroundmid col-span-3 p-10 rounded">
               Mitigating human-generated emissions Anthropogenic building a
               community Tiny Factories
             </div>
 
-            <div className="row-span-3 col-span-2 p-10 rounded">
+            <div className="bg-backgroundmid row-span-3 col-span-2 p-10 rounded">
               writting
               <ul>
                 {postData.slice(0, 3).map((d, i) => {
@@ -48,7 +48,7 @@ export default function Index({ allPosts }) {
                 })}
               </ul>
             </div>
-            <div className="row-span-3 relative rounded">
+            <div className="bg-backgroundmid row-span-3 relative rounded">
               <Image
                 src={WilliamFelker}
                 alt="william felker in 2022"
@@ -57,8 +57,10 @@ export default function Index({ allPosts }) {
                 priority
               />
             </div>
-            <div className="p-10 rounded row-span-2">building</div>
-            <div className="col-span-2 p-10 rounded">
+            <div className="bg-backgroundmid p-10 rounded row-span-2">
+              building
+            </div>
+            <div className="bg-backgroundmid col-span-2 p-10 rounded">
               <span>Reading</span>
               <ul>
                 <li className="hover:translate-x-6 transform-gpu">
@@ -74,7 +76,9 @@ export default function Index({ allPosts }) {
               </ul>
             </div>
 
-            <div className="p-10 rounded">Dwelling in San Francisco</div>
+            <div className="bg-backgroundmid col-span-3 p-10 rounded">
+              Dwelling in San Francisco
+            </div>
           </div>
         </div>
       </Layout>
