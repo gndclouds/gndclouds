@@ -7,6 +7,7 @@ const footerLinks = {
     { name: "newsletter ↗", href: "https://buttondown.email/gndclouds" },
     { name: "twitter ↗", href: "https://twitter.com/gndclouds" },
     { name: "are.na ↗", href: "https://www.are.na/gndclouds" },
+    { name: "glitch ↗", href: "https://glitch.com/@gndclouds" },
   ],
 };
 
