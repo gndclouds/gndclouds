@@ -1,6 +1,4 @@
 import Link from "next/link";
-import Container from "./container";
-import { EXAMPLE_PATH } from "../lib/constants";
 import { useRouter } from "next/router";
 const navigation = {
   main: [{ name: "about", href: "/about" }],
@@ -10,12 +8,12 @@ export default function Navigation() {
   const { asPath, pathname } = useRouter();
   return (
     <>
-      <nav className="invisible md:visible sticky top-0 z-50 flex p-8 bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark">
+      <nav className="invisible md:visible sticky top-0 z-50 flex p-8 bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode">
         <Link href="/">
           <a className="flex-none">gndclouds</a>
         </Link>
         <input
-          className="grow pl-1 bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark"
+          className="grow pl-1 bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode"
           id="myInput"
           placeholder={asPath}
         />

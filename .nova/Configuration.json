@@ -3,6 +3,7 @@
   "prettier.format-on-save" : "Enable",
   "workspace.art_style" : 0,
   "workspace.color" : 2,
+  "workspace.name" : "gndclouds",
   "workspace.preview_type" : "custom",
   "workspace.preview_url" : "localhost:8080"
 }

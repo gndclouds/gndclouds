@@ -1,15 +1,6 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { Suspense, useState } from "react";
-import { Shapes } from "/lib/shapes";
-import { transition } from "/lib/motion.config";
-import useMeasure from "react-use-measure";
-import { OG_NAME } from "../lib/constants";
 
 export default function PageHero({ PageDescription, quickLinks }) {
-  const { asPath, pathname } = useRouter();
-  const Links = { quickLinks };
-
   return (
     <>
       <div className="grid grid-cols-3 gap-4">
