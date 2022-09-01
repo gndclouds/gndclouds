@@ -111,7 +111,7 @@ export default function About() {
           <title>{OG_NAME}</title>
         </Head>
         <div className="flex flex-wrap">
-          <div className="w-full sm:w-2/3">
+          <div className="w-full sm:w-2/3 sm:pr-3">
             <div className="pb-9">Hey I’m Will,</div>
             <div className="pb-9">
               My day-to-day focuses are on implementing web3 technologies to
@@ -153,14 +153,17 @@ export default function About() {
               .
             </div>
           </div>
-          <div className="w-full sm:w-1/3 relative rounded">
-            <Image
-              src={WilliamFelker}
-              alt="william felker in 2022"
-              layout="fill"
-              objectFit="contain"
-              priority
-            />
+          <div className="w-full sm:w-1/3 relative rounded ">
+            <div className="inset-x-0 top-0">
+              {" "}
+              <Image
+                src={WilliamFelker}
+                alt="william felker in 2022"
+                layout="fill"
+                objectFit="contain"
+                priority
+              />{" "}
+            </div>
           </div>
         </div>
         <div className=" uppercase ">Presently at:</div>

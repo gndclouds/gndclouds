@@ -18,7 +18,7 @@ function PPM({ stars }) {
 export default function Footer() {
   return (
     <>
-      <footer className="bg-backgroundlight dark:bg-backgrounddark text-textlight dark:text-textdark invisible md:visible flex p-8 ">
+      <footer className="bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode invisible md:visible flex p-8 ">
         <div className="">
           {footerLinks.main.map((item) => (
             <Link key={item.name} href={item.href}>

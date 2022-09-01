@@ -3,14 +3,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        backgroundlight: "#182e1a",
-        backgroundmid: "#ffffff",
-        backgrounddark: "#182e1a",
-        textlight: "#d8e1c0",
-        textmid: "#d8e1c0",
-        textdark: "#d8e1c0",
-        background: "#AFC2AE",
-        green: "#204231",
+        backgroundlightmode: "#d8e1c0",
+        textlightmode: "#182e1a",
+        backgrounddarkmode: "#182e1a",
+        textdarkmode: "#d8e1c0",
       },
       fontFamily: {
         sans: [

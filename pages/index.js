@@ -31,16 +31,17 @@ export default function Index({ allPosts }) {
               community Tiny Factories
             </div>
 
-            <div className="bg-backgroundmid row-span-3 col-span-2 p-10 rounded">
-              writting
+            <div className="bg-backgroundmid row-span-3 col-span-3 p-10 rounded">
+              <span className="uppercase">writing:</span>
               <ul>
-                {postData.slice(0, 3).map((d, i) => {
+                {postData.slice(0, 5).map((d, i) => {
                   const { title, description, slug, image } = d;
                   return (
-                    <li key={i} className="">
-                      <Link as={`/posts/${slug}`} href="/posts/[slug]" key={i}>
-                        <a className="">
-                          <span className="">{title} </span>
+                    <li className="block">
+                      <Link key={i} as={`/posts/${slug}`} href="/posts/[slug]">
+                        <a className="hover:translate-x-1 transform-gpu ">
+                          <div className="inline pr-1">→</div>
+                          <div className="inline">{title}</div>
                         </a>
                       </Link>
                     </li>
@@ -48,7 +49,7 @@ export default function Index({ allPosts }) {
                 })}
               </ul>
             </div>
-            <div className="bg-backgroundmid row-span-3 relative rounded">
+            {/* <div className="bg-backgroundmid row-span-3 relative rounded">
               <Image
                 src={WilliamFelker}
                 alt="william felker in 2022"
@@ -59,19 +60,29 @@ export default function Index({ allPosts }) {
             </div>
             <div className="bg-backgroundmid p-10 rounded row-span-2">
               building
-            </div>
-            <div className="bg-backgroundmid col-span-2 p-10 rounded">
-              <span>Reading</span>
+            </div>*/}
+            <div className="bg-backgroundmid col-span-3 p-10 rounded">
+              <span className="uppercase">reading:</span>
               <ul>
-                <li className="hover:translate-x-6 transform-gpu">
-                  Planetary Mine: Territories of Extraction under Late
-                  Capitalism
+                <li className="flex hover:translate-x-1 transform-gpu">
+                  <div className="inline pr-1">→</div>
+                  <div className="inline">
+                    Planetary Mine: Territories of Extraction under Late
+                    Capitalism{" "}
+                  </div>
                 </li>
-                <li className="hover:translate-x-6 transform-gpu">
-                  Ways of Being: Beyond Human Intelligence
+                <li className="flex hover:translate-x-1 transform-gpu">
+                  <div className="inline pr-1">→</div>
+                  <div className="inline">
+                    Ways of Being: Beyond Human Intelligence{" "}
+                  </div>
                 </li>
-                <li className="hover:translate-x-6 transform-gpu">
-                  A Pattern Language: Towns, Buildings, Construction
+
+                <li className="flex hover:translate-x-1 transform-gpu">
+                  <div className="inline pr-1">→</div>
+                  <div className="inline">
+                    A Pattern Language: Towns, Buildings, Construction
+                  </div>
                 </li>
               </ul>
             </div>
