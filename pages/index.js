@@ -37,8 +37,8 @@ export default function Index({ allPosts }) {
                 {postData.slice(0, 5).map((d, i) => {
                   const { title, description, slug, image } = d;
                   return (
-                    <li className="block">
-                      <Link key={i} as={`/posts/${slug}`} href="/posts/[slug]">
+                    <li key={i} className="block">
+                      <Link as={`/posts/${slug}`} href="/posts/[slug]">
                         <a className="hover:translate-x-1 transform-gpu ">
                           <div className="inline pr-1">→</div>
                           <div className="inline">{title}</div>
