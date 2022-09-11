@@ -118,12 +118,12 @@ export default function About() {
               help monitor greenhouse gas emissions. Currently, this takes the
               form of{" "}
               <Link href="https://hge.earth">
-                <a>Earth API</a>
+                <a className="font-medium">Earth API ↗</a>
               </Link>
               , a data management and visualization tool for bioregions,
               built-in collaboration with{" "}
               <Link href="https://anthropogenic.com">
-                <a>Anthropogenic</a>
+                <a className="font-medium">Anthropogenic ↗</a>
               </Link>
               .
             </div>
@@ -131,7 +131,7 @@ export default function About() {
             <div className="pb-9">
               I also{" "}
               <Link href="https://tinyfactories.space">
-                <a>co-run a community</a>
+                <a className="font-medium">co-run a community ↗</a>
               </Link>{" "}
               of creatives, consisting of indiepreneurs, coders, artists,
               designers, musicians, videographers, writers, animators (and more)
@@ -148,7 +148,7 @@ export default function About() {
               abstracted away so that we could focus on the intended function.
               Before that was college at{" "}
               <Link href="https://cca.edu">
-                <a>California College of the Arts</a>
+                <a className="font-medium">California College of the Arts ↗</a>
               </Link>
               .
             </div>

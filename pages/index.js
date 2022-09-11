@@ -39,7 +39,7 @@ export default function Index({ allPosts }) {
                   return (
                     <li key={i} className="block">
                       <Link as={`/posts/${slug}`} href="/posts/[slug]">
-                        <a className="hover:translate-x-1 transform-gpu ">
+                        <a className=" flex hover:translate-x-1 transform-gpu">
                           <div className="inline pr-1">→</div>
                           <div className="inline">{title}</div>
                         </a>

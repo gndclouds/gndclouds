@@ -6,12 +6,13 @@ export default function Home() {
   return (
     <Layout>
       <Head>
-        <title>Log</title>
+        <title>Learning Log</title>
         <meta />
       </Head>
 
       <main>
         <p>logs</p>
+        Loading from Notion
       </main>
     </Layout>
   );

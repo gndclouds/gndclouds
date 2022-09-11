@@ -1,0 +1,26 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>undefined/about</loc>
+    <changefreq>hourly</changefreq>
+  </url>
+  <url>
+    <loc>undefined</loc>
+    <changefreq>hourly</changefreq>
+  </url>
+  <url>
+    <loc>undefined/log</loc>
+    <changefreq>hourly</changefreq>
+  </url>
+  <url>
+    <loc>undefined/posts/[slug]</loc>
+    <changefreq>hourly</changefreq>
+  </url>
+  <url>
+    <loc>undefined/things/index</loc>
+    <changefreq>hourly</changefreq>
+  </url>
+  <url>
+    <loc>undefined/thoughts/index</loc>
+    <changefreq>hourly</changefreq>
+  </url>
+</urlset>
