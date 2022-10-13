@@ -1,113 +1,211 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import Layout from "../components/layout";
-import { getAllPosts } from "../lib/api";
-
 import Head from "next/head";
 import { OG_NAME } from "../lib/constants";
 import WilliamFelker from "../public/assets/williamfelker.JPG";
 
-export default function Index({ allPosts }) {
-  const [searchValue, setSearchValue] = useState("");
-  const { asPath, pathname } = useRouter();
+const cvData = [
+  {
+    company: "Anthropogenic",
+    href: "https://anthropogenic.com",
+    status: true,
+    previewImage: "",
+  },
+  {
+    company: "Tiny Factories",
+    href: "https://tinyfactories.space",
+    status: true,
+    previewImage: "",
+  },
+  {
+    company: "Oh Dot Zero",
+    href: "https://ohdotzero.co",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "Dark Matter Labs",
+    href: "https://darkmatterlabs.org/",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "Reduct Video",
+    href: "https://reduct.video",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "Protocol Labs",
+    href: "https://protocol.ai",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "Udacity",
+    href: "https://www.udacity.com",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "Xero PARC",
+    href: "https://www.parc.com",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "Fjord",
+    href: "https://www.accenture.com",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "IFTTT",
+    href: "https://ifttt.com",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "IDEO CoLab",
+    href: "https://www.ideocolab.com",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "IDEO",
+    href: "https://ideo.com",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "CCA Secret Project",
+    href: "https://",
+    status: false,
+  },
+  {
+    company: "Maker Media",
+    href: "https://make.co",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "Intel Labs",
+    href: "",
+    status: false,
+    previewImage: "",
+  },
+  {
+    company: "California College of the Arts",
+    href: "https://www.cca.edu",
+    status: false,
+    previewImage: "",
+  },
+];
 
-  const postData = allPosts.filter((postData) => {
-    const searchContent = postData.title;
-    return searchContent.toLowerCase().includes(searchValue.toLowerCase());
-  });
-
+export default function About() {
   return (
     <>
       <Layout>
         <Head>
           <title>{OG_NAME}</title>
         </Head>
-        <div className="py-8">
-          <div className="grid gap-4 grid-cols-3 grid-rows-3">
-            <div className="bg-backgroundmid col-span-3 p-10 rounded">
-              Mitigating human-generated emissions Anthropogenic building a
-              community Tiny Factories
+        <div className="flex flex-wrap">
+          <div className="w-full sm:w-2/3 sm:pr-3">
+            <div className="pb-9">Hey I’m Will,</div>
+            <div className="pb-9">
+              My day-to-day focuses are on implementing web3 technologies to
+              help monitor greenhouse gas emissions. Currently, this takes the
+              form of{" "}
+              <Link href="https://hge.earth">
+                <a className="font-medium hover:underline hover:underline-offset-2">
+                  Earth API ↗
+                </a>
+              </Link>
+              , a data management and visualization tool for bioregions,
+              built-in collaboration with{" "}
+              <Link href="https://anthropogenic.com">
+                <a className="font-medium hover:underline hover:underline-offset-2">
+                  Anthropogenic ↗
+                </a>
+              </Link>
+              .
             </div>
 
-            <div className="bg-backgroundmid row-span-3 col-span-3 p-10 rounded">
-              <span className="uppercase">writing:</span>
-              <ul>
-                {postData.slice(0, 5).map((d, i) => {
-                  const { title, description, slug, image } = d;
-                  return (
-                    <li key={i} className="block">
-                      <Link as={`/posts/${slug}`} href="/posts/[slug]">
-                        <a className="hover:translate-x-1 transform-gpu ">
-                          <div className="inline pr-1">→</div>
-                          <div className="inline">{title}</div>
-                        </a>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+            <div className="pb-9">
+              I also{" "}
+              <Link href="https://tinyfactories.space">
+                <a className="font-medium hover:underline hover:underline-offset-2">
+                  co-run a community ↗
+                </a>
+              </Link>{" "}
+              of creatives, consisting of indiepreneurs, coders, artists,
+              designers, musicians, videographers, writers, animators (and more)
+              who are working to support each other in establishing both
+              creative autonomy and financial stability. This space allows me to
+              tinker with smaller ideas to keep my creative thoughts flowing in
+              a way that is not always sustainable at work.
             </div>
-            {/* <div className="bg-backgroundmid row-span-3 relative rounded">
+
+            <div className="pb-9">
+              In the before times, I worked as a design technologist at research
+              labs across all types of companies. In these roles, I translated
+              emerging technologies into prototypes in which the core tech was
+              abstracted away so that we could focus on the intended function.
+              Before that was at{" "}
+              <Link href="https://cca.edu">
+                <a className="font-medium hover:underline hover:underline-offset-2">
+                  California College of the Arts ↗
+                </a>
+              </Link>{" "}
+              pursuing a bfa in{" "}
+              <Link href="https://www.cca.edu/design/ixd/">
+                <a className="font-medium hover:underline hover:underline-offset-2">
+                  Interaction Design ↗
+                </a>
+              </Link>
+              .
+            </div>
+          </div>
+          <div className="w-full sm:w-1/3 relative rounded ">
+            <div className="inset-x-0 top-0">
+              {" "}
               <Image
                 src={WilliamFelker}
                 alt="william felker in 2022"
                 layout="fill"
                 objectFit="contain"
                 priority
-              />
-            </div>
-            <div className="bg-backgroundmid p-10 rounded row-span-2">
-              building
-            </div>*/}
-            <div className="bg-backgroundmid col-span-3 p-10 rounded">
-              <span className="uppercase">reading:</span>
-              <ul>
-                <li className="flex hover:translate-x-1 transform-gpu">
-                  <div className="inline pr-1">→</div>
-                  <div className="inline">
-                    Planetary Mine: Territories of Extraction under Late
-                    Capitalism{" "}
-                  </div>
-                </li>
-                <li className="flex hover:translate-x-1 transform-gpu">
-                  <div className="inline pr-1">→</div>
-                  <div className="inline">
-                    Ways of Being: Beyond Human Intelligence{" "}
-                  </div>
-                </li>
-
-                <li className="flex hover:translate-x-1 transform-gpu">
-                  <div className="inline pr-1">→</div>
-                  <div className="inline">
-                    A Pattern Language: Towns, Buildings, Construction
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-backgroundmid col-span-3 p-10 rounded">
-              Dwelling in San Francisco
+              />{" "}
             </div>
           </div>
         </div>
+        <div className=" uppercase ">Presently at:</div>
+        {cvData.map((data, i) => (
+          <>
+            {data.status === true && (
+              <Link key={i} href={data.href}>
+                <a className="font-medium hover:underline hover:underline-offset-2 block pb-3">
+                  {data.company} ↗
+                </a>
+              </Link>
+            )}
+          </>
+        ))}
+        <div className="py-3"></div>
+        <div className="pb-1 uppercase ">Previous at:</div>{" "}
+        {cvData.map((data, i) => (
+          <>
+            {data.status === false && (
+              <Link key={i} href={data.href}>
+                <a className="font-medium hover:underline hover:underline-offset-2 block pb-3">
+                  {data.company} ↗
+                </a>
+              </Link>
+            )}
+          </>
+        ))}
       </Layout>
     </>
   );
-}
-
-export async function getStaticProps() {
-  const allPosts = getAllPosts([
-    "title",
-    "date",
-    "slug",
-    "author",
-    "coverImage",
-    "excerpt",
-  ]);
-
-  return {
-    props: { allPosts },
-  };
 }

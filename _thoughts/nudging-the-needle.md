@@ -9,5 +9,3 @@ author:
 ogImage:
   url: "/assets/blog/preview/cover.jpg"
 ---
-
-https://ferpalacios.xyz/orphenyadeone/williamfelker.html

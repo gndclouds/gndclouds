@@ -6,4 +6,5 @@ Disallow: /accounts
 
 # Allow all crawlers
 User-agent: *
-Allow: /
+Allow: /ls
+

@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["source.unsplash.com"],
+    domains: ["source.unsplash.com", "i.gr-assets.com"],
   },
   async redirects() {
     return [
@@ -21,5 +21,12 @@ module.exports = {
         permanent: true,
       },
     ];
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      require("./scripts/generate-sitemap");
+    }
+
+    return config;
   },
 };
