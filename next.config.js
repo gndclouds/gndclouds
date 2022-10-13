@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["source.unsplash.com"],
+    domains: ["source.unsplash.com", "i.gr-assets.com"],
   },
   async redirects() {
     return [

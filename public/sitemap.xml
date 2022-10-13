@@ -16,11 +16,11 @@
     <changefreq>hourly</changefreq>
   </url>
   <url>
-    <loc>undefined/things/index</loc>
+    <loc>undefined/thoughts/index</loc>
     <changefreq>hourly</changefreq>
   </url>
   <url>
-    <loc>undefined/thoughts/index</loc>
+    <loc>undefined/things/index</loc>
     <changefreq>hourly</changefreq>
   </url>
 </urlset>
