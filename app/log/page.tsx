@@ -25,11 +25,24 @@ export default async function Page({
       {channel.contents.map((d: any) => (
         <div className="flex flex-col space-y-1 mb-4">
           <div className="w-full flex flex-col">
-            <p>{d.generated_title}</p>
+            <p>{d.title}</p>
             <p>
               {/* s {!d.content ? <>d{d.description}</> : <>{d.content}</>} */}
             </p>
-            <div>{!d.image.display ? <>Found Image</> : <>No Image</>} </div>
+            {/* <div>
+              {!d.image.display ? (
+                <>{d.content}</>
+              ) : (
+                <>
+                  <Image
+                    src={d.image.square.url}
+                    width={500}
+                    height={500}
+                    alt="Picture of the author"
+                  />
+                </>
+              )}{" "}
+            </div> */}
           </div>
         </div>
       ))}
