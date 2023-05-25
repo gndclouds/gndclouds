@@ -1,9 +1,20 @@
-/** @type {import('next').NextConfig} */
+const { withContentlayer } = require("next-contentlayer");
+
+/**
+ * @type {import('next').NextConfig}
+ */
 const nextConfig = {
-  experimental: {
-    mdxRs: true,
+  reactStrictMode: true,
+  swcMinify: true,
+  async redirects() {
+    return [
+      {
+        source: "/cv",
+        destination: "/about",
+        permanent: false,
+      },
+    ];
   },
 };
 
-const withMDX = require("@next/mdx")();
-module.exports = withMDX(nextConfig);
+module.exports = withContentlayer(nextConfig);

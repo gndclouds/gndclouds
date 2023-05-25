@@ -5,9 +5,5 @@ import Content from "./message.mdx";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  return (
-    <main className="">
-      <Content />
-    </main>
-  );
+  return <main className="">{/* <Content /> */}</main>;
 }

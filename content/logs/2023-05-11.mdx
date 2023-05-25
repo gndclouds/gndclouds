@@ -1,0 +1,114 @@
+---
+title: "DRM Free Book Publishers"
+publishedAt: "2021-01-01"
+status: "published"
+tag: log/dev, log/projects,
+---
+
+# Using color spectrum data into RGB values
+
+A few weeks back, a friend and I thought it would be fun to build a life-size color picker for a party similar to what you might use in a tool like Photoshop.
+
+To start, we used an [Adafruit ESP32-S3](https://www.adafruit.com/product/5691) and [AS7341](https://www.adafruit.com/product/4698) to measure the color of an object and convert it to RGB to display on a neopixel. Oddly most of the example code and project referencing the AS7341 keep the 11 color channels the same as RGB values. So my friend took a pass at doing so.
+
+```python
+# Converting sensor data from AS7341 to RBG values.
+# 20230512
+
+from time import sleep
+import board
+import neopixel
+from adafruit_as7341 import AS7341
+
+# Define Things
+i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
+sensor = AS7341(i2c)
+pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
+pixel.brightness = 1
+
+old_min = 0
+old_max = 5000
+new_min = 0
+new_max = 255
+
+def bar_graph(read_value):
+	scaled = int(read_value / 1000)
+	return "[%5d] " % read_value + (scaled * "*")
+
+def map(value, leftMin, leftMax, rightMin, rightMax):
+	# Figure out how 'wide' each range is
+	leftSpan = leftMax - leftMin
+	rightSpan = rightMax - rightMin
+
+	# Convert the left range into a 0-1 range (float)
+	valueScaled = float(value - leftMin) / float(leftSpan)
+
+	# Convert the 0-1 range into a value in the right range.
+	return rightMin + (valueScaled * rightSpan)
+
+rgbPerWavelength = [
+		[118,0,237], #0
+		[0,40,255], #1
+		[0,213,255], #2
+		[31,255,0], #3
+		[179,255,0], #4
+		[255,223,0], #5
+		[255,79,0], #6
+		[255,0,0], #7
+	]
+
+def waveToRGB(wave_amt,wave_index):
+	outRGB = [0,0,0]
+	outRGB[0] = wave_amt * rgbPerWavelength[wave_index][0]
+	outRGB[1] = wave_amt * rgbPerWavelength[wave_index][1]
+	outRGB[2] = wave_amt * rgbPerWavelength[wave_index][2]
+	return outRGB
+#Loops
+while True:
+	sensor.led_current = 0.01
+	sensor.led = False
+
+	sensor_channels = sensor.all_channels
+
+	acc_rgb = [0,0,0]
+	for wave_index in [2,4,7]:# range(8):
+		wave_amt = sensor_channels[wave_index]
+		rgb_amt = waveToRGB(wave_amt,wave_index)
+		acc_rgb[0] += rgb_amt[0]
+		acc_rgb[1] += rgb_amt[1]
+		acc_rgb[2] += rgb_amt[2]
+
+	maxColour = max(acc_rgb[0],max(acc_rgb[1],acc_rgb[2]))
+	#minColour = min(acc_rgb[0],min(acc_rgb[1],acc_rgb[2]))
+
+	newR = map(acc_rgb[0], 0, maxColour, 0, 255)
+	newG = map(acc_rgb[1], 0, maxColour, 0, 255)
+	newB = map(acc_rgb[2], 0, maxColour, 0, 255)
+
+	R = sensor_channels[7]
+	print("R "+ str(R))
+	G = sensor_channels[4]
+	print("G "+ str(G))
+	B = sensor_channels[2]
+	print("B "+ str(B))
+	print("\n------------------------------------------------")
+	pixel.fill((newR, newG, newB))
+	sleep(1)
+
+```
+
+We found the color of the neopixels to be less accurate then we wanted and ultimately looked into other sensors for measuring the primary color of the object the [[color picker]] was pointing at. It turns out that a better way to do this is with a camera, as it's designed to convert things to RGB 😅. And there is even a PiCamera library, `picamera.array.PiRGBArray()` does what we have been trying to get working with the `as7341` sensor.
+
+https://en.wikipedia.org/wiki/CIE_1931_color_space#Definition_of_the_CIE_XYZ_color_space
+
+https://wiki.dfrobot.com/AS7341_Visible_Light_Sensor_SKU_SEN0365
+
+Pi Camera Verison
+
+![[RGB-Histogram-from-ResearchGate.png]]
+
+https://eloquentarduino.github.io/2021/09/rgb-histogram-of-esp32-cam-images/
+
+https://maker.pro/raspberry-pi/tutorial/how-to-create-object-detection-with-opencv
+
+https://www.hackster.io/aula-jazmati/color-detection-using-raspberry-pi-python-animation-tools-445349

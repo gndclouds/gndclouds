@@ -1,0 +1,15 @@
+---
+title: "DRM Free Book Publishers"
+publishedAt: "2021-01-01"
+status: "published"
+tag: log/dev
+---
+
+When creating a page for a collection, I first want to get the `collectionPage` info, then run the `collectionData` request. Because not all `collectionPage` will have `collectionData`.
+
+So `collectionData` can share most of the code with `PageBody.tsx` but I will need to pass an `id` instead of a `table` .
+
+1. Create a `CollectionHero` function in `PageHero`.tsx which calls`/api/` to `GET` the metadata for a page.
+2. If the `collection` has a `Measurements[].length` then render the `collectionBody` from `PageBody`.tsx
+
+Time for lunch, then will give this a try.

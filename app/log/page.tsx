@@ -1,81 +1,29 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import Content from "./message.mdx";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-const inter = Inter({ subsets: ["latin"] });
+import { allLogs } from "contentlayer/generated";
 
-export default function Home() {
+export default function LogPage() {
   return (
     <main className="">
-      <div className="">
-        <p>
-          Get started by editing&nbsp;
-          <code className="">app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {allLogs
+        .sort((a, b) => {
+          if (new Date(a.publishedAt) > new Date(b.publishedAt)) {
+            return -1;
+          }
+          return 1;
+        })
+        .map((log: any) => (
+          <Link
+            key={log.slug}
+            className="flex flex-col space-y-1 mb-4"
+            href={`/newsletter/${log.slug}`}
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className=""
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="">
-        <div>
-          <Content />
-        </div>
-      </div>
-
-      <div className="">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className=""
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className=""
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className=""
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+            <div className="w-full flex flex-col">
+              <p>{log.title}</p>
+            </div>
+          </Link>
+        ))}
     </main>
   );
 }
