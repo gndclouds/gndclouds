@@ -21,6 +21,10 @@ export default async function Page({
   return (
     <>
       <h1>Collection</h1>
+      <div className="">
+        <div className="">✨ Inspiration</div>
+        <div className="">🔬 Research</div>
+      </div>
       {channel.contents.map((d: any) => (
         <Link
           key={d.id}

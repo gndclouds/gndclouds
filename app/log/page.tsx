@@ -1,51 +1,45 @@
-import Image from "next/image";
+import Link from "next/link";
+import { compareDesc, format, parseISO } from "date-fns";
+import { allLogs, Log } from "contentlayer/generated";
+import { getMDXComponent } from "next-contentlayer/hooks";
 
-async function getChannel(collection: string) {
-  const res = await fetch(`https://api.are.na/v2/channels/gc-logs`, {
-    next: { revalidate: 10 },
-  });
-  console.log(res);
-  return res.json();
-}
-
-export default async function Page({
-  params: { collection },
-}: {
-  params: { collection: string };
-}) {
-  // Initiate both requests in parallel
-  const channelData = getChannel(collection);
-
-  // Wait for the promises to resolve
-  const [channel] = await Promise.all([channelData]);
+function LogCard(log: Log) {
+  const Content = getMDXComponent(log.body.code);
 
   return (
-    <>
-      <h1>{channel.title}</h1>
-      {channel.contents.map((d: any) => (
-        <div key={d.id} className="flex flex-col space-y-1 mb-4">
-          <div className="w-full flex flex-col">
-            <p>{d.title}</p>
-            <p>
-              {/* s {!d.content ? <>d{d.description}</> : <>{d.content}</>} */}
-            </p>
-            {/* <div>
-              {!d.image.display ? (
-                <>{d.content}</>
-              ) : (
-                <>
-                  <Image
-                    src={d.image.square.url}
-                    width={500}
-                    height={500}
-                    alt="Picture of the author"
-                  />
-                </>
-              )}{" "}
-            </div> */}
-          </div>
-        </div>
+    <div className="mb-8">
+      {/* <h2 className="text-xl">
+        <Link
+          href={log.url}
+          className="text-blue-700 hover:text-blue-900"
+          legacyBehavior
+        >
+          {log.title}
+        </Link>
+      </h2> */}
+      <time dateTime={log.publishedAt} className="block mb-2  text-gray-600">
+        {format(parseISO(log.publishedAt), "yyyy-MM-d, ")}
+      </time>
+      <div className="">
+        {" "}
+        <Content />{" "}
+      </div>
+    </div>
+  );
+}
+
+export default function Home() {
+  const logs = allLogs.sort((a, b) =>
+    compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
+  );
+
+  return (
+    <div className="max-w-xl py-8 mx-auto">
+      <h1 className="">Logs</h1>
+
+      {logs.map((log, idx) => (
+        <LogCard key={idx} {...log} />
       ))}
-    </>
+    </div>
   );
 }
