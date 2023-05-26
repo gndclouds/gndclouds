@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { allNewsletters } from "contentlayer/generated";
-
 export const metadata: Metadata = {
   title: "Newsletter",
   description: "A newsletter from gndclouds delivered on a monthly-ish basis.",
@@ -18,7 +16,7 @@ export default function NewsletterPage() {
             action="https://buttondown.email/api/emails/embed-subscribe/gndclouds"
             method="post"
             target="popupwindow"
-            onSubmit="window.open('https://newsletter.gndclouds.earth', 'popupwindow')"
+            // onSubmit="window.open('https://newsletter.gndclouds.earth', 'popupwindow')"
             className="flex inline-block bg-black"
           >
             <label htmlFor="bd-email"></label>
@@ -40,26 +38,7 @@ export default function NewsletterPage() {
           </form>
         </div>
       </div>
-      <div>
-        {allNewsletters
-          .sort((a, b) => {
-            if (new Date(a.publishedAt) > new Date(b.publishedAt)) {
-              return -1;
-            }
-            return 1;
-          })
-          .map((newsletter: any) => (
-            <Link
-              key={newsletter.slug}
-              className="flex flex-col space-y-1 mb-4"
-              href={`/newsletter/${newsletter.slug}`}
-            >
-              <div className="w-full flex flex-col">
-                <p>{newsletter.title}</p>
-              </div>
-            </Link>
-          ))}
-      </div>
+      <div></div>
     </main>
   );
 }

@@ -14,7 +14,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Navbar({ user }: { user: any }) {
+export default function Navbar() {
   const pathname = usePathname();
 
   return (

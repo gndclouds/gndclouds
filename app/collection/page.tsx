@@ -23,6 +23,7 @@ export default async function Page({
       <h1>Collection</h1>
       {channel.contents.map((d: any) => (
         <Link
+          key={d.id}
           className="flex flex-col space-y-1 mb-4"
           href={`/collection/${d.slug}`}
         >

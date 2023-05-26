@@ -21,7 +21,7 @@ export default async function Page({
     <>
       <h1>{channel.title}</h1>
       {channel.contents.map((d: any) => (
-        <div className="flex flex-col space-y-1 mb-4">
+        <div key={d.id} className="flex flex-col space-y-1 mb-4">
           <div className="w-full flex flex-col">
             <p>{d.generated_title}</p>
             <p>{d.content}</p>

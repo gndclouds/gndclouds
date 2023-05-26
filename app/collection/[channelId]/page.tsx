@@ -25,7 +25,7 @@ export default async function Page({
       <h1>{channel.title}</h1>
       <div className="grid grid-cols-4 gap-4">
         {channel.contents.map((d: any) => (
-          <div className="flex flex-col space-y-1 mb-4">
+          <div key={d.id} className="flex flex-col space-y-1 mb-4">
             <div className="w-full flex flex-col">
               {!d.image.display ? (
                 <>{d.content}</>
