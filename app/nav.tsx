@@ -6,10 +6,8 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 const navigation = [
-  { name: "log", href: "/log" },
-  { name: "newsletter", href: "/newsletter" },
-  { name: "blog", href: "/blog" },
-  { name: "projects", href: "/project" },
+  { name: "thoughts", href: "/thoughts" },
+  { name: "things", href: "/things" },
   { name: "about", href: "/about" },
 ];
 

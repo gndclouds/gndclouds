@@ -8,7 +8,7 @@ function LogCard(log: Log) {
 
   return (
     <div className="mb-8">
-      {/* <h2 className="text-xl">
+      <h2 className="text-xl">
         <Link
           href={log.url}
           className="text-blue-700 hover:text-blue-900"
@@ -16,14 +16,11 @@ function LogCard(log: Log) {
         >
           {log.title}
         </Link>
-      </h2> */}
+      </h2>
       <time dateTime={log.publishedAt} className="block mb-2  text-gray-600">
         {format(parseISO(log.publishedAt), "yyyy-MM-d, ")}
       </time>
-      <div className="">
-        {" "}
-        <Content />{" "}
-      </div>
+      <div className=""> {/* <Content />{" "} */}</div>
     </div>
   );
 }
