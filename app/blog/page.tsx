@@ -17,21 +17,14 @@ function BlogCard(blog: Blog) {
           {blog.title}
         </Link>
       </h2>
-      <time
-        dateTime={blog.publishedAt}
-        className="block mb-2 text-xs text-gray-600"
-      >
-        {format(parseISO(blog.publishedAt), "LLLL d, yyyy")}
-      </time>
+
       <div className="text-sm">{/* <Content /> */}</div>
     </div>
   );
 }
 
 export default function Home() {
-  const blogs = allBlogs.sort((a, b) =>
-    compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
-  );
+  const blogs = allBlogs
 
   return (
     <div className="max-w-xl py-8 mx-auto">
