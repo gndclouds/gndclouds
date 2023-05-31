@@ -2,7 +2,7 @@ import { defineDocumentType, makeSource } from "contentlayer/source-files";
 
 const Log = defineDocumentType(() => ({
   name: "Log",
-  filePathPattern: `logs/*.mdx`,
+  filePathPattern: `**/*.mdx`,
   contentType: "mdx",
   fields: {
     title: {
@@ -10,16 +10,36 @@ const Log = defineDocumentType(() => ({
       description: "The title of the post",
       required: true,
     },
+    excerpt: {
+      type: "string",
+      description: "The exerpt of the post",
+      required: false,
+    },
     publishedAt: {
       type: "date",
       description: "The date of the post",
       required: true,
     },
+    coverImage: {
+      type: "string",
+      description: "The OG of the post",
+      required: false,
+    },
+    externalUrl: {
+      type: "string",
+      description: "The orginal publication of the post",
+      required: false,
+    },
+    tags: {
+      type: "string",
+      description: "The tags of the post",
+      required: false,
+    },
   },
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/${doc._raw.flattenedPath}`,
+      resolve: (doc) => `log/${doc._raw.flattenedPath}`,
     },
   },
 }));
@@ -34,23 +54,43 @@ const Newsletter = defineDocumentType(() => ({
       description: "The title of the post",
       required: true,
     },
+    excerpt: {
+      type: "string",
+      description: "The exerpt of the post",
+      required: false,
+    },
     publishedAt: {
       type: "date",
       description: "The date of the post",
       required: true,
     },
+    coverImage: {
+      type: "string",
+      description: "The OG of the post",
+      required: false,
+    },
+    externalUrl: {
+      type: "string",
+      description: "The orginal publication of the post",
+      required: false,
+    },
+    tags: {
+      type: "string",
+      description: "The tags of the post",
+      required: false,
+    },
   },
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/${doc._raw.flattenedPath}`,
+      resolve: (doc) => `newsletter/${doc._raw.flattenedPath}`,
     },
   },
 }));
 
 const Blog = defineDocumentType(() => ({
   name: "Blog",
-  filePathPattern: `/blogs/*.mdx`,
+  filePathPattern: `**/*.mdx`,
   contentType: "mdx",
   fields: {
     title: {
@@ -58,16 +98,36 @@ const Blog = defineDocumentType(() => ({
       description: "The title of the post",
       required: true,
     },
+    excerpt: {
+      type: "string",
+      description: "The exerpt of the post",
+      required: false,
+    },
     publishedAt: {
       type: "date",
       description: "The date of the post",
       required: true,
     },
+    coverImage: {
+      type: "string",
+      description: "The OG of the post",
+      required: false,
+    },
+    externalUrl: {
+      type: "string",
+      description: "The orginal publication of the post",
+      required: false,
+    },
+    tags: {
+      type: "string",
+      description: "The tags of the post",
+      required: false,
+    },
   },
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/${doc._raw.flattenedPath}`,
+      resolve: (doc) => `blog/${doc._raw.flattenedPath}`,
     },
   },
 }));
@@ -82,10 +142,30 @@ const Project = defineDocumentType(() => ({
       description: "The title of the post",
       required: true,
     },
+    excerpt: {
+      type: "string",
+      description: "The exerpt of the post",
+      required: false,
+    },
     publishedAt: {
       type: "date",
       description: "The date of the post",
       required: true,
+    },
+    coverImage: {
+      type: "string",
+      description: "The OG of the post",
+      required: false,
+    },
+    externalUrl: {
+      type: "string",
+      description: "The orginal publication of the post",
+      required: false,
+    },
+    tags: {
+      type: "string",
+      description: "The tags of the post",
+      required: false,
     },
   },
   computedFields: {

@@ -9,15 +9,18 @@ import { allNewsletters, Newsletter } from "contentlayer/generated";
 
 import { getMDXComponent } from "next-contentlayer/hooks";
 
-function Card(data: Data) {
+interface Data {
+  url: string;
+  title: string;
+  publishedAt: string;
+}
 
+function Card(data: Data) {
   return (
     <div className="mb-8">
-       <div className="text-xl">
-        <Link
-          href={data.url}
-        >
-         <div className="text-lg">{data.title}</div>
+      <div className="text-xl">
+        <Link href={data.url}>
+          <div className="text-lg">{data.title}</div>
         </Link>
       </div>
       <time dateTime={data.publishedAt} className="text-sm">
