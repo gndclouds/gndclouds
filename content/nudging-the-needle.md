@@ -1,11 +1,12 @@
 ---
-title: "Poems Made For Earth"
+title: "Nudging The Needle"
 excerpt: "Field notes on infrastructure, urban planning, and architecture details from the streets of Taiwan."
-publishedAt: "2020-11-14T05:35:07.322Z"
+publishedAt: "2020-11-14"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Project"
+type: "Blog"
 tags:
 ---
 
-ee
+
+HI
