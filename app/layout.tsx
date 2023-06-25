@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+
+// If loading a variable font, you don't need to specify the font weight
+const inter = Inter({ subsets: ["latin"] });
 // import { Analytics } from "@vercel/analytics/react";
 import Nav from "./nav";
 
@@ -18,13 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode">
-        <Nav />
-        <div className="mx-auto p-8 py-50 font-mono min-h-screen max-w-screen-xl">
-          {" "}
-          {children}
-        </div>
-      </body>
+      <div className={inter.className}>
+        <body className="bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode">
+          <Nav />
+          <div className="mx-auto p-8 py-50 min-h-screen max-w-screen-xl">
+            {" "}
+            {children}
+          </div>
+        </body>
+      </div>
     </html>
   );
 }

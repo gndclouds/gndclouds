@@ -32,68 +32,68 @@ new_min = 0
 new_max = 255
 
 def bar_graph(read_value):
-	scaled = int(read_value / 1000)
-	return "[%5d] " % read_value + (scaled * "*")
+  scaled = int(read_value / 1000)
+  return "[%5d] " % read_value + (scaled * "*")
 
 def map(value, leftMin, leftMax, rightMin, rightMax):
-	# Figure out how 'wide' each range is
-	leftSpan = leftMax - leftMin
-	rightSpan = rightMax - rightMin
+  # Figure out how 'wide' each range is
+  leftSpan = leftMax - leftMin
+  rightSpan = rightMax - rightMin
 
-	# Convert the left range into a 0-1 range (float)
-	valueScaled = float(value - leftMin) / float(leftSpan)
+  # Convert the left range into a 0-1 range (float)
+  valueScaled = float(value - leftMin) / float(leftSpan)
 
-	# Convert the 0-1 range into a value in the right range.
-	return rightMin + (valueScaled * rightSpan)
+  # Convert the 0-1 range into a value in the right range.
+  return rightMin + (valueScaled * rightSpan)
 
 rgbPerWavelength = [
-		[118,0,237], #0
-		[0,40,255], #1
-		[0,213,255], #2
-		[31,255,0], #3
-		[179,255,0], #4
-		[255,223,0], #5
-		[255,79,0], #6
-		[255,0,0], #7
-	]
+    [118,0,237], #0
+    [0,40,255], #1
+    [0,213,255], #2
+    [31,255,0], #3
+    [179,255,0], #4
+    [255,223,0], #5
+    [255,79,0], #6
+    [255,0,0], #7
+  ]
 
 def waveToRGB(wave_amt,wave_index):
-	outRGB = [0,0,0]
-	outRGB[0] = wave_amt * rgbPerWavelength[wave_index][0]
-	outRGB[1] = wave_amt * rgbPerWavelength[wave_index][1]
-	outRGB[2] = wave_amt * rgbPerWavelength[wave_index][2]
-	return outRGB
+  outRGB = [0,0,0]
+  outRGB[0] = wave_amt * rgbPerWavelength[wave_index][0]
+  outRGB[1] = wave_amt * rgbPerWavelength[wave_index][1]
+  outRGB[2] = wave_amt * rgbPerWavelength[wave_index][2]
+  return outRGB
 #Loops
 while True:
-	sensor.led_current = 0.01
-	sensor.led = False
+  sensor.led_current = 0.01
+  sensor.led = False
 
-	sensor_channels = sensor.all_channels
+  sensor_channels = sensor.all_channels
 
-	acc_rgb = [0,0,0]
-	for wave_index in [2,4,7]:# range(8):
-		wave_amt = sensor_channels[wave_index]
-		rgb_amt = waveToRGB(wave_amt,wave_index)
-		acc_rgb[0] += rgb_amt[0]
-		acc_rgb[1] += rgb_amt[1]
-		acc_rgb[2] += rgb_amt[2]
+  acc_rgb = [0,0,0]
+  for wave_index in [2,4,7]:# range(8):
+    wave_amt = sensor_channels[wave_index]
+    rgb_amt = waveToRGB(wave_amt,wave_index)
+    acc_rgb[0] += rgb_amt[0]
+    acc_rgb[1] += rgb_amt[1]
+    acc_rgb[2] += rgb_amt[2]
 
-	maxColour = max(acc_rgb[0],max(acc_rgb[1],acc_rgb[2]))
-	#minColour = min(acc_rgb[0],min(acc_rgb[1],acc_rgb[2]))
+  maxColour = max(acc_rgb[0],max(acc_rgb[1],acc_rgb[2]))
+  #minColour = min(acc_rgb[0],min(acc_rgb[1],acc_rgb[2]))
 
-	newR = map(acc_rgb[0], 0, maxColour, 0, 255)
-	newG = map(acc_rgb[1], 0, maxColour, 0, 255)
-	newB = map(acc_rgb[2], 0, maxColour, 0, 255)
+  newR = map(acc_rgb[0], 0, maxColour, 0, 255)
+  newG = map(acc_rgb[1], 0, maxColour, 0, 255)
+  newB = map(acc_rgb[2], 0, maxColour, 0, 255)
 
-	R = sensor_channels[7]
-	print("R "+ str(R))
-	G = sensor_channels[4]
-	print("G "+ str(G))
-	B = sensor_channels[2]
-	print("B "+ str(B))
-	print("\n------------------------------------------------")
-	pixel.fill((newR, newG, newB))
-	sleep(1)
+  R = sensor_channels[7]
+  print("R "+ str(R))
+  G = sensor_channels[4]
+  print("G "+ str(G))
+  B = sensor_channels[2]
+  print("B "+ str(B))
+  print("\n------------------------------------------------")
+  pixel.fill((newR, newG, newB))
+  sleep(1)
 
 ```
 

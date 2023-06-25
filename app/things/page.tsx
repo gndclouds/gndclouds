@@ -13,7 +13,7 @@ const news = [
   },
   {
     company: {
-      name: "Hour9",
+      name: "House9",
       href: "#",
     },
   },
@@ -48,7 +48,7 @@ const clients = [
   {
     company: {
       name: "ContiniouseTech",
-      href: "#",
+      href: "https://continuoustech.com/",
     },
     jobTitle: "...",
   },
@@ -62,21 +62,21 @@ const clients = [
   {
     company: {
       name: "Speechify",
-      href: "#",
+      href: "https://speechify.com/",
     },
     jobTitle: "...",
   },
   {
     company: {
       name: "WorkshopCafe",
-      href: "#",
+      href: "https://www.workshopcafe.com/",
     },
     jobTitle: "...",
   },
   {
     company: {
-      name: "Pando",
-      href: "#",
+      name: "Pando Populus",
+      href: "https://pandopopulus.com/",
     },
     jobTitle: "...",
   },
@@ -100,7 +100,7 @@ const cv = [
   {
     company: {
       name: "Anthropogenic",
-      href: "#",
+      href: "https://anthropogenic.com",
     },
     jobTitle: "Co-Founder",
   },
@@ -215,7 +215,8 @@ const projects = [
   },
   {
     name: "haiku",
-    description: "ContiniouseTech",
+    description:
+      "A poem generator which makes a haiku based on how your city will be inpacted by the changing climate.",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
@@ -223,15 +224,17 @@ const projects = [
   },
   {
     name: "Glossary",
-    description: "ContiniouseTech",
+    description:
+      "A shared source of truth for terms, technology, treaties, and companines working on climate. ",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
     href: "https://glossary.madefor.earth",
   },
   {
-    name: "Earth's API",
-    description: "ContiniouseTech",
+    name: "🪦 Earth's API",
+    description:
+      "Everything humans do affects our ecosystems. And with many of the Earth's systems at tipping points, there must be accessibility and modernization of climate data platforms. Enter Earth API.",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
@@ -243,19 +246,21 @@ const projects = [
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
-    href: "#",
+    href: "https://tiny.garden",
   },
   {
     name: "Circulaw",
-    description: "ContiniouseTech",
+    description:
+      "CircuLaw is a knowledge platform dedicated to enabling the transition to a circular economy by identifying opportunities in current law to support a circular future.",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
-    href: "#",
+    href: "https://www.circulaw.nl/",
   },
   {
     name: "Slate",
-    description: "ContiniouseTech",
+    description:
+      "Slate is a search tool designed to help you remember and keep track of things you care about on the web.",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
@@ -277,23 +282,13 @@ const projects = [
     image: { href: "", alt: "" },
     href: "#",
   },
-
   {
-    name: "FigPug",
+    name: "🪦 Okohaus",
     description: "ContiniouseTech",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
-    href: "#",
-  },
-
-  {
-    name: "FigPug",
-    description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
-    image: { href: "", alt: "" },
-    href: "#",
+    href: "https://okohaus.earth/",
   },
   {
     name: "arena2slides",
@@ -301,24 +296,24 @@ const projects = [
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
-    href: "#",
+    href: "http://arena2slides.herokuapp.com/",
   },
   {
-    name: "easy chinese",
+    name: "🪦 easy chinese",
     description: "ContiniouseTech",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
-    href: "#",
+    href: "https://easychinese.space/",
   },
 
   {
-    name: "frienda",
+    name: "🪦 frienda",
     description: "ContiniouseTech",
     date: "ContiniouseTech",
     tags: "ContiniouseTech",
     image: { href: "", alt: "" },
-    href: "#",
+    href: "https://www.frienda.space/",
   },
 
   {
@@ -334,14 +329,14 @@ const projects = [
 export default function Home() {
   return (
     <main className="">
-      <div className="">Things</div>
+      <div className="font-bold text-lg">Things</div>
       <div className="pb-3">
-        Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
-        consectetur sint cillum minim nostrud duis. Culpa sunt esse eu occaecat
-        nulla incididunt amet reprehenderit tempor esse sunt nisi. Sint mollit
-        laborum exercitation ullamco laborum sint proident ea minim aute sint.
-        Sit cupidatat nisi id excepteur tempor veniam minim nisi ullamco eiusmod
-        enim magna Lorem occaecat.
+        Most of what I work on today is focused on exploring new ways to see
+        ourselves in nature instead of adjacent to it. This happens through
+        collaboration, fantastic teams, and a mix of serious and silly projects.
+        Since my path to get here constantly evolves, I share more of my past
+        work to show when some project ideas started vs. when they became a
+        reality.{" "}
       </div>
 
       <div className="py-9">
@@ -363,13 +358,13 @@ export default function Home() {
               <Link href={d.href}>
                 <div className="font-bold">{d.name} ↗</div>
               </Link>
-              <div>{d.jobTitle}</div>
+              <div>{d.description}</div>
             </div>
           ))}
         </div>
       </div>
       <div className="py-9">
-        <div className="">Teams</div>
+        <div>Teams</div>
         <div className="pb-3">
           Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
           consectetur.

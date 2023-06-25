@@ -15,7 +15,7 @@ module.exports = {
       },
       fontFamily: {
         sans: [
-          "Fivo Sans",
+          "Inter",
           "IBM Plex Sans",
           "Helvetica Neue",
           "ui-sans-serif",
