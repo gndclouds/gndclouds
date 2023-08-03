@@ -1,32 +1,47 @@
-module.exports = {
-  reactStrictMode: true,
+const { withContentlayer } = require("next-contentlayer");
+
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
   images: {
-    domains: ["source.unsplash.com", "i.gr-assets.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.are.na",
+      },
+      {
+        protocol: "https",
+        hostname: "d2w9rnfcy7mm78.cloudfront.net",
+      },
+    ],
   },
+  reactStrictMode: true,
+  swcMinify: true,
   async redirects() {
     return [
       {
-        source: "/home",
-        destination: "/",
-        permanent: true,
+        source: "/",
+        destination: "/about",
+        permanent: false,
       },
       {
-        source: "/post",
-        destination: "/blog",
-        permanent: true,
+        source: "/things",
+        destination: "/about",
+        permanent: false,
       },
       {
-        source: "/posts/",
-        destination: "/blogs/",
-        permanent: true,
+        source: "/thoughts",
+        destination: "/about",
+        permanent: false,
+      },
+      {
+        source: "/cv",
+        destination: "/about",
+        permanent: false,
       },
     ];
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      require("./scripts/generate-sitemap");
-    }
-
-    return config;
-  },
 };
+
+module.exports = withContentlayer(nextConfig);

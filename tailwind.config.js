@@ -1,5 +1,10 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./components/**/*.js", "./pages/**/*.js"],
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
     extend: {
       colors: {
@@ -10,7 +15,7 @@ module.exports = {
       },
       fontFamily: {
         sans: [
-          "Fivo Sans",
+          "Inter",
           "IBM Plex Sans",
           "Helvetica Neue",
           "ui-sans-serif",
@@ -25,15 +30,7 @@ module.exports = {
           "SFMono-Regular",
         ],
       },
-      spacing: {
-        28: "7rem",
-      },
-      letterSpacing: {
-        tighter: "-.04em",
-      },
-      lineHeight: {
-        tight: 1.2,
-      },
+
       fontSize: {
         xs: ["10px", "18px"],
         sm: ["10px", "21px"],
@@ -53,10 +50,6 @@ module.exports = {
         extrabold: 800,
         "extra-bold": 800,
         black: 900,
-      },
-      boxShadow: {
-        sm: "0 5px 10px rgba(0, 0, 0, 0.12)",
-        md: "0 8px 30px rgba(0, 0, 0, 0.12)",
       },
     },
   },

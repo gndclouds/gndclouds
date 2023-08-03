@@ -1,54 +1,39 @@
 {
   "name": "gndclouds",
-  "version": "7.0.3",
-  "description": "A website for William Felker",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/gndclouds/gndclouds"
-  },
-  "author": {
-    "name": "William Felker",
-    "email": "gndclouds@icloud.comnpm ",
-    "url": "https://gndclouds.cc"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gndclouds/gndclouds/issues"
-  },
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@notionhq/client": "^0.4.9",
-    "@react-three/fiber": "^7.0.24",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
-    "classnames": "2.2.6",
-    "date-fns": "2.16.1",
-    "framer-motion": "^5.5.5",
-    "fs": "^0.0.1-security",
-    "gray-matter": "4.0.2",
-    "next": "^12.0.7",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-map-gl": "^7.0.6",
-    "remark": "13.0.0",
-    "remark-html": "13.0.1",
-    "swr": "^1.2.2",
-    "three": "^0.136.0"
+
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "20.2.1",
+    "@types/react-dom": "18.2.4",
+    "are.na": "^0.1.5",
+    "autoprefixer": "10.4.14",
+    "contentlayer": "^0.3.2",
+    "date-fns": "^2.30.0",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.3",
+    "isomorphic-unfetch": "^4.0.2",
+    "next": "^13.4.4",
+    "next-contentlayer": "^0.3.2",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "reading-time": "^1.5.0",
+    "tailwindcss": "3.3.2",
+    "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@tailwindcss/aspect-ratio": "^0.4.0",
-    "@tailwindcss/forms": "^0.4.0",
-    "@tailwindcss/line-clamp": "^0.3.0",
-    "@tailwindcss/typography": "^0.5.2",
-    "autoprefixer": "^10.4.0",
-    "eslint": "^8.18.0",
-    "eslint-config-next": "12.0.7",
-    "postcss": "^8.4.5",
-    "tailwindcss": "^3.0.5"
+  "@types/react": "18.0.38",
+  "autoprefixer": "^10.4.14",
+  "postcss": "^8.4.23",
+  "tailwindcss": "^3.2.7",
+  "typescript": "5.0.4"
   }
 }
