@@ -85,6 +85,13 @@ const clients = [
 const cv = [
   {
     company: {
+      name: "🞴🞴🞴🞴 🞴🞴🞴🞴🞴",
+      href: "/",
+    },
+    jobTitle: "Co-Founder",
+  },
+  {
+    company: {
       name: "Made For Earth",
       href: "https://madefor.earth",
     },
@@ -141,7 +148,7 @@ const cv = [
   },
   {
     company: {
-      name: "PARC",
+      name: "Xerox PARC",
       href: "https://www.xerox.com/en-us/innovation/parc",
     },
     jobTitle: "Research Assistant",
@@ -235,16 +242,16 @@ const projects = [
     name: "🪦 Earth's API",
     description:
       "Everything humans do affects our ecosystems. And with many of the Earth's systems at tipping points, there must be accessibility and modernization of climate data platforms. Enter Earth API.",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://hge.earth",
   },
   {
     name: "Tiny Garden",
     description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://tiny.garden",
   },
@@ -252,8 +259,8 @@ const projects = [
     name: "Circulaw",
     description:
       "CircuLaw is a knowledge platform dedicated to enabling the transition to a circular economy by identifying opportunities in current law to support a circular future.",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://www.circulaw.nl/",
   },
@@ -261,66 +268,67 @@ const projects = [
     name: "Slate",
     description:
       "Slate is a search tool designed to help you remember and keep track of things you care about on the web.",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://slate.host",
   },
   {
     name: "Composing Sink",
     description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "#",
   },
   {
     name: "Pico Utility",
     description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "#",
   },
   {
     name: "🪦 Okohaus",
     description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://okohaus.earth/",
   },
   {
     name: "arena2slides",
-    description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    description: "Convert your are.na channel into a slideshow to share!",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "http://arena2slides.herokuapp.com/",
   },
   {
     name: "🪦 easy chinese",
-    description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    description:
+      "A carefully curated, fun, and pretty flashcards to accelerate your chinese learning from scratch.",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://easychinese.space/",
   },
 
   {
     name: "🪦 frienda",
-    description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    description: "Ever wanted to share a confidential secret? Now you can!",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://www.frienda.space/",
   },
 
   {
-    name: "Galileo Starter Kit",
+    name: "🪦 Galileo Starter Kit",
     description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "tbd",
+    tags: "tbd",
     image: { href: "", alt: "" },
     href: "#",
   },
@@ -364,7 +372,7 @@ export default function Home() {
         </div>
       </div>
       <div className="py-9">
-        <div>Teams</div>
+        <div id="teams">Teams</div>
         <div className="pb-3">
           Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
           consectetur.

@@ -21,6 +21,21 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/",
+        destination: "/about",
+        permanent: false,
+      },
+      {
+        source: "/things",
+        destination: "/about",
+        permanent: false,
+      },
+      {
+        source: "/thoughts",
+        destination: "/about",
+        permanent: false,
+      },
+      {
         source: "/cv",
         destination: "/about",
         permanent: false,

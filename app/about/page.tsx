@@ -46,17 +46,17 @@ export default function Home() {
           >
             co-run a community ↗
           </Link>{" "}
-          of creatives, consisting of indiepreneurs, coders, artists, designers,
-          musicians, videographers, writers, animators (and more) who are
-          working to support each other in establishing both creative autonomy
-          and financial stability. This space allows me to tinker with smaller
-          ideas to keep my creative thoughts flowing in a way that is not always
-          sustainable at work.
+          ,called Tiny Factories, of creatives, consisting of indiepreneurs,
+          coders, artists, designers, musicians, videographers, writers,
+          animators (and more) who are working to support each other in
+          establishing both creative autonomy and financial stability. This
+          space allows me to tinker with smaller ideas to keep my creative
+          thoughts flowing in a way that is not always sustainable at work.
         </div>
         <div className="pb-3">
           In the before times, I worked as a design technologist at research
           labs across all{" "}
-          <Link className="underline underline-offset-2" href="/">
+          <Link className="underline underline-offset-2" href="/things#teams">
             types of companies
           </Link>
           . In these roles, I translated emerging technologies into prototypes
@@ -81,12 +81,12 @@ export default function Home() {
         <div className="pb-3"></div>
       </div>
       <div className="">
-        <Image
+        {/* <Image
           src="me.png"
           alt="Picture of the author"
           width={500}
           height={500}
-        />
+        /> */}
       </div>
     </main>
   );
