@@ -1,8 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 const news = [
   {
@@ -45,13 +41,6 @@ const awards = [
 ];
 
 const clients = [
-  {
-    company: {
-      name: "ContiniouseTech",
-      href: "https://continuoustech.com/",
-    },
-    jobTitle: "...",
-  },
   {
     company: {
       name: "Amber Initiative",
@@ -380,9 +369,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {cv.map((d, i) => (
             <div key={i}>
-              <Link href={d.company.href}>
-                <div className="font-bold">{d.company.name} ↗</div>
-              </Link>
+              <div className="font-bold">{d.company.name}</div>
               <div>{d.jobTitle}</div>
             </div>
           ))}

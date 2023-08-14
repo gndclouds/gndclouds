@@ -1,6 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Inter } from "next/font/google";
 
 import { compareDesc, format, parseISO } from "date-fns";
 import { allLogs, Log } from "contentlayer/generated";
