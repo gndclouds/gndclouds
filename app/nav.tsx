@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import Image from "next/image";
-
 const navigation = [
   { name: "thoughts", href: "/thoughts" },
   { name: "things", href: "/things" },
@@ -42,13 +40,22 @@ export default function Navbar() {
         </div>
       </nav>
       <nav
-        className="visible md:invisible fixed bg-background text-green
+        className="grid col-span-4 gap-1 visible md:invisible fixed bg-backgroundlightmode text-green
        inset-x-0
        bottom-0
        p-4"
       >
         <Link href="/">
-          <div className="flex-none">gndclouds</div>
+          <div>gndclouds</div>
+        </Link>
+        <Link href="/thoughts">
+          <div>thoughts</div>
+        </Link>
+        <Link href="/things">
+          <div>things</div>
+        </Link>
+        <Link href="/about">
+          <div>about</div>
         </Link>
       </nav>
     </>
