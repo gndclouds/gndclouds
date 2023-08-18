@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 // If loading a variable font, you don't need to specify the font weight

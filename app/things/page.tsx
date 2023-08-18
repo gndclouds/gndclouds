@@ -1,8 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 const news = [
   {
@@ -45,13 +41,6 @@ const awards = [
 ];
 
 const clients = [
-  {
-    company: {
-      name: "ContiniouseTech",
-      href: "https://continuoustech.com/",
-    },
-    jobTitle: "...",
-  },
   {
     company: {
       name: "Amber Initiative",
@@ -134,6 +123,13 @@ const cv = [
   },
   {
     company: {
+      name: "Speechify",
+      href: "https://speechify.com",
+    },
+    jobTitle: "Researcher",
+  },
+  {
+    company: {
       name: "Dubberly Design Office",
       href: "https://www.dubberly.com",
     },
@@ -213,44 +209,45 @@ const cv = [
 
 const projects = [
   {
-    name: "Data",
-    description: "ContiniouseTech",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    name: "🚧 Data",
+    description:
+      "A standardized protocol and centralized repository for all Earth science data, enabling seamless search across university, government, and citizen science datasets.",
+    date: "2023",
+    tags: "",
     image: { href: "", alt: "" },
     href: "https://data.madefor.earth",
   },
   {
-    name: "haiku",
+    name: "🚧 haiku",
     description:
       "A poem generator which makes a haiku based on how your city will be inpacted by the changing climate.",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+    date: "2023",
+    tags: "",
     image: { href: "", alt: "" },
     href: "https://haiku.madefor.earth",
   },
   {
     name: "Glossary",
     description:
-      "A shared source of truth for terms, technology, treaties, and companines working on climate. ",
-    date: "ContiniouseTech",
-    tags: "ContiniouseTech",
+      "A shared source of truth to build a better future. As awareness of the climate crisis increases, so does the noise and origin of information. We are working to make a glossary of terms, agreements, companies, organizations and more.",
+    date: "2023",
+    tags: "",
     image: { href: "", alt: "" },
     href: "https://glossary.madefor.earth",
   },
   {
-    name: "🪦 Earth's API",
+    name: "😴 Earth's API",
     description:
       "Everything humans do affects our ecosystems. And with many of the Earth's systems at tipping points, there must be accessibility and modernization of climate data platforms. Enter Earth API.",
-    date: "tbd",
-    tags: "tbd",
+    date: "2022",
+    tags: "",
     image: { href: "", alt: "" },
     href: "https://hge.earth",
   },
   {
-    name: "Tiny Garden",
-    description: "ContiniouseTech",
-    date: "tbd",
+    name: "🚧 Tiny Garden",
+    description: "",
+    date: "2020",
     tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://tiny.garden",
@@ -258,8 +255,8 @@ const projects = [
   {
     name: "Circulaw",
     description:
-      "CircuLaw is a knowledge platform dedicated to enabling the transition to a circular economy by identifying opportunities in current law to support a circular future.",
-    date: "tbd",
+      "A knowledge platform dedicated to enabling the transition to a circular economy by identifying opportunities in current law to support a circular future.",
+    date: "2021-2022",
     tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://www.circulaw.nl/",
@@ -268,7 +265,7 @@ const projects = [
     name: "Slate",
     description:
       "Slate is a search tool designed to help you remember and keep track of things you care about on the web.",
-    date: "tbd",
+    date: "2020",
     tags: "tbd",
     image: { href: "", alt: "" },
     href: "https://slate.host",
@@ -276,93 +273,204 @@ const projects = [
   {
     name: "Composing Sink",
     description: "ContiniouseTech",
-    date: "tbd",
-    tags: "tbd",
+    date: "2019",
+    tags: "",
     image: { href: "", alt: "" },
     href: "#",
   },
   {
     name: "Pico Utility",
-    description: "ContiniouseTech",
+    description:
+      "a case study, focusing on scaling a micro grid down to the size of one home through integrating the waste products of one utility system into another.",
+    date: "2019",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "#",
+  },
+  {
+    name: "😴 Okohaus",
+    description: "",
+    date: "2018",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "https://okohaus.earth/",
+  },
+
+  {
+    name: "arena2slides",
+    description: "Convert your are.na channel into a slideshow to share!",
+    date: "2019",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "http://arena2slides.herokuapp.com/",
+  },
+  {
+    name: "😴 easy chinese",
+    description:
+      "A carefully curated, fun, and pretty flashcards to accelerate your chinese learning from scratch.",
+    date: "2019",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "/",
+  },
+
+  {
+    name: "😴 Whole Person Care Field Guide",
+    description: "Ever wanted to share a confidential secret? Now you can!",
+    date: "2018",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "/",
+  },
+  {
+    name: "😴 IFTTT Maker Platform",
+    description:
+      "I ran the user research phase to determine the viability for a new product called Maker Platform. Established and managed the first community of makers who used IFTTT.",
+    date: "2017",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "https://ifttt.com/services/gctest/general",
+  },
+  {
+    name: "😴 Secret Project Taiwan",
+    description:
+      "At IDEO CoLab, I worked on Nomad. A platform which uses IPFS to create a peer-to-peer network of nodes that routes messages from publisher to subscriber.",
     date: "tbd",
     tags: "tbd",
     image: { href: "", alt: "" },
     href: "#",
   },
   {
-    name: "🪦 Okohaus",
-    description: "ContiniouseTech",
-    date: "tbd",
-    tags: "tbd",
-    image: { href: "", alt: "" },
-    href: "https://okohaus.earth/",
-  },
-  {
-    name: "arena2slides",
-    description: "Convert your are.na channel into a slideshow to share!",
-    date: "tbd",
-    tags: "tbd",
-    image: { href: "", alt: "" },
-    href: "http://arena2slides.herokuapp.com/",
-  },
-  {
-    name: "🪦 easy chinese",
+    name: "😴 Nomad",
     description:
-      "A carefully curated, fun, and pretty flashcards to accelerate your chinese learning from scratch.",
-    date: "tbd",
-    tags: "tbd",
+      "At IDEO CoLab, I worked on Nomad. A platform which uses IPFS to create a peer-to-peer network of nodes that routes messages from publisher to subscriber.",
+    date: "2016",
+    tags: "",
     image: { href: "", alt: "" },
-    href: "https://easychinese.space/",
+    href: "#",
   },
 
   {
-    name: "🪦 frienda",
-    description: "Ever wanted to share a confidential secret? Now you can!",
-    date: "tbd",
-    tags: "tbd",
-    image: { href: "", alt: "" },
-    href: "https://www.frienda.space/",
-  },
-
-  {
-    name: "🪦 Galileo Starter Kit",
-    description: "ContiniouseTech",
-    date: "tbd",
-    tags: "tbd",
+    name: "😴 Galileo Starter Kit",
+    description:
+      "At Intel Labs I worked on the User Experience Research Group's Open Design Team where I focused on researching how Intel could make hardware more approachable to novice makers.",
+    date: "2014",
+    tags: "",
     image: { href: "", alt: "" },
     href: "#",
   },
 ];
 
-export default function Home() {
+async function getData() {
+  const res = await fetch("https://api.are.na/v2/channels/c-bbhhcczsrto", {
+    next: { revalidate: 3600 },
+  });
+  console.log(res);
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+
+export default async function Page(props) {
+  const collectionsData = await getData();
+
   return (
     <main className="">
-      <div className="font-bold text-lg">Things</div>
-      <div className="pb-3">
-        Most of what I work on today is focused on exploring new ways to see
-        ourselves in nature instead of adjacent to it. This happens through
-        collaboration, fantastic teams, and a mix of serious and silly projects.
-        Since my path to get here constantly evolves, I share more of my past
-        work to show when some project ideas started vs. when they became a
-        reality.{" "}
-      </div>
+      {/* Collection Hero */}
+      <div className="uppercase text-h1 font-bold">Things:</div>
+      <div className="grid grid-cols-2 gap-8">
+        <div className="col-span-2 text-h3">
+          Most of what I work on today is focused on exploring new ways to see
+          ourselves in nature instead of adjacent to it. This happens through
+          collaboration, fantastic teams, and a mix of serious and silly
+          projects.
+        </div>
 
-      <div className="py-9">
-        <div className="">collections</div>
-        <div className="pb-3">
-          Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
-          consectetur.
+        {/* <div className="col-span-2">
+          <div className="grid grid-cols-3 gap-1">
+            <div className="bg-red-300 p-4">
+              <div className="uppercase ">Collections</div>
+              <div className="font-bold">
+                {collectionsData.length || "Unknown Length"}
+              </div>
+            </div>
+            <div className="bg-red-300 p-4">
+              <div className="uppercase">Projects</div>
+              <div className="font-bold">
+                {projects.length || "Unknown Length"}
+              </div>
+            </div>
+
+            <div className="bg-red-300 p-4">
+              <div className="uppercase">Teams</div>
+              <div className="font-bold"> {cv.length || "Unknown Length"}</div>
+            </div>
+          </div>
+        </div>*/}
+      </div>
+      {/* Anchor Links */}
+      {/*<div className="grid grid-cols-3 gap-8">
+        <div className="pt-3 border-t-2 border-black">
+          <Link href="#section-measurements">
+            <div className="hover:underline">Collections →</div>
+          </Link>
+        </div>
+        <div className="pt-3 border-t-2 border-black">
+          <Link href="#section-api">
+            <div className="hover:underline">Projects →</div>
+          </Link>
+        </div>
+
+        <div className="pt-3 border-t-2 border-black">
+          <Link href="#section-changelog">
+            <div className="hover:underline">Teams →</div>
+          </Link>
+        </div>
+      </div>*/}
+
+      {/*Collections Section*/}
+      <div className="py-16">
+        <div className="font-bold uppercase text-h3 border-t-4">
+          Collections
+        </div>
+        <div className="pt-3 pb-9">
+          Many of my projects begin as a curated collection of thoughts within
+          an are.na channel. Below, you&apos;ll find the latest updates from
+          these channels, each representing a potential project in the making.
+          These evolving channels are the seeds from which innovative projects
+          are likely to blossom in the near future.
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {collectionsData.contents.map((d: any) => (
+            <Link
+              key={d.id}
+              className="w-full flex flex-col border-2 rounded p-4"
+              href={`https://www.are.na/gndclouds/${d.slug}`}
+            >
+              <div className="font-bold">
+                {d.title} <span className="font-serif">↗</span>
+              </div>
+              <div className="text-p">{d.metadata.description}</div>
+            </Link>
+          ))}
         </div>
       </div>
-      <div className="py-9">
-        <div className="">projects</div>
+      {/*Projects Section*/}
+      <div className="py-16">
+        <div className="font-bold uppercase text-h3 border-t-4">projects</div>
         <div className="pb-3">
           Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
           consectetur.
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((d, i) => (
-            <div key={i}>
+            <div key={i} className="w-full flex flex-col border-2 rounded p-4">
               <Link href={d.href}>
                 <div className="font-bold">{d.name} ↗</div>
               </Link>
@@ -372,17 +480,17 @@ export default function Home() {
         </div>
       </div>
       <div className="py-9">
-        <div id="teams">Teams</div>
+        <div id="teams" className="font-bold uppercase text-h3 border-t-4">
+          Teams
+        </div>
         <div className="pb-3">
           Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
           consectetur.
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {cv.map((d, i) => (
             <div key={i}>
-              <Link href={d.company.href}>
-                <div className="font-bold">{d.company.name} ↗</div>
-              </Link>
+              <div className="font-bold">{d.company.name}</div>
               <div>{d.jobTitle}</div>
             </div>
           ))}
@@ -394,7 +502,7 @@ export default function Home() {
           Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
           consectetur.
         </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
         {clients.map((d, i) => (
           <div  key={i}>
@@ -409,3 +517,19 @@ export default function Home() {
     </main>
   );
 }
+
+// export async function getStaticProps() {
+//   const response = await fetch(
+//     `https://api.are.na/v2/channels/collections-els75g-cc08`,
+//     {
+//       next: { revalidate: 10 },
+//     }
+//   );
+//   const revalidatedData = await response.json();
+//   console.log(revalidatedData);
+//   return {
+//     props: {
+//       revalidatedData,
+//     },
+//   };
+// }

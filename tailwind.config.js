@@ -32,11 +32,11 @@ module.exports = {
       },
 
       fontSize: {
-        xs: ["10px", "18px"],
-        sm: ["10px", "21px"],
-        base: ["18px", "24px"],
-        lg: ["18px", "27px"],
-        xl: ["42px", "54px"],
+        paragraph: "20px",
+        h3: "24px",
+        h2: "34px",
+        h1: "64px",
+        title: "",
       },
       fontWeight: {
         hairline: 100,

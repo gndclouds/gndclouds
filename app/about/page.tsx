@@ -1,9 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Inter } from "next/font/google";
-import Content from "./message.md";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
@@ -81,12 +77,12 @@ export default function Home() {
         <div className="pb-3"></div>
       </div>
       <div className="">
-        {/* <Image
-          src="me.png"
-          alt="Picture of the author"
+        <Image
+          src="/will/2023_headshot.JPG"
+          alt="Black and White photo of Will taking his own photo in the reflection of a pain of glass."
           width={500}
           height={500}
-        /> */}
+        />
       </div>
     </main>
   );
