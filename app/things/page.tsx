@@ -377,7 +377,7 @@ async function getData() {
   return res.json();
 }
 
-export default async function Page(props) {
+export default async function Page(props: any) {
   const collectionsData = await getData();
 
   return (
