@@ -11,17 +11,20 @@ datasource db {
 }
 
 model Timeline {
-  id        Int      @id @default(autoincrement())
+  id        String   @id
   title     String
   content   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   published Boolean  @default(true)
-  slug      String   @unique
-  link      String   @unique
+  slug      String?  @unique
+  link      String?  @unique
   Tags      Tags[]   @relation("TimelineToTags")
   Source    Source[] @relation("TimelineToSources")
   Medium    Medium[] @relation("TimelineToMediums")
+  Format    Format[] @relation("TimelineToFormats")
+  Type      Type[]   @relation("TimelineToTypes")
+
 }
 
 model Tags {
@@ -50,3 +53,22 @@ model Medium {
   slug        String     @unique
   Timeline    Timeline[] @relation("TimelineToMediums")
 }
+
+model Format {
+  id          String     @id
+  published   Boolean    @default(true)
+  name        String
+  description String?
+  slug        String     @unique
+  Timeline    Timeline[] @relation("TimelineToFormats")
+}
+
+model Type {
+  id          String     @id
+  published   Boolean    @default(true)
+  name        String
+  description String?
+  slug        String     @unique
+  Timeline    Timeline[] @relation("TimelineToTypes")
+}
+

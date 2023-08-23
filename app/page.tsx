@@ -1,7 +1,9 @@
+import Link from "next/link";
+
 async function getData() {
-  const res = await fetch("http://localhost:3003//api/timeline");
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
+  const res = await fetch("http://localhost:3003/api/timeline", {
+    next: { revalidate: 3600 },
+  });
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
@@ -13,7 +15,9 @@ async function getData() {
 
 type PostType = {
   id: number;
-  updatedAt: string; // Assuming date is in ISO string format, you can adjust as per your needs
+  updatedAt: string;
+  createdAt: string;
+  date: string;
   title: string;
   content: string;
 };
@@ -41,15 +45,27 @@ export default async function Page() {
   console.log(data.posts);
   return (
     <main className="">
+      <div className="pb-9">
+        <div className="uppercase text-h1 font-bold">👋🏻</div>
+        <div className="grid grid-cols-2 gap-8">
+          <div className="col-span-2 text-h3">
+            Most of what I work on today is focused on exploring new ways to see
+            ourselves in nature instead of adjacent to it. This happens through
+            collaboration, fantastic teams, and a mix of serious and silly
+            projects.
+          </div>
+        </div>{" "}
+      </div>
       {Object.entries(groupedPosts).map(([weekStartDate, postsInWeek]) => (
-        <div key={weekStartDate}>
-          <h2>Week of {weekStartDate}</h2>
+        <div key={weekStartDate} className="pb-9 border-t-4">
+          <h2 className="uppercase">Week {weekStartDate}</h2>
           {postsInWeek.map((post: PostType) => (
-            <div key={post.id} className="">
-              <div className="uppercase">{post.date}</div>
-              <div className="">{post.title}</div>
-              <div className="">{post.content}</div>
-            </div>
+            <Link key={post.id} href="#">
+              <div className="">
+                <div className="uppercase">{post.date}</div>
+                <div className="font-bold">{post.title}</div>
+              </div>
+            </Link>
           ))}
         </div>
       ))}

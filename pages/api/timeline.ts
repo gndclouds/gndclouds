@@ -1,4 +1,3 @@
-import { Post, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
@@ -10,7 +9,7 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
-      const posts = await prisma.Timeline.findMany({
+      const posts = await prisma.timeline.findMany({
         where: { published: true },
       });
       console.log(posts);
