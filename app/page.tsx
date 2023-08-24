@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 async function getData() {
-  const res = await fetch("http://localhost:3003/api/timeline", {
+  const res = await fetch("http://localhost:3000/api/timeline", {
     next: { revalidate: 3600 },
   });
 
