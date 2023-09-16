@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="invisible md:visible sticky top-0 z-50 flex p-8 bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode">
+      <nav className=" sticky top-0 z-50 flex p-8 bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode">
         <Link href="/">
           <div className="hover:underline hover:underline-offset-2 flex-none">
             gndclouds
@@ -28,7 +28,7 @@ export default function Navbar() {
           id="myInput"
           placeholder="/"
         />
-        <div className="right">
+        <div className="invisible md:visible right">
           {navigation.map((item) => (
             <Link key={item.name} href={item.href}>
               <div className="hover:underline hover:underline-offset-2 inline-block pl-5 ">
@@ -38,7 +38,7 @@ export default function Navbar() {
           ))}
         </div>
       </nav>
-      <nav
+      {/* <nav
         className="grid col-span-4 gap-1 visible md:invisible fixed bg-backgroundlightmode text-green
        inset-x-0
        bottom-0
@@ -56,7 +56,7 @@ export default function Navbar() {
         <Link href="/about">
           <div>about</div>
         </Link>
-      </nav>
+      </nav> */}
     </>
   );
 }

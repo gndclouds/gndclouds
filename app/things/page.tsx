@@ -209,7 +209,16 @@ const cv = [
 
 const projects = [
   {
-    name: "🚧 Data",
+    name: "🚧 Stories",
+    description:
+      "Madlib style story generator to normalize potential positive outcomes of our current climate future.",
+    date: "2023",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "https://stories.madefor.earth",
+  },
+  {
+    name: "Earth API v2",
     description:
       "A standardized protocol and centralized repository for all Earth science data, enabling seamless search across university, government, and citizen science datasets.",
     date: "2023",
@@ -236,7 +245,7 @@ const projects = [
     href: "https://glossary.madefor.earth",
   },
   {
-    name: "😴 Earth's API",
+    name: "Earth's API v1",
     description:
       "Everything humans do affects our ecosystems. And with many of the Earth's systems at tipping points, there must be accessibility and modernization of climate data platforms. Enter Earth API.",
     date: "2022",
@@ -245,8 +254,9 @@ const projects = [
     href: "https://hge.earth",
   },
   {
-    name: "🚧 Tiny Garden",
-    description: "",
+    name: "Tiny Garden",
+    description:
+      "a long term project to make a micro blogging platform to curate better communities around supporting indie makers, as they become entrepreneurs.",
     date: "2020",
     tags: "tbd",
     image: { href: "", alt: "" },
@@ -288,14 +298,14 @@ const projects = [
     href: "#",
   },
   {
-    name: "😴 Okohaus",
-    description: "",
+    name: "Okohaus",
+    description:
+      "an experimental community focused on sharing novel ideas around climate",
     date: "2018",
     tags: "",
     image: { href: "", alt: "" },
     href: "https://okohaus.earth/",
   },
-
   {
     name: "arena2slides",
     description: "Convert your are.na channel into a slideshow to share!",
@@ -316,7 +326,8 @@ const projects = [
 
   {
     name: "😴 Whole Person Care Field Guide",
-    description: "Ever wanted to share a confidential secret? Now you can!",
+    description:
+      "We created a field guide for the new role which summarized our research and best practices for enrolling housing-insure people in Medi-Cal.",
     date: "2018",
     tags: "",
     image: { href: "", alt: "" },
@@ -333,8 +344,7 @@ const projects = [
   },
   {
     name: "😴 Secret Project Taiwan",
-    description:
-      "At IDEO CoLab, I worked on Nomad. A platform which uses IPFS to create a peer-to-peer network of nodes that routes messages from publisher to subscriber.",
+    description: "",
     date: "tbd",
     tags: "tbd",
     image: { href: "", alt: "" },
@@ -465,12 +475,12 @@ export default async function Page(props: any) {
       <div className="py-16">
         <div className="font-bold uppercase text-h3 border-t-4">projects</div>
         <div className="pb-3">
-          Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
-          consectetur.
+          I&apos;m working on expanding this section with more of my past work,
+          but for now here are some selected projects
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((d, i) => (
-            <div key={i} className="w-full flex flex-col border-2 rounded p-4">
+            <div key={i} className="w-full flex flex-col rounded p-4">
               <Link href={d.href}>
                 <div className="font-bold">{d.name} ↗</div>
               </Link>
@@ -484,8 +494,10 @@ export default async function Page(props: any) {
           Teams
         </div>
         <div className="pb-3">
-          Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
-          consectetur.
+          Thank you to the mentors, collaborators, and friends who have played a
+          vital role in my learning journey through shared experiences. These
+          interactions have contributed to my personal growth and the refinement
+          of my practice.
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {cv.map((d, i) => (

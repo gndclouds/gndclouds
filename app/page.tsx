@@ -56,7 +56,7 @@ export default async function Page() {
           </div>
         </div>{" "}
       </div>
-      {Object.entries(groupedPosts).map(([weekStartDate, postsInWeek]) => (
+      {/* {Object.entries(groupedPosts).map(([weekStartDate, postsInWeek]) => (
         <div key={weekStartDate} className="pb-9 border-t-4">
           <h2 className="uppercase">Week {weekStartDate}</h2>
           {postsInWeek.map((post: PostType) => (
@@ -68,7 +68,7 @@ export default async function Page() {
             </Link>
           ))}
         </div>
-      ))}
+      ))} */}
     </main>
   );
 }
