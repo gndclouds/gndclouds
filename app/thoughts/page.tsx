@@ -40,7 +40,7 @@ export default function Home() {
     compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
   );
   return (
-    <main className="border-2">
+    <div className="border-2">
       <div className="border-2 h-64 backdrop-blur bg-black">
         Add image
         <div className="pb-3 text-lg font-bold">Thoughts</div>
@@ -147,6 +147,6 @@ export default function Home() {
           ))}
         </div>
       </div>*/}
-    </main>
+    </div>
   );
 }

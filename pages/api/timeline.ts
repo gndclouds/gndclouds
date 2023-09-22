@@ -12,11 +12,11 @@ export default async function handler(
       const posts = await prisma.timeline.findMany({
         where: { published: true },
       });
-      console.log(posts);
+      // console.log(posts);
 
       res.status(200).json({ posts });
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       res.status(500).end();
     }
   }
