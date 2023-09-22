@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
       <div className="">
         <div className="pb-3">Hey I’m Will,</div>
         <div className="pb-3">
@@ -84,6 +84,6 @@ export default function Home() {
           height={500}
         />
       </div>
-    </main>
+    </div>
   );
 }

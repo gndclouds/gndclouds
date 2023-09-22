@@ -375,7 +375,7 @@ async function getData() {
   const res = await fetch("https://api.are.na/v2/channels/c-bbhhcczsrto", {
     next: { revalidate: 3600 },
   });
-  console.log(res);
+  // console.log(res);
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 

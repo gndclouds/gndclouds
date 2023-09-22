@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+   {/*
 async function getData() {
   const res = await fetch("http://localhost:3000/api/timeline", {
     next: { revalidate: 3600 },
@@ -38,13 +39,13 @@ function groupByWeek(posts: PostType[]) {
 
   return weeks;
 }
-
+*/}
 export default async function Page() {
-  const data = await getData();
-  const groupedPosts = groupByWeek(data.posts);
-  console.log(data.posts);
+  {/* const data = await getData();
+  const groupedPosts = groupByWeek(data.posts);*/}
+  // console.log(data.posts);
   return (
-    <main className="">
+    <div className="">
       <div className="pb-9">
         <div className="uppercase text-h1 font-bold">👋🏻</div>
         <div className="grid grid-cols-2 gap-8">
@@ -69,6 +70,6 @@ export default async function Page() {
           ))}
         </div>
       ))} */}
-    </main>
+    </div>
   );
 }
