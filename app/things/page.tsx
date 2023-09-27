@@ -74,13 +74,6 @@ const clients = [
 const cv = [
   {
     company: {
-      name: "🞴🞴🞴🞴 🞴🞴🞴🞴🞴",
-      href: "/",
-    },
-    jobTitle: "Co-Founder",
-  },
-  {
-    company: {
       name: "Made For Earth",
       href: "https://madefor.earth",
     },
@@ -209,13 +202,13 @@ const cv = [
 
 const projects = [
   {
-    name: "🚧 Stories",
+    name: "Positive Futures",
     description:
       "Madlib style story generator to normalize potential positive outcomes of our current climate future.",
     date: "2023",
     tags: "",
     image: { href: "", alt: "" },
-    href: "https://stories.madefor.earth",
+    href: "https://positivefutur.es/",
   },
   {
     name: "Earth API v2",
@@ -225,15 +218,6 @@ const projects = [
     tags: "",
     image: { href: "", alt: "" },
     href: "https://data.madefor.earth",
-  },
-  {
-    name: "🚧 haiku",
-    description:
-      "A poem generator which makes a haiku based on how your city will be inpacted by the changing climate.",
-    date: "2023",
-    tags: "",
-    image: { href: "", alt: "" },
-    href: "https://haiku.madefor.earth",
   },
   {
     name: "Glossary",
@@ -453,14 +437,14 @@ export default async function Page(props: any) {
           Many of my projects begin as a curated collection of thoughts within
           an are.na channel. Below, you&apos;ll find the latest updates from
           these channels, each representing a potential project in the making.
-          These evolving channels are the seeds from which innovative projects
-          are likely to blossom in the near future.
+          These evolving channels are the seeds from which projects are likely
+          to blossom in the near future.
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {collectionsData.contents.map((d: any) => (
             <Link
               key={d.id}
-              className="w-full flex flex-col border-2 rounded p-4"
+              className="w-full flex flex-col rounded p-4 line-clamp-3"
               href={`https://www.are.na/gndclouds/${d.slug}`}
             >
               <div className="font-bold">
