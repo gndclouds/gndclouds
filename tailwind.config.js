@@ -8,10 +8,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        backgroundlightmode: "#f9ebbe",
-        textlightmode: "#6643b6",
-        backgrounddarkmode: "#6643b6",
-        textdarkmode: "#f9ebbe",
+        backgroundlightmode: "#fff",
+        textlightmode: "#000",
+        backgrounddarkmode: "#000",
+        textdarkmode: "#fff",
       },
       fontFamily: {
         sans: [

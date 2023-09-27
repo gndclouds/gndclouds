@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Timeline {
+  id        String   @id
+  title     String
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(true)
+  slug      String?  @unique
+  link      String?  @unique
+  Tags      Tags[]   @relation("TimelineToTags")
+  Source    Source[] @relation("TimelineToSources")
+  Medium    Medium[] @relation("TimelineToMediums")
+  Format    Format[] @relation("TimelineToFormats")
+  Type      Type[]   @relation("TimelineToTypes")
+
+}
+
+model Tags {
+  id          String     @id
+  published   Boolean    @default(true)
+  name        String
+  description String?
+  slug        String     @unique
+  Timeline    Timeline[] @relation("TimelineToTags")
+}
+
+model Source {
+  id          String     @id
+  published   Boolean    @default(true)
+  name        String
+  description String?
+  slug        String     @unique
+  Timeline    Timeline[] @relation("TimelineToSources")
+}
+
+model Medium {
+  id          String     @id
+  published   Boolean    @default(true)
+  name        String
+  description String?
+  slug        String     @unique
+  Timeline    Timeline[] @relation("TimelineToMediums")
+}
+
+model Format {
+  id          String     @id
+  published   Boolean    @default(true)
+  name        String
+  description String?
+  slug        String     @unique
+  Timeline    Timeline[] @relation("TimelineToFormats")
+}
+
+model Type {
+  id          String     @id
+  published   Boolean    @default(true)
+  name        String
+  description String?
+  slug        String     @unique
+  Timeline    Timeline[] @relation("TimelineToTypes")
+}
+

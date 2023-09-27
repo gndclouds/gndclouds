@@ -74,13 +74,6 @@ const clients = [
 const cv = [
   {
     company: {
-      name: "🞴🞴🞴🞴 🞴🞴🞴🞴🞴",
-      href: "/",
-    },
-    jobTitle: "Co-Founder",
-  },
-  {
-    company: {
       name: "Made For Earth",
       href: "https://madefor.earth",
     },
@@ -209,22 +202,22 @@ const cv = [
 
 const projects = [
   {
-    name: "🚧 Data",
+    name: "Positive Futures",
+    description:
+      "Madlib style story generator to normalize potential positive outcomes of our current climate future.",
+    date: "2023",
+    tags: "",
+    image: { href: "", alt: "" },
+    href: "https://positivefutur.es/",
+  },
+  {
+    name: "Earth API v2",
     description:
       "A standardized protocol and centralized repository for all Earth science data, enabling seamless search across university, government, and citizen science datasets.",
     date: "2023",
     tags: "",
     image: { href: "", alt: "" },
     href: "https://data.madefor.earth",
-  },
-  {
-    name: "🚧 haiku",
-    description:
-      "A poem generator which makes a haiku based on how your city will be inpacted by the changing climate.",
-    date: "2023",
-    tags: "",
-    image: { href: "", alt: "" },
-    href: "https://haiku.madefor.earth",
   },
   {
     name: "Glossary",
@@ -236,7 +229,7 @@ const projects = [
     href: "https://glossary.madefor.earth",
   },
   {
-    name: "😴 Earth's API",
+    name: "Earth's API v1",
     description:
       "Everything humans do affects our ecosystems. And with many of the Earth's systems at tipping points, there must be accessibility and modernization of climate data platforms. Enter Earth API.",
     date: "2022",
@@ -245,8 +238,9 @@ const projects = [
     href: "https://hge.earth",
   },
   {
-    name: "🚧 Tiny Garden",
-    description: "",
+    name: "Tiny Garden",
+    description:
+      "a long term project to make a micro blogging platform to curate better communities around supporting indie makers, as they become entrepreneurs.",
     date: "2020",
     tags: "tbd",
     image: { href: "", alt: "" },
@@ -288,14 +282,14 @@ const projects = [
     href: "#",
   },
   {
-    name: "😴 Okohaus",
-    description: "",
+    name: "Okohaus",
+    description:
+      "an experimental community focused on sharing novel ideas around climate",
     date: "2018",
     tags: "",
     image: { href: "", alt: "" },
     href: "https://okohaus.earth/",
   },
-
   {
     name: "arena2slides",
     description: "Convert your are.na channel into a slideshow to share!",
@@ -316,7 +310,8 @@ const projects = [
 
   {
     name: "😴 Whole Person Care Field Guide",
-    description: "Ever wanted to share a confidential secret? Now you can!",
+    description:
+      "We created a field guide for the new role which summarized our research and best practices for enrolling housing-insure people in Medi-Cal.",
     date: "2018",
     tags: "",
     image: { href: "", alt: "" },
@@ -333,8 +328,7 @@ const projects = [
   },
   {
     name: "😴 Secret Project Taiwan",
-    description:
-      "At IDEO CoLab, I worked on Nomad. A platform which uses IPFS to create a peer-to-peer network of nodes that routes messages from publisher to subscriber.",
+    description: "",
     date: "tbd",
     tags: "tbd",
     image: { href: "", alt: "" },
@@ -365,7 +359,7 @@ async function getData() {
   const res = await fetch("https://api.are.na/v2/channels/c-bbhhcczsrto", {
     next: { revalidate: 3600 },
   });
-  console.log(res);
+  // console.log(res);
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -443,14 +437,14 @@ export default async function Page(props: any) {
           Many of my projects begin as a curated collection of thoughts within
           an are.na channel. Below, you&apos;ll find the latest updates from
           these channels, each representing a potential project in the making.
-          These evolving channels are the seeds from which innovative projects
-          are likely to blossom in the near future.
+          These evolving channels are the seeds from which projects are likely
+          to blossom in the near future.
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {collectionsData.contents.map((d: any) => (
             <Link
               key={d.id}
-              className="w-full flex flex-col border-2 rounded p-4"
+              className="w-full flex flex-col rounded p-4 line-clamp-3"
               href={`https://www.are.na/gndclouds/${d.slug}`}
             >
               <div className="font-bold">
@@ -465,12 +459,12 @@ export default async function Page(props: any) {
       <div className="py-16">
         <div className="font-bold uppercase text-h3 border-t-4">projects</div>
         <div className="pb-3">
-          Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
-          consectetur.
+          I&apos;m working on expanding this section with more of my past work,
+          but for now here are some selected projects
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((d, i) => (
-            <div key={i} className="w-full flex flex-col border-2 rounded p-4">
+            <div key={i} className="w-full flex flex-col rounded p-4">
               <Link href={d.href}>
                 <div className="font-bold">{d.name} ↗</div>
               </Link>
@@ -484,8 +478,10 @@ export default async function Page(props: any) {
           Teams
         </div>
         <div className="pb-3">
-          Dolor sint cupidatat sunt mollit officia reprehenderit sit minim sint
-          consectetur.
+          Thank you to the mentors, collaborators, and friends who have played a
+          vital role in my learning journey through shared experiences. These
+          interactions have contributed to my personal growth and the refinement
+          of my practice.
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {cv.map((d, i) => (

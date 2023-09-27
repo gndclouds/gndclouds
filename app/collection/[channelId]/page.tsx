@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 async function getChannelData(slug: string) {
-  console.log(slug);
+  // console.log(slug);
   const res = await fetch(
     `https://api.are.na/v2/channels/ui-design-zyv0uejxmxs`
   );
@@ -19,7 +19,7 @@ export default async function Page({
 
   // Wait for the promises to resolve
   const [channel] = await Promise.all([channelData]);
-  console.log(channel);
+  // console.log(channel);
   return (
     <>
       <h1>{channel.title}</h1>
