@@ -3,10 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navigation = [
-  { name: "things", href: "/things" },
-  { name: "about", href: "/about" },
-];
+const navigation = [{ name: "about", href: "/about" }];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
