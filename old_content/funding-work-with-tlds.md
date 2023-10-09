@@ -4,7 +4,7 @@ excerpt: "How we are trying to passively fund projects with TLDs"
 publishedAt: "2020-09-14"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

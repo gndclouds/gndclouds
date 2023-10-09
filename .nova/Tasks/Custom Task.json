@@ -1,6 +1,8 @@
 {
   "actions" : {
-
-  },
-  "identifier" : "E13F5B8A-E26E-4DFC-9DAA-1804F9C44B08"
+    "build" : {
+      "enabled" : true,
+      "script" : "cd content\ngit fetch\ngit pull"
+    }
+  }
 }

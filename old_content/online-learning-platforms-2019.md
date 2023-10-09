@@ -4,7 +4,7 @@ excerpt: "This report looked at the broader view of online education in terms of
 publishedAt: "2019-04-26"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

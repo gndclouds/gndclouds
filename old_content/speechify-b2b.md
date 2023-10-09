@@ -4,7 +4,7 @@ excerpt: "This report is a high level summery of how Speechify would fit into th
 publishedAt: "2019-11-24"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

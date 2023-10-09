@@ -240,7 +240,7 @@ const projects = [
   {
     name: "Tiny Garden",
     description:
-      "a long term project to make a micro blogging platform to curate better communities around supporting indie makers, as they become entrepreneurs.",
+      "a long term project to make a micro noteging platform to curate better communities around supporting indie makers, as they become entrepreneurs.",
     date: "2020",
     tags: "tbd",
     image: { href: "", alt: "" },

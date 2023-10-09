@@ -4,7 +4,7 @@ excerpt: "Field notes on infrastructure, urban planning, and architecture detail
 publishedAt: "2020-11-14"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

@@ -30,13 +30,14 @@ module.exports = {
           "SFMono-Regular",
         ],
       },
-
       fontSize: {
-        paragraph: "20px",
-        h3: "24px",
-        h2: "34px",
-        h1: "64px",
-        title: "",
+        largest: "65pt",
+        larget: "36pt",
+        large: "24pt",
+        standard: "18pt",
+        small: "14pt",
+        smaller: "10pt",
+        tiny: "6pt",
       },
       fontWeight: {
         hairline: 100,

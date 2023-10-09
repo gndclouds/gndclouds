@@ -1,10 +1,10 @@
 ---
 title: "E-commerce for Indiepreneurs 2020"
-excerpt: "This is a note on My Blog about agile frameworks."
+excerpt: "This is a note on My Note about agile frameworks."
 publishedAt: "2019-05-07"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

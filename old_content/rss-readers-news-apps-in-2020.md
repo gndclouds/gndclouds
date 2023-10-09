@@ -4,7 +4,7 @@ excerpt: "News aggregation has just started to evolve again after being a list o
 publishedAt: "2020-02-01"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

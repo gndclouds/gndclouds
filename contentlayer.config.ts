@@ -2,7 +2,7 @@ import { defineDocumentType, makeSource } from "contentlayer/source-files";
 
 const Log = defineDocumentType(() => ({
   name: "Log",
-  filePathPattern: `**/*.mdx`,
+  filePathPattern: `/logs/*.md`,
   contentType: "mdx",
   fields: {
     title: {
@@ -30,6 +30,11 @@ const Log = defineDocumentType(() => ({
       description: "The orginal publication of the post",
       required: false,
     },
+    published: {
+      type: "boolean",
+      description: "Should the Log be published",
+      required: false,
+    },
     tags: {
       type: "string",
       description: "The tags of the post",
@@ -39,14 +44,17 @@ const Log = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `log/${doc._raw.flattenedPath}`,
+      resolve: (doc) => {
+        let path = doc._raw.flattenedPath.replace("publish/logs", "").trim();
+        return `log/${path}`;
+      },
     },
   },
 }));
 
 const Newsletter = defineDocumentType(() => ({
   name: "Newsletter",
-  filePathPattern: `/newsletters/*.mdx`,
+  filePathPattern: `/newsletters/*.md`,
   contentType: "mdx",
   fields: {
     title: {
@@ -74,6 +82,11 @@ const Newsletter = defineDocumentType(() => ({
       description: "The orginal publication of the post",
       required: false,
     },
+    published: {
+      type: "boolean",
+      description: "Should the Newsletter be published",
+      required: false,
+    },
     tags: {
       type: "string",
       description: "The tags of the post",
@@ -83,14 +96,19 @@ const Newsletter = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `newsletter/${doc._raw.flattenedPath}`,
+      resolve: (doc) => {
+        let path = doc._raw.flattenedPath
+          .replace("publish/newsletters", "")
+          .trim();
+        return `newsletter/${path}`;
+      },
     },
   },
 }));
 
-const Blog = defineDocumentType(() => ({
-  name: "Blog",
-  filePathPattern: `**/*.mdx`,
+const Note = defineDocumentType(() => ({
+  name: "Note",
+  filePathPattern: `**/*.md`,
   contentType: "mdx",
   fields: {
     title: {
@@ -118,6 +136,11 @@ const Blog = defineDocumentType(() => ({
       description: "The orginal publication of the post",
       required: false,
     },
+    published: {
+      type: "boolean",
+      description: "Should the Note be published",
+      required: false,
+    },
     tags: {
       type: "string",
       description: "The tags of the post",
@@ -127,14 +150,17 @@ const Blog = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `blog/${doc._raw.flattenedPath}`,
+      resolve: (doc) => {
+        let path = doc._raw.flattenedPath.replace("publish/notes", "").trim();
+        return `note/${path}`;
+      },
     },
   },
 }));
 
 const Project = defineDocumentType(() => ({
   name: "Project",
-  filePathPattern: `/projects/*.mdx`,
+  filePathPattern: `/projects/*.md`,
   contentType: "mdx",
   fields: {
     title: {
@@ -162,21 +188,41 @@ const Project = defineDocumentType(() => ({
       description: "The orginal publication of the post",
       required: false,
     },
+    published: {
+      type: "boolean",
+      description: "Should the Project be published",
+      required: false,
+    },
     tags: {
       type: "string",
       description: "The tags of the post",
+      required: false,
+    },
+    url: {
+      type: "string",
+      description: "The url of the post",
+      required: false,
+    },
+    aliases: {
+      type: "string",
+      description: "The aliases of the post",
       required: false,
     },
   },
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/${doc._raw.flattenedPath}`,
+      resolve: (doc) => {
+        let path = doc._raw.flattenedPath
+          .replace("publish/projects", "")
+          .trim();
+        return `newsletter/${path}`;
+      },
     },
   },
 }));
 
 export default makeSource({
   contentDirPath: "content",
-  documentTypes: [Log, Newsletter, Blog, Project],
+  documentTypes: [Log, Newsletter, Note, Project],
 });

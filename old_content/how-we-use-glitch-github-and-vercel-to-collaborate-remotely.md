@@ -4,7 +4,7 @@ excerpt: "Over the past few months our team has been working interdependently an
 publishedAt: "2020-08-01"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

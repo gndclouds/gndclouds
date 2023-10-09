@@ -4,7 +4,7 @@ excerpt: "How to improve the experience of the current chrome web extension in p
 publishedAt: "2019-11-30"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

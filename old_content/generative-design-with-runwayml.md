@@ -4,7 +4,7 @@ excerpt: "For a few months, I have read and made a few small machine learning pr
 publishedAt: "2021-03-14"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

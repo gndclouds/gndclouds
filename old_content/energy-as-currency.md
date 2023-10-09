@@ -4,7 +4,7 @@ excerpt: "In January of 2018 I spent 8 Days with IDEO’s CoLab during the winte
 publishedAt: "2018-07-22"
 coverImage: "https://source.unsplash.com/user/gndclouds"
 externalUrl:
-type: "Blog"
+type: "Note"
 tags:
 ---
 

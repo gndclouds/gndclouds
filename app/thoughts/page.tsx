@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { compareDesc, format, parseISO } from "date-fns";
 import { allLogs, Log } from "contentlayer/generated";
-import { allBlogs, Blog } from "contentlayer/generated";
+import { allNotes, Note } from "contentlayer/generated";
 import { allNewsletters, Newsletter } from "contentlayer/generated";
 
 import { getMDXComponent } from "next-contentlayer/hooks";
@@ -33,7 +33,7 @@ export default function Home() {
   const logs = allLogs.sort((a, b) =>
     compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
   );
-  const blogs = allBlogs.sort((a, b) =>
+  const notes = allNotes.sort((a, b) =>
     compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
   );
   const newsletters = allNewsletters.sort((a, b) =>
@@ -76,10 +76,10 @@ export default function Home() {
           </div>
           <div className="p-4 border-2">
             <div className="uppercase">
-              <Link href="blog">
+              <Link href="note">
                 <div className="flex justify-between">
                   {" "}
-                  <div>Blogs</div>
+                  <div>Notes</div>
                   <div>→</div>
                 </div>
               </Link>
@@ -89,7 +89,7 @@ export default function Home() {
               Sint cupidatat sunt mollit officia reprehenderit sit minim sint
               consectetur sint cillum minim nostrud duis.{" "}
             </div>
-            <div className=""> {blogs.length}</div>
+            <div className=""> {notes.length}</div>
           </div>
           <div className="p-4 border-2">
             <div className="uppercase">
@@ -112,11 +112,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Section Blogs */}
+      {/* Section Notes */}
       {/* <div className="mb-9">
-        <div className="font-bold text-lg">blog</div>
+        <div className="font-bold text-lg">note</div>
         <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-3">
-          {blogs.map((data, idx) => (
+          {notes.map((data, idx) => (
             <Card key={idx} {...data} />
           ))}
         </div>
