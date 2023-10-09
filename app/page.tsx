@@ -4,25 +4,25 @@ const localLinks = [
   {
     Link: {
       name: "Logs",
-      href: "/logs",
+      href: "/log",
     },
   },
   {
     Link: {
       name: "Newsletters",
-      href: "/newsletters",
+      href: "/newsletter",
     },
   },
   {
     Link: {
       name: "Notes",
-      href: "/notes",
+      href: "/note",
     },
   },
   {
     Link: {
       name: "Projects",
-      href: "/projects",
+      href: "/project",
     },
   },
   {
@@ -85,7 +85,7 @@ export default async function Page() {
         {/* Left Static Column */}
         <div className="p-8 flex flex-col justify-between w-full md:w-1/2">
           <div className="">gndclouds</div>
-          <div className="text-standard sm:text-standard md:text-large">
+          <div className="text-small sm:text-standard lg:text-large my-8 md:my-0">
             My focus for the next decade is contributing to work that helps make
             the unseen seen so that we can see ourselves as a part of nature
             instead of acting like we are adjacent to it.
@@ -93,25 +93,33 @@ export default async function Page() {
           {/* You can add more content here */}
         </div>
         {/* Right Scrollable Column */}
-        <div className="p-8 flex flex-col justify-between w-full md:w-1/2 text-standard sm:text-standard md:text-large">
-          <div>title</div>
-          {localLinks.map((d, i) => (
-            <Link href={d.Link.href}>
-              <div key={i} className="group hover:translate-x-6 duration-100">
-                {d.Link.name}{" "}
-                <span className="opacity-0 group-hover:opacity-100">→</span>
-              </div>
-            </Link>
-          ))}
-          <div className="uppercase">around the internet</div>
-          {internetLinks.map((d, i) => (
-            <Link href={d.Link.href}>
-              <div key={i} className="group hover:translate-x-6 duration-100">
-                {d.Link.name}{" "}
-                <span className="opacity-0 group-hover:opacity-100">↗</span>
-              </div>
-            </Link>
-          ))}
+        <div className="p-8 flex flex-col justify-between w-full md:w-1/2 text-small sm:text-standard bg-[#f0f0f0]">
+          <div className="flex-1 rounded-2xl bg-[#f9d73b] p-8 mb-4">
+            <div className="text-standard border-b-4 border-[#f0f0f0]">
+              More things:
+            </div>
+            {localLinks.map((d, i) => (
+              <Link key={i} href={d.Link.href}>
+                <div className="group hover:translate-x-1 duration-100">
+                  {d.Link.name}{" "}
+                  <span className="opacity-0 group-hover:opacity-100">→</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="flex-1 rounded-2xl bg-[#f9d73b] p-8 mt-4">
+            <div className="text-standard border-b-4 border-[#f0f0f0]">
+              follow along:
+            </div>
+            {internetLinks.map((d, i) => (
+              <Link key={i} href={d.Link.href}>
+                <div className="group text-small hover:translate-x-1 duration-100">
+                  {d.Link.name}{" "}
+                  <span className="opacity-0 group-hover:opacity-100">↗</span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
