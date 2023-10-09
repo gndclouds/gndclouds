@@ -22,8 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <div className={inter.className}>
         <body className="bg-backgroundlightmode text-textlightmode dark:bg-backgrounddarkmode dark:text-textdarkmode">
-          <Nav />
-          <div className="mx-auto p-8 py-50 min-h-screen max-w-screen-xl">
+          {/* <Nav /> */}
+          <div className="mx-auto py-50 min-h-screen max-w-screen-xl">
             {" "}
             {children}
           </div>
