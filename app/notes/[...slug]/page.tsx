@@ -32,7 +32,6 @@ export async function generateMetadata({
 
   return {
     title: note.title,
-    description: note.description,
   };
 }
 
@@ -52,11 +51,7 @@ export default async function NotePage({ params }: NoteProps) {
   return (
     <article className="py-6 prose dark:prose-invert">
       <h1 className="mb-2">{note.title}</h1>
-      {note.description && (
-        <p className="text-xl mt-0 text-slate-700 dark:text-slate-200">
-          {note.description}
-        </p>
-      )}
+
       <hr className="my-4" />
       <Mdx code={note.body.code} />
     </article>

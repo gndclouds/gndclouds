@@ -26,15 +26,21 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="">
             <header>
               <div className="flex items-center justify-between">
-                <ModeToggle />
-                <nav className="ml-auto text-sm font-medium space-x-6 p-8">
+                {/* <ModeToggle /> */}
+                {/* <nav className="ml-auto text-sm font-medium space-x-6 p-8">
                   <Link href="/">gndclouds</Link>
                   <Link href="/about">About</Link>
-                </nav>
+                </nav> */}
               </div>
             </header>
             <main>{children}</main>
           </div>
+          <footer className="border-t-4 flex flex-row justify-between m-4">
+            <Link href="/">gndclouds</Link>
+            <Link href="/">gndclouds</Link>
+            <Link href="/">gndclouds</Link>
+            <Link href="/">gndclouds</Link>
+          </footer>
           <Analytics />
         </ThemeProvider>
       </body>

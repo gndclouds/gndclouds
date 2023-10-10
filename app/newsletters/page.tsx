@@ -1,7 +1,8 @@
 import { allNewsletters } from "@/.contentlayer/generated";
 import { compareDesc, format, parseISO } from "date-fns";
-
 import Link from "next/link";
+import Image from "next/image";
+import { Mdx } from "@/components/mdx-components";
 
 export default function NewsletterPage() {
   const newsletters = allNewsletters.sort((a, b) =>
@@ -9,17 +10,20 @@ export default function NewsletterPage() {
   );
   return (
     <div className=" dark:prose-invert">
-      <div className="p-4 min-w-screen flex bg-gray-100">
+      <div className="p-4 min-w-screen flex">
         {/* Hero Section */}
         <div className="relative flex-1 h-[200px] rounded-2xl overflow-hidden">
-          {/* <Image
-            src="/path-to-your-image.jpg"
+          <Image
+            src="https://source.unsplash.com/user/gndclouds"
             alt="Hero Image"
             layout="fill"
             objectFit="cover"
-          /> */}
+          />
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
+            <div className="text-white  uppercase">
+              <Link href="/">gndclouds</Link>
+            </div>
             <div className="text-white text-largest uppercase">Newsletter</div>
           </div>
           <div className="absolute bottom-0 p-4 w-full">
@@ -38,15 +42,15 @@ export default function NewsletterPage() {
           </div>
         </div>
       </div>
-      {/* Logs Section */}
+      {/* Newsletter Section */}
 
       <div className="p-4 min-w-screen ">
         {newsletters.map((newsletter) => (
           <article key={newsletter._id}>
             <Link href={newsletter.slug}>
-              <h2>{newsletter.title}</h2>
+              <div className="text-large">{newsletter.title}</div>
             </Link>
-            {/* {newsletter.description && <p>{newsletter.description}</p>} */}
+            <Mdx code={newsletter.body.code} />
           </article>
         ))}
       </div>

@@ -9,7 +9,7 @@ export default function Home() {
           <Link href={post.slug}>
             <h2>{post.title}</h2>
           </Link>
-          {post.description && <p>{post.description}</p>}
+          {/* {post.description && <p>{post.description}</p>} */}
         </article>
       ))}
     </div>
