@@ -22,7 +22,9 @@ export default function NewsletterPage() {
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
             <div className="text-white  uppercase">
-              <Link href="/">gndclouds</Link>
+              <Link href="/" className="font-bold">
+                gndclouds
+              </Link>
             </div>
             <div className="text-white text-largest uppercase">Newsletter</div>
           </div>
@@ -44,12 +46,12 @@ export default function NewsletterPage() {
       </div>
       {/* Newsletter Section */}
 
-      <div className="p-4 min-w-screen ">
+      <div className="p-4 min-w-screen">
         {newsletters.map((newsletter) => (
-          <article key={newsletter._id}>
-            <Link href={newsletter.slug}>
+          <article key={newsletter._id} className="py-12 border-b-4">
+            <div>
               <div className="text-large">{newsletter.title}</div>
-            </Link>
+            </div>
             <Mdx code={newsletter.body.code} />
           </article>
         ))}

@@ -59,9 +59,11 @@ export default function ProjectPage() {
           >
             <div>
               <Link href={project.url || project.slug}>
-                <div className="text-large">
-                  <div>{project.title}</div>
-                  {project.url && <div className="font-mono"> ↗</div>}
+                <div className="text-large flex-wrap font-bold">
+                  <div className="inline-block pr-2">{project.title} </div>
+                  {project.url && (
+                    <div className="inline-block font-mono">↗</div>
+                  )}
                 </div>
               </Link>
               <div className="">
@@ -71,14 +73,16 @@ export default function ProjectPage() {
               </div>
               <div className="mb-4 sm:mb-0">{project.description}</div>
             </div>
-            <div className="bg-[#f9d73b] h-[400px] rounded-2xl overflow-hidden">
-              iamge
-              {/* <Image
+            <div className=" relative bg-[#f9d73b] aspect-square rounded-2xl overflow-hidden">
+              <Image
                 src="https://source.unsplash.com/user/gndclouds"
-                alt="Hero Image"
-                layout="fill"
-                objectFit="cover"
-              /> */}
+                quality={100}
+                fill
+                sizes="100vh"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
             </div>
           </article>
         ))}
