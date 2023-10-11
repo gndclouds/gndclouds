@@ -76,6 +76,7 @@ export default function ProjectPage() {
             <div className=" relative bg-[#f9d73b] aspect-square rounded-2xl overflow-hidden">
               <Image
                 src="https://source.unsplash.com/user/gndclouds"
+                alt=""
                 quality={100}
                 fill
                 sizes="100vh"
