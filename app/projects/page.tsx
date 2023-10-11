@@ -5,7 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function ProjectPage() {
-  const projects = allProjects.sort((a, b) =>
+  const unpublishedProjects = allProjects.filter(
+    (project) => project.published
+  );
+
+  const projects = unpublishedProjects.sort((a, b) =>
     compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
   );
   return (
@@ -54,17 +58,18 @@ export default function ProjectPage() {
             className="grid grid-cols-1 sm:grid-cols-2 mx-2 m-20 sm:m-8 gap-4"
           >
             <div>
-              <Link href={project.slug}>
-                <div className="text-large">{project.title}</div>
+              <Link href={project.url || project.slug}>
+                <div className="text-large">
+                  <div>{project.title}</div>
+                  {project.url && <div className="font-mono"> ↗</div>}
+                </div>
               </Link>
-              <div className="">date</div>
-              <div className="mb-4 sm:mb-0">
-                Voluptate anim officia magna exercitation. Occaecat et consequat
-                occaecat qui ad ipsum cillum exercitation occaecat. Duis officia
-                velit eiusmod minim voluptate. Eiusmod quis reprehenderit sunt
-                ipsum. Voluptate officia labore eiusmod incididunt cupidatat
-                enim commodo.
+              <div className="">
+                <time dateTime={project.publishedAt}>
+                  {format(parseISO(project.publishedAt), "yyyy")}
+                </time>
               </div>
+              <div className="mb-4 sm:mb-0">{project.description}</div>
             </div>
             <div className="bg-[#f9d73b] h-[400px] rounded-2xl overflow-hidden">
               iamge

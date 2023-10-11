@@ -123,6 +123,16 @@ export const Project = defineDocumentType(() => ({
       description: "The date of the Project",
       required: true,
     },
+    published: {
+      type: "boolean",
+      description: "Should the project be published",
+      required: true,
+    },
+    url: {
+      type: "string",
+      description: "Should the project be published",
+      required: true,
+    },
   },
   computedFields,
 }));

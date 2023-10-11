@@ -21,6 +21,11 @@ export default function LogPage() {
           />
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
+            <div className="text-white  uppercase">
+              <Link href="/" className="font-bold">
+                gndclouds
+              </Link>
+            </div>
             <div className="text-white text-largest uppercase">Log</div>
           </div>
           <div className="absolute bottom-0 p-4 w-full">
