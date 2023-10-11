@@ -53,6 +53,11 @@ module.exports = {
         "extra-bold": 800,
         black: 900,
       },
+      utilities: {
+        ".ss01": {
+          "font-feature-settings": "'ss01'",
+        },
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],
