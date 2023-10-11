@@ -35,12 +35,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </header>
             <main>{children}</main>
           </div>
-          <footer className="border-t-4 flex flex-row justify-between m-4">
+          {/* <footer className="border-t-4 flex flex-row justify-between m-4">
             <Link href="/">gndclouds</Link>
             <Link href="/">gndclouds</Link>
             <Link href="/">gndclouds</Link>
             <Link href="/">gndclouds</Link>
-          </footer>
+          </footer> */}
           <Analytics />
         </ThemeProvider>
       </body>
