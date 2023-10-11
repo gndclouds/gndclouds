@@ -3,14 +3,14 @@ import Link from "next/link";
 const localLinks = [
   {
     Link: {
-      name: "Logs",
-      href: "/logs",
+      name: "About",
+      href: "/about",
     },
   },
   {
     Link: {
-      name: "Newsletters",
-      href: "/newsletters",
+      name: "Logs",
+      href: "/logs",
     },
   },
   {
@@ -23,12 +23,6 @@ const localLinks = [
     Link: {
       name: "Projects",
       href: "/projects",
-    },
-  },
-  {
-    Link: {
-      name: "Teams",
-      href: "/teams",
     },
   },
 ];
