@@ -7,24 +7,6 @@ const localLinks = [
       href: "/about",
     },
   },
-  {
-    Link: {
-      name: "Logs",
-      href: "/logs",
-    },
-  },
-  {
-    Link: {
-      name: "Notes",
-      href: "/notes",
-    },
-  },
-  {
-    Link: {
-      name: "Projects",
-      href: "/projects",
-    },
-  },
 ];
 
 const internetLinks = [
