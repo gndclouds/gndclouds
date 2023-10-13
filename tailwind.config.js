@@ -4,6 +4,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./content/**/*.{md,mdx}",
   ],
   theme: {
     extend: {
@@ -30,13 +31,14 @@ module.exports = {
           "SFMono-Regular",
         ],
       },
-
       fontSize: {
-        paragraph: "20px",
-        h3: "24px",
-        h2: "34px",
-        h1: "64px",
-        title: "",
+        largest: "65pt",
+        larget: "36pt",
+        large: "24pt",
+        standard: "18pt",
+        small: "14pt",
+        smaller: "10pt",
+        tiny: "6pt",
       },
       fontWeight: {
         hairline: 100,
@@ -50,6 +52,11 @@ module.exports = {
         extrabold: 800,
         "extra-bold": 800,
         black: 900,
+      },
+      utilities: {
+        ".ss01": {
+          "font-feature-settings": "'ss01'",
+        },
       },
     },
   },

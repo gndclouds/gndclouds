@@ -1,11 +1,11 @@
-import { allLogs } from "@/.contentlayer/generated";
+import { allNewsletters } from "@/.contentlayer/generated";
 import { compareDesc, format, parseISO } from "date-fns";
-
 import Link from "next/link";
 import Image from "next/image";
+import { Mdx } from "@/components/mdx-components";
 
-export default function LogPage() {
-  const logs = allLogs.sort((a, b) =>
+export default function NewsletterPage() {
+  const newsletters = allNewsletters.sort((a, b) =>
     compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
   );
   return (
@@ -26,33 +26,33 @@ export default function LogPage() {
                 gndclouds
               </Link>
             </div>
-            <div className="text-white text-largest uppercase">Log</div>
+            <div className="text-white text-largest uppercase">Newsletter</div>
           </div>
           <div className="absolute bottom-0 p-4 w-full">
             <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
               <div className="flex justify-start items-center">
                 Updated:{" "}
-                <time dateTime={logs[0].publishedAt}>
-                  {format(parseISO(logs[0].publishedAt), "yyyy-MM-dd")}
+                <time dateTime={newsletters[0].publishedAt}>
+                  {format(parseISO(newsletters[0].publishedAt), "yyyy-MM-dd")}
                 </time>
               </div>
               <div className="flex justify-center items-center">
-                Number of {allLogs.length}
+                Number of {allNewsletters.length}
               </div>
               <div className="flex justify-end items-center">rss</div>
             </div>
           </div>
         </div>
       </div>
-      {/* Logs Section */}
+      {/* Newsletter Section */}
 
-      <div className="p-4 min-w-screen ">
-        {logs.map((log) => (
-          <article key={log._id}>
-            <Link href={log.slug}>
-              <h2>{log.title}</h2>
-            </Link>
-            {/* {log.description && <p>{log.description}</p>} */}
+      <div className="p-4 min-w-screen">
+        {newsletters.map((newsletter) => (
+          <article key={newsletter._id} className="py-12 border-b-4">
+            <div>
+              <div className="text-large">{newsletter.title}</div>
+            </div>
+            <Mdx code={newsletter.body.code} />
           </article>
         ))}
       </div>

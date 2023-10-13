@@ -14,6 +14,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "d2w9rnfcy7mm78.cloudfront.net",
       },
+      {
+        protocol: "https",
+        hostname: "source.unsplash.com",
+      },
     ],
   },
   reactStrictMode: true,
@@ -22,11 +26,6 @@ const nextConfig = {
     return [
       {
         source: "/cv",
-        destination: "/about",
-        permanent: false,
-      },
-      {
-        source: "/",
         destination: "/about",
         permanent: false,
       },
