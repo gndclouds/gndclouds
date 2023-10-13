@@ -14,17 +14,21 @@ export default function NotePage() {
         {/* Hero Section */}
         <div className="relative flex-1 h-[200px] rounded-2xl overflow-hidden">
           <Image
-            src="https://source.unsplash.com/user/gndclouds"
+            src="/hero-notes.png"
             alt="Hero Image"
             layout="fill"
             objectFit="cover"
           />
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
-            <div className="text-white  uppercase">
-              <Link href="/">gndclouds</Link>
+            <div className="text-white uppercase">
+              <Link href="/" className="font-bold">
+                gndclouds
+              </Link>
             </div>
-            <div className="text-white text-largest uppercase">Note</div>
+            <div className="text-white font-bold text-largest uppercase">
+              Notes
+            </div>
           </div>
           <div className="absolute bottom-0 p-4 w-full">
             <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
@@ -42,14 +46,21 @@ export default function NotePage() {
           </div>
         </div>
       </div>
-      {/* Logs Section */}
+      {/* Notes Section */}
 
       <div className="p-4 min-w-screen ">
+        <div className="bg-[#f0f0f0] italic p-4">
+          This page is generated with Obsidian and there are some linking
+          [[bugs]] still being worked out.
+        </div>
         {notes.map((note) => (
-          <article key={note._id}>
+          <article key={note._id} className="py-4">
             <Link href={note.slug}>
-              <h2>{note.title}</h2>
+              <div className="text-standard sm:text-large">{note.title}</div>
             </Link>
+            <time dateTime={note.publishedAt}>
+              {format(parseISO(note.publishedAt), "yyyy-MM-dd")}
+            </time>
             {/* {note.description && <p>{note.description}</p>} */}
           </article>
         ))}
