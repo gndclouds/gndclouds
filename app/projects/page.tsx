@@ -73,9 +73,9 @@ export default function ProjectPage() {
               </div>
               <div className="mb-4 sm:mb-0">{project.description}</div>
             </div>
-            <div className=" relative bg-[#f9d73b] aspect-square rounded-2xl overflow-hidden">
+            <div className=" relative aspect-video rounded-2xl overflow-hidden">
               <Image
-                src="/content/assets/test-hero-asset.jpg"
+                src={project.heroImage}
                 alt=""
                 quality={100}
                 fill
