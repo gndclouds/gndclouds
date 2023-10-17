@@ -33,13 +33,13 @@ export default function ProjectPage() {
     );
   }
 
-  const uniqueYears = [
-    ...new Set(
-      allProjects.map((project) =>
-        format(parseISO(project.publishedAt), "yyyy")
-      )
-    ),
-  ];
+  // const uniqueYears = [
+  //   ...new Set(
+  //     allProjects.map((project) =>
+  //       format(parseISO(project.publishedAt), "yyyy")
+  //     )
+  //   ),
+  // ];
 
   return (
     <div className="dark:prose-invert">
@@ -94,7 +94,7 @@ export default function ProjectPage() {
             placeholder="Search projects..."
             className="border border-gray-300 shadow-sm rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
           />
-          <select
+          {/* <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
           >
@@ -104,7 +104,7 @@ export default function ProjectPage() {
                 {year}
               </option>
             ))}
-          </select>
+          </select> */}
         </div>
         {projects.map((project) => (
           <article
