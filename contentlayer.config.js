@@ -133,6 +133,10 @@ export const Project = defineDocumentType(() => ({
       description: "Should the project be published",
       required: true,
     },
+    heroImage: {
+      type: "string",
+      required: false,
+    },
   },
   computedFields,
 }));
