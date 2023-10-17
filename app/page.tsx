@@ -7,12 +7,7 @@ const localLinks = [
       href: "/about",
     },
   },
-  {
-    Link: {
-      name: "Notes",
-      href: "/notes",
-    },
-  },
+
   {
     Link: {
       name: "Projects",
