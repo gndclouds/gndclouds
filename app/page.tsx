@@ -3,14 +3,31 @@ import Link from "next/link";
 const localLinks = [
   {
     Link: {
-      name: "About",
+      name: "about",
       href: "/about",
     },
   },
-
   {
     Link: {
-      name: "Projects",
+      name: "collections",
+      href: "/collections",
+    },
+  },
+  {
+    Link: {
+      name: "library",
+      href: "/library",
+    },
+  },
+  {
+    Link: {
+      name: "notes",
+      href: "/notes",
+    },
+  },
+  {
+    Link: {
+      name: "projects",
       href: "/projects",
     },
   },
@@ -85,7 +102,9 @@ export default async function Page() {
               <Link key={i} href={d.Link.href}>
                 <div className="group hover:translate-x-1 duration-100">
                   {d.Link.name}{" "}
-                  <span className="opacity-0 group-hover:opacity-100">→</span>
+                  <span className="opacity-0 group-hover:opacity-100 font-mono">
+                    →
+                  </span>
                 </div>
               </Link>
             ))}
@@ -98,7 +117,9 @@ export default async function Page() {
               <Link key={i} href={d.Link.href}>
                 <div className="group hover:translate-x-1 duration-100">
                   {d.Link.name}{" "}
-                  <span className="opacity-0 group-hover:opacity-100">↗</span>
+                  <span className="opacity-0 group-hover:opacity-100 font-mono">
+                    ↗
+                  </span>
                 </div>
               </Link>
             ))}
