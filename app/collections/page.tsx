@@ -21,16 +21,16 @@ export default async function CollectionsPage({}) {
   const revalidatedData = await getData();
 
   return (
-    <div className=" dark:prose-invert">
+    <div className="dark:prose-invert">
       <div className="min-w-screen flex">
         {/* Hero Section */}
         <div className="relative flex-1 h-[200px] overflow-hidden">
-          {/* <Image
-            src="/hero-notes.png"
+          <Image
+            src="https://source.unsplash.com/user/gndclouds"
             alt="Hero Image"
             layout="fill"
             objectFit="cover"
-          /> */}
+          />
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
             <div className="text-white uppercase font-bold">
