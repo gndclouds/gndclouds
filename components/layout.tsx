@@ -6,8 +6,6 @@ import "../app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@/components/analytics";
 
-const inter = Inter({ subsets: ["latin"] });
-
 interface RootLayoutProps {
   children: React.ReactNode;
 }
@@ -16,7 +14,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body
-        className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ordinal slashed-zero tabular-nums ss01 ${inter.className}`}
+        className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ordinal slashed-zero tabular-nums ss01`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="">
