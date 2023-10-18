@@ -22,9 +22,9 @@ export default async function CollectionsPage({}) {
 
   return (
     <div className=" dark:prose-invert">
-      <div className="p-4 min-w-screen flex">
+      <div className="min-w-screen flex">
         {/* Hero Section */}
-        <div className="relative flex-1 h-[200px] rounded-2xl overflow-hidden">
+        <div className="relative flex-1 h-[200px] overflow-hidden">
           {/* <Image
             src="/hero-notes.png"
             alt="Hero Image"
@@ -33,20 +33,30 @@ export default async function CollectionsPage({}) {
           /> */}
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
-            <div className="text-white uppercase">
-              <Link href="/" className="font-bold">
-                gndclouds
+            <div className="text-white uppercase font-bold">
+              <Link href="/" className=""></Link>
+              <Link href="/" className="font-bol">
+                ← gndclouds
+              </Link>
+              <span className="px-1">/</span>
+              <Link href="/collections" className="">
+                collections
               </Link>
             </div>
-            <div className="text-white font-bold text-largest uppercase">
-              Collections
-            </div>
+
+            <div className="text-white font-bold text-largest uppercase"></div>
           </div>
           <div className="absolute bottom-0 p-4 w-full">
             <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
-              <div className="flex justify-start items-center">ss</div>
-              <div className="flex justify-center items-center">ss </div>
-              <div className="flex justify-end items-center">rss</div>
+              <div className="flex justify-start items-center">
+                <Link href="https://are.na/gndclouds">
+                  <div>
+                    are.na <span className="font-mono">↗</span>
+                  </div>
+                </Link>
+              </div>
+              <div className="flex justify-center items-center"> </div>
+              <div className="flex justify-end items-center"></div>
             </div>
           </div>
         </div>
@@ -54,10 +64,6 @@ export default async function CollectionsPage({}) {
       {/* Notes Section */}
 
       <div className="p-4 min-w-screen ">
-        <div className="bg-[#f0f0f0] italic p-4">
-          This page is generated with Obsidian and there are some linking
-          [[bugs]] still being worked out.
-        </div>
         <div className="py-9 grid grid-cols-2 gap-4">
           {revalidatedData.contents.map((d: any) => (
             <Link

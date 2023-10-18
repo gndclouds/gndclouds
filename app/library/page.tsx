@@ -55,10 +55,6 @@ export default async function CollectionsPage({}) {
       {/* Notes Section */}
 
       <div className="p-4 min-w-screen ">
-        <div className="bg-[#f0f0f0] italic p-4">
-          This page is generated with Obsidian and there are some linking
-          [[bugs]] still being worked out.
-        </div>
         <div className="py-9 grid grid-cols-2 gap-4">
           {revalidatedData.contents.map((d: any) => (
             <Link

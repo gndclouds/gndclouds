@@ -6,7 +6,7 @@ import { compareDesc, format, parseISO } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ProjectPage() {
+export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
 
@@ -43,9 +43,9 @@ export default function ProjectPage() {
 
   return (
     <div className="dark:prose-invert">
-      <div className="p-4 min-w-screen flex ">
+      <div className="min-w-screen flex ">
         {/* Hero Section */}
-        <div className="relative flex-1 h-[200px] rounded-2xl overflow-hidden">
+        <div className="relative flex-1 h-[200px]  overflow-hidden">
           <Image
             src="https://source.unsplash.com/user/gndclouds"
             alt="Hero Image"
@@ -55,29 +55,30 @@ export default function ProjectPage() {
 
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
-            <div className="text-white uppercase">
-              <Link href="/" className="font-bold">
-                gndclouds
+            <div className="text-white uppercase font-bold">
+              <Link href="/" className=""></Link>
+              <Link href="/" className="font-bol">
+                ← gndclouds
+              </Link>
+              <span className="px-1">/</span>
+              <Link href="/projects" className="">
+                projects
               </Link>
             </div>
-            <div className="text-white text-largest uppercase">Projects</div>
+            <div className="text-white text-largest uppercase"></div>
           </div>
           <div className="absolute bottom-0 p-4 w-full">
             <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
               <div className="flex justify-start items-center">
-                Newest:{" "}
                 <time dateTime={projects[0].publishedAt}>
-                  {format(parseISO(projects[0].publishedAt), "yyyy-MM")}
+                  v.{format(parseISO(projects[0].publishedAt), "yyyy-MM")}
                 </time>
               </div>
               <div className="flex justify-center items-center">
                 {allProjects.length} Entries
               </div>
               <div className="flex justify-end items-center">
-                Building{" "}
-                <Link href="/">
-                  Made For Earth <span className="font-mono">↗</span>
-                </Link>
+                <Link href="/projects/rss.xml">RSS </Link>
               </div>
             </div>
           </div>
