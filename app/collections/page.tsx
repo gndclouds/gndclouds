@@ -64,6 +64,13 @@ export default async function CollectionsPage({}) {
       {/* Notes Section */}
 
       <div className="p-4 min-w-screen ">
+        <div className="pt-3 pb-9">
+          Many of my projects begin as a curated collection of thoughts within
+          an are.na channel. Below, you&apos;ll find the latest updates from
+          these channels, each representing a potential project in the making.
+          These evolving channels are the seeds from which projects are likely
+          to blossom in the near future.
+        </div>
         <div className="py-9 grid grid-cols-2 gap-4">
           {revalidatedData.contents.map((d: any) => (
             <Link

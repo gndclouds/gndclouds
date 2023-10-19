@@ -84,7 +84,7 @@ export default async function Page() {
       <div className="flex flex-col md:flex-row h-screen w-full">
         {/* Left Static Column */}
         <div className="p-8 flex flex-col justify-between w-full md:w-1/2">
-          <div className="">gndclouds</div>
+          <div className="font-bold uppercase">⌂ gndclouds</div>
           <div className="text-small sm:text-standard lg:text-large my-8 md:my-0">
             My focus for the next decade is contributing to work that helps make
             the unseen seen so that we can see ourselves as a part of nature
