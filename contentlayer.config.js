@@ -101,6 +101,11 @@ export const Note = defineDocumentType(() => ({
       description: "The date of the Newsletters",
       required: true,
     },
+    published: {
+      type: "boolean",
+      description: "Should the project be published",
+      required: true,
+    },
   },
   computedFields,
 }));

@@ -1,22 +1,212 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default async function AboutPage() {
+const awards = [
+  {
+    awards: {
+      name: "Impact Award",
+      year: "2018",
+      href: "https://www.cca.edu/newsroom/2018-impact-award-winners/",
+    },
+  },
+  {
+    awards: {
+      name: "Intel Aha Award",
+      year: "2014",
+      href: "#",
+    },
+  },
+];
+
+const articles = [
+  {
+    article: {
+      name: "Nudging the Needle",
+      href: "https://ferpalacios.xyz/orphenyadeone/williamfelker.html",
+    },
+  },
+  {
+    article: {
+      name: "Learning The Right Way To Think Wrong",
+      href: "https://creativeindustries.us/2017/12/12/learning-the-right-way-to-think-wrong/",
+    },
+  },
+];
+
+const teams = [
+  {
+    company: {
+      name: "Made For Earth",
+      href: "https://madefor.earth",
+    },
+    jobTitle: "Founder",
+  },
+  {
+    company: {
+      name: "tiny factories",
+      href: "https://tinyfactories.space",
+    },
+    jobTitle: "Co-Founder",
+  },
+  {
+    company: {
+      name: "Anthropogenic",
+      href: "https://anthropogenic.com",
+    },
+    jobTitle: "Co-Founder",
+  },
+  {
+    company: {
+      name: "Dark Matter Labs",
+      href: "https://darkmatterlabs.org",
+    },
+    jobTitle: "Design Technologiest",
+  },
+  {
+    company: {
+      name: "Reduct Video",
+      href: "https://reduct.video",
+    },
+    jobTitle: "Software Developer",
+  },
+  {
+    company: {
+      name: "Protocol Labs",
+      href: "https://protocol.ai",
+    },
+    jobTitle: "Software Developer",
+  },
+  {
+    company: {
+      name: "Speechify",
+      href: "https://speechify.com",
+    },
+    jobTitle: "Researcher",
+  },
+  {
+    company: {
+      name: "Dubberly Design Office",
+      href: "https://www.dubberly.com",
+    },
+    jobTitle: "Designer",
+  },
+  {
+    company: {
+      name: "Udacity",
+      href: "https://www.udacity.com",
+    },
+    jobTitle: "UX Researcher",
+  },
+  {
+    company: {
+      name: "Xerox PARC",
+      href: "https://www.xerox.com/en-us/innovation/parc",
+    },
+    jobTitle: "Research Assistant",
+  },
+  {
+    company: {
+      name: "IDEO CoLab",
+      href: "https://www.ideocolab.com",
+    },
+    jobTitle: "Fellow",
+  },
+  {
+    company: {
+      name: "Fjord",
+      href: "https://www.accenture.com/",
+    },
+    jobTitle: "Technologiest / Designer",
+  },
+  {
+    company: {
+      name: "IFTTT",
+      href: "https://ifttt.com/explore",
+    },
+    jobTitle: "Designer",
+  },
+  {
+    company: {
+      name: "IDEO CoLab",
+      href: "https://www.ideocolab.com",
+    },
+    jobTitle: "Interaction Designer",
+  },
+  {
+    company: {
+      name: "California College of the Arts",
+      href: "https://cca.edu",
+    },
+    jobTitle: "TA, Coach, Residency",
+  },
+  {
+    company: {
+      name: "IDEO",
+      href: "https://ideo.com",
+    },
+    jobTitle: "IxD Intern",
+  },
+  {
+    company: {
+      name: "Maker Media",
+      href: "https://make.co",
+    },
+    jobTitle: "Design Technologiest",
+  },
+  {
+    company: {
+      name: "Intel Labs",
+      href: "https://www.intel.com/content/www/us/en/research/overview.html",
+    },
+    jobTitle: "Researcher & Prototyper",
+  },
+];
+
+export default function AboutPage() {
   return (
-    <div>
-      <div className="flex flex-col md:flex-row h-screen w-full">
-        {/* Left Static Column */}
-        <div className="p-8 flex flex-col justify-between w-full md:w-1/2">
-          <Link href="/">gndclouds</Link>
-          <Image
-            src="/will/2023_headshot.JPG"
-            alt="Black and White photo of Will taking his own photo in the reflection of a pain of glass."
-            width={500}
-            height={500}
-          />
+    <div className="h-screen w-full flex">
+      {/* Left Static Column */}
+      <div className="relative flex-1  overflow-hidden">
+        <Image
+          src="/will/2023_headshot.JPG"
+          alt="Hero Image"
+          layout="fill"
+          objectFit="cover"
+        />
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className="absolute top-0 left-0 p-4">
+          <div className="text-white uppercase font-bold">
+            <Link href="/" className=""></Link>
+            <Link href="/" className="font-bol">
+              ← gndclouds
+            </Link>
+            <span className="px-1">/</span>
+            <Link href="/about" className="">
+              about
+            </Link>
+          </div>
+
+          <div className="text-white font-bold text-largest uppercase"></div>
         </div>
-        {/* Right Scrollable Column */}
-        <div className="p-8 flex flex-col justify-between w-full md:w-1/2">
+        <div className="absolute bottom-0 p-4 w-full">
+          <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
+            <div className="flex justify-start items-center">
+              <Link href="https://are.na/gndclouds">
+                <div>
+                  are.na <span className="font-mono">↗</span>
+                </div>
+              </Link>
+            </div>
+            <div className="flex justify-center items-center"> </div>
+            <div className="flex justify-end items-center"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Scrollable Column */}
+      <div className="p-8 w-full md:w-1/2 overflow-y-auto">
+        <div className="grid grid-cols-1 gap-8">
+          {" "}
           <div className="grid grid-cols-1 gap-8">
             <div className="">Hey I’m Will,</div>
             <div className="">
@@ -92,6 +282,53 @@ export default async function AboutPage() {
                 Interaction Design ↗
               </Link>
               .
+            </div>
+          </div>
+          <div className="py-9"></div>
+          {/* Section on Teams */}
+          <div>
+            <div className="uppercase border-t-2">Teams</div>
+            {/* <div>
+              Thank you to the mentors, collaborators, and friends who have
+              played a vital role in my learning journey through shared
+              experiences. These interactions have contributed to my personal
+              growth and the refinement of my practice.
+            </div> */}
+            <div className="grid grid-cols-1 gap-4">
+              {teams.map((d, i) => (
+                <div key={i}>
+                  <div className="font-bold">{d.company.name}</div>
+                  <div>{d.jobTitle}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Section on Articles */}
+          <div>
+            <div className="uppercase border-t-2">Articles</div>
+            <div className="grid grid-cols-1 gap-4">
+              {articles.map((d, i) => (
+                <div key={i}>
+                  <Link href={d.article.href}>
+                    <div className="font-bold">
+                      {d.article.name}
+                      <span className="font-mono"> ↗</span>
+                    </div>
+                  </Link>{" "}
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Section on Awards */}
+          <div>
+            <div className="uppercase border-t-2">Awards</div>
+            <div className="grid grid-cols-1 gap-4">
+              {awards.map((d, i) => (
+                <div key={i}>
+                  <div className="font-bold">{d.awards.name}</div>
+                  <div>{d.awards.year}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

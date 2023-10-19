@@ -3,14 +3,31 @@ import Link from "next/link";
 const localLinks = [
   {
     Link: {
-      name: "About",
+      name: "about",
       href: "/about",
     },
   },
-
   {
     Link: {
-      name: "Projects",
+      name: "collections",
+      href: "/collections",
+    },
+  },
+  {
+    Link: {
+      name: "library",
+      href: "/library",
+    },
+  },
+  {
+    Link: {
+      name: "notes",
+      href: "/notes",
+    },
+  },
+  {
+    Link: {
+      name: "projects",
       href: "/projects",
     },
   },
@@ -67,7 +84,7 @@ export default async function Page() {
       <div className="flex flex-col md:flex-row h-screen w-full">
         {/* Left Static Column */}
         <div className="p-8 flex flex-col justify-between w-full md:w-1/2">
-          <div className="">gndclouds</div>
+          <div className="font-bold uppercase">⌂ gndclouds</div>
           <div className="text-small sm:text-standard lg:text-large my-8 md:my-0">
             My focus for the next decade is contributing to work that helps make
             the unseen seen so that we can see ourselves as a part of nature
@@ -85,7 +102,9 @@ export default async function Page() {
               <Link key={i} href={d.Link.href}>
                 <div className="group hover:translate-x-1 duration-100">
                   {d.Link.name}{" "}
-                  <span className="opacity-0 group-hover:opacity-100">→</span>
+                  <span className="opacity-0 group-hover:opacity-100 font-mono">
+                    →
+                  </span>
                 </div>
               </Link>
             ))}
@@ -98,7 +117,9 @@ export default async function Page() {
               <Link key={i} href={d.Link.href}>
                 <div className="group hover:translate-x-1 duration-100">
                   {d.Link.name}{" "}
-                  <span className="opacity-0 group-hover:opacity-100">↗</span>
+                  <span className="opacity-0 group-hover:opacity-100 font-mono">
+                    ↗
+                  </span>
                 </div>
               </Link>
             ))}
