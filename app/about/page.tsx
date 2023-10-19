@@ -1,63 +1,34 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const news = [
-  {
-    company: {
-      name: "That interview",
-      href: "#",
-    },
-  },
-  {
-    company: {
-      name: "House9",
-      href: "#",
-    },
-  },
-  {
-    company: {
-      name: "Learning The Right Way To Think Wrong",
-      href: "http://creativeindustries.us/2017/12/12/learning-the-right-way-to-think-wrong/",
-    },
-  },
-];
-
 const awards = [
   {
     awards: {
       name: "Impact Award",
-      year: "0000",
+      year: "2018",
       href: "https://www.cca.edu/newsroom/2018-impact-award-winners/",
     },
-    domain: "design",
   },
   {
     awards: {
-      name: "Intel Comp",
-      year: "0000",
+      name: "Intel Aha Award",
+      year: "2014",
       href: "#",
     },
-    domain: "deign",
   },
 ];
 
 const articles = [
   {
     article: {
-      name: "Amber Initiative",
-      href: "https://amberinitiative.com",
+      name: "Nudging the Needle",
+      href: "https://ferpalacios.xyz/orphenyadeone/williamfelker.html",
     },
   },
   {
     article: {
-      name: "Amber Initiative",
-      href: "https://amberinitiative.com",
-    },
-  },
-  {
-    article: {
-      name: "Amber Initiative",
-      href: "https://amberinitiative.com",
+      name: "Learning The Right Way To Think Wrong",
+      href: "https://creativeindustries.us/2017/12/12/learning-the-right-way-to-think-wrong/",
     },
   },
 ];
@@ -317,12 +288,12 @@ export default function AboutPage() {
           {/* Section on Teams */}
           <div>
             <div className="uppercase border-t-2">Teams</div>
-            <div>
+            {/* <div>
               Thank you to the mentors, collaborators, and friends who have
               played a vital role in my learning journey through shared
               experiences. These interactions have contributed to my personal
               growth and the refinement of my practice.
-            </div>
+            </div> */}
             <div className="grid grid-cols-1 gap-4">
               {teams.map((d, i) => (
                 <div key={i}>
@@ -338,7 +309,12 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 gap-4">
               {articles.map((d, i) => (
                 <div key={i}>
-                  <div className="font-bold">{d.article.name}</div>
+                  <Link href={d.article.href}>
+                    <div className="font-bold">
+                      {d.article.name}
+                      <span className="font-mono"> ↗</span>
+                    </div>
+                  </Link>{" "}
                 </div>
               ))}
             </div>
