@@ -4,8 +4,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { Mdx } from "@/components/mdx-components";
 
+function hasPublishedAt(
+  item: (typeof allNewsletters)[0]
+): item is (typeof allNewsletters)[0] & { publishedAt: string } {
+  return item.publishedAt !== undefined;
+}
+
 export default function NewsletterPage() {
-  const newsletters = allNewsletters.sort((a, b) =>
+  // Use the type guard in the filter
+  const validNewsletters = allNewsletters.filter(hasPublishedAt);
+
+  // Now, this should not throw any TypeScript errors
+  const newsletters = validNewsletters.sort((a, b) =>
     compareDesc(new Date(a.publishedAt), new Date(b.publishedAt))
   );
   return (
