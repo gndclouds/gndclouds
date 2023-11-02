@@ -65,6 +65,20 @@ export const Log = defineDocumentType(() => ({
       description: "The date of the Log",
       required: true,
     },
+    published: {
+      type: "boolean",
+      description: "Should the Log be published",
+      required: true,
+    },
+    url: {
+      type: "string",
+      description: "Should the project be published",
+      required: false,
+    },
+    heroImage: {
+      type: "string",
+      required: false,
+    },
   },
   computedFields,
 }));
@@ -81,6 +95,11 @@ export const Newsletter = defineDocumentType(() => ({
     publishedAt: {
       type: "date",
       description: "The date of the Newsletters",
+      required: false,
+    },
+    published: {
+      type: "boolean",
+      description: "Should the Newsletter be published",
       required: true,
     },
   },
@@ -98,13 +117,27 @@ export const Note = defineDocumentType(() => ({
     },
     publishedAt: {
       type: "date",
-      description: "The date of the Newsletters",
+      description: "Date first published",
+      required: true,
+    },
+    updatedAt: {
+      type: "date",
+      description: "Date of most recent edits",
       required: true,
     },
     published: {
       type: "boolean",
       description: "Should the project be published",
       required: true,
+    },
+    url: {
+      type: "string",
+      description: "Should the project be published",
+      required: false,
+    },
+    heroImage: {
+      type: "string",
+      required: false,
     },
   },
   computedFields,
@@ -125,7 +158,12 @@ export const Project = defineDocumentType(() => ({
     },
     publishedAt: {
       type: "date",
-      description: "The date of the Project",
+      description: "Date first published",
+      required: true,
+    },
+    updatedAt: {
+      type: "date",
+      description: "Date of most recent edits",
       required: true,
     },
     published: {
