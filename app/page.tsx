@@ -15,18 +15,6 @@ const localLinks = [
   },
   {
     Link: {
-      name: "library",
-      href: "/library",
-    },
-  },
-  {
-    Link: {
-      name: "notes",
-      href: "/notes",
-    },
-  },
-  {
-    Link: {
       name: "projects",
       href: "/projects",
     },
@@ -56,12 +44,6 @@ const internetLinks = [
     Link: {
       name: "read.cv",
       href: "https://read.cv/gndclouds",
-    },
-  },
-  {
-    Link: {
-      name: "tiny garden",
-      href: "https://tiny.garden/gndclouds",
     },
   },
   {
