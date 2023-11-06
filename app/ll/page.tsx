@@ -5,21 +5,35 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // if you need support for GitHub Flavored Markdown
 
+interface Post {
+  id: string; // or number
+  title: string;
+  description: string;
+  content: string;
+  // Add other fields here as per your data
+}
+
 function LogsPage() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]); // Use the Post interface
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  async function fetchPosts(page) {
+  async function fetchPosts(page: number) {
     setLoading(true);
     try {
       const res = await fetch(
         `https://api.are.na/v2/channels/test-ll?page=${page}&per_page=10`
       );
       const data = await res.json();
-      // Check if data.contents is an array before setting the state
-      if (Array.isArray(data.contents)) {
-        setPosts((prevPosts) => [...prevPosts, ...data.contents]);
+
+      if (
+        Array.isArray(data.contents) &&
+        data.contents.every(
+          (item: { id: unknown }) =>
+            typeof item === "object" && item !== null && "id" in item
+        )
+      ) {
+        setPosts((prevPosts) => [...prevPosts, ...(data.contents as Post[])]);
       } else {
         console.error("data.contents is not an array", data.contents);
       }
@@ -29,14 +43,16 @@ function LogsPage() {
     setLoading(false);
   }
 
-  function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
+  function debounce(func: (...args: any[]) => void, wait: number) {
+    let timeout: NodeJS.Timeout | null;
+    return function executedFunction(...args: any[]) {
       const later = () => {
-        clearTimeout(timeout);
+        clearTimeout(timeout!);
         func(...args);
       };
-      clearTimeout(timeout);
+      if (timeout !== null) {
+        clearTimeout(timeout);
+      }
       timeout = setTimeout(later, wait);
     };
   }
