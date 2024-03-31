@@ -192,8 +192,13 @@ export default function AboutPage() {
           <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
             <div className="flex justify-start items-center">
               <Link href="https://are.na/gndclouds">
-                <div>
+                <div className="block">
                   are.na <span className="font-mono">↗</span>
+                </div>
+              </Link>
+              <Link href="https://twitter.com/gndclouds">
+                <div className="block pl-2">
+                  x <span className="font-mono">↗</span>
                 </div>
               </Link>
             </div>

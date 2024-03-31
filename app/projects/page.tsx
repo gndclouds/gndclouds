@@ -107,42 +107,41 @@ export default function ProjectsPage() {
             ))}
           </select> */}
         </div>
-        {projects.map((project) => (
-          <article
-            key={project._id}
-            className="grid grid-cols-1 sm:grid-cols-2 my-20  gap-4 "
-          >
-            <div>
-              <Link href={project.url || project.slug}>
-                <div className="text-large flex-wrap font-bold">
-                  <div className="inline-block pr-2">{project.title} </div>
-                  {project.url && (
-                    <div className="inline-block font-mono">↗</div>
-                  )}
-                </div>
-              </Link>
-              <div className="">
-                <time dateTime={project.publishedAt}>
-                  {format(parseISO(project.publishedAt), "yyyy")}
-                </time>
-              </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {projects.map((project) => (
+            <article key={project._id} className="my-20  gap-4 ">
               <div className="mb-4 sm:mb-0">{project.description}</div>
-            </div>
-            <div className="relative aspect-video rounded-2xl overflow-hidden">
-              {project.heroImage ? (
-                <Image
-                  src={project.heroImage}
-                  alt=""
-                  quality={100}
-                  layout="fill"
-                  objectFit="cover"
-                />
-              ) : (
-                <div className="bg-[#f9d73b]"></div>
-              )}
-            </div>
-          </article>
-        ))}
+              <div>
+                <Link href={project.url || project.slug}>
+                  <div className="text-large flex-wrap font-bold">
+                    <div className="inline-block pr-2">{project.title} </div>
+                    {project.url && (
+                      <div className="inline-block font-mono">↗</div>
+                    )}
+                  </div>
+                </Link>
+                <div className="">
+                  <time dateTime={project.publishedAt}>
+                    {format(parseISO(project.publishedAt), "yyyy")}
+                  </time>
+                </div>
+              </div>
+              <div className="relative aspect-video rounded-2xl overflow-hidden">
+                {project.heroImage ? (
+                  <Image
+                    src={project.heroImage}
+                    alt=""
+                    quality={100}
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                ) : (
+                  <div className="bg-[#f9d73b]"></div>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );

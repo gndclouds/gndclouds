@@ -15,6 +15,12 @@ const localLinks = [
   },
   {
     Link: {
+      name: "logs",
+      href: "/logs",
+    },
+  },
+  {
+    Link: {
       name: "projects",
       href: "/projects",
     },
