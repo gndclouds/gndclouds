@@ -21,7 +21,6 @@ export function PageHero({ updated, count, rss }: PageHeroProps) {
 
       <div className="absolute top-0 left-0 p-4">
         <div className="text-white  uppercase font-bold">
-          <Link href="/" className=""></Link>
           <Link href="/" className="font-bol">
             ← gndclouds
           </Link>

@@ -15,14 +15,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <div>
       <script
         async
         defer
         data-website-id="d0310b26-9820-4f75-8939-200ecdfc29a0"
         src="https://umami.tinyfactories.space/umami.js"
       ></script>
-      <body
+      <div
         className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ordinal slashed-zero tabular-nums ss01`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
           <Analytics />
         </ThemeProvider>
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }

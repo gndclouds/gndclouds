@@ -4,11 +4,12 @@
   "private": false,
   "license": "CC-BY-SA-4.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "bash update_submodules.sh && next dev",
     "build": "next build",
     "preview": "next build && next start",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-content": "./update_content.sh"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.10",

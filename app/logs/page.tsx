@@ -41,7 +41,7 @@ export default function LogsPage() {
   // ];
   const latestUpdateDate =
     logs.length > 0
-      ? format(parseISO(logs[0].publishedAt), "yyyy-MM-dd")
+      ? format(parseISO(logs[0].publishedAt ?? ""), "yyyy-MM-dd")
       : "N/A";
   const logsCount = Array.isArray(logs) ? logs.length : 0;
 

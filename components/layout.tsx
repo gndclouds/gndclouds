@@ -12,8 +12,8 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
-      <body
+    <div>
+      <div
         className={`antialiased min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ordinal slashed-zero tabular-nums ss01`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           </div>
           <Analytics />
         </ThemeProvider>
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }
