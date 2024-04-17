@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { allNotes } from "contentlayer/generated";
 
 import { Metadata } from "next";
-import { Mdx } from "@/components/mdx-components";
-import Layout from "@/components/layout";
+import { Mdx } from "@/app/components/mdx-components";
+import Layout from "@/app/components/layout";
 
 interface NoteProps {
   params: {

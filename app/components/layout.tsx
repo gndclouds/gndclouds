@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import "../app/globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Analytics } from "@/components/analytics";
+import { ThemeProvider } from "@/app/components/theme-provider";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </header>
             <main className="mx-auto">{children}</main>
           </div>
-          <Analytics />
         </ThemeProvider>
       </div>
     </div>

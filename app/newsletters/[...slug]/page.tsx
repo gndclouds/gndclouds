@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { allNewsletters } from "contentlayer/generated";
 
 import { Metadata } from "next";
-import { Mdx } from "@/components/mdx-components";
+import { Mdx } from "@/app/components/mdx-components";
 
 interface NewsletterProps {
   params: {

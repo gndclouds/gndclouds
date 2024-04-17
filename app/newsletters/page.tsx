@@ -2,7 +2,7 @@ import { allNewsletters } from "@/.contentlayer/generated";
 import { compareDesc, format, parseISO } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
-import { Mdx } from "@/components/mdx-components";
+import { Mdx } from "@/app/components/mdx-components";
 
 function hasPublishedAt(
   item: (typeof allNewsletters)[0]

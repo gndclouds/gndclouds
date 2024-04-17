@@ -5,6 +5,7 @@ import { allNotes } from "@/.contentlayer/generated";
 import { compareDesc, format, parseISO } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
+import PageNavigation from "@/app/components/PageNavigation";
 
 export default function NotesPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,14 +53,7 @@ export default function NotesPage() {
           <div className="absolute inset-0 bg-black opacity-40"></div>
           <div className="absolute top-0 left-0 p-4">
             <div className="text-white uppercase font-bold">
-              <Link href="/" className=""></Link>
-              <Link href="/" className="font-bol">
-                ← gndclouds
-              </Link>
-              <span className="px-1">/</span>
-              <Link href="/notes" className="">
-                notes
-              </Link>
+              <PageNavigation currentPage="notes" />
             </div>
             <div className="text-white font-bold text-largest uppercase"></div>
           </div>

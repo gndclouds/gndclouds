@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { allProjects } from "contentlayer/generated";
 
 import { Metadata } from "next";
-import { Mdx } from "@/components/mdx-components";
+import { Mdx } from "@/app/components/mdx-components";
 
 interface ProjectProps {
   params: {

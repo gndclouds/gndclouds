@@ -14,13 +14,16 @@ function toSlug(str) {
 const computedFields = {
   slug: {
     type: "string",
-    resolve: (doc) => `/${doc._raw.flattenedPath}`,
+    resolve: (doc) => `/${doc._raw.flattenedPath.split('/').map(toSlug).join('/')}`,
   },
   slugAsParams: {
     type: "string",
     resolve: (doc) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
   },
 };
+
+
+
 
 export const Page = defineDocumentType(() => ({
   name: "Page",
@@ -185,6 +188,7 @@ export const Project = defineDocumentType(() => ({
 }));
 
 export default makeSource({
-  contentDirPath: "./content",
+  contentDirPath: "./db/content",
   documentTypes: [Log, Page, Post, Newsletter, Note, Project],
 });
+

@@ -33,13 +33,10 @@ export default function ProjectsPage() {
     );
   }
 
-  // const uniqueYears = [
-  //   ...new Set(
-  //     allProjects.map((project) =>
-  //       format(parseISO(project.publishedAt), "yyyy")
-  //     )
-  //   ),
-  // ];
+  if (!projects.length || projects.some((project) => !project.publishedAt)) {
+    // Handle the case where projects are empty or missing publishedAt
+    return <div>No projects available</div>;
+  }
 
   return (
     <div className="dark:prose-invert">
@@ -95,17 +92,6 @@ export default function ProjectsPage() {
             placeholder="Search projects..."
             className="border border-gray-300 shadow-sm rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
           />
-          {/* <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-          >
-            <option value="">Filter by year</option>
-            {uniqueYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select> */}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {projects.map((project) => (

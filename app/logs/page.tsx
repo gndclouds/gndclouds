@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { allLogs } from "@/.contentlayer/generated";
 import { compareDesc, format, parseISO } from "date-fns";
-import { PageHero } from "@/components/page-hero";
-import { Mdx } from "@/components/mdx-components";
+import { PageHero } from "@/app/components/page-hero";
+import { Mdx } from "@/app/components/mdx-components";
 
 import Link from "next/link";
 import Image from "next/image";

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { Analytics } from "@/components/analytics";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ThemeProvider } from "@/app/components/theme-provider";
+import { Analytics } from "@/app/components/analytics";
+import { ModeToggle } from "@/app/components/mode-toggle";
 
 export const metadata = {
   title: "gndclouds",

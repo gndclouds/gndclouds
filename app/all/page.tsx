@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   allNotes,
   allLogs,
@@ -30,13 +29,11 @@ export default function FeedPage() {
   return (
     <div className="prose dark:prose-invert">
       {combinedItems.map((item) => (
-        <div key={item._id}>
+        <article key={item._id}>
           <Link href={item.slug}>
-            <a>
-              <h2>{item.title}</h2>
-            </a>{" "}
+            <h2>{item.title}</h2>
           </Link>
-        </div>
+        </article>
       ))}
     </div>
   );

@@ -196,6 +196,11 @@ export default function AboutPage() {
                   are.na <span className="font-mono">↗</span>
                 </div>
               </Link>
+              <Link href="https://read.cv/gndclouds">
+                <div className="block pl-2">
+                  cv <span className="font-mono">↗</span>
+                </div>
+              </Link>
               <Link href="https://twitter.com/gndclouds">
                 <div className="block pl-2">
                   x <span className="font-mono">↗</span>
