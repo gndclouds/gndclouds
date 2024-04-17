@@ -1,5 +1,4 @@
-"use client";
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 import { fetchContentPages } from "@/app/queries/all";
 import Hello from "@/app/components/hello";
 import Pagination from "@/app/components/pagination";
@@ -23,19 +22,22 @@ export default async function Page({
   const totalPages = await fetchContentPages(query);
 
   return (
-    <div className="w-full">
-      {/* Hero Secrion */}
-      <section className="pt-24">Add hello</section>
-      <Search placeholder="Search structures..." />
-
-      <Suspense key={query + currentPage + filter}>
-        <FeedListView
-          query={query}
-          currentPage={Number(currentPage) || 1}
-          filter={filter}
-        />
-      </Suspense>
-      <Pagination totalPages={totalPages} />
+    <div className="flex flex-col md:flex-row w-full">
+      {/* Hero Section */}
+      <section className="md:w-1/2 pt-24 md:pt-0 md:show">
+        <Hello />
+      </section>
+      <section className="md:w-1/2 hidden md:block">
+        <Search placeholder="Search structures..." />
+        <Suspense key={query + currentPage + filter}>
+          <FeedListView
+            query={query}
+            currentPage={Number(currentPage) || 1}
+            filter={filter}
+          />
+        </Suspense>
+        <Pagination totalPages={totalPages} />
+      </section>
     </div>
   );
 }

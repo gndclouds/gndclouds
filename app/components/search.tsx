@@ -4,7 +4,11 @@ import { useDebouncedCallback } from "use-debounce";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-export default function Search({ placeholder }: { placeholder: string }) {
+interface SearchProps {
+  placeholder: string;
+}
+
+export default function Search({ placeholder }: SearchProps) {
   const [selectedFilter, setSelectedFilter] = useState<string>("trending");
   const searchParams = useSearchParams();
   const pathname = usePathname();

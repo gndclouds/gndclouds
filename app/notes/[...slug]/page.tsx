@@ -3,7 +3,6 @@ import { allNotes } from "contentlayer/generated";
 
 import { Metadata } from "next";
 import { Mdx } from "@/app/components/mdx-components";
-import Layout from "@/app/components/layout";
 
 interface NoteProps {
   params: {
@@ -50,13 +49,13 @@ export default async function NotePage({ params }: NoteProps) {
   }
 
   return (
-    <Layout>
+    <div>
       <article className="mx-4 sm:mx-6 py-6 prose dark:prose-invert">
         <h1 className="mb-2">{note.title}</h1>
 
         <hr className="my-4" />
         <Mdx code={note.body.code} />
       </article>
-    </Layout>
+    </div>
   );
 }

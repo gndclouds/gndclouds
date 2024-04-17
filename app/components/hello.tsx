@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Hello({ placeholder }: { placeholder: string }) {
   return (
-    <div className="p-8 flex flex-col justify-between w-full md:w-1/2">
+    <div className="p-8 flex flex-col justify-between w-full">
       <div className="font-bold uppercase">gndclouds</div>
       <div className="text-small sm:text-standard lg:text-md my-8 md:my-0">
         <div>
