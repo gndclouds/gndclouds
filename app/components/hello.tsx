@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Hello({ placeholder }: { placeholder: string }) {
+export default function Hello() {
   return (
     <div className="p-8 flex flex-col justify-between w-full">
       <div className="font-bold uppercase">gndclouds</div>

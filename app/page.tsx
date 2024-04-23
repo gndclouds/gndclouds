@@ -1,25 +1,32 @@
-import React, { Suspense } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import { fetchContentPages } from "@/app/queries/all";
 import Hello from "@/app/components/hello";
 import Pagination from "@/app/components/pagination";
 import Search from "@/app/components/search";
-import FeedListView from "@/app/components/feel/list";
+import LoadingSkeleton from "@/app/loading";
 import styles from "./page.module.css";
+import { useSearchParams } from "next/navigation";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-    filter?: string;
-  };
-}) {
-  const query = searchParams?.query || "";
-  const filter = searchParams?.filter || "";
+export default function Page() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") || "";
+  const filter = searchParams.get("filter") || "";
+  const selectedTypes = searchParams.get("selectedTypes")?.split(",") || [];
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchContentPages(query);
+  useEffect(() => {
+    const fetchPages = async () => {
+      setLoading(true);
+      const pages = await fetchContentPages(query, new Set(selectedTypes));
+      setTotalPages(pages);
+      setLoading(false);
+    };
+
+    fetchPages();
+  }, [query, selectedTypes, currentPage]);
 
   return (
     <div className="flex flex-col md:flex-row w-full">
@@ -29,14 +36,15 @@ export default async function Page({
       </section>
       <section className="md:w-1/2 hidden md:block">
         <Search placeholder="Search structures..." />
-        <Suspense key={query + currentPage + filter}>
-          <FeedListView
-            query={query}
-            currentPage={Number(currentPage) || 1}
-            filter={filter}
-          />
-        </Suspense>
-        <Pagination totalPages={totalPages} />
+        {loading ? (
+          <LoadingSkeleton />
+        ) : (
+          <React.Fragment>
+            {/* Implement FeedListView with fetched data */}
+            <div>Feed content based on fetched data</div>
+            <Pagination totalPages={totalPages} />
+          </React.Fragment>
+        )}
       </section>
     </div>
   );

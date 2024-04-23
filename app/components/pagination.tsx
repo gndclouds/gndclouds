@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@radix-ui/react-icons";
 
 import clsx from "clsx";

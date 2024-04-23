@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
@@ -9,10 +9,31 @@ interface SearchProps {
 }
 
 export default function Search({ placeholder }: SearchProps) {
-  const [selectedFilter, setSelectedFilter] = useState<string>("trending");
+  const [selectedTypes, setSelectedTypes] = useState<Set<string>>(
+    new Set(["Note", "Log", "Project"])
+  );
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+
+  const updateSearchParams = useCallback(
+    (newTypes: Set<string>) => {
+      const params = new URLSearchParams(searchParams);
+      // Convert each type to capitalized form before joining
+      params.set(
+        "type",
+        Array.from(newTypes)
+          .map((type) => type.charAt(0).toUpperCase() + type.slice(1))
+          .join(",")
+      );
+      replace(`${pathname}?${params.toString()}`);
+    },
+    [searchParams, replace, pathname]
+  );
+
+  useEffect(() => {
+    updateSearchParams(selectedTypes); // Update search params on initial render with all types selected
+  }, [selectedTypes, updateSearchParams]);
 
   const handleSearch = useDebouncedCallback((term) => {
     console.log(`Searching... ${term}`);
@@ -27,12 +48,23 @@ export default function Search({ placeholder }: SearchProps) {
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 
-  const handleFilterChange = (filter: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("filter", filter);
-    replace(`${pathname}?${params.toString()}`);
-    setSelectedFilter(filter);
+  const handleTypeChange = (type: string) => {
+    setSelectedTypes((prev) => {
+      const newTypes = new Set(prev);
+      if (newTypes.has(type)) {
+        newTypes.delete(type);
+      } else {
+        newTypes.add(type);
+      }
+      // Moved updateSearchParams call to useEffect to prevent direct call during rendering
+      return newTypes;
+    });
   };
+
+  // Added useEffect to handle search params update after handleTypeChange
+  useEffect(() => {
+    updateSearchParams(selectedTypes);
+  }, [selectedTypes, updateSearchParams]);
 
   return (
     <div className="w-full">
@@ -54,33 +86,35 @@ export default function Search({ placeholder }: SearchProps) {
       <div className="mt-4 flex justify-between">
         <div className="flex gap-4">
           <button
-            className={`rounded-md  ${
-              selectedFilter === "trending"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
+            className={`rounded-full px-4 py-1 ${
+              selectedTypes.has("Note")
+                ? "bg-purple-500 text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
-            onClick={() => handleFilterChange("trending")}
+            onClick={() => handleTypeChange("Note")}
           >
             Notes
           </button>
           <button
-            className={`rounded-md text-gray-700 ${
-              selectedFilter === "recent"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200"
+            className={`rounded-full px-4 py-1 ${
+              selectedTypes.has("Log")
+                ? "bg-green-500 text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
-            onClick={() => handleFilterChange("recent")}
+            onClick={() => handleTypeChange("Log")}
           >
             Logs
           </button>
-        </div>
-        <div className="flex gap-4">
-          <div className="relative">
-            <select className="block w-full rounded-md border border-gray-200 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm">
-              <option>Updated</option>
-              <option>Trending</option>
-            </select>
-          </div>
+          <button
+            className={`rounded-full px-4 py-1 ${
+              selectedTypes.has("Project")
+                ? "bg-orange-500 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTypeChange("Project")}
+          >
+            Projects
+          </button>
         </div>
       </div>
     </div>
