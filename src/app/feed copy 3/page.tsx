@@ -1,4 +1,4 @@
-import { getAllMarkdownFiles } from "@/queries/posts";
+import { getAllMarkdownFiles } from "@/queries/all";
 
 export default async function Home() {
   const posts = await getAllMarkdownFiles();
@@ -9,7 +9,7 @@ export default async function Home() {
       <ul>
         {posts.map((post) => (
           <li key={post.slug}>
-            <a href={`/content/${post.slug}`}>{post.title}</a>
+            <a href={`/log/${post.slug}`}>{post.title}</a>
           </li>
         ))}
       </ul>
