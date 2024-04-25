@@ -1,12 +1,14 @@
+import Link from "next/link";
+import Image from "next/image";
 import { getAllUnsplashImages } from "@/queries/all";
-import CollectionHero from "@/components/CollectionHero";
+import ListView from "@/components/list-view";
+import CollectionHero from "@/components/collection-hero";
 
-export default async function Home() {
+export default async function PhotographyPage() {
   const data = await getAllUnsplashImages("gndclouds");
-
   return (
-    <div>
-      {/* <CollectionHero projects={data} allProjects={data} /> */}
+    <main>
+      <CollectionHero name="Photography" projects={data} allProjects={data} />
       <section>
         <div className="gallery flex flex-wrap justify-start">
           {data.map((image, index) => (
@@ -16,21 +18,28 @@ export default async function Home() {
                 index % 2 === 0 ? "mr-2" : "ml-2"
               }`}
             >
-              <a
-                href={image.urls.regular}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={image.urls.thumb}
-                  alt={`Image taken by ${image.user.name}`}
-                  className="rounded-lg"
-                />
-              </a>
+              <Link href={image.urls.regular} passHref>
+                <div target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src={image.urls.small}
+                    alt={`Image taken by ${image.alt_description}`}
+                    className="rounded-lg"
+                    width={300}
+                    height={300}
+                  />
+                </div>
+                <div className="mt-2">
+                  <p>{image.exif.make}</p>
+                  <p>{image.exif.model}</p>
+                  <p>{image.exif.exposure_time}</p>
+                  <p>{image.exif.aperture}</p>
+                  <p>{image.exif.focal_length}</p>
+                </div>
+              </Link>
             </div>
           ))}
         </div>
       </section>
-    </div>
+    </main>
   );
 }

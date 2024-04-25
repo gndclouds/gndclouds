@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { parseISO, format } from "date-fns";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
-const CollectionHero = ({ projects, allProjects }) => (
+const CollectionHero = ({ name, projects, allProjects }) => (
   <div className="min-w-screen flex">
     {/* Hero Section */}
     <div className="relative flex-1 h-[200px] overflow-hidden">
@@ -15,13 +16,13 @@ const CollectionHero = ({ projects, allProjects }) => (
 
       <div className="absolute inset-0 bg-black opacity-40"></div>
       <div className="absolute top-0 left-0 p-4">
-        <div className="text-white uppercase font-bold">
-          <Link href="/">
-            <div>← gndclouds</div>
+        <div className="text-white uppercase font-bold flex items-center">
+          <Link href="/" className="inline-flex items-center">
+            <ArrowLeftIcon className="font-bold" /> gndclouds
           </Link>
           <span className="px-1">/</span>
-          <Link href="/projects">
-            <div>projects</div>
+          <Link href="/projects" className="inline">
+            {name}
           </Link>
         </div>
       </div>

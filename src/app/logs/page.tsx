@@ -1,12 +1,23 @@
-import { getAllMarkdownFiles } from "@/queries/all";
-import ListView from "@/components/list-view";
+import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
 
-export default async function Home() {
-  const allData = await getAllMarkdownFiles();
-  const data = allData.filter((post) => post.categories.includes("Log"));
+import ListView from "@/components/list-view";
+import CollectionHero from "@/components/collection-hero";
+
+export default async function FeedPage() {
+  const [data, images] = await Promise.all([
+    getAllMarkdownFiles(),
+    getAllUnsplashImages("gndclouds"),
+  ]);
+
+  const combinedData = [...data, ...images].sort(
+    (a, b) =>
+      new Date(b.publishedAt || b.created_at).getTime() -
+      new Date(a.publishedAt || a.created_at).getTime()
+  );
+
   return (
     <main>
-      <h1>Logs</h1>
+      <CollectionHero name="Logs" projects={data} allProjects={data} />
       <section>
         <ListView data={data} />
       </section>

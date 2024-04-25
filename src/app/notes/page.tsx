@@ -3,7 +3,7 @@ import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
-export default async function FeedPage() {
+export default async function NotesPage() {
   const [data, images] = await Promise.all([
     getAllMarkdownFiles(),
     getAllUnsplashImages("gndclouds"),
@@ -17,7 +17,7 @@ export default async function FeedPage() {
 
   return (
     <main>
-      <CollectionHero name="Newsletters" projects={data} allProjects={data} />
+      <CollectionHero name="Notes" projects={data} allProjects={data} />
       <section>
         <ListView data={data} />
       </section>
