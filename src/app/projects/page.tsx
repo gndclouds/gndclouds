@@ -9,11 +9,17 @@ export default async function NotesPage() {
     getAllUnsplashImages("gndclouds"),
   ]);
 
-  const combinedData = [...data, ...images].sort(
-    (a, b) =>
-      new Date(b.publishedAt || b.created_at).getTime() -
-      new Date(a.publishedAt || a.created_at).getTime()
-  );
+  const combinedData = [...data, ...images].sort((a, b) => {
+    const dateA =
+      "created_at" in a
+        ? new Date(a.created_at).getTime()
+        : new Date(a.publishedAt).getTime();
+    const dateB =
+      "created_at" in b
+        ? new Date(b.created_at).getTime()
+        : new Date(b.publishedAt).getTime();
+    return dateB - dateA;
+  });
 
   return (
     <main>

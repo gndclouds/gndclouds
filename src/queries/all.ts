@@ -45,6 +45,11 @@ export interface ArenaItem {
   createdAt: string;
 }
 
+interface ArenaResponse {
+  blocks?: Array<{ title: string; id: string; class: string }>;
+  channels?: Array<{ title: string; id: string; class: string }>;
+}
+
 export interface ActivityHubItem {
   id: string;
   title: string;
@@ -202,10 +207,8 @@ export async function getArenaUserActivity(
       );
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as ArenaResponse;
     const items = (data.blocks || []).concat(data.channels || []);
-    // console.log("Items fetched on page", page, ":", items.length);
-
     allItems = allItems.concat(
       items.map((item: { title: string; id: string; class: string }) => ({
         title: item.title,
@@ -242,6 +245,7 @@ export async function getArenaBlockData(blockId: string): Promise<any> {
   }
 
   interface ArenaBlockResponse {
+    id: string; // Added id property to resolve the error
     image?: {
       thumb: { url: string };
       square: { url: string };
@@ -337,8 +341,12 @@ export async function getAllArenaChannelsForUser(
     );
   }
 
-  const data = await response.json();
-  return data.channels; // Assuming the response has a 'channels' key with the channel data
+  interface ArenaChannelsResponse {
+    channels: any[]; // Replace 'any' with a more specific type if known
+  }
+
+  const data = (await response.json()) as ArenaChannelsResponse;
+  return data.channels;
 }
 
 // all feed data
@@ -350,8 +358,8 @@ export async function getActivityHubData(
 
   const combinedData = [...arenaData, ...unsplashData].map((item) => ({
     id: item.id,
-    title: item.title || "No title", // Assuming you want a fallback for title
-    imageUrl: "image" in item ? item.image : item.urls?.regular,
+    title: item.title || "No title",
+    imageUrl: "urls" in item ? item.urls.regular : item.image,
     link: item.link || null,
     createdAt: "created_at" in item ? item.created_at : item.createdAt,
   }));

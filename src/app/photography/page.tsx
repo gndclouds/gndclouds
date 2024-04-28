@@ -19,7 +19,7 @@ export default async function PhotographyPage() {
               }`}
             >
               <Link href={image.urls.regular} passHref>
-                <div target="_blank" rel="noopener noreferrer">
+                <div>
                   <Image
                     src={image.urls.small}
                     alt={`Image taken by ${image.alt_description}`}

@@ -3,7 +3,17 @@ import Link from "next/link";
 import { parseISO, format } from "date-fns";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
-const CollectionHero = ({ name, projects, allProjects }) => (
+interface CollectionHeroProps {
+  name: string;
+  projects: any[]; // Specify more detailed type if possible
+  allProjects: any[]; // Specify more detailed type if possible
+}
+
+const CollectionHero = ({
+  name,
+  projects,
+  allProjects,
+}: CollectionHeroProps) => (
   <div className="min-w-screen flex">
     {/* Hero Section */}
     <div className="relative flex-1 h-[200px] overflow-hidden">

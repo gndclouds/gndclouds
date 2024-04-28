@@ -9,11 +9,18 @@ export default async function FeedPage() {
     getAllUnsplashImages("gndclouds"),
   ]);
 
-  const combinedData = [...data, ...images].sort(
-    (a, b) =>
-      new Date(b.publishedAt || b.created_at).getTime() -
-      new Date(a.publishedAt || a.created_at).getTime()
-  );
+  const combinedData = [...data, ...images].sort((a, b) => {
+    // Assuming 'Post' type has 'publishedAt' and 'UnsplashImage' has 'created_at'
+    const dateA =
+      "publishedAt" in a
+        ? new Date(a.publishedAt).getTime()
+        : new Date(a.created_at).getTime();
+    const dateB =
+      "publishedAt" in b
+        ? new Date(b.publishedAt).getTime()
+        : new Date(b.created_at).getTime();
+    return dateB - dateA;
+  });
 
   return (
     <main>

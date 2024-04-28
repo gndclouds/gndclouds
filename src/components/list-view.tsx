@@ -28,7 +28,7 @@ export default function ListView({ data }: { data: any[] }) {
             </div>
           </div>
         ),
-        colSpan: "col-span-6",
+        colSpan: "col-span-12",
       },
       Log: {
         element: (
@@ -40,7 +40,7 @@ export default function ListView({ data }: { data: any[] }) {
             <p>{item.content}</p>
           </div>
         ),
-        colSpan: "col-span-6",
+        colSpan: "col-span-12",
       },
       Note: {
         element: (
@@ -64,7 +64,7 @@ export default function ListView({ data }: { data: any[] }) {
             </div>
           </div>
         ),
-        colSpan: "col-span-6",
+        colSpan: "col-span-12",
       },
       Photography: {
         element: (
@@ -90,7 +90,7 @@ export default function ListView({ data }: { data: any[] }) {
             </div>
           </div>
         ),
-        colSpan: "col-span-6",
+        colSpan: "col-span-12",
       },
       Project: {
         element: (
@@ -125,7 +125,7 @@ export default function ListView({ data }: { data: any[] }) {
             </div>
           </div>
         ),
-        colSpan: "col-span-6",
+        colSpan: "col-span-12",
       },
       default: {
         element: (
@@ -137,7 +137,7 @@ export default function ListView({ data }: { data: any[] }) {
             </div>
           </div>
         ),
-        colSpan: "col-span-6",
+        colSpan: "col-span-12",
       },
     };
 

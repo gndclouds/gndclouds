@@ -2,6 +2,13 @@ import { readdir } from "fs/promises";
 import { readFileSync } from "fs";
 import matter from "gray-matter";
 
+// Define the Post type
+export type Post = {
+  slug: string;
+  title: string;
+  categories: string[];
+};
+
 export async function getAllMarkdownFiles(): Promise<Post[]> {
   const contentDir = "./src/app/db/content";
   const slugs = (await readdir(contentDir, { withFileTypes: true })).filter(

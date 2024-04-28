@@ -1,58 +1,100 @@
 import Link from "next/link";
-import { categories } from "@/categories";
-import { Pagination } from "@/components/pagination";
-import { Posts } from "@/components/posts";
-import { getPaginatedPosts, postsPerPage } from "@/posts";
+import Image from "next/image";
+// import { categories } from "@/categories";
+// import { Pagination } from "@/components/pagination";
+// import { Posts } from "@/components/posts";
+// import { getPaginatedPosts, postsPerPage } from "@/posts";
 
 export default async function Home() {
   return (
-    <main>
-      <div className="p-8 flex flex-col justify-between w-full">
-        <div className="font-bold uppercase">gndclouds</div>
-        <div className="text-small sm:text-standard lg:text-md my-8 md:my-0">
-          <div>
-            Hello, my name is{" "}
-            <Link className="underline" href="/about" passHref>
-              <>Will</>
-            </Link>{" "}
-            and welcome to my corner of the internet. Here, you will find an
-            assortment of{" "}
-            <button
-              className={`px-4 py-2 border rounded 
-              `}
-            >
-              notes
-            </button>
-            , <button className={`px-4 py-2 border rounded `}>logs</button>,{" "}
-            <button className={`px-4 py-2 border rounded `}>newsletters</button>
-            , and{" "}
-            <button className={`px-4 py-2 border rounded`}>projects</button>{" "}
-            that showcase my interests as a generalist. My primary focus is on
-            learning how to best contribute to work that helps us to understand
-            our place in nature rather than acting like we are adjacent to it.
-            My next decades’ worth of work is centered on exploring to ….
+    <div className="h-screen w-full flex">
+      {/* Left Static Column */}
+      <div className="relative flex-1  overflow-hidden">
+        <Image
+          src="/me/2023_headshot.JPG"
+          alt="Hero Image"
+          layout="fill"
+          objectFit="cover"
+        />
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className="absolute bottom-0 p-4 w-full">
+          <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
+            <div className="flex justify-start items-center">
+              <Link href="https://are.na/gndclouds">
+                <div className="block">
+                  are.na <span className="font-mono">↗</span>
+                </div>
+              </Link>
+              <Link href="https://twitter.com/gndclouds">
+                <div className="block pl-2">
+                  x <span className="font-mono">↗</span>
+                </div>
+              </Link>
+            </div>
+            <div className="flex justify-center items-center"> </div>
+            <div className="flex justify-end items-center"></div>
           </div>
-          <div className="">
-            For now, this means reducing waste while increasing an individual’s
-            creative agency at{" "}
-            <Link href="#" passHref>
-              <div className="underline">*********.</div>
-            </Link>{" "}
-            Creating new tooling to accelerate our understanding of climate
-            action at the{" "}
-            <Link href="https://planetary.software" passHref>
-              <div className="underline">planetary software group</div>
+        </div>
+      </div>
+
+      {/* Right Scrollable Column */}
+      <div className="p-8 w-full md:w-1/2 overflow-y-auto text-2xl">
+        <div className="grid grid-col gap-4">
+          <div>
+            Hello, my name is Will. Welcome to my corner of the internet.{" "}
+            <Link href="/feed" className="underline">
+              Here
             </Link>
-            . And tinkering on personal projects at{" "}
-            <Link href="https://tinyfactories.space" passHref>
-              <div className="underline">TinyFactories</div>
+            , you’ll find various notes, logs, newsletters, and projects that
+            showcase my broad range of interests.
+          </div>
+          <div>
+            My focus for the next decade is to contribute to work that makes the
+            unseen visible, allowing humanity to recognize itself as a part of
+            nature rather than separate from it.
+          </div>
+          <div>
+            Currently, this involves reducing waste and enhancing individual
+            creative agency to construct structures at{" "}
+            <Link
+              href="https://www.are.na/block/27538602"
+              className="underline"
+            >
+              🞲🞲🞲🞲 🞲🞲🞲🞲🞲
+            </Link>
+            .
+          </div>
+          <div>
+            To deepen my understanding of climate action and to develop new
+            practices, I work on open software projects under the{" "}
+            <Link href="https://planetary.software" className="underline">
+              Planetary Software Group
+            </Link>{" "}
+            and tinker with personal projects at{" "}
+            <Link href="https://tinyfactories.space/" className="underline">
+              TinyFactories
+            </Link>
+            , a hub for collaborative innovation.
+          </div>
+          <div>
+            Previously, I served as a design technologist at research labs
+            across various types of companies, where I specialized in
+            translating emerging technologies into prototypes that simplified
+            complex technologies to focus on their intended functions.
+          </div>
+          <div>
+            My academic journey began at the{" "}
+            <Link href="https://cca.edu/" className="underline">
+              California College of the Arts
+            </Link>
+            , where I pursued a BFA in{" "}
+            <Link href="https://www.cca.edu/design/ixd/" className="underline">
+              Interaction Design
             </Link>
             .
           </div>
         </div>
-
-        {/* You can add more content here */}
       </div>
-    </main>
+    </div>
   );
 }
