@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 // import { categories } from "@/categories";
 // import { Pagination } from "@/components/pagination";
 // import { Posts } from "@/components/posts";
@@ -77,10 +78,13 @@ export default async function Home() {
             , a hub for collaborative innovation.
           </div>
           <div>
-            Previously, I served as a design technologist at research labs
-            across various types of companies, where I specialized in
-            translating emerging technologies into prototypes that simplified
-            complex technologies to focus on their intended functions.
+            Previously, I served as a design technologist at{" "}
+            <Link href="https://read.cv/gndclouds" className="underline">
+              research labs across various types of companies
+            </Link>
+            , where I specialized in translating emerging technologies into
+            prototypes that simplified complex technologies to focus on their
+            intended functions.
           </div>
           <div>
             My academic journey began at the{" "}
