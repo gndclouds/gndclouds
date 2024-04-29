@@ -58,6 +58,14 @@ export interface ActivityHubItem {
   createdAt: string;
 }
 
+interface CombinedItem {
+  id: string;
+  title: string;
+  imageUrl: string | null;
+  link: string | null; // Ensure link is explicitly typed as 'string | null'
+  createdAt: string;
+}
+
 async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
   let files: string[] = [];
   const dirents = await readdir(dir, { withFileTypes: true });
@@ -181,18 +189,22 @@ export async function getAllUnsplashImages(
 
 export async function getArenaUserActivity(
   username: string,
-  pageSize: number = 20 // Default page size set to 20
-): Promise<{ title: string; id: string; type: string }[]> {
+  pageSize: number = 20
+): Promise<{ title: string; id: string; type: string; createdAt: string }[]> {
   const arenaAccessToken = process.env.ARENA_ACCESS_KEY;
-  if (!arenaAccessToken) {
+  if (!arenaAccessToken)
     throw new Error(
       "ARENA_ACCESS_KEY is not set in the environment variables."
     );
-  }
 
   let page = 1;
   let hasMore = true;
-  let allItems: { title: string; id: string; type: string }[] = [];
+  let allItems: {
+    title: string;
+    id: string;
+    type: string;
+    createdAt: string;
+  }[] = [];
   let totalItemsFetched = 0;
 
   while (hasMore && totalItemsFetched < 5) {
@@ -214,6 +226,7 @@ export async function getArenaUserActivity(
         title: item.title,
         id: item.id,
         type: item.class === "Channel" ? "channel" : "block",
+        createdAt: new Date().toISOString(), // Using current date-time as placeholder
       }))
     );
 
@@ -222,7 +235,6 @@ export async function getArenaUserActivity(
     page++;
   }
 
-  // console.log("Total Items fetched:", allItems.length);
   return allItems;
 }
 
@@ -356,13 +368,20 @@ export async function getActivityHubData(
   const arenaData = await getArenaUserActivity(username);
   const unsplashData = await getAllUnsplashImages(username);
 
-  const combinedData = [...arenaData, ...unsplashData].map((item) => ({
-    id: item.id,
-    title: item.title || "No title",
-    imageUrl: "urls" in item ? item.urls.regular : item.image,
-    link: item.link || null,
-    createdAt: "created_at" in item ? item.created_at : item.createdAt,
-  }));
+  const combinedData: CombinedItem[] = [...arenaData, ...unsplashData].map(
+    (item) => ({
+      id: item.id,
+      title: item.title || "No title",
+      imageUrl:
+        "urls" in item
+          ? (item.urls.regular as string | null)
+          : "image" in item
+          ? (item.image as string | null)
+          : null,
+      link: "link" in item ? (item.link as string | null) : null,
+      createdAt: "created_at" in item ? item.created_at : item.createdAt,
+    })
+  );
 
   return combinedData.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

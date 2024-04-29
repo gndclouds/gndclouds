@@ -11,7 +11,7 @@ import CollectionHero from "@/components/collection-hero";
 export default async function Home() {
   const userActivity = await getArenaUserActivity("gndclouds");
   const allArenaData = await Promise.all(
-    userActivity.map(async (item) => {
+    userActivity.map(async (item: any) => {
       if (item.type === "block") {
         return await getArenaBlockData(item.id);
       } else if (item.type === "channel") {
