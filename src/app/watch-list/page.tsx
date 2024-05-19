@@ -1,7 +1,8 @@
 import { parseStringPromise } from "xml2js";
 import { getPublicPlexWatchList } from "@/queries/plex";
+
 export default async function WatchListPage() {
-  let data = await getPublicPlexWatchList();
+  let data: any = await getPublicPlexWatchList();
 
   // Check if data is a string and try to parse it as XML
   if (typeof data === "string" && data.startsWith("<?xml")) {
@@ -15,10 +16,11 @@ export default async function WatchListPage() {
   }
 
   // Assuming data is now an object with a property 'item' which is an array
-  const items = data?.rss?.channel?.[0]?.item || [];
+  const items = (data as any)?.rss?.channel?.[0]?.item || [];
 
   return (
     <main>
+      {/* <CollectionHero name="Watch List" projects={data} allProjects={data} /> */}
       <section className="grid grid-cols-1 gap-4">
         {items.map((item: any) => (
           <div key={item.guid[0]._} className="bg-white p-4 shadow rounded-lg">

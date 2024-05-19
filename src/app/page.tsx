@@ -68,14 +68,15 @@ export default async function Home() {
           <div>
             To deepen my understanding of climate action and to develop new
             practices, I work on open software projects under the{" "}
-            <Link href="https://planetary.software" className="underline">
-              Planetary Software Group
+            <Link href="#" className="underline">
+              Interstitial Working Group
             </Link>{" "}
             and tinker with personal projects at{" "}
             <Link href="https://tinyfactories.space/" className="underline">
               TinyFactories
             </Link>
-            , a hub for collaborative innovation.
+            , a tribe of people supporting each other to establish their
+            creative footing.
           </div>
           <div>
             Previously, I served as a design technologist at{" "}
@@ -95,7 +96,16 @@ export default async function Home() {
             <Link href="https://www.cca.edu/design/ixd/" className="underline">
               Interaction Design
             </Link>
-            .
+            . Around this time, I had the chance to participate in John
+            Bielenberg’s experimental education program. This program focused on{" "}
+            <Link
+              href="https://www.youtube.com/watch?v=PZJoJ-b2MIY"
+              className="underline"
+            >
+              thinking wrong
+            </Link>
+            , which largely shaped my thinking about how to apply my
+            capabilities to the world.
           </div>
         </div>
       </div>

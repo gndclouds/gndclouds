@@ -1,4 +1,5 @@
 import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
+
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
@@ -7,31 +8,34 @@ interface Image {
   // include other properties that an image object might have
 }
 
-export default async function FeedPage() {
+export default async function FriendsPage() {
+  // const data = await getAllMarkdownFiles();
   const [data, images] = await Promise.all([
     getAllMarkdownFiles(),
     getAllUnsplashImages("gndclouds"),
   ]);
+  // console.log("data", data);
 
+  // Enhance images with a type property and normalize date fields
   const enhancedImages = images.map((image: Image) => ({
     ...image,
     type: "Photography",
     publishedAt: image.created_at,
   }));
+  // console.log("enhancedImages", enhancedImages);
 
+  // Combine and sort data and images based on date
   const combinedData = [...data, ...enhancedImages].sort((a, b) => {
     const dateA = new Date(a.publishedAt).getTime();
     const dateB = new Date(b.publishedAt).getTime();
     return dateB - dateA;
   });
 
-  // console.log("Server-rendered data:", combinedData);
-
   return (
-    <main className="flex">
-      <CollectionHero name="Feed" projects={data} allProjects={data} />
-      <section className="flex-1 overflow-auto">
-        <ListView data={combinedData} />
+    <main>
+      <CollectionHero name="Friends" projects={data} allProjects={data} />
+      <section>
+        <ListView data={data.map((item, index) => ({ ...item, key: index }))} />{" "}
       </section>
     </main>
   );

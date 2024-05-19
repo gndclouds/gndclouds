@@ -1,8 +1,13 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 
+interface ListViewProps {
+  data: any[];
+}
+
 export default function ListView({ data }: { data: any[] }) {
-  const renderItem = (item: any) => {
+  const renderItem = (item: any, index: number) => {
     const linkPath = `/${item.type}/${item.slug}`;
 
     const contents: {
@@ -144,15 +149,15 @@ export default function ListView({ data }: { data: any[] }) {
     const content = contents[item.type] || contents.default;
 
     return (
-      <div key={item.slug} className={content.colSpan}>
-        {content.element}
+      <div key={item.id || index}>
+        <Link href={`#${item.slug}`} id={item.slug}>
+          <div className={`${content.colSpan} border-r-2 border-gray-300`}>
+            {content.element}
+          </div>
+        </Link>
       </div>
     );
   };
 
-  return (
-    <div className="grid grid-cols-3 sm:grid-cols-12 gap-4">
-      {data.map(renderItem)}
-    </div>
-  );
+  return <div>{data.map((item, index) => renderItem(item, index))}</div>;
 }

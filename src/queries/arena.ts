@@ -7,7 +7,7 @@ export async function getArenagramImages(): Promise<any[]> {
   }
 
   const channelId = "arenagram-iykx83-ruio"; // Channel ID for Arenagram
-  let allImages = [];
+  let allImages: any[] = []; // Explicitly typed as an array of any type
   let page = 1;
   let hasMore = true;
 
