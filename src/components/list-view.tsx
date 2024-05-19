@@ -150,11 +150,15 @@ export default function ListView({ data }: { data: any[] }) {
 
     return (
       <div key={item.id || index}>
-        <Link href={`#${item.slug}`} id={item.slug}>
+        {/* <Link href={`#${item.slug}`} id={item.slug}>         // This is creating the hydration Error ...
+
           <div className={`${content.colSpan} border-r-2 border-gray-300`}>
             {content.element}
           </div>
-        </Link>
+        </Link> */}{" "}
+        <div className={`${content.colSpan} border-r-2 border-gray-300`}>
+          {content.element}
+        </div>
       </div>
     );
   };

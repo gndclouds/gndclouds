@@ -8,31 +8,40 @@ interface Image {
 }
 
 export default async function FeedPage() {
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
+  try {
+    const [data, images] = await Promise.all([
+      getAllMarkdownFiles(),
+      getAllUnsplashImages("gndclouds"),
+    ]);
 
-  const enhancedImages = images.map((image: Image) => ({
-    ...image,
-    type: "Photography",
-    publishedAt: image.created_at,
-  }));
+    const enhancedImages = images.map((image: Image) => ({
+      ...image,
+      type: "Photography",
+      publishedAt: image.created_at,
+    }));
 
-  const combinedData = [...data, ...enhancedImages].sort((a, b) => {
-    const dateA = new Date(a.publishedAt).getTime();
-    const dateB = new Date(b.publishedAt).getTime();
-    return dateB - dateA;
-  });
+    const combinedData = [...data, ...enhancedImages].sort((a, b) => {
+      const dateA = new Date(a.publishedAt).getTime();
+      const dateB = new Date(b.publishedAt).getTime();
+      return dateB - dateA;
+    });
 
-  // console.log("Server-rendered data:", combinedData);
+    console.log("Server-rendered data:", combinedData);
 
-  return (
-    <main className="flex">
-      <CollectionHero name="Feed" projects={data} allProjects={data} />
-      <section className="flex-1 overflow-auto">
-        <ListView data={combinedData} />
-      </section>
-    </main>
-  );
+    return (
+      <main className="flex">
+        <CollectionHero
+          name="Feed"
+          projects={combinedData}
+          allProjects={combinedData}
+        />
+        <section>
+          <ListView data={combinedData} />
+        </section>
+      </main>
+    );
+  } catch (error) {
+    console.error("Error loading feed data:", error);
+    return <div>Error loading feed data</div>;
+  }
 }
