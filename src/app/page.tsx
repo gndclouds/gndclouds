@@ -89,16 +89,6 @@ export default async function Home() {
             intended functions.
           </div>
           <div>
-            Previously, I served as a design technologist at research labs
-            across various types of{" "}
-            <Link href="https://read.cv/gndclouds" className="underline">
-              companies
-            </Link>
-            , where I specialized in translating emerging technologies into
-            prototypes that simplified complex technologies to focus on their
-            intended functions.
-          </div>
-          <div>
             My academic journey began at the{" "}
             <Link href="https://cca.edu/" className="underline">
               California College of the Arts
