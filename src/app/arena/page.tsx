@@ -1,8 +1,4 @@
-import {
-  getArenaUserActivity,
-  getArenaBlockData,
-  getArenaChannelData,
-} from "@/queries/all";
+import { getArenaUserActivity, getArenaBlockData } from "@/queries/arena";
 import { Suspense } from "react";
 import Image from "next/image";
 import ListView from "@/components/list-view";
@@ -10,6 +6,10 @@ import CollectionHero from "@/components/collection-hero";
 
 export default async function Home() {
   const userActivity = await getArenaUserActivity("gndclouds");
+  if (!userActivity) {
+    // Handle the case where userActivity is void or null
+    return <p>No activity found.</p>;
+  }
   const allArenaData = await Promise.all(
     userActivity.map(async (item: any) => {
       if (item.type === "block") {
@@ -24,7 +24,7 @@ export default async function Home() {
     <div className="flex flex-col p-5">
       <Suspense fallback={<p>Loading feed...</p>}>
         <ul className="space-y-5">
-          {allArenaData.map((block) => (
+          {allArenaData.map((block: any) => (
             <li
               key={block.id}
               className="flex bg-white rounded-lg shadow overflow-hidden"

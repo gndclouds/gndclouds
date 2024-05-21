@@ -3,11 +3,15 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
 
-export type Newsletter = {
+export interface Newsletter {
   slug: string;
   title: string;
   content: string;
-};
+  publishedAt: string;
+  type: string[];
+  published: boolean;
+  tags: string[];
+}
 
 function titleToSlug(title: string): string {
   return title
@@ -25,9 +29,13 @@ export function getNewsletterBySlug(slug: string): Newsletter | null {
     const { data: metadata, content } = matter(fileContents);
 
     return {
-      slug: slug,
+      slug: titleToSlug(filePath),
       title: metadata.title,
       content: content,
+      publishedAt: metadata.publishedAt || "",
+      type: metadata.type || [],
+      published: metadata.published || false,
+      tags: metadata.tags || [],
     } as Newsletter;
   } catch (error) {
     console.error(`Error reading newsletter file: ${error}`);
@@ -35,7 +43,7 @@ export function getNewsletterBySlug(slug: string): Newsletter | null {
   }
 }
 
-export async function getAllNewsletters(): Promise<Post[]> {
+export async function getAllNewsletters(): Promise<Newsletter[]> {
   const contentDir = "./src/app/db/content/newsletters";
   const filePaths = await getMarkdownFilesRecursively(contentDir);
 
@@ -48,7 +56,7 @@ export async function getAllNewsletters(): Promise<Post[]> {
         title: metadata.title,
         content: content,
         publishedAt: metadata.publishedAt || "",
-      } as Post;
+      } as Newsletter;
     })
   );
 

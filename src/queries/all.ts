@@ -12,7 +12,10 @@ export interface Post {
   type: string[];
   publishedAt: string;
   published: boolean;
-  metadata: Record<string, any>;
+  metadata: {
+    contentHtml: string;
+    [key: string]: any;
+  };
 }
 
 export interface UnsplashImage {
@@ -160,4 +163,18 @@ export async function getAllUnsplashImages(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  try {
+    const response = await fetch(`/api/posts/${slug}`);
+    if (response.ok) {
+      const post = await response.json();
+      return post as Post;
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch post:", error);
+    return null;
+  }
 }

@@ -31,7 +31,7 @@ const MarkdownComponents = {
     <p className="text-base" {...props} />
   ),
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <Link className="underline" {...props} />
+    <Link className="underline" href={props.href || ""} {...props} />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
     <ul className="list-disc pl-5" {...props} />

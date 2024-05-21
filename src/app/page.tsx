@@ -43,16 +43,16 @@ export default async function Home() {
         <div className="grid grid-col gap-4">
           <div>
             Hello, my name is Will. Welcome to my corner of the internet.{" "}
-            <Link href="/feed" className="underline">
+            {/* <Link href="/feed" className="underline">
               Here
             </Link>
             , you’ll find various notes, logs, newsletters, and projects that
-            showcase my broad range of interests.
+            showcase my broad range of interests. */}
           </div>
           <div>
             My focus for the next decade is to contribute to work that makes the
-            unseen visible, allowing humanity to recognize itself as a part of
-            nature rather than separate from it.
+            unseen seen, allowing humanity to recognize itself as a part of
+            nature rather than adjacent to it.
           </div>
           <div>
             Currently, this involves reducing waste and enhancing individual
@@ -79,9 +79,20 @@ export default async function Home() {
             creative footing.
           </div>
           <div>
-            Previously, I served as a design technologist at{" "}
+            Previously, I served as a design technologist at research labs
+            across various types of{" "}
             <Link href="https://read.cv/gndclouds" className="underline">
-              research labs across various types of companies
+              companies
+            </Link>
+            , where I specialized in translating emerging technologies into
+            prototypes that simplified complex technologies to focus on their
+            intended functions.
+          </div>
+          <div>
+            Previously, I served as a design technologist at research labs
+            across various types of{" "}
+            <Link href="https://read.cv/gndclouds" className="underline">
+              companies
             </Link>
             , where I specialized in translating emerging technologies into
             prototypes that simplified complex technologies to focus on their

@@ -4,7 +4,10 @@ import { getPostBySlug } from "@/queries/all";
 
 type Post = {
   title: string;
-  metadata: Record<string, any>; // Changed to a more flexible type
+  metadata: {
+    contentHtml: string;
+    [key: string]: any; // for flexibility
+  };
 };
 
 export default function LogPage() {

@@ -1,3 +1,9 @@
+export const getArenaBlockData = async (blockId: string) => {
+  // function implementation
+};
+
+// Ensure all necessary functions are exported
+
 export async function getArenagramImages(): Promise<any[]> {
   const arenaAccessToken = process.env.ARENA_ACCESS_KEY;
   if (!arenaAccessToken) {
@@ -78,4 +84,9 @@ export async function getCollectionData(): Promise<any[]> {
     created_at: collection.created_at,
     updated_at: collection.updated_at,
   }));
+}
+
+export async function getArenaUserActivity(username: string): Promise<any[]> {
+  // Your implementation here
+  return [];
 }
