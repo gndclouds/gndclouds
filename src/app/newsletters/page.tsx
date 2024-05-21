@@ -1,31 +1,25 @@
-import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
-
-import ListView from "@/components/list-view";
+import { getAllNewsletters } from "@/queries/newsletters";
 import CollectionHero from "@/components/collection-hero";
+import { NewsletterList } from "@/components/newsletter-list";
 
 export default async function FeedPage() {
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
+  const data = await getAllNewsletters();
 
-  const combinedData = [...data, ...images].sort((a, b) => {
-    const dateA =
-      "created_at" in a
-        ? new Date(a.created_at).getTime()
-        : new Date(a.publishedAt).getTime();
-    const dateB =
-      "created_at" in b
-        ? new Date(b.created_at).getTime()
-        : new Date(b.publishedAt).getTime();
+  const sortedData = data.sort((a, b) => {
+    const dateA = new Date(a.publishedAt).getTime(); // Ensure you use the correct date field
+    const dateB = new Date(b.publishedAt).getTime();
     return dateB - dateA;
   });
 
   return (
     <main>
-      <CollectionHero name="Newsletters" projects={data} allProjects={data} />
+      <CollectionHero
+        name="Newsletters"
+        projects={sortedData}
+        allProjects={sortedData}
+      />
       <section>
-        <ListView data={data} />
+        <NewsletterList newsletters={sortedData} />
       </section>
     </main>
   );

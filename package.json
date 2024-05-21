@@ -16,15 +16,18 @@
     "@radix-ui/themes": "^3.0.2",
     "@tailwindcss/typography": "^0.5.12",
     "@types/mdx": "^2.0.13",
+    "@types/xml2js": "^0.4.14",
     "are.na": "^0.1.5",
     "autoprefixer": "^10.4.19",
     "date-fns": "^3.6.0",
     "glob": "^10.3.12",
     "gray-matter": "^4.0.3",
-    "next": "14.2.2",
+    "next": "latest",
     "next-contentlayer": "^0.3.4",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^9.0.1",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/node": "^20",

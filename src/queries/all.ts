@@ -12,7 +12,10 @@ export interface Post {
   type: string[];
   publishedAt: string;
   published: boolean;
-  metadata: Record<string, any>;
+  metadata: {
+    contentHtml: string;
+    [key: string]: any;
+  };
 }
 
 export interface UnsplashImage {
@@ -110,31 +113,6 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
   );
 }
 
-export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const contentDir = "./src/app/db/content";
-  const filePaths = await getMarkdownFilesRecursively(contentDir);
-  const filePath = filePaths.find((path) => path.endsWith(`${slug}.md`));
-
-  if (!filePath) {
-    return null;
-  }
-
-  const { data: metadata } = matter(readFileSync(filePath, "utf8"));
-  return {
-    slug: filePath
-      .substring(contentDir.length + 1)
-      .replace(/\.md$/, "")
-      .replace(/\//g, "-"),
-    title: metadata.title,
-    categories: metadata.categories || [],
-    tags: metadata.tags || [],
-    type: metadata.type || [],
-    publishedAt: metadata.publishedAt || "",
-    published: metadata.published || false,
-    metadata: metadata,
-  } as Post;
-}
-
 export async function getAllUnsplashImages(
   username: string
 ): Promise<UnsplashImage[]> {
@@ -187,203 +165,16 @@ export async function getAllUnsplashImages(
   );
 }
 
-export async function getArenaUserActivity(
-  username: string,
-  pageSize: number = 20
-): Promise<{ title: string; id: string; type: string; createdAt: string }[]> {
-  const arenaAccessToken = process.env.ARENA_ACCESS_KEY;
-  if (!arenaAccessToken)
-    throw new Error(
-      "ARENA_ACCESS_KEY is not set in the environment variables."
-    );
-
-  let page = 1;
-  let hasMore = true;
-  let allItems: {
-    title: string;
-    id: string;
-    type: string;
-    createdAt: string;
-  }[] = [];
-  let totalItemsFetched = 0;
-
-  while (hasMore && totalItemsFetched < 5) {
-    const response = await fetch(
-      `https://api.are.na/v2/users/${username}/contents?access_token=${arenaAccessToken}&page=${page}&per_page=${pageSize}`
-    );
-
-    if (!response.ok) {
-      console.error(`Failed to fetch data from Are.na: ${response.statusText}`);
-      throw new Error(
-        `Failed to fetch data from Are.na: ${response.statusText}`
-      );
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  try {
+    const response = await fetch(`/api/posts/${slug}`);
+    if (response.ok) {
+      const post = await response.json();
+      return post as Post;
     }
-
-    const data = (await response.json()) as ArenaResponse;
-    const items = (data.blocks || []).concat(data.channels || []);
-    allItems = allItems.concat(
-      items.map((item: { title: string; id: string; class: string }) => ({
-        title: item.title,
-        id: item.id,
-        type: item.class === "Channel" ? "channel" : "block",
-        createdAt: new Date().toISOString(), // Using current date-time as placeholder
-      }))
-    );
-
-    totalItemsFetched += items.length;
-    hasMore = items.length === pageSize && totalItemsFetched < 5; // Check if the number of items fetched equals the page size and total fetched is less than 5
-    page++;
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch post:", error);
+    return null;
   }
-
-  return allItems;
-}
-
-export async function getArenaBlockData(blockId: string): Promise<any> {
-  const arenaAccessToken = process.env.ARENA_ACCESS_KEY;
-  if (!arenaAccessToken) {
-    throw new Error(
-      "ARENA_ACCESS_KEY is not set in the environment variables."
-    );
-  }
-
-  const response = await fetch(
-    `https://api.are.na/v2/blocks/${blockId}?access_token=${arenaAccessToken}`
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch block data from Are.na: ${response.statusText}`
-    );
-  }
-
-  interface ArenaBlockResponse {
-    id: string; // Added id property to resolve the error
-    image?: {
-      thumb: { url: string };
-      square: { url: string };
-      display: { url: string };
-      large: { url: string };
-      original: { url: string };
-    };
-    title: string;
-    updated_at: string;
-    created_at: string;
-    description: string;
-    sources?: Array<{ id: string; title: string; url: string }>;
-    connections?: Array<{ id: string; title: string }>;
-  }
-
-  const data = (await response.json()) as ArenaBlockResponse;
-
-  // Extracting image URLs from the new image format
-  const images = data.image
-    ? {
-        thumb: data.image.thumb.url,
-        square: data.image.square.url,
-        display: data.image.display.url,
-        large: data.image.large.url,
-        original: data.image.original.url,
-      }
-    : {};
-
-  return {
-    title: data.title,
-    updated_at: data.updated_at,
-    created_at: data.created_at,
-    description: data.description,
-    source: data.sources
-      ? data.sources.map(
-          (source: { id: string; title: string; url: string }) => ({
-            id: source.id,
-            title: source.title,
-            url: source.url,
-          })
-        )
-      : [],
-    images: images,
-    id: data.id,
-    connections: data.connections
-      ? data.connections.map((connection: { id: string; title: string }) => ({
-          id: connection.id,
-          title: connection.title,
-        }))
-      : [],
-  };
-}
-
-export async function getArenaChannelData(channelId: string): Promise<void> {
-  const arenaAccessToken = process.env.ARENA_ACCESS_KEY;
-  if (!arenaAccessToken) {
-    throw new Error(
-      "ARENA_ACCESS_KEY is not set in the environment variables."
-    );
-  }
-
-  const response = await fetch(
-    `https://api.are.na/v2/channels/${channelId}?access_token=${arenaAccessToken}`
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch channel data from Are.na: ${response.statusText}`
-    );
-  }
-
-  const data = await response.json();
-  // console.log(data);
-}
-
-export async function getAllArenaChannelsForUser(
-  userId: string
-): Promise<any[]> {
-  const arenaAccessToken = process.env.ARENA_ACCESS_KEY;
-  if (!arenaAccessToken) {
-    throw new Error(
-      "ARENA_ACCESS_KEY is not set in the environment variables."
-    );
-  }
-
-  const response = await fetch(
-    `https://api.are.na/v2/users/${userId}/channels?access_token=${arenaAccessToken}`
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch channel data from Are.na: ${response.statusText}`
-    );
-  }
-
-  interface ArenaChannelsResponse {
-    channels: any[]; // Replace 'any' with a more specific type if known
-  }
-
-  const data = (await response.json()) as ArenaChannelsResponse;
-  return data.channels;
-}
-
-// all feed data
-export async function getActivityHubData(
-  username: string
-): Promise<ActivityHubItem[]> {
-  const arenaData = await getArenaUserActivity(username);
-  const unsplashData = await getAllUnsplashImages(username);
-
-  const combinedData: CombinedItem[] = [...arenaData, ...unsplashData].map(
-    (item) => ({
-      id: item.id,
-      title: item.title || "No title",
-      imageUrl:
-        "urls" in item
-          ? (item.urls.regular as string | null)
-          : "image" in item
-          ? (item.image as string | null)
-          : null,
-      link: "link" in item ? (item.link as string | null) : null,
-      createdAt: "created_at" in item ? item.created_at : item.createdAt,
-    })
-  );
-
-  return combinedData.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
 }

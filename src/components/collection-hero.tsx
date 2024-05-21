@@ -20,8 +20,8 @@ const CollectionHero = ({
       <Image
         src="https://source.unsplash.com/user/gndclouds"
         alt="Hero Image"
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: "cover" }}
       />
 
       <div className="absolute inset-0 bg-black opacity-40"></div>

@@ -1,37 +1,47 @@
 import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
-
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
+interface Image {
+  created_at: string;
+  // include other properties that an image object might have
+}
+
 export default async function FeedPage() {
-  // const data = await getAllMarkdownFiles();
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
-  // console.log("data", data);
+  try {
+    const [data, images] = await Promise.all([
+      getAllMarkdownFiles(),
+      getAllUnsplashImages("gndclouds"),
+    ]);
 
-  // Enhance images with a type property and normalize date fields
-  const enhancedImages = images.map((image) => ({
-    ...image,
-    type: "Photography",
-    publishedAt: image.created_at,
-  }));
-  // console.log("enhancedImages", enhancedImages);
+    const enhancedImages = images.map((image: Image) => ({
+      ...image,
+      type: "Photography",
+      publishedAt: image.created_at,
+    }));
 
-  // Combine and sort data and images based on date
-  const combinedData = [...data, ...enhancedImages].sort((a, b) => {
-    const dateA = new Date(a.publishedAt).getTime();
-    const dateB = new Date(b.publishedAt).getTime();
-    return dateB - dateA;
-  });
+    const combinedData = [...data, ...enhancedImages].sort((a, b) => {
+      const dateA = new Date(a.publishedAt).getTime();
+      const dateB = new Date(b.publishedAt).getTime();
+      return dateB - dateA;
+    });
 
-  return (
-    <main>
-      <CollectionHero name="Feed" projects={data} allProjects={data} />
-      <section>
-        <ListView data={data} />
-      </section>
-    </main>
-  );
+    console.log("Server-rendered data:", combinedData);
+
+    return (
+      <main className="flex">
+        <CollectionHero
+          name="Feed"
+          projects={combinedData}
+          allProjects={combinedData}
+        />
+        <section>
+          <ListView data={combinedData} />
+        </section>
+      </main>
+    );
+  } catch (error) {
+    console.error("Error loading feed data:", error);
+    return <div>Error loading feed data</div>;
+  }
 }
