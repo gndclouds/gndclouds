@@ -113,7 +113,8 @@ export default async function Home() {
               Interaction Design
             </Link>
             . Around this time, I had the chance to participate in John
-            Bielenberg’s experimental education program. This program focused on{" "}
+            Bielenberg&apos;s experimental education program. This program
+            focused on{" "}
             <Link
               href="https://www.youtube.com/watch?v=PZJoJ-b2MIY"
               className="underline"
@@ -126,22 +127,36 @@ export default async function Home() {
           <div>
             <span className="font-bold">This site</span> is to be a public
             archive divided into more formal{" "}
-            <Link href="/note" className="underline">
+            <Link href="/" className="underline">
               notes
             </Link>
             , more rough thoughts in the form of{" "}
-            <Link href="/logs" className="underline">
+            <Link href="/" className="underline">
               logs
             </Link>
             , and an archive of{" "}
-            <Link href="/projects" className="underline">
+            <Link href="/" className="underline">
               projects
             </Link>
             .
           </div>
           <div>
-            <span className="font-bold">If you want to connect</span>, let's
-            grab a tea or go for a run.
+            <span className="font-bold">If you want to connect</span>, let&#39;s
+            grab a{" "}
+            <Link
+              href="https://www.corner.inc/list/f98ae632-b6c6-41cb-b34f-5aab2d4cd15d"
+              className="underline"
+            >
+              tea
+            </Link>{" "}
+            or go for a{" "}
+            <Link
+              href="https://www.alltrails.com/lists/running-with-friends-d9fc0cd?sh=rknycs"
+              className="underline"
+            >
+              run
+            </Link>
+            .
           </div>
         </div>
       </div>
