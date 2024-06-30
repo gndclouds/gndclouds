@@ -8,7 +8,10 @@ interface ListViewProps {
 
 export default function ListView({ data }: { data: any[] }) {
   const renderItem = (item: any, index: number) => {
-    const linkPath = `/${item.type}/${item.slug}`;
+    const linkPath = `/logs/${item.slug}`;
+
+    // Print the linkPath for debugging
+    console.log(`Rendering item with linkPath: ${linkPath}`);
 
     const contents: {
       [key: string]: { element: JSX.Element; colSpan: string };
@@ -37,12 +40,21 @@ export default function ListView({ data }: { data: any[] }) {
       },
       Log: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
-            <h2 className="text-2xl">
-              <Link href={linkPath}>{item.title}</Link>
-            </h2>
-            <p>Date: {item.publishedAt.toString()}</p>
-            <p>{item.content}</p>
+          <div className="flex flex-col border-2 border-gray-200 rounded-lg relative">
+            <div className="flex justify-between w-full p-2">
+              <span className="text-xs uppercase px-2 py-1">
+                logs / {item.slug}
+              </span>
+              <span className="text-sm">
+                {new Date(item.publishedAt).toISOString().slice(0, 10)}
+              </span>
+            </div>
+            <div className="flex flex-col w-full p-4">
+              <h2 className="text-xl">
+                <Link href={linkPath}>{item.title}</Link>
+              </h2>
+              <p>{item.snippet}</p>
+            </div>
           </div>
         ),
         colSpan: "col-span-12",
@@ -146,22 +158,28 @@ export default function ListView({ data }: { data: any[] }) {
       },
     };
 
-    const content = contents[item.type] || contents.default;
-
     return (
-      <div key={item.id || index}>
-        {/* <Link href={`#${item.slug}`} id={item.slug}>         // This is creating the hydration Error ...
-
-          <div className={`${content.colSpan} border-r-2 border-gray-300`}>
-            {content.element}
+      <div
+        key={index}
+        className={`col-span-12 md:${
+          contents[item.type]?.colSpan || "col-span-6"
+        }`}
+      >
+        {contents[item.type]?.element || (
+          <div className="border-2 border-gray-200 rounded-lg p-4">
+            <h2 className="text-xl">
+              <Link href={linkPath}>{item.title}</Link>
+            </h2>
+            <p>{item.snippet}</p>
           </div>
-        </Link> */}{" "}
-        <div className={`${content.colSpan} border-r-2 border-gray-300`}>
-          {content.element}
-        </div>
+        )}
       </div>
     );
   };
 
-  return <div>{data.map((item, index) => renderItem(item, index))}</div>;
+  return (
+    <div className="grid grid-cols-12 gap-4">
+      {data.map((item, index) => renderItem(item, index))}
+    </div>
+  );
 }
