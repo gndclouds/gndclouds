@@ -1,32 +1,42 @@
-import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
-
+import { getAllMarkdownFiles } from "@/queries/logs";
+import Link from "next/link"; // Import Link from next/link
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
 export default async function FeedPage() {
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
+  const data = await getAllMarkdownFiles();
 
-  const combinedData = [...data, ...images].sort((a, b) => {
-    // Assuming 'Post' type has 'publishedAt' and 'UnsplashImage' has 'created_at'
-    const dateA =
-      "publishedAt" in a
-        ? new Date(a.publishedAt).getTime()
-        : new Date(a.created_at).getTime();
-    const dateB =
-      "publishedAt" in b
-        ? new Date(b.publishedAt).getTime()
-        : new Date(b.created_at).getTime();
+  const sortedData = data.sort((a, b) => {
+    const dateA = new Date(a.publishedAt).getTime();
+    const dateB = new Date(b.publishedAt).getTime();
     return dateB - dateA;
   });
+  // console.log("Data count after sorting:", sortedData.length);
 
   return (
     <main>
-      <CollectionHero name="Logs" projects={data} allProjects={data} />
+      <CollectionHero
+        name="Logs"
+        projects={sortedData}
+        allProjects={sortedData}
+      />
+      <section className="" style={{ display: "flex", alignItems: "center" }}>
+        <div>Logs:</div>
+        <Link href="/logs">
+          <div className="p-2 border border-black m-1 rounded">/all</div>
+        </Link>
+        <Link href="/logs/gndclouds">
+          <div className="p-2 border border-black m-1 rounded">/gndclouds</div>
+        </Link>
+        <Link href="/logs/flex-house">
+          <div className="p-2 border border-black m-1 rounded">/flexhouse</div>
+        </Link>
+        <Link href="/logs/logolens">
+          <div className="p-2 border border-black m-1 rounded">/logolens</div>
+        </Link>
+      </section>
       <section>
-        <ListView data={data} />
+        <ListView data={sortedData} />
       </section>
     </main>
   );

@@ -21,15 +21,16 @@ function titleToSlug(title: string): string {
 }
 
 export function getNewsletterBySlug(slug: string): Newsletter | null {
-  const contentDir = "./src/app/db/newsletters";
-  const filePath = `${contentDir}/${slug}.md`;
+  const formattedSlug = slug.toLowerCase().replace(/\s+/g, "-");
+  const contentDir = "./src/app/db/content/newsletters";
+  const filePath = `${contentDir}/${formattedSlug}.md`;
 
   try {
     const fileContents = readFileSync(filePath, "utf8");
     const { data: metadata, content } = matter(fileContents);
 
     return {
-      slug: titleToSlug(filePath),
+      slug: titleToSlug(metadata.title),
       title: metadata.title,
       content: content,
       publishedAt: metadata.publishedAt || "",
@@ -52,7 +53,7 @@ export async function getAllNewsletters(): Promise<Newsletter[]> {
       const fileContents = readFileSync(filePath, "utf8");
       const { data: metadata, content } = matter(fileContents);
       return {
-        slug: titleToSlug(filePath),
+        slug: titleToSlug(metadata.title),
         title: metadata.title,
         content: content,
         publishedAt: metadata.publishedAt || "",

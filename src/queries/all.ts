@@ -90,11 +90,15 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
   const files = await Promise.all(
     filePaths.map(async (filePath) => {
       const { data: metadata } = matter(readFileSync(filePath, "utf8"));
+      let slug = filePath
+        .substring(contentDir.length + 1)
+        .replace(/\.md$/, "")
+        .replace(/\//g, "-")
+        .toLowerCase()
+        .replace(/^gs-/, "")
+        .replace(/\s+/g, "-");
       return {
-        slug: filePath
-          .substring(contentDir.length + 1)
-          .replace(/\.md$/, "")
-          .replace(/\//g, "-"),
+        slug,
         title: metadata.title,
         categories: metadata.categories || [],
         tags: metadata.tags || [],
@@ -167,7 +171,11 @@ export async function getAllUnsplashImages(
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const response = await fetch(`/api/posts/${slug}`);
+    const formattedSlug = slug
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/^gs-/, "");
+    const response = await fetch(`/api/posts/${formattedSlug}`);
     if (response.ok) {
       const post = await response.json();
       return post as Post;

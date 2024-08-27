@@ -26,7 +26,7 @@ export default async function FeedPage() {
       return dateB - dateA;
     });
 
-    console.log("Server-rendered data:", combinedData);
+    // console.log("Server-rendered data:", combinedData);
 
     return (
       <main className="flex">

@@ -65,7 +65,9 @@ export const NewsletterList: React.FC<NewsletterListProps> = ({
           className="max-w-4xl mx-auto p-5 leading-relaxed text-lg"
         >
           <h2 className="border-b-2 border-gray-300 pb-2">
-            {newsletter.title}
+            <Link href={`/newsletter/${newsletter.slug}`}>
+              {newsletter.title}
+            </Link>
           </h2>
           <ReactMarkdown components={MarkdownComponents}>
             {preprocessMarkdown(newsletter.content)}

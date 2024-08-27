@@ -31,6 +31,11 @@ export default async function Home() {
                   x <span className="font-mono">↗</span>
                 </div>
               </Link>
+              <Link rel="me" href="https://mastodon.social/@gndclouds">
+                <div className="block pl-2">
+                  mastodon <span className="font-mono">↗</span>
+                </div>
+              </Link>
             </div>
             <div className="flex justify-center items-center"> </div>
             <div className="flex justify-end items-center"></div>
@@ -42,21 +47,25 @@ export default async function Home() {
       <div className="p-8 w-full md:w-1/2 overflow-y-auto text-2xl">
         <div className="grid grid-col gap-4">
           <div>
-            Hello, my name is Will. Welcome to my corner of the internet.{" "}
-            {/* <Link href="/feed" className="underline">
-              Here
+            Hello, my name is Will. Welcome to my corner of the internet.
+          </div>
+          <div>
+            <span className="font-bold">My focus</span> for the next decade, as
+            a{" "}
+            <Link
+              href="https://www.are.na/block/27538602"
+              className="underline"
+            >
+              BioDesign Technologist
             </Link>
-            , you’ll find various notes, logs, newsletters, and projects that
-            showcase my broad range of interests. */}
+            , is to contribute to work that makes critical elements of natural
+            systems visible. This focus on making the unseen seen looks at how
+            we can change and see ourselves as a part of nature rather than
+            adjacent to it.
           </div>
           <div>
-            My focus for the next decade is to contribute to work that makes the
-            unseen seen, allowing humanity to recognize itself as a part of
-            nature rather than adjacent to it.
-          </div>
-          <div>
-            Currently, this involves reducing waste and enhancing individual
-            creative agency to construct structures at{" "}
+            One way I&apos;m exploring this vision at scale is by reducing waste
+            and creating demand for biomaterials at{" "}
             <Link
               href="https://www.are.na/block/27538602"
               className="underline"
@@ -66,9 +75,9 @@ export default async function Home() {
             .
           </div>
           <div>
-            To deepen my understanding of climate action and to develop new
-            practices, I work on open software projects under the{" "}
-            <Link href="#" className="underline">
+            In parallel, to deepen my understanding of climate action and to
+            develop new practices, I work on open software projects under the{" "}
+            <Link href="https://iwg.earth" className="underline">
               Interstitial Working Group
             </Link>{" "}
             and tinker with personal projects at{" "}
@@ -79,17 +88,35 @@ export default async function Home() {
             creative footing.
           </div>
           <div>
-            Previously, I served as a design technologist at research labs
-            across various types of{" "}
-            <Link href="https://read.cv/gndclouds" className="underline">
-              companies
+            <span className="font-bold">Previously</span>, I served as a design
+            technologist at{" "}
+            <Link href="https://www.ideo.com/" className="underline">
+              IDEO
+            </Link>{" "}
+            <Link href="https://ideocolab.com/" className="underline">
+              CoLab
+            </Link>
+            ,{" "}
+            <Link href="https://protocol.ai/" className="underline">
+              Protocol Labs
+            </Link>
+            ,{" "}
+            <Link href="https://darkmatterlabs.org/" className="underline">
+              Dark Matter Labs
+            </Link>
+            , and{" "}
+            <Link
+              href="https://en.wikipedia.org/wiki/PARC_(company)"
+              className="underline"
+            >
+              Xerox PARC
             </Link>
             , where I specialized in translating emerging technologies into
             prototypes that simplified complex technologies to focus on their
             intended functions.
           </div>
           <div>
-            My academic journey began at the{" "}
+            <span className="font-bold">My academic journey</span> began at the{" "}
             <Link href="https://cca.edu/" className="underline">
               California College of the Arts
             </Link>
@@ -98,7 +125,8 @@ export default async function Home() {
               Interaction Design
             </Link>
             . Around this time, I had the chance to participate in John
-            Bielenberg’s experimental education program. This program focused on{" "}
+            Bielenberg&apos;s experimental education program. This program
+            focused on{" "}
             <Link
               href="https://www.youtube.com/watch?v=PZJoJ-b2MIY"
               className="underline"
@@ -107,6 +135,40 @@ export default async function Home() {
             </Link>
             , which largely shaped my thinking about how to apply my
             capabilities to the world.
+          </div>
+          <div>
+            <span className="font-bold">This site</span> is to be a public
+            archive divided into more formal{" "}
+            <Link href="/" className="underline">
+              notes
+            </Link>
+            , more rough thoughts in the form of{" "}
+            <Link href="/logs" className="underline">
+              logs
+            </Link>
+            , and an archive of{" "}
+            <Link href="/projects" className="underline">
+              projects
+            </Link>
+            .
+          </div>
+          <div>
+            <span className="font-bold">If you want to connect</span>, let&#39;s
+            grab a{" "}
+            <Link
+              href="https://www.corner.inc/list/f98ae632-b6c6-41cb-b34f-5aab2d4cd15d"
+              className="underline"
+            >
+              tea
+            </Link>{" "}
+            or go for a{" "}
+            <Link
+              href="https://www.alltrails.com/lists/running-with-friends-d9fc0cd?sh=rknycs"
+              className="underline"
+            >
+              run
+            </Link>
+            .
           </div>
         </div>
       </div>
