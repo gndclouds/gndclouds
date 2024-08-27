@@ -45,8 +45,15 @@ export default async function Home() {
             Hello, my name is Will. Welcome to my corner of the internet.
           </div>
           <div>
-            <span className="font-bold">My focus</span> for the next decade is
-            to contribute to work that makes critical elements of natural
+            <span className="font-bold">My focus</span> for the next decade, as
+            a{" "}
+            <Link
+              href="https://www.are.na/block/27538602"
+              className="underline"
+            >
+              BioDesign Technologist
+            </Link>
+            , is to contribute to work that makes critical elements of natural
             systems visible. This focus on making the unseen seen looks at how
             we can change and see ourselves as a part of nature rather than
             adjacent to it.
@@ -131,11 +138,11 @@ export default async function Home() {
               notes
             </Link>
             , more rough thoughts in the form of{" "}
-            <Link href="/" className="underline">
+            <Link href="/logs" className="underline">
               logs
             </Link>
             , and an archive of{" "}
-            <Link href="/" className="underline">
+            <Link href="/projects" className="underline">
               projects
             </Link>
             .
