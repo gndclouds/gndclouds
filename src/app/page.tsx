@@ -31,6 +31,11 @@ export default async function Home() {
                   x <span className="font-mono">↗</span>
                 </div>
               </Link>
+              <Link rel="me" href="https://mastodon.social/@gndclouds">
+                <div className="block pl-2">
+                  mastodon <span className="font-mono">↗</span>
+                </div>
+              </Link>
             </div>
             <div className="flex justify-center items-center"> </div>
             <div className="flex justify-end items-center"></div>
