@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
 import { getLogBySlug } from "@/queries/logs";
 
-export default async function LogPage({ params }) {
+interface Params {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function LogPage({ params }: Params) {
   const { slug } = params; // `slug` is a single path segment
   const log = await getLogBySlug(slug);
 

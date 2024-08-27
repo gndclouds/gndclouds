@@ -46,7 +46,9 @@ export default function ListView({ data }: { data: any[] }) {
                 logs / {item.slug}
               </span>
               <span className="text-sm">
-                {new Date(item.publishedAt).toISOString().slice(0, 10)}
+                {item.publishedAt
+                  ? new Date(item.publishedAt).toISOString().slice(0, 10)
+                  : "Unknown Date"}
               </span>
             </div>
             <div className="flex flex-col w-full p-4">
