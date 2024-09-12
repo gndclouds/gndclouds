@@ -6,10 +6,10 @@
       "use": "@vercel/next"
     }
   ],
+  "env": {
+    "GIT_SUBMODULE_STRATEGY": "recursive"
+  },
   "build": {
-    "env": {
-      "GIT_SUBMODULE_STRATEGY": "recursive"
-    },
     "commands": {
       "build": "git submodule update --init --recursive && next build"
     }
