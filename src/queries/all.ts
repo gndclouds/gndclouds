@@ -1,4 +1,4 @@
-import { readdir } from "fs/promises";
+import { readdir, stat } from "fs/promises";
 import { readFileSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
@@ -71,20 +71,34 @@ interface CombinedItem {
 
 async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
   let files: string[] = [];
-  const dirents = await readdir(dir, { withFileTypes: true });
-  for (const dirent of dirents) {
-    const res = join(dir, dirent.name);
-    if (dirent.isDirectory()) {
-      files = [...files, ...(await getMarkdownFilesRecursively(res))];
-    } else if (res.endsWith(".md")) {
-      files.push(res);
+  try {
+    const dirents = await readdir(dir, { withFileTypes: true });
+    for (const dirent of dirents) {
+      const res = join(dir, dirent.name);
+      if (dirent.isDirectory()) {
+        files = [...files, ...(await getMarkdownFilesRecursively(res))];
+      } else if (res.endsWith(".md")) {
+        files.push(res);
+      }
     }
+  } catch (error) {
+    console.error(`Error reading directory ${dir}:`, error);
   }
   return files;
 }
 
 export async function getAllMarkdownFiles(): Promise<Post[]> {
   const contentDir = "./src/app/db/content";
+  try {
+    const dirStat = await stat(contentDir);
+    if (!dirStat.isDirectory()) {
+      throw new Error(`${contentDir} is not a directory`);
+    }
+  } catch (error) {
+    console.error(`Error accessing directory ${contentDir}:`, error);
+    return [];
+  }
+
   const filePaths = await getMarkdownFilesRecursively(contentDir);
 
   const files = await Promise.all(

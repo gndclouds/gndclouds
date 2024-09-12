@@ -66,11 +66,8 @@ export default async function Home() {
           <div>
             One way I&apos;m exploring this vision at scale is by reducing waste
             and creating demand for biomaterials at{" "}
-            <Link
-              href="https://www.are.na/block/27538602"
-              className="underline"
-            >
-              🞲🞲🞲🞲 🞲🞲🞲🞲🞲
+            <Link href="https://blocks.flexhouse.dev/" className="underline">
+              FlexHouse
             </Link>
             .
           </div>
@@ -143,11 +140,11 @@ export default async function Home() {
               notes
             </Link>
             , more rough thoughts in the form of{" "}
-            <Link href="/logs" className="underline">
+            <Link href="/" className="underline">
               logs
             </Link>
             , and an archive of{" "}
-            <Link href="/projects" className="underline">
+            <Link href="/" className="underline">
               projects
             </Link>
             .
