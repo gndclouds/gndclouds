@@ -1,17 +1,4 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "next.config.js",
-      "use": "@vercel/next"
-    }
-  ],
-  "env": {
-    "GIT_SUBMODULE_STRATEGY": "recursive"
-  },
-  "build": {
-    "commands": {
-      "build": "git submodule update --init --recursive && next build"
-    }
-  }
+  "buildCommand": "./vercel-install.sh && npm run build"
 }

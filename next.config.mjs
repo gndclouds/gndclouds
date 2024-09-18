@@ -1,3 +1,4 @@
+import "dotenv/config";
 import createMDX from "@next/mdx";
 
 /** @type {import('next').NextConfig} */
@@ -10,6 +11,7 @@ const nextConfig = {
       { protocol: "https", hostname: "images.are.na" },
     ],
   },
+  // Add any other Next.js configurations here
 };
 
 const withMDX = createMDX();

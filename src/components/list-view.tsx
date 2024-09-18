@@ -8,7 +8,7 @@ interface ListViewProps {
 
 export default function ListView({ data }: { data: any[] }) {
   const renderItem = (item: any, index: number) => {
-    const linkPath = `/logs/${item.slug}`;
+    const linkPath = `/${item.type}/${item.slug}`;
 
     // Print the linkPath for debugging
     console.log(`Rendering item with linkPath: ${linkPath}`);
@@ -114,11 +114,11 @@ export default function ListView({ data }: { data: any[] }) {
       Project: {
         element: (
           <div className="border-2 border-gray-200 rounded-lg relative">
-            <div className="absolute top-0 left-0 p-2">
+            {/* <div className="absolute top-0 left-0 p-2">
               <span className="bg-gray-200 text-gray-800 text-xs font-bold uppercase px-2 py-1 rounded-full">
                 #projects
               </span>
-            </div>
+            </div> */}
             <div className="absolute top-0 right-0 p-2">
               <span className="text-sm">
                 {item.publishedAt
@@ -130,7 +130,7 @@ export default function ListView({ data }: { data: any[] }) {
               <h2 className="text-2xl">
                 <Link href={linkPath}>{item.title}</Link>
               </h2>
-              <p>{item.description}</p>
+              <p>{item.metadata.description}</p>
             </div>
             <div className="flex-1 p-4">
               {item.heroImage && (
