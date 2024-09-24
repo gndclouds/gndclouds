@@ -21,9 +21,15 @@ export default async function ProjectPage({ params }: Params) {
 
   return (
     <div>
-      <PageHero data={{ ...project, tags: project.tags?.join(", ") || "" }} />
-      {project.metadata?.contentHtml ? (
-        <ReactMarkdown>{project.metadata.contentHtml}</ReactMarkdown>
+      <PageHero
+        data={{
+          ...project,
+          tags: project.tags?.join(", ") || "",
+          publishedAt: project.publishedAt || "",
+        }}
+      />
+      {project.contentHtml ? (
+        <ReactMarkdown>{project.contentHtml}</ReactMarkdown>
       ) : (
         <p>No content available</p>
       )}

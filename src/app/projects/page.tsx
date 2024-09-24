@@ -28,7 +28,7 @@ export default async function ProjectsPage() {
         projects={combinedData}
         allProjects={combinedData}
       />
-      <section className="flex flex-col gap-4">
+      <section className="flex flex-col gap-4 p-4 ">
         <ListView data={combinedData} />
       </section>
     </main>

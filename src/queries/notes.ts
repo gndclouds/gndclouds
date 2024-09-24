@@ -70,7 +70,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
         categories: metadata.categories || [],
         tags: metadata.tags || [],
         type:
-          metadata.type && metadata.type.length > 0 ? metadata.type[0] : "log",
+          metadata.type && metadata.type.length > 0 ? metadata.type[0] : "note",
         publishedAt: metadata.publishedAt || "",
         published: metadata.published || false,
         metadata: metadata,
@@ -85,10 +85,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
   );
 }
 
-export async function getAllLogs(): Promise<Post[]> {
+export async function getAllNotes(): Promise<Post[]> {
   const allMarkdownFiles = await getAllMarkdownFiles();
-  return allMarkdownFiles.filter((file) => {
-    const types = Array.isArray(file.type) ? file.type : [file.type];
-    return types.some((t) => t.toLowerCase() === "log");
-  });
+  return allMarkdownFiles.filter((file) => file.type.includes("note"));
 }

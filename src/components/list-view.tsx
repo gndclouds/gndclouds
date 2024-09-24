@@ -44,47 +44,94 @@ export default function ListView({ data }: { data: any[] }) {
       },
       log: {
         element: (
-          <div className="flex flex-col border-2 border-gray-200 rounded-lg relative">
-            <div className="flex justify-between w-full p-2">
-              <span className="text-xs uppercase px-2 py-1">
-                logs / {item.slug}
-              </span>
-              <span className="text-sm">
-                {item.publishedAt
-                  ? new Date(item.publishedAt).toISOString().slice(0, 10)
-                  : "Unknown Date"}
-              </span>
+          <div className="border-2 border-gray-200 relative">
+            <div>
+              <div>{item.title}</div>
+              <div className="absolute top-0 right-0 p-2">
+                <span className="text-sm">
+                  {item.publishedAt
+                    ? new Date(item.publishedAt).getFullYear()
+                    : "Unknown Date"}
+                </span>
+              </div>
+            </div>{" "}
+            <div>
+              {item.metadata?.description || "No description available"}
             </div>
-            <div className="flex flex-col w-full p-4">
-              <h2 className="text-xl">
-                <Link href={linkPath}>{item.title}</Link>
-              </h2>
-              <p>{item.snippet}</p>
+            <div className="flex flex-row border-t-2 border-gray-200 absolute bottom-0 left-0 w-full">
+              <div className="flex flex-wrap gap-2 p-2">
+                {item.tags?.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/tag/${tag}`}
+                    className="bg-gray-200 rounded-full px-3 py-1 text-sm"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+              <div className="bg-gray-200 ml-auto">
+                <Link href={linkPath}>→</Link>
+              </div>
             </div>
+            <div className="flex-1 p-4 pt-8"></div>
+            {/* <div className="flex-1 p-4">
+            {item.heroImage && (
+              <Image
+                src={item.heroImage}
+                alt={item.title}
+                layout="fill"
+                className="rounded-lg"
+              />
+            )}
+          </div> */}
           </div>
         ),
         colSpan: "col-span-12",
       },
       note: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
-            <div className="absolute top-0 left-0 p-2">
-              <span className="bg-gray-200 text-gray-800 text-xs font-bold uppercase px-2 py-1 rounded-full">
-                #note
-              </span>
+          <div className="border-2 border-gray-200 relative">
+            <div>
+              <div>{item.title}</div>
+              <div className="absolute top-0 right-0 p-2">
+                <span className="text-sm">
+                  {item.publishedAt
+                    ? new Date(item.publishedAt).getFullYear()
+                    : "Unknown Date"}
+                </span>
+              </div>
+            </div>{" "}
+            <div>
+              {item.metadata?.description || "No description available"}
             </div>
-            <div className="absolute top-0 right-0 p-2">
-              <span className="text-sm ordinal slashed-zero tabular-numsyarn ">
-                {item.publishedAt
-                  ? new Date(item.publishedAt).toISOString().slice(0, 10)
-                  : "Unknown Date"}
-              </span>
+            <div className="flex flex-row border-t-2 border-gray-200 absolute bottom-0 left-0 w-full">
+              <div className="flex flex-wrap gap-2 p-2">
+                {item.tags?.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/tag/${tag}`}
+                    className="bg-gray-200 rounded-full px-3 py-1 text-sm"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+              <div className="bg-gray-200 ml-auto">
+                <Link href={linkPath}>→</Link>
+              </div>
             </div>
-            <div className="flex-1 p-4 pt-8">
-              <h2 className="text-2xl">
-                <Link href={linkPath}>{item.title}</Link>
-              </h2>
-            </div>
+            <div className="flex-1 p-4 pt-8"></div>
+            {/* <div className="flex-1 p-4">
+            {item.heroImage && (
+              <Image
+                src={item.heroImage}
+                alt={item.title}
+                layout="fill"
+                className="rounded-lg"
+              />
+            )}
+          </div> */}
           </div>
         ),
         colSpan: "col-span-12",
@@ -117,26 +164,38 @@ export default function ListView({ data }: { data: any[] }) {
       },
       project: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
-            {/* <div className="absolute top-0 left-0 p-2">
-              <span className="bg-gray-200 text-gray-800 text-xs font-bold uppercase px-2 py-1 rounded-full">
-                #projects
-              </span>
-            </div> */}
-            <div className="absolute top-0 right-0 p-2">
-              <span className="text-sm">
-                {item.publishedAt
-                  ? new Date(item.publishedAt).getFullYear()
-                  : "Unknown Date"}
-              </span>
+          <div className="border-2 border-gray-200 relative">
+            <div>
+              <div>{item.title}</div>
+              <div className="absolute top-0 right-0 p-2">
+                <span className="text-sm">
+                  {item.publishedAt
+                    ? new Date(item.publishedAt).getFullYear()
+                    : "Unknown Date"}
+                </span>
+              </div>
+            </div>{" "}
+            <div>
+              {item.metadata?.description || "No description available"}
             </div>
-            <div className="flex-1 p-4 pt-8">
-              <h2 className="text-2xl">
-                <Link href={linkPath}>{item.title}</Link>
-              </h2>
-              <p>{item.metadata?.description || "No description available"}</p>
+            <div className="flex flex-row border-t-2 border-gray-200 absolute bottom-0 left-0 w-full">
+              <div className="flex flex-wrap gap-2 p-2">
+                {item.tags?.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/tag/${tag}`}
+                    className="bg-gray-200 rounded-full px-3 py-1 text-sm"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+              <div className="bg-gray-200 ml-auto">
+                <Link href={linkPath}>→</Link>
+              </div>
             </div>
-            <div className="flex-1 p-4">
+            <div className="flex-1 p-4 pt-8"></div>
+            {/* <div className="flex-1 p-4">
               {item.heroImage && (
                 <Image
                   src={item.heroImage}
@@ -145,7 +204,7 @@ export default function ListView({ data }: { data: any[] }) {
                   className="rounded-lg"
                 />
               )}
-            </div>
+            </div> */}
           </div>
         ),
         colSpan: "col-span-12",

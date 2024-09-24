@@ -1,39 +1,19 @@
-import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
+import { getAllNotes } from "@/queries/notes";
 
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
 export default async function NotesPage() {
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
-  console.log(data);
-  const combinedData = [...data, ...images]
-    .filter((item) => {
-      if ("type" in item) {
-        if (!item.type) {
-          console.log("Item without type:", item);
-          return false;
-        }
-        return true;
-      }
-      return false;
-    })
+  const data = await getAllNotes();
+  const combinedData = data
     .map((item) => ({
       ...item,
       description:
-        "description" in item ? item.description : "No description available", // Check if description exists
+        "description" in item ? item.description : "No description available",
     }))
     .sort((a, b) => {
-      const dateA =
-        "created_at" in a
-          ? new Date(a.created_at).getTime()
-          : new Date(a.publishedAt).getTime();
-      const dateB =
-        "created_at" in b
-          ? new Date(b.created_at).getTime()
-          : new Date(b.publishedAt).getTime();
+      const dateA = new Date(a.publishedAt).getTime();
+      const dateB = new Date(b.publishedAt).getTime();
       return dateB - dateA;
     });
 
@@ -44,7 +24,7 @@ export default async function NotesPage() {
         projects={combinedData}
         allProjects={combinedData}
       />
-      <section>
+      <section className="flex flex-col gap-4 p-4 ">
         <ListView data={combinedData} />
       </section>
     </main>
