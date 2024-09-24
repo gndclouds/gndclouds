@@ -9,6 +9,12 @@ const nextConfig = {
       { protocol: "https", hostname: "source.unsplash.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "images.are.na" },
+      {
+        protocol: "https",
+        hostname: "readwise-assets.s3.amazonaws.com",
+        port: "",
+        pathname: "/media/reader/parsed_document_assets/**",
+      },
     ],
   },
   // Add any other Next.js configurations here

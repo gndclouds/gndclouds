@@ -20,15 +20,15 @@ export default async function WatchListPage() {
           items.map((item: any) => (
             <div key={item.id} style={{ margin: "10px" }}>
               <h2>{item.title}</h2>
-              <p>Author: {item.author}</p>
-              <Image
+              {/* <p>Author: {item.author}</p> */}
+              {/* <Image
                 src={item.image_url}
                 alt={`Cover for ${item.title}`}
                 width={250}
                 height={375}
                 style={{ width: "100%", height: "auto", maxWidth: "250px" }}
-              />
-              <div style={{ marginTop: "10px" }}>
+              /> */}
+              {/* <div style={{ marginTop: "10px" }}>
                 <p>Reading Progress: {item.reading_progress}</p>
                 <div style={{ width: "100%", backgroundColor: "#ddd" }}>
                   <div
@@ -39,7 +39,7 @@ export default async function WatchListPage() {
                     }}
                   ></div>
                 </div>
-              </div>
+              </div> */}
             </div>
           ))
         ) : (

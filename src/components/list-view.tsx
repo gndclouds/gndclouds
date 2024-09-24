@@ -130,7 +130,7 @@ export default function ListView({ data }: { data: any[] }) {
               <h2 className="text-2xl">
                 <Link href={linkPath}>{item.title}</Link>
               </h2>
-              <p>{item.metadata.description}</p>
+              <p>{item.metadata?.description || "No description available"}</p>
             </div>
             <div className="flex-1 p-4">
               {item.heroImage && (

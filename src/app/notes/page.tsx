@@ -20,6 +20,10 @@ export default async function NotesPage() {
       }
       return false;
     })
+    .map((item) => ({
+      ...item,
+      description: item.description || "No description available", // Provide a default value
+    }))
     .sort((a, b) => {
       const dateA =
         "created_at" in a
