@@ -22,7 +22,8 @@ export default async function NotesPage() {
     })
     .map((item) => ({
       ...item,
-      description: item.description || "No description available", // Provide a default value
+      description:
+        "description" in item ? item.description : "No description available", // Check if description exists
     }))
     .sort((a, b) => {
       const dateA =

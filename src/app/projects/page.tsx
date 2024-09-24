@@ -3,6 +3,16 @@ import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
+type Post = {
+  // ... other properties ...
+  description?: string; // Make description optional
+};
+
+type UnsplashImage = {
+  // ... properties ...
+  description: string;
+};
+
 export default async function NotesPage() {
   const [data, images] = await Promise.all([
     getAllMarkdownFiles(),
@@ -22,7 +32,8 @@ export default async function NotesPage() {
     })
     .map((item) => ({
       ...item,
-      description: item.description || "No description available", // Provide a default value
+      description:
+        "description" in item ? item.description : "No description available", // Check if description exists
     }))
     .sort((a, b) => {
       const dateA =
