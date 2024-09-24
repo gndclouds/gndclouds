@@ -8,7 +8,11 @@ interface ListViewProps {
 
 export default function ListView({ data }: { data: any[] }) {
   const renderItem = (item: any, index: number) => {
-    const linkPath = `/${item.type}/${item.slug}`;
+    const itemType =
+      typeof item.type === "string" && item.type.length > 0
+        ? item.type.toLowerCase()
+        : "project";
+    const linkPath = `/${itemType}/${item.slug}`;
 
     // Print the linkPath for debugging
     console.log(`Rendering item with linkPath: ${linkPath}`);
@@ -16,7 +20,7 @@ export default function ListView({ data }: { data: any[] }) {
     const contents: {
       [key: string]: { element: JSX.Element; colSpan: string };
     } = {
-      Newsletter: {
+      newsletter: {
         element: (
           <div className="border-2 border-gray-200 rounded-lg relative">
             <div className="absolute top-0 left-0 p-2">
@@ -38,7 +42,7 @@ export default function ListView({ data }: { data: any[] }) {
         ),
         colSpan: "col-span-12",
       },
-      Log: {
+      log: {
         element: (
           <div className="flex flex-col border-2 border-gray-200 rounded-lg relative">
             <div className="flex justify-between w-full p-2">
@@ -61,7 +65,7 @@ export default function ListView({ data }: { data: any[] }) {
         ),
         colSpan: "col-span-12",
       },
-      Note: {
+      note: {
         element: (
           <div className="border-2 border-gray-200 rounded-lg relative">
             <div className="absolute top-0 left-0 p-2">
@@ -85,7 +89,7 @@ export default function ListView({ data }: { data: any[] }) {
         ),
         colSpan: "col-span-12",
       },
-      Photography: {
+      photography: {
         element: (
           <div className="border-2 border-gray-200 rounded-lg relative">
             <div className="">
@@ -111,7 +115,7 @@ export default function ListView({ data }: { data: any[] }) {
         ),
         colSpan: "col-span-12",
       },
-      Project: {
+      project: {
         element: (
           <div className="border-2 border-gray-200 rounded-lg relative">
             {/* <div className="absolute top-0 left-0 p-2">
@@ -148,7 +152,7 @@ export default function ListView({ data }: { data: any[] }) {
       },
       default: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
+          <div className="border-2 border-gray-200 relative">
             <div className="flex-1 p-4 pt-8">
               <h2 className="text-2xl">
                 <Link href={linkPath}>{item.title} - default</Link>
@@ -164,10 +168,10 @@ export default function ListView({ data }: { data: any[] }) {
       <div
         key={index}
         className={`col-span-12 md:${
-          contents[item.type]?.colSpan || "col-span-6"
+          contents[itemType]?.colSpan || "col-span-6"
         }`}
       >
-        {contents[item.type]?.element || (
+        {contents[itemType]?.element || (
           <div className="border-2 border-gray-200 rounded-lg p-4">
             <h2 className="text-xl">
               <Link href={linkPath}>{item.title}</Link>
