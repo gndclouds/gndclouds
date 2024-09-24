@@ -1,24 +1,65 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Bio1997 from "../components/landing/bio1997";
+import Bio2014 from "../components/landing/bio2014";
+import Bio2016 from "../components/landing/bio2016";
+import Bio2017 from "../components/landing/bio2017";
+import Bio2019 from "../components/landing/bio2019";
+import Bio2020 from "../components/landing/bio2020";
+import Bio2021 from "../components/landing/bio2021";
+import Bio2022 from "../components/landing/bio2022";
+import Bio2023 from "../components/landing/bio2023";
+import Bio2024 from "../components/landing/bio2024";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-// import { categories } from "@/categories";
-// import { Pagination } from "@/components/pagination";
-// import { Posts } from "@/components/posts";
-// import { getPaginatedPosts, postsPerPage } from "@/posts";
 
-export default async function Home() {
+export default function Home() {
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+
+  const handleYearChange = (year: string) => {
+    setSelectedYear(year);
+  };
+
+  const years = Array.from(
+    { length: currentYear - 2020 + 1 },
+    (_, i) => 2020 + i
+  )
+    .filter((year) => year !== 2019)
+    .concat([1997, 2014, 2016])
+    .sort((a, b) => a - b);
+
   return (
     <div className="h-screen w-full flex">
       {/* Left Static Column */}
-      <div className="relative flex-1  overflow-hidden">
+      <div className="relative flex-1 overflow-hidden">
         <Image
-          src="/me/2023_headshot.JPG"
+          src={`/me/${selectedYear}_headshot.jpeg`}
           alt="Hero Image"
           layout="fill"
           objectFit="cover"
         />
         <div className="absolute inset-0 bg-black opacity-40"></div>
-        <div className="absolute bottom-0 p-4 w-full">
+        <div className="absolute bottom-0 p-4 w-full h-full">
+          {" "}
+          {/* <div className="absolute right-10 top-0 h-full flex flex-col items-center justify-between">
+            <div className="relative h-full w-1 bg-white">
+              {years.map((year, index) => (
+                <div
+                  key={index}
+                  className="absolute right-full mr-2 text-white cursor-pointer"
+                  style={{
+                    top: `${((index + 1) * 100) / (years.length + 1)}%`,
+                  }}
+                  onClick={() => handleYearChange(year.toString())}
+                >
+                  {year}
+                </div>
+              ))}
+            </div>
+          </div> */}
           <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
             <div className="flex justify-start items-center">
               <Link href="https://are.na/gndclouds">
@@ -37,136 +78,23 @@ export default async function Home() {
                 </div>
               </Link>
             </div>
-            <div className="flex justify-center items-center"> </div>
-            <div className="flex justify-end items-center"></div>
+            <div className="flex justify-center items-center"></div>
           </div>
         </div>
       </div>
-
       {/* Right Scrollable Column */}
       <div className="p-8 w-full md:w-1/2 overflow-y-auto text-2xl">
         <div className="grid grid-col gap-4">
-          <div>
-            Hello, my name is Will. Welcome to my corner of the internet.
-          </div>
-          <div>
-            <span className="font-bold">My focus</span> for the next decade, as
-            a{" "}
-            <Link
-              href="https://www.are.na/block/27538602"
-              className="underline"
-            >
-              BioDesign Technologist
-            </Link>
-            , is to contribute to work that makes critical elements of natural
-            systems visible. This focus on making the unseen seen looks at how
-            we can change and see ourselves as a part of nature rather than
-            adjacent to it.
-          </div>
-          <div>
-            One way I&apos;m exploring this vision at scale is by reducing waste
-            and creating demand for biomaterials at{" "}
-            <Link href="https://blocks.flexhouse.dev/" className="underline">
-              FlexHouse
-            </Link>
-            .
-          </div>
-          <div>
-            In parallel, to deepen my understanding of climate action and to
-            develop new practices, I work on open software projects under the{" "}
-            <Link href="https://iwg.earth" className="underline">
-              Interstitial Working Group
-            </Link>{" "}
-            and tinker with personal projects at{" "}
-            <Link href="https://tinyfactories.space/" className="underline">
-              TinyFactories
-            </Link>
-            , a tribe of people supporting each other to establish their
-            creative footing.
-          </div>
-          <div>
-            <span className="font-bold">Previously</span>, I served as a design
-            technologist at{" "}
-            <Link href="https://www.ideo.com/" className="underline">
-              IDEO
-            </Link>{" "}
-            <Link href="https://ideocolab.com/" className="underline">
-              CoLab
-            </Link>
-            ,{" "}
-            <Link href="https://protocol.ai/" className="underline">
-              Protocol Labs
-            </Link>
-            ,{" "}
-            <Link href="https://darkmatterlabs.org/" className="underline">
-              Dark Matter Labs
-            </Link>
-            , and{" "}
-            <Link
-              href="https://en.wikipedia.org/wiki/PARC_(company)"
-              className="underline"
-            >
-              Xerox PARC
-            </Link>
-            , where I specialized in translating emerging technologies into
-            prototypes that simplified complex technologies to focus on their
-            intended functions.
-          </div>
-          <div>
-            <span className="font-bold">My academic journey</span> began at the{" "}
-            <Link href="https://cca.edu/" className="underline">
-              California College of the Arts
-            </Link>
-            , where I pursued a BFA in{" "}
-            <Link href="https://www.cca.edu/design/ixd/" className="underline">
-              Interaction Design
-            </Link>
-            . Around this time, I had the chance to participate in John
-            Bielenberg&apos;s experimental education program. This program
-            focused on{" "}
-            <Link
-              href="https://www.youtube.com/watch?v=PZJoJ-b2MIY"
-              className="underline"
-            >
-              thinking wrong
-            </Link>
-            , which largely shaped my thinking about how to apply my
-            capabilities to the world.
-          </div>
-          <div>
-            <span className="font-bold">This site</span> is to be a public
-            archive divided into more formal{" "}
-            <Link href="/" className="underline">
-              notes
-            </Link>
-            , more rough thoughts in the form of{" "}
-            <Link href="/" className="underline">
-              logs
-            </Link>
-            , and an archive of{" "}
-            <Link href="/" className="underline">
-              projects
-            </Link>
-            .
-          </div>
-          <div>
-            <span className="font-bold">If you want to connect</span>, let&#39;s
-            grab a{" "}
-            <Link
-              href="https://www.corner.inc/list/f98ae632-b6c6-41cb-b34f-5aab2d4cd15d"
-              className="underline"
-            >
-              tea
-            </Link>{" "}
-            or go for a{" "}
-            <Link
-              href="https://www.alltrails.com/lists/running-with-friends-d9fc0cd?sh=rknycs"
-              className="underline"
-            >
-              run
-            </Link>
-            .
-          </div>
+          {selectedYear === "1997" && <Bio1997 />}
+          {selectedYear === "2014" && <Bio2014 />}
+          {selectedYear === "2016" && <Bio2016 />}
+          {selectedYear === "2017" && <Bio2017 />}
+          {selectedYear === "2019" && <Bio2019 />}
+          {selectedYear === "2020" && <Bio2020 />}
+          {selectedYear === "2021" && <Bio2021 />}
+          {selectedYear === "2022" && <Bio2022 />}
+          {selectedYear === "2023" && <Bio2023 />}
+          {selectedYear === "2024" && <Bio2024 />}
         </div>
       </div>
     </div>
