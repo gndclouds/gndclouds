@@ -8,9 +8,18 @@ export default async function NotesPage() {
     getAllMarkdownFiles(),
     getAllUnsplashImages("gndclouds"),
   ]);
-
+  console.log(data);
   const combinedData = [...data, ...images]
-    .filter((item) => item.type && item.type.includes("Project"))
+    .filter((item) => {
+      if ("type" in item) {
+        if (!item.type) {
+          console.log("Item without type:", item);
+          return false;
+        }
+        return true;
+      }
+      return false;
+    })
     .sort((a, b) => {
       const dateA =
         "created_at" in a

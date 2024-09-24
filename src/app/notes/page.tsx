@@ -8,24 +8,39 @@ export default async function NotesPage() {
     getAllMarkdownFiles(),
     getAllUnsplashImages("gndclouds"),
   ]);
-
-  const combinedData = [...data, ...images].sort((a, b) => {
-    const dateA =
-      "created_at" in a
-        ? new Date(a.created_at).getTime()
-        : new Date(a.publishedAt).getTime();
-    const dateB =
-      "created_at" in b
-        ? new Date(b.created_at).getTime()
-        : new Date(b.publishedAt).getTime();
-    return dateB - dateA;
-  });
+  console.log(data);
+  const combinedData = [...data, ...images]
+    .filter((item) => {
+      if ("type" in item) {
+        if (!item.type) {
+          console.log("Item without type:", item);
+          return false;
+        }
+        return true;
+      }
+      return false;
+    })
+    .sort((a, b) => {
+      const dateA =
+        "created_at" in a
+          ? new Date(a.created_at).getTime()
+          : new Date(a.publishedAt).getTime();
+      const dateB =
+        "created_at" in b
+          ? new Date(b.created_at).getTime()
+          : new Date(b.publishedAt).getTime();
+      return dateB - dateA;
+    });
 
   return (
     <main>
-      <CollectionHero name="Notes" projects={data} allProjects={data} />
+      <CollectionHero
+        name="Notes"
+        projects={combinedData}
+        allProjects={combinedData}
+      />
       <section>
-        <ListView data={data} />
+        <ListView data={combinedData} />
       </section>
     </main>
   );
