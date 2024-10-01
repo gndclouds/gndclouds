@@ -69,12 +69,14 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
         title: metadata.title || "Untitled",
         categories: metadata.categories || [],
         tags: metadata.tags || [],
-        type:
-          metadata.type && metadata.type.length > 0 ? metadata.type[0] : "note",
-        publishedAt: metadata.publishedAt || "",
+        type: metadata.type || "default",
+        publishedAt: metadata.publishedAt || new Date(),
         published: metadata.published || false,
-        metadata: metadata,
-        filePath, // Include the file path
+        metadata: {
+          ...metadata,
+          contentHtml: metadata.contentHtml || "",
+        },
+        filePath: filePath,
       } as Post;
     })
   );
@@ -85,7 +87,14 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
   );
 }
 
-export async function getAllNotes(): Promise<Post[]> {
+export async function getAllResearch(): Promise<Post[]> {
   const allMarkdownFiles = await getAllMarkdownFiles();
-  return allMarkdownFiles.filter((file) => file.type.includes("note"));
+  return allMarkdownFiles.filter((file) => file.type.includes("Research"));
+}
+
+export async function getAllNotesAndResearch(): Promise<Post[]> {
+  const allMarkdownFiles = await getAllMarkdownFiles();
+  return allMarkdownFiles.filter(
+    (file) => file.type.includes("Note") || file.type.includes("Research")
+  );
 }

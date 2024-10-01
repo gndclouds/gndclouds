@@ -1,10 +1,10 @@
-import { getAllNotes } from "@/queries/notes";
+import { getAllNotesAndResearch } from "@/queries/notes";
 
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
 export default async function NotesPage() {
-  const data = await getAllNotes();
+  const data = await getAllNotesAndResearch();
   const combinedData = data
     .map((item) => ({
       ...item,

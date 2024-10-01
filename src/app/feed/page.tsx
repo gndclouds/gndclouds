@@ -35,7 +35,7 @@ export default async function FeedPage() {
           projects={combinedData}
           allProjects={combinedData}
         />
-        <section>
+        <section className="p-4">
           <ListView data={combinedData} />
         </section>
       </main>

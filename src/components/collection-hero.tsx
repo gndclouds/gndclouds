@@ -17,13 +17,12 @@ const CollectionHero = ({
   <div className="min-w-screen flex">
     {/* Hero Section */}
     <div className="relative flex-1 h-[200px] overflow-hidden">
-      {/* <Image
-        src="https://source.unsplash.com/user/gndclouds"
+      <Image
+        src="/background.jpg"
         alt="Hero Image"
         fill
-        style={{ objectFit: "cover" }}
-      /> */}
-
+        style={{ objectFit: "cover", objectPosition: "bottom" }}
+      />
       <div className="absolute inset-0 bg-black opacity-40"></div>
       <div className="absolute top-0 left-0 p-4">
         <div className="text-white uppercase font-bold flex items-center">
@@ -47,7 +46,7 @@ const CollectionHero = ({
             {allProjects.length} Entries
           </div>
           <div className="flex justify-end items-center">
-            <Link href="/projects/rss.xml">
+            <Link href="/api/projects/rss.xml">
               <div>RSS</div>
             </Link>
           </div>

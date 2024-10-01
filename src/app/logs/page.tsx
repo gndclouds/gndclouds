@@ -20,7 +20,7 @@ export default async function LogsPage() {
       const dateB = new Date(b.publishedAt).getTime();
       return dateB - dateA;
     });
-
+  console.log(combinedData);
   return (
     <main>
       <CollectionHero

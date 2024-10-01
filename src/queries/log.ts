@@ -21,7 +21,6 @@ export async function getLogBySlug(slug: string): Promise<Log | null> {
   if (!log) {
     return null;
   }
-
   const { data: metadata, content } = matter(
     readFileSync(log.filePath, "utf8")
   ); // Read the file using the file path

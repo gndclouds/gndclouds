@@ -8,30 +8,42 @@ export type Post = {
   slug: string;
   title: string;
   categories: string[];
+  filePath: string; // Add the filePath property
 };
 
-export async function getProjectBySlug(slug: string): Promise<Post | null> {
+// Define the extended interface
+interface PostWithFilePath extends Post {
+  filePath: string;
+  metadata: {
+    contentHtml: string;
+  };
+  publishedAt?: string; // Add this line
+}
+
+export async function getProjectBySlug(
+  slug: string
+): Promise<PostWithFilePath | null> {
   const allProjects = await getAllMarkdownFiles(); // Get all projects
-  const project = allProjects.find((project) => project.slug === slug); // Find the project by slug
+  const project: PostWithFilePath = allProjects.find(
+    (project) => project.slug === slug
+  );
 
   if (!project) {
-    return null;
+    throw new Error(`Project with slug ${slug} not found`);
   }
 
   const { data: metadata, content } = matter(
     readFileSync(project.filePath, "utf8")
   ); // Read the file using the file path
 
-  console.log("Metadata:", metadata);
-  console.log("Content:", content);
-
   return {
     slug: project.slug,
     title: metadata.title,
     categories: metadata.categories || [],
+    filePath: project.filePath, // Add this line
+    publishedAt: metadata.publishedAt, // Ensure this line reads the publishedAt property
     metadata: {
-      ...metadata,
-      contentHtml: content,
+      contentHtml: content, // Use the content from the markdown file
     },
-  } as Post;
+  };
 }
