@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { getAllMarkdownFiles, getLogBySlug } from "@/queries/logs";
-import Link from "next/link";
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 import PageHero from "@/components/page-hero";

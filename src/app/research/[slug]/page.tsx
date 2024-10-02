@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getProjectBySlug } from "@/queries/project";
 import PageHero from "@/components/page-hero";
 import ReactMarkdown from "react-markdown";
+import MarkdownContent from "@/components/MarkdownContent";
 
 interface Params {
   params: {
@@ -12,7 +13,6 @@ interface Params {
 export default async function ProjectPage({ params }: Params) {
   const { slug } = params;
   const project = await getProjectBySlug(slug);
-  console.log("Project data:", project);
   if (!project) {
     notFound();
   }
@@ -32,15 +32,11 @@ export default async function ProjectPage({ params }: Params) {
         data={{
           ...project,
           tags: project.categories?.join(", ") || "",
-          publishedAt: validPublishedAt, // Use the validated date
+          publishedAt: validPublishedAt,
         }}
       />
       {project.metadata?.contentHtml ? (
-        <div className="flex px-4 py-12">
-          <div className="max-w-3xl">
-            <ReactMarkdown>{project.metadata.contentHtml}</ReactMarkdown>
-          </div>
-        </div>
+        <MarkdownContent content={project.metadata.contentHtml} />
       ) : (
         <p>No content available</p>
       )}

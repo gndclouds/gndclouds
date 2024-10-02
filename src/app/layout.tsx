@@ -16,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-100`}>{children}</body>
+      <body
+        className={`${inter.className} bg-backgroundLight text-textLight dark:bg-backgroundDark dark:text-textDark`}
+      >
+        {children}
+      </body>
       <script
         async
         defer

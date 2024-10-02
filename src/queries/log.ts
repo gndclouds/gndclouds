@@ -12,6 +12,7 @@ export type Log = {
     description: string;
     contentHtml: string;
   };
+  publishedAt?: string; // Add this line to include the publishedAt property
 };
 
 export async function getLogBySlug(slug: string): Promise<Log | null> {
@@ -24,9 +25,6 @@ export async function getLogBySlug(slug: string): Promise<Log | null> {
   const { data: metadata, content } = matter(
     readFileSync(log.filePath, "utf8")
   ); // Read the file using the file path
-
-  console.log("Metadata:", metadata);
-  console.log("Content:", content);
 
   return {
     slug: log.slug,

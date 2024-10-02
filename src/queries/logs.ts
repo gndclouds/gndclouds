@@ -94,3 +94,23 @@ export async function getAllLogs(): Promise<Post[]> {
     return types.some((t) => t.toLowerCase() === "log");
   });
 }
+export async function getLogBySlug(slug: string): Promise<Post | null> {
+  const allLogs = await getAllLogs(); // Get all logs
+  const log = allLogs.find((log) => log.slug === slug); // Find the log by slug
+
+  if (!log) {
+    return null;
+  }
+
+  const { data: metadata, content } = matter(
+    readFileSync(log.filePath, "utf8")
+  ); // Read the file using the file path
+
+  return {
+    ...log,
+    metadata: {
+      ...metadata,
+      contentHtml: content,
+    },
+  } as Post;
+}

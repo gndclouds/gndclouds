@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
 import { getProjectBySlug } from "@/queries/project";
 import PageHero from "@/components/page-hero";
-import ReactMarkdown from "react-markdown";
+import MarkdownContent from "@/components/MarkdownContent";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { remark } from "remark";
+import remarkGfm from "remark-gfm"; // Add this line
+import { visit } from "unist-util-visit";
+import styles from "@/app/markdown-styles.module.css";
 
 interface Params {
   params: {
@@ -9,10 +15,15 @@ interface Params {
   };
 }
 
+interface MarkdownContentProps {
+  content: string;
+  links: string[]; // Add this line
+  footnotes: string[];
+}
+
 export default async function ProjectPage({ params }: Params) {
   const { slug } = params;
   const project = await getProjectBySlug(slug);
-  console.log("Project data:", project);
   if (!project) {
     notFound();
   }
@@ -26,24 +37,81 @@ export default async function ProjectPage({ params }: Params) {
     ? project.publishedAt
     : "";
 
+  const renderers = {
+    code({
+      node,
+      inline,
+      className,
+      children,
+      ...props
+    }: {
+      node: any;
+      inline: boolean;
+      className: string;
+      children: React.ReactNode;
+    }) {
+      const match = /language-(\w+)/.exec(className || "");
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={materialDark}
+          language={match[1]}
+          PreTag="div"
+          {...props}
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+    link({ href, children }: { href: string; children: React.ReactNode }) {
+      if (href.startsWith("[[") && href.endsWith("]]")) {
+        const linkText = href.slice(2, -2);
+        return <a href={`/some-path/${linkText}`}>{children}</a>;
+      }
+      return <a href={href}>{children}</a>;
+    },
+  };
+
+  const extractLinksAndFootnotes = (content: string) => {
+    const links: string[] = [];
+    const footnotes: string[] = [];
+    const processor = remark()
+      .use(remarkGfm)
+      .use(() => (tree) => {
+        visit(tree, "link", (node) => {
+          links.push(node.url);
+        });
+        visit(tree, "footnoteDefinition", (node) => {
+          footnotes.push(node);
+        });
+      });
+
+    processor.processSync(content);
+    return { links, footnotes };
+  };
+
+  const { links, footnotes } = extractLinksAndFootnotes(
+    project.metadata.contentHtml
+  );
+
   return (
     <div>
       <PageHero
         data={{
           ...project,
           tags: project.categories?.join(", ") || "",
-          publishedAt: validPublishedAt, // Use the validated date
+          publishedAt: validPublishedAt,
         }}
       />
-      {project.metadata?.contentHtml ? (
-        <div className="flex px-4 py-12">
-          <div className="max-w-3xl">
-            <ReactMarkdown>{project.metadata.contentHtml}</ReactMarkdown>
-          </div>
-        </div>
-      ) : (
-        <p>No content available</p>
-      )}
+
+      <MarkdownContent
+        content={project.metadata.contentHtml}
+        links={links}
+        footnotes={footnotes}
+      />
     </div>
   );
 }

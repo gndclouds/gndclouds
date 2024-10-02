@@ -34,7 +34,7 @@ const PageHero = ({ data }: PageHeroProps) => {
           style={{ objectFit: "cover", objectPosition: "bottom" }}
         />
 
-        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className="absolute inset-0 opacity-40"></div>
         <div className="absolute top-0 left-0 p-4">
           <div className="text-white uppercase font-bold flex items-center">
             <Link href="/" className="inline-flex items-center">

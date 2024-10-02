@@ -24,13 +24,14 @@ export async function getProjectBySlug(
   slug: string
 ): Promise<PostWithFilePath | null> {
   const allProjects = await getAllMarkdownFiles(); // Get all projects
-  const project: PostWithFilePath = allProjects.find(
+  const project: PostWithFilePath | undefined = allProjects.find(
     (project) => project.slug === slug
   );
 
   if (!project) {
     throw new Error(`Project with slug ${slug} not found`);
   }
+  // Now `project` is guaranteed to be `PostWithFilePath`
 
   const { data: metadata, content } = matter(
     readFileSync(project.filePath, "utf8")

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getLogBySlug } from "@/queries/log";
 import PageHero from "@/components/page-hero";
 import ReactMarkdown from "react-markdown";
+import MarkdownContent from "@/components/MarkdownContent";
 
 interface Params {
   params: {
@@ -20,15 +21,28 @@ type Log = {
   publishedAt?: string; // Add this line to include the publishedAt property
 };
 
+// Define the type for log.metadata
+type Metadata = {
+  description: string;
+  contentHtml: string;
+  links?: any[]; // Add this line
+  footnotes?: any[]; // Add this line
+};
+
+// Ensure log.metadata is of type Metadata
+const log: { metadata: Metadata } = {
+  // ... existing log initialization ...
+};
+
 export default async function LogPage({ params }: Params) {
   const { slug } = params;
   const log = await getLogBySlug(slug);
 
+  console.log(log); // Check the structure of the log object
+
   if (!log) {
     notFound();
   }
-
-  console.log("Log data:", log);
 
   return (
     <div>
@@ -40,11 +54,11 @@ export default async function LogPage({ params }: Params) {
         }}
       />
       {log.metadata?.contentHtml ? (
-        <div className="flex px-4 py-12">
-          <div className="max-w-3xl">
-            <ReactMarkdown>{log.metadata.contentHtml}</ReactMarkdown>
-          </div>
-        </div>
+        <MarkdownContent
+          content={log.metadata.contentHtml}
+          links={log.metadata.links || []}
+          footnotes={log.metadata.footnotes || []}
+        />
       ) : (
         <p>No content available</p>
       )}
