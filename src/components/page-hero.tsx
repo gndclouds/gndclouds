@@ -8,6 +8,7 @@ interface PageHeroProps {
     publishedAt: string;
     title: string;
     tags: string;
+    url?: string; // Add this line
   };
 }
 
@@ -60,6 +61,13 @@ const PageHero = ({ data }: PageHeroProps) => {
               )}
             </div>
           </div>
+          {data.url && (
+            <div className="absolute bottom-0 right-0 p-4">
+              <Link href={data.url} className="text-white underline">
+                View Live Project
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

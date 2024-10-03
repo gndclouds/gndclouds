@@ -109,6 +109,7 @@ export default async function ProjectPage({ params }: Params) {
           ...project,
           tags: project.categories?.join(", ") || "",
           publishedAt: validPublishedAt,
+          url: project.url, // Ensure this line is added
         }}
       />
 

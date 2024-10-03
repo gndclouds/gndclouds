@@ -43,6 +43,7 @@ export async function getProjectBySlug(
     categories: metadata.categories || [],
     filePath: project.filePath, // Add this line
     publishedAt: metadata.publishedAt, // Ensure this line reads the publishedAt property
+    url: metadata.url, // Ensure this line reads the url property
     metadata: {
       contentHtml: content, // Use the content from the markdown file
     },

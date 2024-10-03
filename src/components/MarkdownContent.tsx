@@ -62,7 +62,10 @@ const MarkdownContent = ({
   }
 
   // Remove footnotes from the main content
-  const contentWithoutFootnotes = content.replace(footnoteRegex, "");
+  const updatedContent = content.replace(
+    /!\[(.*?)\]\(assets\/media\/(.*?)\)/g,
+    "![$1](/assets/media/$2)"
+  );
 
   return (
     <div className="flex">
@@ -74,7 +77,7 @@ const MarkdownContent = ({
           rehypePlugins={[rehypeRaw]}
           components={components}
         >
-          {contentWithoutFootnotes}
+          {updatedContent}
         </ReactMarkdown>
       </div>
       <div className="w-1/3 p-4">
