@@ -1,6 +1,9 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import React from "react";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { FiArrowRight } from "react-icons/fi";
 
 interface ListViewProps {
   data: any[];
@@ -8,19 +11,45 @@ interface ListViewProps {
 
 export default function ListView({ data }: { data: any[] }) {
   const renderItem = (item: any, index: number) => {
-    const linkPath = `/logs/${item.slug}`;
+    // Debugging: Log the item and its metadata
+    // console.log(`Item ${index}:`, item);
+    // console.log(`Item ${index} metadata:`, item.metadata);
+
+    let itemType = "default";
+    if (Array.isArray(item.metadata?.type) && item.metadata.type.length > 0) {
+      itemType = item.metadata.type[0].toLowerCase();
+    } else if (
+      typeof item.metadata?.type === "string" &&
+      item.metadata.type.length > 0
+    ) {
+      itemType = item.metadata.type.toLowerCase();
+    }
+
+    const linkPath = `/${itemType}/${item.slug}`; // Updated to use itemType
 
     // Print the linkPath for debugging
-    console.log(`Rendering item with linkPath: ${linkPath}`);
+    // console.log(`Rendering item with linkPath: ${linkPath}`);
+
+    const gridColumnSpan: { [key: string]: string } = {
+      newsletter: "span 12",
+      log: "span 6",
+      note: "span 6",
+      photography: "span 4",
+      project: "span 4",
+      default: "span 12",
+    };
 
     const contents: {
       [key: string]: { element: JSX.Element; colSpan: string };
     } = {
-      Newsletter: {
+      newsletter: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
+          <div
+            className={`col-span-12 md:col-span-6 lg:col-span-4 border-2 border-backgroundDark dark:border-backgroundLight relative p-4 min-h-[50px] group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          >
+            {" "}
             <div className="absolute top-0 left-0 p-2">
-              <span className="bg-gray-200 text-gray-800 text-xs font-bold uppercase px-2 py-1 rounded-full">
+              <span className="bg-gray-200 text-gray-800 text-xs font-bold uppercase px-2 py-1">
                 #newsletter
               </span>
             </div>
@@ -36,58 +65,106 @@ export default function ListView({ data }: { data: any[] }) {
             </div>
           </div>
         ),
-        colSpan: "col-span-12",
+        colSpan: gridColumnSpan.newsletter,
       },
-      Log: {
+      log: {
         element: (
-          <div className="flex flex-col border-2 border-gray-200 rounded-lg relative">
-            <div className="flex justify-between w-full p-2">
-              <span className="text-xs uppercase px-2 py-1">
-                logs / {item.slug}
-              </span>
-              <span className="text-sm">
+          <div
+            className={`col-span-12 md:col-span-6 lg:col-span-4 border-2 border-backgroundDark dark:border-backgroundLight relative p-4 min-h-[50px] group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          >
+            <Link href={linkPath} className="">
+              <div className="text-sm slashed-zero lining-nums">
                 {item.publishedAt
-                  ? new Date(item.publishedAt).toISOString().slice(0, 10)
+                  ? new Date(item.publishedAt).getFullYear()
                   : "Unknown Date"}
-              </span>
-            </div>
-            <div className="flex flex-col w-full p-4">
-              <h2 className="text-xl">
-                <Link href={linkPath}>{item.title}</Link>
-              </h2>
-              <p>{item.snippet}</p>
+              </div>
+              <div className="flex flex-row flex justify-between text-[3vw] font-medium">
+                <h2 className="">{item.title}</h2>
+                <FiArrowRight className="text-[3vw]" />
+              </div>
+            </Link>
+            <div className="flex flex-wrap gap-2 p-2 ">
+              {item.tags?.map((tag: string) => (
+                <Link
+                  key={tag}
+                  href={`/tag/${tag}`}
+                  className="border-2 border-backgroundDark dark:border-backgroundLight dark:hover:bg-backgroundLight hover:bg-backgroundDark dark:hover:text-textLight hover:text-textDark px-3 py-1 text-sm uppercase"
+                >
+                  {tag}
+                </Link>
+              ))}
             </div>
           </div>
         ),
-        colSpan: "col-span-12",
+        colSpan: gridColumnSpan.log,
       },
-      Note: {
+      note: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
-            <div className="absolute top-0 left-0 p-2">
-              <span className="bg-gray-200 text-gray-800 text-xs font-bold uppercase px-2 py-1 rounded-full">
-                #note
-              </span>
-            </div>
-            <div className="absolute top-0 right-0 p-2">
-              <span className="text-sm ordinal slashed-zero tabular-numsyarn ">
+          <div
+            className={`col-span-12 md:col-span-6 lg:col-span-4 border-2 border-backgroundDark dark:border-backgroundLight relative p-4 min-h-[50px] group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          >
+            {" "}
+            <Link href={linkPath} className="">
+              <div className="text-sm slashed-zero lining-nums">
                 {item.publishedAt
-                  ? new Date(item.publishedAt).toISOString().slice(0, 10)
+                  ? new Date(item.publishedAt).getFullYear()
                   : "Unknown Date"}
-              </span>
-            </div>
-            <div className="flex-1 p-4 pt-8">
-              <h2 className="text-2xl">
-                <Link href={linkPath}>{item.title}</Link>
-              </h2>
+              </div>
+              <div className="flex flex-row flex justify-between text-[3vw] font-medium">
+                <h2 className="">{item.title}</h2>
+                <FiArrowRight className="text-[3vw]" />
+              </div>
+            </Link>
+            <div className="flex flex-wrap gap-2 p-2 ">
+              {item.tags?.map((tag: string) => (
+                <Link
+                  key={tag}
+                  href={`/tag/${tag}`}
+                  className="border-2 border-backgroundDark dark:border-backgroundLight dark:hover:bg-backgroundLight hover:bg-backgroundDark dark:hover:text-textLight hover:text-textDark px-3 py-1 text-sm uppercase"
+                >
+                  {tag}
+                </Link>
+              ))}
             </div>
           </div>
         ),
-        colSpan: "col-span-12",
+        colSpan: gridColumnSpan.note,
       },
-      Photography: {
+      research: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
+          <div
+            className={`col-span-12 md:col-span-6 lg:col-span-4 border-2 border-backgroundDark dark:border-backgroundLight relative p-4 min-h-[50px] group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          >
+            {" "}
+            <Link href={linkPath} className="">
+              <div className="text-sm slashed-zero lining-nums">
+                {item.publishedAt
+                  ? new Date(item.publishedAt).getFullYear()
+                  : "Unknown Date"}
+              </div>
+              <div className="flex flex-row flex justify-between text-[3vw] font-medium">
+                <h2 className="">{item.title}</h2>
+                <FiArrowRight className="text-[3vw]" />
+              </div>
+            </Link>
+            <div className="flex flex-wrap gap-2 p-2 ">
+              {item.tags?.map((tag: string) => (
+                <Link
+                  key={tag}
+                  href={`/tag/${tag}`}
+                  className="border-2 border-backgroundDark dark:border-backgroundLight dark:hover:bg-backgroundLight hover:bg-backgroundDark dark:hover:text-textLight hover:text-textDark px-3 py-1 text-sm uppercase"
+                >
+                  {tag}
+                </Link>
+              ))}
+            </div>
+          </div>
+        ),
+        colSpan: gridColumnSpan.note,
+      },
+      photography: {
+        element: (
+          <div className="col-span-12 md:col-span-4 lg:col-span-2 border-2 border-gray-200 relative">
             <div className="">
               {item.urls && (
                 <Image
@@ -98,65 +175,55 @@ export default function ListView({ data }: { data: any[] }) {
                 />
               )}
             </div>
-            <div className="card-title">
-              {/* <p>
-                Camera: {item.exif.make} {item.exif.model}
-              </p>
-              <p>Exposure: {item.exif.exposure_time}s</p>
-              <p>Aperture: f/{item.exif.aperture}</p>
-              <p>Focal Length: {item.exif.focal_length}mm</p>
-              <p>ISO: {item.exif.iso}</p> */}
-            </div>
+            <div className="card-title">cae</div>
           </div>
         ),
-        colSpan: "col-span-12",
+        colSpan: gridColumnSpan.photography,
       },
-      Project: {
+      project: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
-            <div className="absolute top-0 left-0 p-2">
-              <span className="bg-gray-200 text-gray-800 text-xs font-bold uppercase px-2 py-1 rounded-full">
-                #projects
-              </span>
-            </div>
-            <div className="absolute top-0 right-0 p-2">
-              <span className="text-sm">
+          <div
+            className={`col-span-12 md:col-span-6 lg:col-span-4 border-2 border-backgroundDark dark:border-backgroundLight relative p-4 min-h-[50px] group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          >
+            {" "}
+            <Link href={linkPath} className="">
+              <div className="text-sm slashed-zero lining-nums">
                 {item.publishedAt
                   ? new Date(item.publishedAt).getFullYear()
                   : "Unknown Date"}
-              </span>
-            </div>
-            <div className="flex-1 p-4 pt-8">
-              <h2 className="text-2xl">
-                <Link href={linkPath}>{item.title}</Link>
-              </h2>
-              <p>{item.description}</p>
-            </div>
-            <div className="flex-1 p-4">
-              {item.heroImage && (
-                <Image
-                  src={item.heroImage}
-                  alt={item.title}
-                  layout="fill"
-                  className="rounded-lg"
-                />
-              )}
-            </div>
+              </div>
+              <div className="flex flex-row flex justify-between text-[3vw] font-medium">
+                <h2 className="">{item.title}</h2>
+                <FiArrowRight className="text-[3vw]" />
+              </div>
+              <div className="text-sm">
+                {item.metadata?.description || "No description available"}
+              </div>
+            </Link>
           </div>
         ),
-        colSpan: "col-span-12",
+        colSpan: gridColumnSpan.project,
       },
       default: {
         element: (
-          <div className="border-2 border-gray-200 rounded-lg relative">
-            <div className="flex-1 p-4 pt-8">
-              <h2 className="text-2xl">
-                <Link href={linkPath}>{item.title} - default</Link>
-              </h2>
-            </div>
+          <div
+            className={`col-span-12 md:col-span-6 lg:col-span-4 border-2 border-backgroundDark dark:border-backgroundLight relative p-4 min-h-[50px] group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          >
+            {" "}
+            <Link href={linkPath} className="">
+              <div className="text-sm slashed-zero lining-nums">
+                {item.publishedAt
+                  ? new Date(item.publishedAt).getFullYear()
+                  : "Unknown Date"}
+              </div>
+              <div className="flex flex-row flex justify-between text-[3vw] font-medium">
+                <h2 className="">{item.title}</h2>
+                <FiArrowRight className="text-[3vw]" />
+              </div>
+            </Link>
           </div>
         ),
-        colSpan: "col-span-12",
+        colSpan: gridColumnSpan.default,
       },
     };
 
@@ -164,17 +231,10 @@ export default function ListView({ data }: { data: any[] }) {
       <div
         key={index}
         className={`col-span-12 md:${
-          contents[item.type]?.colSpan || "col-span-6"
+          contents[itemType]?.colSpan || contents.default.colSpan
         }`}
       >
-        {contents[item.type]?.element || (
-          <div className="border-2 border-gray-200 rounded-lg p-4">
-            <h2 className="text-xl">
-              <Link href={linkPath}>{item.title}</Link>
-            </h2>
-            <p>{item.snippet}</p>
-          </div>
-        )}
+        {contents[itemType]?.element || contents.default.element}
       </div>
     );
   };

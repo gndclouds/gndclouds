@@ -27,22 +27,22 @@ const PageHero = ({ data }: PageHeroProps) => {
     <div className="min-w-screen flex">
       {/* Hero Section */}
       <div className="relative flex-1 h-[200px] overflow-hidden">
-        {/* <Image
-          src={image}
+        <Image
+          src="/background.jpg"
           alt="Hero Image"
           fill
-          style={{ objectFit: "cover" }}
-        /> */}
+          style={{ objectFit: "cover", objectPosition: "bottom" }}
+        />
 
-        <div className="absolute inset-0 bg-black opacity-40"></div>
+        <div className="absolute inset-0 opacity-40"></div>
         <div className="absolute top-0 left-0 p-4">
           <div className="text-white uppercase font-bold flex items-center">
             <Link href="/" className="inline-flex items-center">
               <ArrowLeftIcon className="font-bold" /> gndclouds
             </Link>
             <span className="px-1">/</span>
-            <Link href="/" className="inline">
-              perivous log find
+            <Link href=".." className="inline">
+              perivous
             </Link>
           </div>
         </div>

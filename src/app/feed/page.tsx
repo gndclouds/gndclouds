@@ -4,6 +4,7 @@ import CollectionHero from "@/components/collection-hero";
 
 interface Image {
   created_at: string;
+  description?: string; // Ensure description is optional
   // include other properties that an image object might have
 }
 
@@ -18,6 +19,7 @@ export default async function FeedPage() {
       ...image,
       type: "Photography",
       publishedAt: image.created_at,
+      description: image.description || "No description available", // Provide a default value
     }));
 
     const combinedData = [...data, ...enhancedImages].sort((a, b) => {
@@ -26,8 +28,6 @@ export default async function FeedPage() {
       return dateB - dateA;
     });
 
-    // console.log("Server-rendered data:", combinedData);
-
     return (
       <main className="flex">
         <CollectionHero
@@ -35,7 +35,7 @@ export default async function FeedPage() {
           projects={combinedData}
           allProjects={combinedData}
         />
-        <section>
+        <section className="p-4">
           <ListView data={combinedData} />
         </section>
       </main>

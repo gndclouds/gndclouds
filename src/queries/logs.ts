@@ -1,9 +1,9 @@
-import { readdir } from "fs/promises";
+import { readdir, stat } from "fs/promises";
 import { readFileSync } from "fs";
-import { join, relative, dirname } from "path";
+import { join } from "path";
 import matter from "gray-matter";
 
-export interface Log {
+export interface Post {
   slug: string;
   title: string;
   categories: string[];
@@ -11,8 +11,7 @@ export interface Log {
   type: string[];
   publishedAt: string;
   published: boolean;
-  summary: string;
-  snippet: string;
+  filePath: string; // Ensure filePath is included
   metadata: {
     contentHtml: string;
     [key: string]: any;
@@ -21,68 +20,98 @@ export interface Log {
 
 async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
   let files: string[] = [];
-  const dirents = await readdir(dir, { withFileTypes: true });
-  for (const dirent of dirents) {
-    const res = join(dir, dirent.name);
-    if (dirent.isDirectory()) {
-      files = [...files, ...(await getMarkdownFilesRecursively(res))];
-    } else if (res.endsWith(".md")) {
-      files.push(res);
+  try {
+    const dirents = await readdir(dir, { withFileTypes: true });
+    for (const dirent of dirents) {
+      const res = join(dir, dirent.name);
+      if (dirent.isDirectory()) {
+        files = [...files, ...(await getMarkdownFilesRecursively(res))];
+      } else if (res.endsWith(".md")) {
+        files.push(res);
+      }
     }
+  } catch (error) {
+    console.error(`Error reading directory ${dir}:`, error);
   }
   return files;
 }
 
-export async function getAllMarkdownFiles(): Promise<Log[]> {
-  const contentDir = "./src/app/db/content/logs";
+export async function getAllMarkdownFiles(): Promise<Post[]> {
+  const contentDir = "./src/app/db/content";
+  try {
+    const dirStat = await stat(contentDir);
+    if (!dirStat.isDirectory()) {
+      throw new Error(`${contentDir} is not a directory`);
+    }
+  } catch (error) {
+    console.error(`Error accessing directory ${contentDir}:`, error);
+    return [];
+  }
+
   const filePaths = await getMarkdownFilesRecursively(contentDir);
 
   const files = await Promise.all(
     filePaths.map(async (filePath) => {
-      const fileContent = readFileSync(filePath, "utf8");
-      const { data: metadata, content } = matter(fileContent);
-
-      // Construct the slug using the title and directory structure
-      const relativePath = relative(contentDir, filePath).replace(/\.md$/, "");
-      const slug = relativePath
-        .split("/")
-        .map((segment) => segment.toLowerCase().replace(/\s+/g, "-"))
-        .join("/");
-
-      // Extract a snippet from the content
-      const snippet = content.split(" ").slice(0, 30).join(" ") + "...";
-
+      const { data: metadata } = matter(readFileSync(filePath, "utf8"));
+      let slug = metadata.title
+        ? metadata.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "")
+        : filePath
+            .substring(contentDir.length + 1)
+            .replace(/\.md$/, "")
+            .replace(/\//g, "-")
+            .toLowerCase()
+            .replace(/^gs-/, "")
+            .replace(/\s+/g, "-");
       return {
         slug,
-        title: metadata.title,
+        title: metadata.title || "Untitled",
         categories: metadata.categories || [],
         tags: metadata.tags || [],
-        type: metadata.type || [],
-        publishedAt: metadata.publishedAt || "",
+        type: metadata.type || "default",
+        publishedAt: metadata.publishedAt || new Date(),
         published: metadata.published || false,
-        summary: metadata.summary || "",
-        snippet, // Add snippet to the returned object
         metadata: {
           ...metadata,
-          contentHtml: content, // Add contentHtml to the metadata
+          contentHtml: metadata.contentHtml || "",
         },
-      } as Log;
+        filePath, // Include the file path
+      } as Post;
     })
   );
 
-  // Sort logs by newest publishAt date
   return files.sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 }
 
-export async function getLogBySlug(slug: string): Promise<Log | null> {
-  const allLogs = await getAllMarkdownFiles();
-  console.log("Searching for slug:", slug);
-  console.log(
-    "Available slugs:",
-    allLogs.map((log) => log.slug)
-  );
-  return allLogs.find((log) => log.slug === slug) || null;
+export async function getAllLogs(): Promise<Post[]> {
+  const allMarkdownFiles = await getAllMarkdownFiles();
+  return allMarkdownFiles.filter((file) => {
+    const types = Array.isArray(file.type) ? file.type : [file.type];
+    return types.some((t) => t.toLowerCase() === "log");
+  });
+}
+export async function getLogBySlug(slug: string): Promise<Post | null> {
+  const allLogs = await getAllLogs(); // Get all logs
+  const log = allLogs.find((log) => log.slug === slug); // Find the log by slug
+
+  if (!log) {
+    return null;
+  }
+
+  const { data: metadata, content } = matter(
+    readFileSync(log.filePath, "utf8")
+  ); // Read the file using the file path
+
+  return {
+    ...log,
+    metadata: {
+      ...metadata,
+      contentHtml: content,
+    },
+  } as Post;
 }

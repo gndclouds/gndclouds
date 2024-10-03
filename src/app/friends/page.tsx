@@ -1,41 +1,34 @@
-import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
-
-import ListView from "@/components/list-view";
+import React from "react"; // Add this line
+import friendsData from "@/data/people.json";
 import CollectionHero from "@/components/collection-hero";
 
-interface Image {
-  created_at: string;
-  // include other properties that an image object might have
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
-export default async function FriendsPage() {
-  // const data = await getAllMarkdownFiles();
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
-  // console.log("data", data);
-
-  // Enhance images with a type property and normalize date fields
-  const enhancedImages = images.map((image: Image) => ({
-    ...image,
-    type: "Photography",
-    publishedAt: image.created_at,
-  }));
-  // console.log("enhancedImages", enhancedImages);
-
-  // Combine and sort data and images based on date
-  const combinedData = [...data, ...enhancedImages].sort((a, b) => {
-    const dateA = new Date(a.publishedAt).getTime();
-    const dateB = new Date(b.publishedAt).getTime();
-    return dateB - dateA;
-  });
+export default function FriendsPage() {
+  const shuffledFriendsData = shuffleArray([...friendsData]);
 
   return (
     <main>
-      <CollectionHero name="Friends" projects={data} allProjects={data} />
-      <section>
-        <ListView data={data.map((item, index) => ({ ...item, key: index }))} />{" "}
+      <CollectionHero
+        name="Projects"
+        projects={shuffledFriendsData}
+        allProjects={shuffledFriendsData}
+      />
+      <section className="flex flex-col gap-4">
+        <h1>Friends</h1>
+        <ul>
+          {shuffledFriendsData.map((friend) => (
+            <li key={friend.name}>
+              <a href={friend.link}>{friend.name}</a> - {friend.tags.join(", ")}
+            </li>
+          ))}
+        </ul>{" "}
       </section>
     </main>
   );

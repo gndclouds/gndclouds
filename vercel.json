@@ -1,0 +1,4 @@
+{
+  "version": 2,
+  "buildCommand": "./vercel-install.sh && npm run build"
+}

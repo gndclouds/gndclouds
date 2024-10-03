@@ -1,31 +1,35 @@
-import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
+import { getAllProjects } from "@/queries/projects";
 
 import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 
-export default async function NotesPage() {
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
+type Post = {
+  description?: string;
+};
 
-  const combinedData = [...data, ...images].sort((a, b) => {
-    const dateA =
-      "created_at" in a
-        ? new Date(a.created_at).getTime()
-        : new Date(a.publishedAt).getTime();
-    const dateB =
-      "created_at" in b
-        ? new Date(b.created_at).getTime()
-        : new Date(b.publishedAt).getTime();
-    return dateB - dateA;
-  });
+export default async function ProjectsPage() {
+  const data = await getAllProjects();
+  const combinedData = data
+    .map((item) => ({
+      ...item,
+      description:
+        "description" in item ? item.description : "No description available",
+    }))
+    .sort((a, b) => {
+      const dateA = new Date(a.publishedAt).getTime();
+      const dateB = new Date(b.publishedAt).getTime();
+      return dateB - dateA;
+    });
 
   return (
     <main>
-      <CollectionHero name="Projects" projects={data} allProjects={data} />
-      <section>
-        <ListView data={data} />
+      <CollectionHero
+        name="Projects"
+        projects={combinedData}
+        allProjects={combinedData}
+      />
+      <section className="flex flex-col gap-4 p-4 ">
+        <ListView data={combinedData} />
       </section>
     </main>
   );
