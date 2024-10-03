@@ -7,6 +7,7 @@ import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm"; // Add this line
 import { visit } from "unist-util-visit";
+import { Node } from "unist"; // Add this line
 import styles from "@/app/markdown-styles.module.css";
 
 interface Params {
@@ -33,8 +34,8 @@ export default async function ProjectPage({ params }: Params) {
     return !isNaN(date.getTime());
   };
 
-  const validPublishedAt = isValidDate(project.publishedAt)
-    ? project.publishedAt
+  const validPublishedAt = isValidDate(project.publishedAt || "")
+    ? project.publishedAt || ""
     : "";
 
   const renderers = {
@@ -77,16 +78,20 @@ export default async function ProjectPage({ params }: Params) {
 
   const extractLinksAndFootnotes = (content: string) => {
     const links: string[] = [];
-    const footnotes: string[] = [];
+    const footnotes: { [key: string]: string } = {}; // Change to an object
     const processor = remark()
       .use(remarkGfm)
       .use(() => (tree) => {
-        visit(tree, "link", (node) => {
+        visit(tree, "link", (node: Node & { url: string }) => {
           links.push(node.url);
         });
-        visit(tree, "footnoteDefinition", (node) => {
-          footnotes.push(node);
-        });
+        visit(
+          tree,
+          "footnoteDefinition",
+          (node: Node & { identifier: string; content: string }) => {
+            footnotes[node.identifier] = node.content; // Adjust as needed
+          }
+        );
       });
 
     processor.processSync(content);

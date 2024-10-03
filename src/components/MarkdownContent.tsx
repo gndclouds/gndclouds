@@ -35,24 +35,6 @@ const components: Partial<ExtendedComponents> = {
   ),
 };
 
-// Extract footnotes and links from the content
-const footnotes: { [key: string]: string } = {};
-const links: string[] = [];
-const footnoteRegex = /\[\^(\d+)\]:\s*(.*)/g;
-const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g;
-
-let match;
-while ((match = footnoteRegex.exec(content)) !== null) {
-  footnotes[match[1]] = match[2];
-}
-
-while ((match = linkRegex.exec(content)) !== null) {
-  links.push(match[2]);
-}
-
-// Remove footnotes from the main content
-const contentWithoutFootnotes = content.replace(footnoteRegex, "");
-
 const MarkdownContent = ({
   content,
   links,
@@ -62,9 +44,28 @@ const MarkdownContent = ({
   links: string[];
   footnotes: { [key: string]: string };
 }) => {
+  // Extract footnotes and links from the content
+  const extractedFootnotes: { [key: string]: string } = {};
+  const extractedLinks: string[] = [];
+  const footnoteRegex = /\[\^(\d+)\]:\s*(.*)/g;
+  const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g;
+
+  let match;
+  while ((match = footnoteRegex.exec(content)) !== null) {
+    if (match) {
+      extractedFootnotes[match[1]] = match[2];
+    }
+  }
+
+  while ((match = linkRegex.exec(content)) !== null) {
+    extractedLinks.push(match[2]);
+  }
+
+  // Remove footnotes from the main content
+  const contentWithoutFootnotes = content.replace(footnoteRegex, "");
+
   return (
     <div className="flex">
-      {content} {/* Use the content prop here */}
       <div className={`w-2/3 p-4 ${styles.reactMarkDown}`}>
         {/* Apply the CSS class here */}
         <ReactMarkdown
@@ -80,7 +81,7 @@ const MarkdownContent = ({
         <h3 className="uppercase text-sm opacity-50">References</h3>
         <h4 className="uppercase text-sm opacity-50">Links:</h4>
         <ul>
-          {links.map((link, index) => (
+          {extractedLinks.map((link, index) => (
             <li
               key={index}
               className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
@@ -93,7 +94,7 @@ const MarkdownContent = ({
         </ul>
         <h4 className="uppercase text-sm opacity-50">Footnotes:</h4>
         <ul>
-          {Object.entries(footnotes).map(([key, text]) => (
+          {Object.entries(extractedFootnotes).map(([key, text]) => (
             <li
               key={key}
               id={`fn-${key}`}

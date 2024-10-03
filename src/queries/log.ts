@@ -1,18 +1,21 @@
 import { readdir } from "fs/promises";
 import { readFileSync } from "fs";
 import matter from "gray-matter";
-import { getAllMarkdownFiles } from "./projects"; // Import the function to get all markdown files
+import { getAllMarkdownFiles } from "./projects"; // Ensure this function returns filePath
 
 // Define the Log type
 export type Log = {
   slug: string;
   title: string;
   tags: string[];
+  filePath: string; // Ensure filePath is included
   metadata: {
     description: string;
     contentHtml: string;
+    links?: string[];
+    footnotes?: string[];
   };
-  publishedAt?: string; // Add this line to include the publishedAt property
+  publishedAt?: string;
 };
 
 export async function getLogBySlug(slug: string): Promise<Log | null> {
@@ -30,9 +33,12 @@ export async function getLogBySlug(slug: string): Promise<Log | null> {
     slug: log.slug,
     title: metadata.title,
     tags: metadata.tags || [],
+    filePath: log.filePath, // Ensure filePath is returned
     metadata: {
       description: metadata.description || "No description available",
       contentHtml: content,
+      links: metadata.links || [],
+      footnotes: metadata.footnotes || [],
     },
   } as Log;
 }

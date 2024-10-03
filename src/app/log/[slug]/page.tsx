@@ -22,17 +22,12 @@ type Log = {
 };
 
 // Define the type for log.metadata
-type Metadata = {
+interface Metadata {
   description: string;
   contentHtml: string;
-  links?: any[]; // Add this line
-  footnotes?: any[]; // Add this line
-};
-
-// Ensure log.metadata is of type Metadata
-const log: { metadata: Metadata } = {
-  // ... existing log initialization ...
-};
+  links?: string[];
+  footnotes?: string[]; // Add this line
+}
 
 export default async function LogPage({ params }: Params) {
   const { slug } = params;
@@ -57,7 +52,16 @@ export default async function LogPage({ params }: Params) {
         <MarkdownContent
           content={log.metadata.contentHtml}
           links={log.metadata.links || []}
-          footnotes={log.metadata.footnotes || []}
+          footnotes={
+            Array.isArray(log.metadata.footnotes)
+              ? Object.fromEntries(
+                  log.metadata.footnotes.map((note, index) => [
+                    index.toString(),
+                    note,
+                  ])
+                )
+              : log.metadata.footnotes || {}
+          } // This line will now work
         />
       ) : (
         <p>No content available</p>

@@ -11,6 +11,7 @@ export interface Post {
   type: string[];
   publishedAt: string;
   published: boolean;
+  filePath: string; // Ensure filePath is included
   metadata: {
     contentHtml: string;
     [key: string]: any;

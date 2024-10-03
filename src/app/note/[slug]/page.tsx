@@ -22,8 +22,8 @@ export default async function ProjectPage({ params }: Params) {
     return !isNaN(date.getTime());
   };
 
-  const validPublishedAt = isValidDate(project.publishedAt)
-    ? project.publishedAt
+  const validPublishedAt = isValidDate(project.publishedAt ?? "")
+    ? project.publishedAt ?? ""
     : "";
 
   return (
@@ -36,7 +36,11 @@ export default async function ProjectPage({ params }: Params) {
         }}
       />
       {project.metadata?.contentHtml ? (
-        <MarkdownContent content={project.metadata.contentHtml} />
+        <MarkdownContent
+          content={project.metadata.contentHtml}
+          links={(project.metadata as any).links ?? []}
+          footnotes={(project.metadata as any).footnotes ?? []} // Type assertion to bypass the TypeScript error
+        />
       ) : (
         <p>No content available</p>
       )}
