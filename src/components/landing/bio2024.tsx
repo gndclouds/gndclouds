@@ -83,15 +83,15 @@ const Bio2024 = () => (
     <div>
       <span className="font-bold">This site</span> is to be a public archive
       divided into more formal{" "}
-      <Link href="/notes" className="underline">
+      <Link href="/" className="underline">
         notes
       </Link>
       , more rough thoughts in the form of{" "}
-      <Link href="/logs" className="underline">
+      <Link href="/" className="underline">
         logs
       </Link>
       , and an archive of{" "}
-      <Link href="/projects" className="underline">
+      <Link href="/" className="underline">
         projects
       </Link>
       .
