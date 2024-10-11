@@ -9,6 +9,7 @@ export type Post = {
   title: string;
   categories: string[];
   filePath: string; // Add the filePath property
+  url: string; // Add this line to include 'url'
 };
 
 // Define the extended interface
@@ -18,6 +19,7 @@ interface PostWithFilePath extends Post {
     contentHtml: string;
   };
   publishedAt?: string; // Add this line
+  url: string; // Add this line to define the 'url' property
 }
 
 export async function getProjectBySlug(
