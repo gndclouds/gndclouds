@@ -36,9 +36,14 @@ const Bio2024 = () => (
     <div>
       <span className="font-bold">Previously</span>, I served as a design
       technologist at{" "}
+      <Link href="https://www.intel.com" className="underline">
+        Intel Labs
+      </Link>
+      ,{" "}
       <Link href="https://www.ideo.com/" className="underline">
         IDEO
-      </Link>{" "}
+      </Link>
+      ,{" "}
       <Link href="https://ideocolab.com/" className="underline">
         CoLab
       </Link>
@@ -83,15 +88,15 @@ const Bio2024 = () => (
     <div>
       <span className="font-bold">This site</span> is to be a public archive
       divided into more formal{" "}
-      <Link href="/" className="underline">
+      <Link href="/notes" className="underline">
         notes
       </Link>
       , more rough thoughts in the form of{" "}
-      <Link href="/" className="underline">
+      <Link href="/logs" className="underline">
         logs
       </Link>
       , and an archive of{" "}
-      <Link href="/" className="underline">
+      <Link href="/projects" className="underline">
         projects
       </Link>
       .
