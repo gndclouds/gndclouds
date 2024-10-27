@@ -25,7 +25,10 @@ interface PostWithFilePath extends Post {
 export async function getProjectBySlug(
   slug: string
 ): Promise<PostWithFilePath | null> {
-  const allProjects = await getAllMarkdownFiles(); // Get all projects
+  const allProjects = (await getAllMarkdownFiles()).map((post) => ({
+    ...post,
+    url: "", // Provide a default or computed value for 'url'
+  })) as PostWithFilePath[]; // Ensure all projects are of type PostWithFilePath
   const project: PostWithFilePath | undefined = allProjects.find(
     (project) => project.slug === slug
   );
