@@ -22,6 +22,11 @@ interface MarkdownContentProps {
   footnotes: string[];
 }
 
+interface PostWithFilePath {
+  // ... other properties ...
+  url: string; // Add this line to define the 'url' property
+}
+
 export default async function ProjectPage({ params }: Params) {
   const { slug } = params;
   const project = await getProjectBySlug(slug);
@@ -109,6 +114,7 @@ export default async function ProjectPage({ params }: Params) {
           ...project,
           tags: project.categories?.join(", ") || "",
           publishedAt: validPublishedAt,
+          url: project.url, // Ensure this line is added
         }}
       />
 

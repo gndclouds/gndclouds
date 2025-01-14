@@ -9,6 +9,7 @@ export type Post = {
   title: string;
   categories: string[];
   filePath: string; // Add the filePath property
+  url: string; // Add this line to include 'url'
 };
 
 // Define the extended interface
@@ -18,12 +19,16 @@ interface PostWithFilePath extends Post {
     contentHtml: string;
   };
   publishedAt?: string; // Add this line
+  url: string; // Add this line to define the 'url' property
 }
 
 export async function getProjectBySlug(
   slug: string
 ): Promise<PostWithFilePath | null> {
-  const allProjects = await getAllMarkdownFiles(); // Get all projects
+  const allProjects = (await getAllMarkdownFiles()).map((post) => ({
+    ...post,
+    url: "", // Provide a default or computed value for 'url'
+  })) as PostWithFilePath[]; // Ensure all projects are of type PostWithFilePath
   const project: PostWithFilePath | undefined = allProjects.find(
     (project) => project.slug === slug
   );
@@ -43,6 +48,7 @@ export async function getProjectBySlug(
     categories: metadata.categories || [],
     filePath: project.filePath, // Add this line
     publishedAt: metadata.publishedAt, // Ensure this line reads the publishedAt property
+    url: metadata.url, // Ensure this line reads the url property
     metadata: {
       contentHtml: content, // Use the content from the markdown file
     },

@@ -17,6 +17,7 @@ interface ExtendedComponents extends Components {
 
 // Use the extended type
 const components: Partial<ExtendedComponents> = {
+  img: ({ node, ...props }) => <img {...props} alt={props.alt || "Image"} />,
   footnoteReference: ({ identifier }: { identifier: string }) => (
     <sup id={`fnref-${identifier}`}>
       <a href={`#fn-${identifier}`}>{identifier}</a>
@@ -44,6 +45,16 @@ const MarkdownContent = ({
   links: string[];
   footnotes: { [key: string]: string };
 }) => {
+  // Function to convert ![[image]] to ![](/assets/media/image)
+  const convertImageSyntax = (text: string) => {
+    return text.replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+      const encodedPath = encodeURIComponent(p1)
+        .replace(/%2F/g, "/")
+        .replace(/%40/g, "@"); // Replace %40 with @
+      return `![](/assets/media/${encodedPath})`; // Ensure only one 'assets' is included
+    });
+  };
+
   // Extract footnotes and links from the content
   const extractedFootnotes: { [key: string]: string } = {};
   const extractedLinks: string[] = [];
@@ -61,8 +72,8 @@ const MarkdownContent = ({
     extractedLinks.push(match[2]);
   }
 
-  // Remove footnotes from the main content
-  const contentWithoutFootnotes = content.replace(footnoteRegex, "");
+  // Convert image syntax and remove footnotes from the main content
+  const updatedContent = convertImageSyntax(content).replace(footnoteRegex, "");
 
   return (
     <div className="flex">
@@ -74,7 +85,7 @@ const MarkdownContent = ({
           rehypePlugins={[rehypeRaw]}
           components={components}
         >
-          {contentWithoutFootnotes}
+          {updatedContent}
         </ReactMarkdown>
       </div>
       <div className="w-1/3 p-4">

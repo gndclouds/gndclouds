@@ -3,6 +3,7 @@
   "version": "7.2.0",
   "private": true,
   "scripts": {
+    "prebuild": "node move-assets.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

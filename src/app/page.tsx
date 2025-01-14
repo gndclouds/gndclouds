@@ -11,6 +11,8 @@ import Bio2021 from "../components/landing/bio2021";
 import Bio2022 from "../components/landing/bio2022";
 import Bio2023 from "../components/landing/bio2023";
 import Bio2024 from "../components/landing/bio2024";
+import Bio2025 from "../components/landing/bio2025";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
@@ -67,9 +69,9 @@ export default function Home() {
                   are.na <span className="font-mono">↗</span>
                 </div>
               </Link>
-              <Link href="https://twitter.com/gndclouds">
+              <Link href="https://bsky.app/profile/gndclouds.earth">
                 <div className="block pl-2">
-                  x <span className="font-mono">↗</span>
+                  Bluesky <span className="font-mono">↗</span>
                 </div>
               </Link>
               <Link rel="me" href="https://mastodon.social/@gndclouds">
@@ -95,6 +97,7 @@ export default function Home() {
           {selectedYear === "2022" && <Bio2022 />}
           {selectedYear === "2023" && <Bio2023 />}
           {selectedYear === "2024" && <Bio2024 />}
+          {selectedYear === "2025" && <Bio2025 />}
         </div>
       </div>
     </div>

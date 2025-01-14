@@ -16,7 +16,7 @@
 }
 
 .reactMarkDown a {
-  color: blue;
+  color: inherit; /* Use the inherited color from the parent element */
   text-decoration: underline;
 }
 

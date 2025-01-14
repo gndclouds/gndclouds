@@ -36,9 +36,14 @@ const Bio2024 = () => (
     <div>
       <span className="font-bold">Previously</span>, I served as a design
       technologist at{" "}
+      <Link href="https://www.intel.com" className="underline">
+        Intel Labs
+      </Link>
+      ,{" "}
       <Link href="https://www.ideo.com/" className="underline">
         IDEO
-      </Link>{" "}
+      </Link>
+      ,{" "}
       <Link href="https://ideocolab.com/" className="underline">
         CoLab
       </Link>
