@@ -74,11 +74,6 @@ export default function Home() {
                   Bluesky <span className="font-mono">↗</span>
                 </div>
               </Link>
-              <Link rel="me" href="https://mastodon.social/@gndclouds">
-                <div className="block pl-2">
-                  mastodon <span className="font-mono">↗</span>
-                </div>
-              </Link>
             </div>
             <div className="flex justify-center items-center"></div>
           </div>

@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
+        mono: ["Fira Code", "monospace"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
