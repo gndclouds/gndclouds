@@ -5,7 +5,7 @@ const Bio2024 = () => (
     <div>Hello, my name is Will. Welcome to my corner of the internet.</div>
     <div>
       <span className="font-bold">My focus</span> for the next decade, as a{" "}
-      <Link href="https://www.are.na/block/27538602" className="underline">
+      <Link href="/note/biodesign-technologist" className="underline">
         BioDesign Technologist
       </Link>
       , is to contribute to work that makes critical elements of natural systems
@@ -15,8 +15,8 @@ const Bio2024 = () => (
     <div>
       One way I&apos;m exploring this vision at scale is by reducing waste and
       creating demand for biomaterials at the{" "}
-      <Link href="https://iwg.earth" className="underline">
-        Interstitial Working Group
+      <Link href="https://interstitial.systems" className="underline">
+        Interstitial
       </Link>
       .
     </div>

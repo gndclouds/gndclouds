@@ -25,13 +25,15 @@ export default function RootLayout({
       lang="en"
       className={`${inter.className} ${firaCode.variable} bg-backgroundLight text-textLight dark:bg-backgroundDark dark:text-textDark`}
     >
-      {children}
-      <script
-        async
-        defer
-        data-website-id="d0310b26-9820-4f75-8939-200ecdfc29a0"
-        src="https://umami.tinyfactories.space/umami.js"
-      ></script>
+      <body>
+        {children}
+        <script
+          async
+          defer
+          data-website-id="d0310b26-9820-4f75-8939-200ecdfc29a0"
+          src="https://umami.tinyfactories.space/umami.js"
+        ></script>
+      </body>
     </html>
   );
 }
