@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Fira_Code } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,12 +28,14 @@ export default function RootLayout({
     >
       <body>
         {children}
-        <script
-          async
-          defer
-          data-website-id="d0310b26-9820-4f75-8939-200ecdfc29a0"
-          src="https://umami.tinyfactories.space/umami.js"
-        ></script>
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            defer
+            src="https://umami.tinyfactories.space/script.js"
+            data-website-id="d0310b26-9820-4f75-8939-200ecdfc29a0"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
