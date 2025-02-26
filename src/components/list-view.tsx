@@ -45,6 +45,12 @@ export default function ListView({ data }: { data: any[] }) {
         ? item.uri // Use the URI for Bluesky posts and Are.na blocks
         : itemType === "photography" && item.links?.html
         ? item.links.html // Use the Unsplash link for photos
+        : itemType === "project"
+        ? `/project/${item.slug}` // Use /project/ for projects
+        : itemType === "note"
+        ? `/note/${item.slug}` // Use /note/ for notes
+        : itemType === "research"
+        ? `/research/${item.slug}` // Use /research/ for research
         : `/${itemType}/${item.slug}`; // Use the slug for other content types
 
     // Define grid column spans for different content types

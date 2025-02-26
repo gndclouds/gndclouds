@@ -1,26 +1,113 @@
 [
   {
-    "title": "Software Engineer",
-    "start": "2020-01-01",
+    "title": "CoFounder",
+    "start": "2024-01-01",
+    "end": "Present",
+    "description": "The next chapter has begun, and I am excited to share more soon.",
+    "role": "CoFounder",
+    "company": "Flexplan.ai",
+    "location": "Earth"
+  },
+  {
+    "title": "Co-Founder",
+    "start": "2017-01-01",
+    "end": "Present",
+    "description": "A tribe of people supporting each other to establish their creative footing.",
+    "role": "Co-Founder",
+    "company": "Tiny Factories",
+    "location": "Taipei / San Francisco / Tokyo",
+    "collaborators": ["Weiwei", "Tomo Kihara"]
+  },
+  {
+    "title": "CoFounder",
+    "start": "2021-01-01",
     "end": "2022-01-01",
-    "description": "Developed and maintained web applications using React and Node.js.",
-    "role": "Frontend Developer",
-    "projects": 5
+    "description": "Cofounded acting as CTO / CDO while creating a public API for earth science data and bond monitoring and verification service for ReFi.",
+    "role": "CoFounder",
+    "company": "Anthropogenic",
+    "location": "Earth"
   },
   {
-    "title": "Project Manager",
-    "start": "2018-05-01",
+    "title": "Design Technologist",
+    "start": "2021-01-01",
+    "end": "2022-01-01",
+    "description": "Work across project teams in a hybrid role of design and development. The main project that I contributed to was Circulaw.nl.",
+    "role": "Design Technologist",
+    "company": "Dark Matter Labs",
+    "location": "Remote"
+  },
+  {
+    "title": "Software Developer",
+    "start": "2020-01-01",
+    "end": "2020-12-31",
+    "description": "Contributed to slate.host",
+    "role": "Software Developer",
+    "company": "Protocol Labs",
+    "location": "Remote",
+    "collaborators": ["Fan Lin", "Jimmy Lee"]
+  },
+  {
+    "title": "UX Researcher",
+    "start": "2018-01-01",
     "end": "2019-12-31",
-    "description": "Led a team of developers to deliver software projects on time and within budget.",
-    "role": "Team Lead",
-    "projects": 3
+    "role": "UX Researcher",
+    "company": "Udacity",
+    "location": "Remote"
   },
   {
-    "title": "Data Analyst",
-    "start": "2016-03-01",
-    "end": "2018-04-30",
-    "description": "Analyzed large datasets to provide actionable insights for business decisions.",
-    "role": "Analyst",
-    "projects": 2
+    "title": "Creative Technologist",
+    "start": "2017-01-01",
+    "end": "2018-01-01",
+    "role": "Creative Technologist",
+    "company": "Fjord",
+    "location": "San Francisco, California"
+  },
+  {
+    "title": "Research Assistant",
+    "start": "2018-01-01",
+    "end": "2018-12-31",
+    "role": "Research Assistant",
+    "company": "PARC, a Xerox Company",
+    "location": "Palo Alto, California"
+  },
+  {
+    "title": "Interaction Designer",
+    "start": "2016-01-01",
+    "end": "2017-01-01",
+    "role": "Interaction Designer",
+    "company": "IDEO CoLab",
+    "location": "San Francisco, California"
+  },
+  {
+    "title": "UX Researcher",
+    "start": "2017-01-01",
+    "end": "2017-12-31",
+    "role": "UX Researcher",
+    "company": "IFTTT",
+    "location": "San Francisco, California"
+  },
+  {
+    "title": "Interaction Design Intern",
+    "start": "2015-01-01",
+    "end": "2015-12-31",
+    "role": "Interaction Design Intern",
+    "company": "IDEO",
+    "location": "Chicago, Illinois"
+  },
+  {
+    "title": "Creative Technologist Intern",
+    "start": "2015-01-01",
+    "end": "2015-12-31",
+    "role": "Creative Technologist Intern",
+    "company": "Maker Media",
+    "location": "San Francisco, CA"
+  },
+  {
+    "title": "UXR Hardware & Software Prototyper",
+    "start": "2014-01-01",
+    "end": "2014-12-31",
+    "role": "UXR Hardware & Software Prototyper",
+    "company": "Intel Labs",
+    "location": "Santa Clara, CA"
   }
 ]

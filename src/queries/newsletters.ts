@@ -2,6 +2,7 @@ import { readdir } from "fs/promises";
 import { readFileSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
+import { stat } from "fs/promises";
 
 export interface Newsletter {
   slug: string;
@@ -20,48 +21,103 @@ function titleToSlug(title: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-export function getNewsletterBySlug(slug: string): Newsletter | null {
+export async function getNewsletterBySlug(
+  slug: string
+): Promise<Newsletter | null> {
   const formattedSlug = slug.toLowerCase().replace(/\s+/g, "-");
-  const contentDir = "./src/app/db/content/newsletters";
-  const filePath = `${contentDir}/${formattedSlug}.md`;
+  const contentDir = join(process.cwd(), "src/app/db/content/newsletters");
 
   try {
-    const fileContents = readFileSync(filePath, "utf8");
-    const { data: metadata, content } = matter(fileContents);
+    // Check if directory exists
+    try {
+      const dirStat = await stat(contentDir);
+      if (!dirStat.isDirectory()) {
+        console.error(`Path exists but is not a directory: ${contentDir}`);
+        return null;
+      }
+    } catch (error) {
+      console.error(`Error accessing directory ${contentDir}:`, error);
+      return null;
+    }
 
-    return {
-      slug: titleToSlug(metadata.title),
-      title: metadata.title,
-      content: content,
-      publishedAt: metadata.publishedAt || "",
-      type: metadata.type || [],
-      published: metadata.published || false,
-      tags: metadata.tags || [],
-    } as Newsletter;
-  } catch (error) {
-    console.error(`Error reading newsletter file: ${error}`);
-    return null;
-  }
-}
+    const filePath = `${contentDir}/${formattedSlug}.md`;
 
-export async function getAllNewsletters(): Promise<Newsletter[]> {
-  const contentDir = "./src/app/db/content/newsletters";
-  const filePaths = await getMarkdownFilesRecursively(contentDir);
-
-  const files = await Promise.all(
-    filePaths.map(async (filePath) => {
+    try {
       const fileContents = readFileSync(filePath, "utf8");
       const { data: metadata, content } = matter(fileContents);
+
       return {
         slug: titleToSlug(metadata.title),
         title: metadata.title,
         content: content,
         publishedAt: metadata.publishedAt || "",
+        type: metadata.type || [],
+        published: metadata.published || false,
+        tags: metadata.tags || [],
       } as Newsletter;
-    })
-  );
+    } catch (error) {
+      console.error(`Error reading newsletter file: ${error}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Unexpected error in getNewsletterBySlug:`, error);
+    return null;
+  }
+}
 
-  return files;
+export async function getAllNewsletters(): Promise<Newsletter[]> {
+  const contentDir = join(process.cwd(), "src/app/db/content/newsletters");
+
+  try {
+    // Check if directory exists
+    try {
+      const dirStat = await stat(contentDir);
+      if (!dirStat.isDirectory()) {
+        console.error(`Path exists but is not a directory: ${contentDir}`);
+        return [];
+      }
+    } catch (error) {
+      console.error(`Error accessing directory ${contentDir}:`, error);
+      console.log(`Current working directory: ${process.cwd()}`);
+      console.log(`Attempting to list parent directory...`);
+
+      try {
+        const parentDir = join(process.cwd(), "src/app/db/content");
+        const parentContents = await readdir(parentDir);
+        console.log(`Contents of ${parentDir}:`, parentContents);
+      } catch (parentError) {
+        console.error(`Error listing parent directory:`, parentError);
+      }
+
+      return [];
+    }
+
+    const filePaths = await getMarkdownFilesRecursively(contentDir);
+    console.log(`Found ${filePaths.length} newsletter files in ${contentDir}`);
+
+    const files = await Promise.all(
+      filePaths.map(async (filePath) => {
+        try {
+          const fileContents = readFileSync(filePath, "utf8");
+          const { data: metadata, content } = matter(fileContents);
+          return {
+            slug: titleToSlug(metadata.title),
+            title: metadata.title,
+            content: content,
+            publishedAt: metadata.publishedAt || "",
+          } as Newsletter;
+        } catch (error) {
+          console.error(`Error processing newsletter file ${filePath}:`, error);
+          return null;
+        }
+      })
+    );
+
+    return files.filter(Boolean) as Newsletter[];
+  } catch (error) {
+    console.error(`Unexpected error in getAllNewsletters:`, error);
+    return [];
+  }
 }
 
 async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {

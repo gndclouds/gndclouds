@@ -34,7 +34,8 @@ export async function getProjectBySlug(
   );
 
   if (!project) {
-    throw new Error(`Project with slug ${slug} not found`);
+    // Return null instead of throwing an error
+    return null;
   }
   // Now `project` is guaranteed to be `PostWithFilePath`
 

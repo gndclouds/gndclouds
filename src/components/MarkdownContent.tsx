@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -17,7 +18,29 @@ interface ExtendedComponents extends Components {
 
 // Use the extended type
 const components: Partial<ExtendedComponents> = {
-  img: ({ node, ...props }) => <img {...props} alt={props.alt || "Image"} />,
+  img: ({ node, ...props }) => {
+    // Extract src and alt from props
+    const { src, alt } = props;
+
+    // Skip Next.js Image for external URLs or SVGs
+    if (!src || src.startsWith("http") || src.endsWith(".svg")) {
+      return <img {...props} alt={alt || "Image"} />;
+    }
+
+    return (
+      <div className={styles.imageContainer}>
+        <Image
+          src={src}
+          alt={alt || "Image"}
+          width={700}
+          height={400}
+          className={styles.responsiveImage}
+          style={{ objectFit: "contain" }}
+          sizes="(max-width: 768px) 100vw, 700px"
+        />
+      </div>
+    );
+  },
   footnoteReference: ({ identifier }: { identifier: string }) => (
     <sup id={`fnref-${identifier}`}>
       <a href={`#fn-${identifier}`}>{identifier}</a>
