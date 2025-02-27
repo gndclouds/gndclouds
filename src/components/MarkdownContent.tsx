@@ -27,18 +27,21 @@ const components: Partial<ExtendedComponents> = {
       return <img {...props} alt={alt || "Image"} />;
     }
 
+    // Ensure src starts with a leading slash
+    const imageSrc = src.startsWith("/") ? src : `/${src}`;
+
+    // Return the Image component directly without wrapping it in a div
+    // This prevents the hydration error when the image is inside a paragraph
     return (
-      <div className={styles.imageContainer}>
-        <Image
-          src={src}
-          alt={alt || "Image"}
-          width={700}
-          height={400}
-          className={styles.responsiveImage}
-          style={{ objectFit: "contain" }}
-          sizes="(max-width: 768px) 100vw, 700px"
-        />
-      </div>
+      <Image
+        src={imageSrc}
+        alt={alt || "Image"}
+        width={700}
+        height={400}
+        className={styles.responsiveImage}
+        style={{ objectFit: "contain" }}
+        sizes="(max-width: 768px) 100vw, 700px"
+      />
     );
   },
   footnoteReference: ({ identifier }: { identifier: string }) => (
@@ -70,12 +73,31 @@ const MarkdownContent = ({
 }) => {
   // Function to convert ![[image]] to ![](/assets/media/image)
   const convertImageSyntax = (text: string) => {
-    return text.replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
-      const encodedPath = encodeURIComponent(p1)
-        .replace(/%2F/g, "/")
-        .replace(/%40/g, "@"); // Replace %40 with @
-      return `![](/assets/media/${encodedPath})`; // Ensure only one 'assets' is included
-    });
+    return (
+      text
+        .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+          // Remove any file extension from the path
+          const cleanPath = p1.trim();
+
+          // Encode the path properly
+          const encodedPath = encodeURIComponent(cleanPath)
+            .replace(/%2F/g, "/")
+            .replace(/%40/g, "@"); // Replace %40 with @
+
+          // Use the correct path for images in src/app/db/assets
+          // Add a line break before and after the image to ensure it's not inside a paragraph
+          return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+        })
+        // Also handle standard markdown image syntax with relative paths
+        .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
+          // Ensure the path starts with a slash
+          // Add a line break before and after the image to ensure it's not inside a paragraph
+          return `\n\n![${alt}](/db-assets/media/${src.replace(
+            "assets/media/",
+            ""
+          )})\n\n`;
+        })
+    );
   };
 
   // Extract footnotes and links from the content
@@ -95,13 +117,14 @@ const MarkdownContent = ({
     extractedLinks.push(match[2]);
   }
 
-  // Convert image syntax and remove footnotes from the main content
-  const updatedContent = convertImageSyntax(content).replace(footnoteRegex, "");
+  // Remove footnotes from the main content without re-converting image syntax
+  const updatedContent = content.replace(footnoteRegex, "");
 
   return (
     <div className="flex">
       <div className={`w-2/3 p-4 ${styles.reactMarkDown}`}>
         {/* Apply the CSS class here */}
+        {/* Debug: Log the content to see what's being passed to ReactMarkdown */}
         <ReactMarkdown
           className="markdown"
           remarkPlugins={[remarkGfm]}

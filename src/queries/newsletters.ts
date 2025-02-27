@@ -25,7 +25,7 @@ export async function getNewsletterBySlug(
   slug: string
 ): Promise<Newsletter | null> {
   const formattedSlug = slug.toLowerCase().replace(/\s+/g, "-");
-  const contentDir = join(process.cwd(), "src/app/db/content/newsletters");
+  const contentDir = join(process.cwd(), "src/app/db/newsletters");
 
   try {
     // Check if directory exists
@@ -66,7 +66,7 @@ export async function getNewsletterBySlug(
 }
 
 export async function getAllNewsletters(): Promise<Newsletter[]> {
-  const contentDir = join(process.cwd(), "src/app/db/content/newsletters");
+  const contentDir = join(process.cwd(), "src/app/db/newsletters");
 
   try {
     // Check if directory exists
@@ -82,7 +82,7 @@ export async function getAllNewsletters(): Promise<Newsletter[]> {
       console.log(`Attempting to list parent directory...`);
 
       try {
-        const parentDir = join(process.cwd(), "src/app/db/content");
+        const parentDir = join(process.cwd(), "src/app/db");
         const parentContents = await readdir(parentDir);
         console.log(`Contents of ${parentDir}:`, parentContents);
       } catch (parentError) {

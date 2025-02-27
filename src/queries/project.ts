@@ -43,6 +43,31 @@ export async function getProjectBySlug(
     readFileSync(project.filePath, "utf8")
   ); // Read the file using the file path
 
+  // Convert Obsidian-style image syntax to standard markdown
+  const convertedContent = content
+    .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+      // Remove any file extension from the path
+      const cleanPath = p1.trim();
+
+      // Encode the path properly
+      const encodedPath = encodeURIComponent(cleanPath)
+        .replace(/%2F/g, "/")
+        .replace(/%40/g, "@");
+
+      // Use the correct path for images in src/app/db/assets
+      // Add a line break before and after the image to ensure it's not inside a paragraph
+      return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+    })
+    // Also handle standard markdown image syntax with relative paths
+    .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
+      // Ensure the path starts with a slash
+      // Add a line break before and after the image to ensure it's not inside a paragraph
+      return `\n\n![${alt}](/db-assets/media/${src.replace(
+        "assets/media/",
+        ""
+      )})\n\n`;
+    });
+
   return {
     slug: project.slug,
     title: metadata.title,
@@ -51,7 +76,7 @@ export async function getProjectBySlug(
     publishedAt: metadata.publishedAt, // Ensure this line reads the publishedAt property
     url: metadata.url, // Ensure this line reads the url property
     metadata: {
-      contentHtml: content, // Use the content from the markdown file
+      contentHtml: convertedContent, // Use the converted content
     },
   };
 }

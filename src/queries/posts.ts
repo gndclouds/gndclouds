@@ -13,7 +13,7 @@ export type Post = {
 };
 
 export async function getAllMarkdownFiles(): Promise<Post[]> {
-  const contentDir = join(process.cwd(), "src/app/db/content");
+  const contentDir = join(process.cwd(), "src/app/db");
 
   try {
     // Check if directory exists

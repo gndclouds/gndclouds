@@ -11,7 +11,7 @@ token=$GIT_ACCESS_TOKEN
 if [ -z "$username" ] || [ -z "$token" ]; then
   echo "ERROR: Git credentials are missing. Please set GIT_USERNAME and GIT_ACCESS_TOKEN environment variables."
   # Create empty directories to prevent build failures
-  mkdir -p src/app/db/content/newsletters
+  mkdir -p src/app/db/newsletters
   exit 1
 fi
 
@@ -40,17 +40,17 @@ git clone https://github.com/gndclouds/db.git src/app/db
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to clone repository"
   # Create empty directories to prevent build failures
-  mkdir -p src/app/db/content/newsletters
+  mkdir -p src/app/db/newsletters
   exit 1
 fi
 
 # Verify the content directory exists
-if [ -d "src/app/db/content" ]; then
-  echo "Content directory exists: src/app/db/content"
-  ls -la src/app/db/content
+if [ -d "src/app/db" ]; then
+  echo "Content directory exists: src/app/db"
+  ls -la src/app/db
 else
   echo "WARNING: Content directory does not exist, creating it"
-  mkdir -p src/app/db/content/newsletters
+  mkdir -p src/app/db/newsletters
 fi
 
 # Clean up credentials
