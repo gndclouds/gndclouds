@@ -24,7 +24,13 @@ const nextConfig = {
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
     ],
   },
-  // Add any other Next.js configurations here
+  // Configure output for better handling large folders
+  output: 'standalone',
+  // Increase serverless function memory and size limits
+  experimental: {
+    serverComponentsExternalPackages: ['src/app/db'],
+    outputFileTracingIgnores: ['**/node_modules/**', '**/src/app/db/**'],
+  },
 };
 
 const withMDX = createMDX();

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { getReadwiseBooksSummary } from "@/queries/readwise";
 
-// Add export config for static generation
-export const dynamic = "force-static";
+// Use ISR for this route with a 24 hour revalidation period
+export const revalidate = 86400; // 24 hours in seconds
 
 // Helper function to add a delay (useful for demonstrating loading states)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

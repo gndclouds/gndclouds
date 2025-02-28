@@ -145,13 +145,15 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
               }
 
               const tagsData = (await tagsResponse.json()) as {
-                results: Array<{ name: string }>;
+                results?: Array<{ name: string }>;
               };
-              const tags = tagsData.results.map((tag) => tag.name);
+              
+              // Safely handle potentially undefined results array
+              const tags = tagsData.results ? tagsData.results.map((tag) => tag.name) : [];
 
               console.log(
                 `Book ${book.id} (${book.title}) has tags: ${
-                  tags.join(", ") || "none"
+                  tags.length > 0 ? tags.join(", ") : "none"
                 }`
               );
 
@@ -170,8 +172,10 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
         console.log("Tags found in this batch:");
         const allTags = new Set<string>();
         booksWithTags.forEach((book: any) => {
-          if (Array.isArray(book.tags)) {
-            book.tags.forEach((tag: string) => allTags.add(tag));
+          if (book && book.tags && Array.isArray(book.tags)) {
+            book.tags.forEach((tag: string) => {
+              if (tag) allTags.add(tag);
+            });
           }
         });
         console.log([...allTags]);
