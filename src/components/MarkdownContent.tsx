@@ -22,16 +22,35 @@ const components: Partial<ExtendedComponents> = {
     // Extract src and alt from props
     const { src, alt } = props;
 
-    // Skip Next.js Image for external URLs or SVGs
-    if (!src || src.startsWith("http") || src.endsWith(".svg")) {
-      return <img {...props} alt={alt || "Image"} />;
+    if (!src) {
+      return null;
     }
 
+    // For SVGs, we still use the img tag as Next.js Image doesn't handle SVGs well
+    if (src.endsWith(".svg")) {
+      return <img {...props} alt={alt || "SVG Image"} />;
+    }
+
+    // For external URLs
+    if (src.startsWith("http")) {
+      return (
+        <Image
+          src={src}
+          alt={alt || "External Image"}
+          width={700}
+          height={400}
+          className={styles.responsiveImage}
+          style={{ objectFit: "contain" }}
+          sizes="(max-width: 768px) 100vw, 700px"
+          unoptimized // Use unoptimized for external images
+        />
+      );
+    }
+
+    // For internal images
     // Ensure src starts with a leading slash
     const imageSrc = src.startsWith("/") ? src : `/${src}`;
 
-    // Return the Image component directly without wrapping it in a div
-    // This prevents the hydration error when the image is inside a paragraph
     return (
       <Image
         src={imageSrc}

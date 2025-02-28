@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import { getReadwiseBooksSummary } from "@/queries/readwise";
 
+// Add export config for static generation
+export const dynamic = "force-static";
+
 // Helper function to add a delay (useful for demonstrating loading states)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function GET(request: Request) {
   try {
-    // Parse URL to get query parameters
-    const { searchParams } = new URL(request.url);
-    const recommendedOnly = searchParams.get("recommended") === "true";
-
-    console.log(`API route called with recommendedOnly=${recommendedOnly}`);
+    // For static generation, we can't use dynamic parameters
+    // Instead, we'll fetch all books and filter on the client side if needed
+    console.log(`API route called`);
     console.log(
       `READWISE_ACCESS_TOKEN exists: ${!!process.env.READWISE_ACCESS_TOKEN}`
     );
@@ -19,8 +20,8 @@ export async function GET(request: Request) {
     // Remove this in production if you don't want the artificial delay
     await delay(1000);
 
-    // Pass the recommendedOnly option to filter by 'recommend' tag
-    const books = await getReadwiseBooksSummary({ recommendedOnly });
+    // Get all books - filtering will happen on client side
+    const books = await getReadwiseBooksSummary({ recommendedOnly: false });
 
     console.log(`Received ${books ? books.length : 0} books from Readwise API`);
 
@@ -28,27 +29,21 @@ export async function GET(request: Request) {
       console.log("No books found, returning 404");
       return NextResponse.json(
         {
-          message: "No books found with 'recommend' tag",
-          recommendedOnly,
+          message: "No books found",
           tokenExists: !!process.env.READWISE_ACCESS_TOKEN,
         },
         { status: 404 }
       );
     }
 
-    // No need to filter here anymore since it's done in getReadwiseBooksSummary
     return NextResponse.json(books);
   } catch (error) {
     console.error("Error fetching Readwise data:", error);
-    // Get searchParams again in case it wasn't available in the try block
-    const recommendedOnly =
-      new URL(request.url).searchParams.get("recommended") === "true";
 
     return NextResponse.json(
       {
         message: "Failed to fetch Readwise data",
         error: error instanceof Error ? error.message : String(error),
-        recommendedOnly,
         tokenExists: !!process.env.READWISE_ACCESS_TOKEN,
       },
       { status: 500 }
