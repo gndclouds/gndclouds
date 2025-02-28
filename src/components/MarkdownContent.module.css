@@ -4,37 +4,72 @@
   line-height: 1.6;
 }
 
+/* Add the markdown class that's used in the project page */
+.markdown {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .reactMarkDown h1,
 .reactMarkDown h2,
 .reactMarkDown h3,
 .reactMarkDown h4,
 .reactMarkDown h5,
-.reactMarkDown h6 {
+.reactMarkDown h6,
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
   margin-top: 1em;
   margin-bottom: 0.5em;
   font-weight: bold;
 }
 
-.reactMarkDown a {
+.reactMarkDown a,
+.markdown a {
   color: inherit; /* Use the inherited color from the parent element */
   text-decoration: underline;
 }
 
-.reactMarkDown p {
+.reactMarkDown p,
+.markdown p {
   margin-bottom: 1em;
 }
 
 .reactMarkDown ul,
-.reactMarkDown ol {
+.reactMarkDown ol,
+.markdown ul,
+.markdown ol {
   margin-left: 1.5em;
   margin-bottom: 1em;
 }
 
-.reactMarkDown li {
+.reactMarkDown li,
+.markdown li {
   margin-bottom: 0.5em;
 }
 
 .sidebar-link.active {
   font-weight: bold;
   color: red;
+}
+
+/* Image container styles - keeping for reference but not used anymore */
+.imageContainer {
+  position: relative;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+/* Updated responsive image styles to work without a container */
+.responsiveImage {
+  border-radius: 0.375rem; /* 6px */
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem 0; /* Add margin that was previously on the container */
 }

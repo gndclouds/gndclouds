@@ -1,10 +1,12 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import styles from "./MarkdownContent.module.css"; // Import the CSS module
 import { Components } from "react-markdown";
+import LinkPreview from "./LinkPreview"; // Import the LinkPreview component
 
 // Extend the Components type
 interface ExtendedComponents extends Components {
@@ -17,7 +19,51 @@ interface ExtendedComponents extends Components {
 
 // Use the extended type
 const components: Partial<ExtendedComponents> = {
-  img: ({ node, ...props }) => <img {...props} alt={props.alt || "Image"} />,
+  img: ({ node, ...props }) => {
+    // Extract src and alt from props
+    const { src, alt } = props;
+
+    if (!src) {
+      return null;
+    }
+
+    // For SVGs, we still use the img tag as Next.js Image doesn't handle SVGs well
+    if (src.endsWith(".svg")) {
+      return <img {...props} alt={alt || "SVG Image"} />;
+    }
+
+    // For external URLs
+    if (src.startsWith("http")) {
+      return (
+        <Image
+          src={src}
+          alt={alt || "External Image"}
+          width={700}
+          height={400}
+          className={styles.responsiveImage}
+          style={{ objectFit: "contain" }}
+          sizes="(max-width: 768px) 100vw, 700px"
+          unoptimized // Use unoptimized for external images
+        />
+      );
+    }
+
+    // For internal images
+    // Ensure src starts with a leading slash
+    const imageSrc = src.startsWith("/") ? src : `/${src}`;
+
+    return (
+      <Image
+        src={imageSrc}
+        alt={alt || "Image"}
+        width={700}
+        height={400}
+        className={styles.responsiveImage}
+        style={{ objectFit: "contain" }}
+        sizes="(max-width: 768px) 100vw, 700px"
+      />
+    );
+  },
   footnoteReference: ({ identifier }: { identifier: string }) => (
     <sup id={`fnref-${identifier}`}>
       <a href={`#fn-${identifier}`}>{identifier}</a>
@@ -47,12 +93,31 @@ const MarkdownContent = ({
 }) => {
   // Function to convert ![[image]] to ![](/assets/media/image)
   const convertImageSyntax = (text: string) => {
-    return text.replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
-      const encodedPath = encodeURIComponent(p1)
-        .replace(/%2F/g, "/")
-        .replace(/%40/g, "@"); // Replace %40 with @
-      return `![](/assets/media/${encodedPath})`; // Ensure only one 'assets' is included
-    });
+    return (
+      text
+        .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+          // Remove any file extension from the path
+          const cleanPath = p1.trim();
+
+          // Encode the path properly
+          const encodedPath = encodeURIComponent(cleanPath)
+            .replace(/%2F/g, "/")
+            .replace(/%40/g, "@"); // Replace %40 with @
+
+          // Use the correct path for images in src/app/db/assets
+          // Add a line break before and after the image to ensure it's not inside a paragraph
+          return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+        })
+        // Also handle standard markdown image syntax with relative paths
+        .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
+          // Ensure the path starts with a slash
+          // Add a line break before and after the image to ensure it's not inside a paragraph
+          return `\n\n![${alt}](/db-assets/media/${src.replace(
+            "assets/media/",
+            ""
+          )})\n\n`;
+        })
+    );
   };
 
   // Extract footnotes and links from the content
@@ -72,13 +137,14 @@ const MarkdownContent = ({
     extractedLinks.push(match[2]);
   }
 
-  // Convert image syntax and remove footnotes from the main content
-  const updatedContent = convertImageSyntax(content).replace(footnoteRegex, "");
+  // Remove footnotes from the main content without re-converting image syntax
+  const updatedContent = content.replace(footnoteRegex, "");
 
   return (
     <div className="flex">
       <div className={`w-2/3 p-4 ${styles.reactMarkDown}`}>
         {/* Apply the CSS class here */}
+        {/* Debug: Log the content to see what's being passed to ReactMarkdown */}
         <ReactMarkdown
           className="markdown"
           remarkPlugins={[remarkGfm]}
@@ -90,31 +156,34 @@ const MarkdownContent = ({
       </div>
       <div className="w-1/3 p-4">
         <h3 className="uppercase text-sm opacity-50">References</h3>
-        <h4 className="uppercase text-sm opacity-50">Links:</h4>
-        <ul>
-          {extractedLinks.map((link, index) => (
-            <li
-              key={index}
-              className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
-            >
-              <Link href={link} target="_blank" rel="noopener noreferrer">
-                {link}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <h4 className="uppercase text-sm opacity-50">Footnotes:</h4>
-        <ul>
-          {Object.entries(extractedFootnotes).map(([key, text]) => (
-            <li
-              key={key}
-              id={`fn-${key}`}
-              className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
-            >
-              {text} <a href={`#fnref-${key}`}>↩</a>
-            </li>
-          ))}
-        </ul>
+        {extractedLinks.length > 0 && (
+          <>
+            <h4 className="uppercase text-sm opacity-50 mb-3">Links:</h4>
+            <div className="space-y-3">
+              {extractedLinks.map((link, index) => (
+                <LinkPreview key={index} url={link} />
+              ))}
+            </div>
+          </>
+        )}
+        {Object.keys(extractedFootnotes).length > 0 && (
+          <>
+            <h4 className="uppercase text-sm opacity-50 mt-6 mb-3">
+              Footnotes:
+            </h4>
+            <ul>
+              {Object.entries(extractedFootnotes).map(([key, text]) => (
+                <li
+                  key={key}
+                  id={`fn-${key}`}
+                  className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
+                >
+                  {text} <a href={`#fnref-${key}`}>↩</a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </div>
   );

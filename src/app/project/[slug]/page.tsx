@@ -2,13 +2,11 @@ import { notFound } from "next/navigation";
 import { getProjectBySlug } from "@/queries/project";
 import PageHero from "@/components/page-hero";
 import MarkdownContent from "@/components/MarkdownContent";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { remark } from "remark";
-import remarkGfm from "remark-gfm"; // Add this line
+import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
-import { Node } from "unist"; // Add this line
-import styles from "@/app/markdown-styles.module.css";
+import { Node } from "unist";
+import styles from "@/components/MarkdownContent.module.css";
 
 interface Params {
   params: {
@@ -16,113 +14,117 @@ interface Params {
   };
 }
 
-interface MarkdownContentProps {
-  content: string;
-  links: string[]; // Add this line
-  footnotes: string[];
+// Define the processMarkdown function
+async function processMarkdown(content: string) {
+  // Convert Obsidian-style image syntax to standard markdown
+  const convertedContent = content
+    .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+      // Remove any file extension from the path
+      const cleanPath = p1.trim();
+
+      // Encode the path properly
+      const encodedPath = encodeURIComponent(cleanPath)
+        .replace(/%2F/g, "/")
+        .replace(/%40/g, "@");
+
+      // Use the correct path for images in src/app/db/assets
+      // Add a line break before and after the image to ensure it's not inside a paragraph
+      return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+    })
+    // Also handle standard markdown image syntax with relative paths
+    .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
+      // Ensure the path starts with a slash
+      // Add a line break before and after the image to ensure it's not inside a paragraph
+      return `\n\n![${alt}](/db-assets/media/${src.replace(
+        "assets/media/",
+        ""
+      )})\n\n`;
+    });
+
+  // Process the markdown content
+  const processor = remark().use(remarkGfm);
+  const processedContent = await processor.process(convertedContent);
+  return processedContent.toString();
 }
 
-interface PostWithFilePath {
-  // ... other properties ...
-  url: string; // Add this line to define the 'url' property
+// Extract links and footnotes for MarkdownContent component
+function extractLinksAndFootnotes(content: string) {
+  // Convert Obsidian-style image syntax to standard markdown
+  const convertedContent = content
+    .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+      // Remove any file extension from the path
+      const cleanPath = p1.trim();
+
+      // Encode the path properly
+      const encodedPath = encodeURIComponent(cleanPath)
+        .replace(/%2F/g, "/")
+        .replace(/%40/g, "@");
+
+      // Use the correct path for images in src/app/db/assets
+      // Add a line break before and after the image to ensure it's not inside a paragraph
+      return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+    })
+    // Also handle standard markdown image syntax with relative paths
+    .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
+      // Ensure the path starts with a slash
+      // Add a line break before and after the image to ensure it's not inside a paragraph
+      return `\n\n![${alt}](/db-assets/media/${src.replace(
+        "assets/media/",
+        ""
+      )})\n\n`;
+    });
+
+  const links: string[] = [];
+  const footnotes: { [key: string]: string } = {};
+
+  const processor = remark()
+    .use(remarkGfm)
+    .use(() => (tree) => {
+      visit(tree, "link", (node: Node & { url: string }) => {
+        links.push(node.url);
+      });
+      visit(
+        tree,
+        "footnoteDefinition",
+        (node: Node & { identifier: string; children: any[] }) => {
+          footnotes[node.identifier] = node.children?.[0]?.value || "";
+        }
+      );
+    });
+
+  processor.processSync(convertedContent);
+  return { links, footnotes };
 }
 
 export default async function ProjectPage({ params }: Params) {
-  const { slug } = params;
-  const project = await getProjectBySlug(slug);
+  const project = await getProjectBySlug(params.slug);
+
   if (!project) {
     notFound();
   }
 
-  const isValidDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return !isNaN(date.getTime());
-  };
-
-  const validPublishedAt = isValidDate(project.publishedAt || "")
-    ? project.publishedAt || ""
-    : "";
-
-  const renderers = {
-    code({
-      node,
-      inline,
-      className,
-      children,
-      ...props
-    }: {
-      node: any;
-      inline: boolean;
-      className: string;
-      children: React.ReactNode;
-    }) {
-      const match = /language-(\w+)/.exec(className || "");
-      return !inline && match ? (
-        <SyntaxHighlighter
-          style={materialDark}
-          language={match[1]}
-          PreTag="div"
-          {...props}
-        >
-          {String(children).replace(/\n$/, "")}
-        </SyntaxHighlighter>
-      ) : (
-        <code className={className} {...props}>
-          {children}
-        </code>
-      );
-    },
-    link({ href, children }: { href: string; children: React.ReactNode }) {
-      if (href.startsWith("[[") && href.endsWith("]]")) {
-        const linkText = href.slice(2, -2);
-        return <a href={`/some-path/${linkText}`}>{children}</a>;
-      }
-      return <a href={href}>{children}</a>;
-    },
-  };
-
-  const extractLinksAndFootnotes = (content: string) => {
-    const links: string[] = [];
-    const footnotes: { [key: string]: string } = {}; // Change to an object
-    const processor = remark()
-      .use(remarkGfm)
-      .use(() => (tree) => {
-        visit(tree, "link", (node: Node & { url: string }) => {
-          links.push(node.url);
-        });
-        visit(
-          tree,
-          "footnoteDefinition",
-          (node: Node & { identifier: string; content: string }) => {
-            footnotes[node.identifier] = node.content; // Adjust as needed
-          }
-        );
-      });
-
-    processor.processSync(content);
-    return { links, footnotes };
-  };
-
+  const processedContent = await processMarkdown(project.metadata.contentHtml);
   const { links, footnotes } = extractLinksAndFootnotes(
     project.metadata.contentHtml
   );
 
   return (
-    <div>
+    <div className="">
       <PageHero
         data={{
-          ...project,
+          title: project.title,
+          publishedAt: project.publishedAt || "",
           tags: project.categories?.join(", ") || "",
-          publishedAt: validPublishedAt,
-          url: project.url, // Ensure this line is added
+          url: project.url || "",
         }}
       />
-
-      <MarkdownContent
-        content={project.metadata.contentHtml}
-        links={links}
-        footnotes={footnotes}
-      />
+      <div className={styles.markdown}>
+        <MarkdownContent
+          content={processedContent}
+          links={links}
+          footnotes={footnotes}
+        />
+      </div>
     </div>
   );
 }

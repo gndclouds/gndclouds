@@ -1,0 +1,26 @@
+[
+  {
+    "platform": "Are.na",
+    "url": "https://www.are.na/username",
+    "username": "@username",
+    "icon": "arena"
+  },
+  {
+    "platform": "GitHub",
+    "url": "https://github.com/username",
+    "username": "@username",
+    "icon": "github"
+  },
+  {
+    "platform": "Bluesky",
+    "url": "https://bsky.app/profile/username",
+    "username": "@username",
+    "icon": "twitter"
+  },
+  {
+    "platform": "Dribbble",
+    "url": "https://dribbble.com/username",
+    "username": "@username",
+    "icon": "dribbble"
+  }
+]

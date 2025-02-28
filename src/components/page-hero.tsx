@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { parseISO, format } from "date-fns";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { useState, KeyboardEvent } from "react";
+import { useRouter } from "next/navigation";
 
 interface PageHeroProps {
   data: {
@@ -13,6 +17,10 @@ interface PageHeroProps {
 }
 
 const PageHero = ({ data }: PageHeroProps) => {
+  const router = useRouter();
+  const [showInput, setShowInput] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
   const publishedAt =
     data.publishedAt && typeof data.publishedAt === "string"
       ? parseISO(data.publishedAt)
@@ -23,6 +31,16 @@ const PageHero = ({ data }: PageHeroProps) => {
   } else {
     console.log("Published At:", publishedAt);
   }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputValue.trim()) {
+      // Navigate to the entered path
+      router.push(`/${inputValue.trim()}`);
+    } else if (e.key === "Escape") {
+      setShowInput(false);
+      setInputValue("");
+    }
+  };
 
   return (
     <div className="min-w-screen flex">
@@ -41,10 +59,28 @@ const PageHero = ({ data }: PageHeroProps) => {
             <Link href="/" className="inline-flex items-center">
               <ArrowLeftIcon className="font-bold" /> gndclouds
             </Link>
-            <span className="px-1">/</span>
-            <Link href=".." className="inline">
-              perivous
-            </Link>
+            <div
+              className="inline-flex items-center cursor-pointer"
+              onMouseEnter={() => setShowInput(true)}
+              onMouseLeave={() => !inputValue && setShowInput(false)}
+            >
+              <span className="px-1">/</span>
+              {showInput ? (
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="type path..."
+                  className="bg-transparent border-b border-white text-white outline-none w-24 placeholder-gray-400"
+                  autoFocus
+                />
+              ) : (
+                <Link href=".." className="inline">
+                  perivous
+                </Link>
+              )}
+            </div>
           </div>
         </div>
         <div className="absolute bottom-0 p-4 w-full">

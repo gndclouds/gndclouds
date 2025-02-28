@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Best Innovative Project",
+    "date": "2021-05-20",
+    "link": "https://example.com/awards/innovative-project"
+  },
+  {
+    "title": "Top Design Award",
+    "date": "2020-11-15",
+    "link": "https://example.com/awards/top-design"
+  },
+  {
+    "title": "Excellence in Research",
+    "date": "2019-09-10",
+    "link": "https://example.com/awards/excellence-research"
+  }
+]

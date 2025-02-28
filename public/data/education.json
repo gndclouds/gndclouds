@@ -1,0 +1,23 @@
+[
+  {
+    "institution": "Stanford University",
+    "degree": "Master of Science",
+    "field": "Computer Science",
+    "start": "2014",
+    "end": "2016",
+    "location": "Stanford, CA",
+    "achievements": [
+      "Research in Human-Computer Interaction",
+      "Teaching Assistant for Design Thinking"
+    ]
+  },
+  {
+    "institution": "MIT",
+    "degree": "Bachelor of Science",
+    "field": "Computer Science and Engineering",
+    "start": "2010",
+    "end": "2014",
+    "location": "Cambridge, MA",
+    "achievements": ["Dean's List", "Undergraduate Research Assistant"]
+  }
+]
