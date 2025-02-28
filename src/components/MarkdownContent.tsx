@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import styles from "./MarkdownContent.module.css"; // Import the CSS module
 import { Components } from "react-markdown";
+import LinkPreview from "./LinkPreview"; // Import the LinkPreview component
 
 // Extend the Components type
 interface ExtendedComponents extends Components {
@@ -155,31 +156,34 @@ const MarkdownContent = ({
       </div>
       <div className="w-1/3 p-4">
         <h3 className="uppercase text-sm opacity-50">References</h3>
-        <h4 className="uppercase text-sm opacity-50">Links:</h4>
-        <ul>
-          {extractedLinks.map((link, index) => (
-            <li
-              key={index}
-              className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
-            >
-              <Link href={link} target="_blank" rel="noopener noreferrer">
-                {link}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <h4 className="uppercase text-sm opacity-50">Footnotes:</h4>
-        <ul>
-          {Object.entries(extractedFootnotes).map(([key, text]) => (
-            <li
-              key={key}
-              id={`fn-${key}`}
-              className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
-            >
-              {text} <a href={`#fnref-${key}`}>↩</a>
-            </li>
-          ))}
-        </ul>
+        {extractedLinks.length > 0 && (
+          <>
+            <h4 className="uppercase text-sm opacity-50 mb-3">Links:</h4>
+            <div className="space-y-3">
+              {extractedLinks.map((link, index) => (
+                <LinkPreview key={index} url={link} />
+              ))}
+            </div>
+          </>
+        )}
+        {Object.keys(extractedFootnotes).length > 0 && (
+          <>
+            <h4 className="uppercase text-sm opacity-50 mt-6 mb-3">
+              Footnotes:
+            </h4>
+            <ul>
+              {Object.entries(extractedFootnotes).map(([key, text]) => (
+                <li
+                  key={key}
+                  id={`fn-${key}`}
+                  className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
+                >
+                  {text} <a href={`#fnref-${key}`}>↩</a>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </div>
   );
