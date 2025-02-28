@@ -3,13 +3,14 @@
   "version": "7.2.0",
   "private": true,
   "scripts": {
-    "prebuild": "node move-assets.js",
+    "prebuild": "node move-assets.js || true",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "beforeBuild": "git submodule update --init --recursive",
-    "generate-backgrounds": "node scripts/generate-hourly-backgrounds.js"
+    "beforeBuild": "git submodule update --init --recursive || true",
+    "generate-backgrounds": "node scripts/generate-hourly-backgrounds.js",
+    "test-git-clone": "./test-git-clone.sh"
   },
   "dependencies": {
     "@atproto/api": "^0.14.6",
