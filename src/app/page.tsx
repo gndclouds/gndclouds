@@ -152,6 +152,13 @@ export default function Home() {
                   Bluesky <span className="font-mono">↗</span>
                 </div>
               </Link>
+              <Link
+                href="https://webring.xxiivv.com/#xxiivv"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                webring <span className="font-mono">↗</span>
+              </Link>
             </div>
             <div className="flex justify-center items-center"></div>
           </div>
