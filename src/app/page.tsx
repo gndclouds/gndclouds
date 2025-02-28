@@ -140,7 +140,7 @@ export default function Home() {
               </div>
             ))}
           </div> */}
-          <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
+          <div className="grid grid-cols-3 text-white uppercase font-medium text-smaller items-center">
             <div className="flex flex-col justify-start items-start">
               <Link href="https://are.na/gndclouds">
                 <div className="block mb-2">
