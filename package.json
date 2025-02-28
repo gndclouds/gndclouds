@@ -25,6 +25,7 @@
     "are.na": "^0.1.5",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "glob": "^10.3.12",
