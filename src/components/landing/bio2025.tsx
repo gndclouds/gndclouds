@@ -5,7 +5,10 @@ const Bio2024 = () => (
     <div>Hello, my name is Will. Welcome to my corner of the internet.</div>
     <div>
       <span className="font-bold">My focus</span> for the next decade, as a{" "}
-      <Link href="/note/biodesign-technologist" className="underline">
+      <Link
+        href="/note/becoming-a-biodesign-technologist"
+        className="underline"
+      >
         BioDesign Technologist
       </Link>
       , is to contribute to work that makes critical elements of natural systems
