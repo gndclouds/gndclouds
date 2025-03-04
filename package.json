@@ -3,13 +3,16 @@
   "version": "7.2.0",
   "private": true,
   "scripts": {
-    "prebuild": "node move-assets.js",
+    "prebuild": "node move-assets.js || true",
     "dev": "next dev",
     "build": "next build",
+    "build:static": "next build && next export -o out",
     "start": "next start",
     "lint": "next lint",
-    "beforeBuild": "git submodule update --init --recursive",
-    "generate-backgrounds": "node scripts/generate-hourly-backgrounds.js"
+    "beforeBuild": "git submodule update --init --recursive || true",
+    "generate-backgrounds": "node scripts/generate-hourly-backgrounds.js",
+    "test-git-clone": "./test-git-clone.sh",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@atproto/api": "^0.14.6",
@@ -25,6 +28,7 @@
     "are.na": "^0.1.5",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.9",
+    "bufferutil": "^4.0.8",
     "cheerio": "^1.0.0",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
@@ -33,6 +37,7 @@
     "highlight.js": "^11.11.1",
     "next": "^14.2.14",
     "next-contentlayer": "^0.3.4",
+    "node-fetch": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
@@ -43,6 +48,8 @@
     "remark-footnotes": "^5.0.0",
     "remark-gfm": "^4.0.0",
     "unist-util-visit": "^5.0.0",
+    "utf-8-validate": "^6.0.3",
+    "ws": "^8.16.0",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {

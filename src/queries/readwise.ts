@@ -1,5 +1,34 @@
 import fetch from "node-fetch";
 
+// Define interfaces for book data
+interface ReadwiseBook {
+  id: string;
+  title: string;
+  author: string;
+  cover_image_url?: string;
+  category: string;
+  updated: string;
+  tags?: string[];
+}
+
+interface BookWithTags extends ReadwiseBook {
+  tags: string[];
+}
+
+interface BookSummary {
+  id: string;
+  title: string;
+  author: string;
+  image_url?: string;
+  reading_progress: number;
+  category: string;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+  published_date: string | null;
+  isRecommended: boolean;
+}
+
 const READWISE_TOKEN = process.env.READWISE_ACCESS_TOKEN; // Ensure you have READWISE_ACCESS_TOKEN in your environment variables
 const READWISE_ENDPOINT = "https://readwise.io/api/v3/list/?category=epub";
 
@@ -56,7 +85,7 @@ async function getReadwiseData() {
   }
 }
 
-async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
+async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Promise<BookSummary[]> {
   try {
     console.log(
       `getReadwiseBooksSummary called with recommendedOnly=${options.recommendedOnly}`
@@ -110,14 +139,7 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
         }
 
         const data = (await response.json()) as {
-          results: Array<{
-            id: string;
-            title: string;
-            author: string;
-            cover_image_url: string;
-            category: string;
-            updated: string;
-          }>;
+          results: ReadwiseBook[];
           next: string | null;
         };
         console.log(
@@ -145,13 +167,22 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
               }
 
               const tagsData = (await tagsResponse.json()) as {
-                results: Array<{ name: string }>;
+                results?: Array<{ name: string }>;
               };
-              const tags = tagsData.results.map((tag) => tag.name);
+              
+              // Safely handle potentially undefined results array
+              let tags: string[] = [];
+              try {
+                if (tagsData && tagsData.results && Array.isArray(tagsData.results)) {
+                  tags = tagsData.results.map((tag) => tag.name || "");
+                }
+              } catch (tagError) {
+                console.error(`Error processing tags for book ${book.id}:`, tagError);
+              }
 
               console.log(
                 `Book ${book.id} (${book.title}) has tags: ${
-                  tags.join(", ") || "none"
+                  tags.length > 0 ? tags.join(", ") : "none"
                 }`
               );
 
@@ -169,9 +200,15 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
         // Log all tags for debugging
         console.log("Tags found in this batch:");
         const allTags = new Set<string>();
-        booksWithTags.forEach((book: any) => {
-          if (Array.isArray(book.tags)) {
-            book.tags.forEach((tag: string) => allTags.add(tag));
+        booksWithTags.forEach((book: BookWithTags) => {
+          try {
+            if (book && book.tags && Array.isArray(book.tags)) {
+              book.tags.forEach((tag: string) => {
+                if (tag) allTags.add(tag);
+              });
+            }
+          } catch (tagError) {
+            console.error("Error processing tags for book summary:", tagError);
           }
         });
         console.log([...allTags]);
@@ -179,13 +216,22 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
         // Count items with any variation of 'recommend' tag before filtering
         if (options.recommendedOnly) {
           const recommendedItemsOnPage = booksWithTags.filter(
-            (book: any) =>
-              Array.isArray(book.tags) &&
-              book.tags.some((tag: string) =>
-                recommendTagVariations.some(
-                  (variation) => tag.toLowerCase() === variation.toLowerCase()
-                )
-              )
+            (book: any) => {
+              try {
+                if (!book || !book.tags || !Array.isArray(book.tags)) {
+                  return false;
+                }
+                return book.tags.some((tag: string) => {
+                  if (typeof tag !== 'string') return false;
+                  return recommendTagVariations.some(
+                    (variation) => tag.toLowerCase() === variation.toLowerCase()
+                  );
+                });
+              } catch (error) {
+                console.error("Error filtering recommended items:", error);
+                return false;
+              }
+            }
           ).length;
           console.log(
             `Page ${pageCount}: Found ${recommendedItemsOnPage} books with any variation of 'recommend' tag`
@@ -195,7 +241,7 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
 
         // Extract items with additional fields for sorting and filtering
         const itemsSummary = booksWithTags
-          .map((book: any) => {
+          .map((book: BookWithTags): BookSummary | null => {
             // Ensure reading_progress is a number between 0 and 1
             const progress = 0; // Reading progress not available in this endpoint
 
@@ -214,17 +260,25 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }) {
             }
 
             // Ensure tags array includes the media type if determined
-            const tags = Array.isArray(book.tags) ? [...book.tags] : [];
+            const tags: string[] = Array.isArray(book.tags) ? [...book.tags] : [];
             if (mediaType && !tags.includes(mediaType)) {
               tags.push(mediaType);
             }
 
             // Check if the item has any variation of the 'recommend' tag
-            const isRecommended = tags.some((tag: string) =>
-              recommendTagVariations.some(
-                (variation) => tag.toLowerCase() === variation.toLowerCase()
-              )
-            );
+            let isRecommended = false;
+            try {
+              if (Array.isArray(tags)) {
+                isRecommended = tags.some((tag: string) => {
+                  if (typeof tag !== 'string') return false;
+                  return recommendTagVariations.some(
+                    (variation) => tag.toLowerCase() === variation.toLowerCase()
+                  );
+                });
+              }
+            } catch (tagError) {
+              console.error("Error checking recommendation tags:", tagError);
+            }
 
             // If we're only looking for recommended items and this isn't one, return null
             if (options.recommendedOnly && !isRecommended) {

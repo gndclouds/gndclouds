@@ -22,6 +22,8 @@ const components: Partial<ExtendedComponents> = {
   img: ({ node, ...props }) => {
     // Extract src and alt from props
     const { src, alt } = props;
+    const isProduction = process.env.NODE_ENV === 'production';
+    const hasGitHubToken = !!process.env.GITHUB_ACCESS_TOKEN;
 
     if (!src) {
       return null;
@@ -48,7 +50,46 @@ const components: Partial<ExtendedComponents> = {
       );
     }
 
-    // For internal images
+    // For asset-proxy URLs (these are our authenticated GitHub requests)
+    if (src.startsWith("/api/asset-proxy")) {
+      return (
+        <Image
+          src={src}
+          alt={alt || "Asset Image"}
+          width={700}
+          height={400}
+          className={styles.responsiveImage}
+          style={{ objectFit: "contain" }}
+          sizes="(max-width: 768px) 100vw, 700px"
+          unoptimized // Must use unoptimized for proxy requests
+        />
+      );
+    }
+
+    // For db-assets paths that may need to use the proxy in production
+    if (src.includes("/db-assets/") && isProduction && hasGitHubToken) {
+      // Convert from /db-assets/path to assets/path for the proxy
+      const assetPath = src
+        .replace("/db-assets/", "assets/")
+        .replace(/^\//, ''); // Remove leading slash
+        
+      const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+      
+      return (
+        <Image
+          src={proxySrc}
+          alt={alt || "Asset Image"}
+          width={700}
+          height={400}
+          className={styles.responsiveImage}
+          style={{ objectFit: "contain" }}
+          sizes="(max-width: 768px) 100vw, 700px"
+          unoptimized // Must use unoptimized for proxy requests
+        />
+      );
+    }
+
+    // For standard internal images
     // Ensure src starts with a leading slash
     const imageSrc = src.startsWith("/") ? src : `/${src}`;
 
@@ -61,6 +102,7 @@ const components: Partial<ExtendedComponents> = {
         className={styles.responsiveImage}
         style={{ objectFit: "contain" }}
         sizes="(max-width: 768px) 100vw, 700px"
+        unoptimized={isProduction} // Use unoptimized in production to avoid image optimization issues
       />
     );
   },
@@ -91,7 +133,10 @@ const MarkdownContent = ({
   links: string[];
   footnotes: { [key: string]: string };
 }) => {
-  // Function to convert ![[image]] to ![](/assets/media/image)
+  // Check if we're in production mode
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  // Function to convert ![[image]] to ![](/assets/media/image) or to use asset proxy in production
   const convertImageSyntax = (text: string) => {
     return (
       text
@@ -104,18 +149,25 @@ const MarkdownContent = ({
             .replace(/%2F/g, "/")
             .replace(/%40/g, "@"); // Replace %40 with @
 
-          // Use the correct path for images in src/app/db/assets
-          // Add a line break before and after the image to ensure it's not inside a paragraph
+          // In production with GitHub token, use the asset proxy
+          if (isProduction && process.env.GITHUB_ACCESS_TOKEN) {
+            return `\n\n![${cleanPath}](/api/asset-proxy?path=assets/${encodedPath})\n\n`;
+          }
+          
+          // Otherwise use the local path for images
           return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
         })
         // Also handle standard markdown image syntax with relative paths
         .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
-          // Ensure the path starts with a slash
-          // Add a line break before and after the image to ensure it's not inside a paragraph
-          return `\n\n![${alt}](/db-assets/media/${src.replace(
-            "assets/media/",
-            ""
-          )})\n\n`;
+          const assetPath = src.replace("assets/media/", "");
+          
+          // In production with GitHub token, use the asset proxy
+          if (isProduction && process.env.GITHUB_ACCESS_TOKEN) {
+            return `\n\n![${alt}](/api/asset-proxy?path=${src})\n\n`;
+          }
+          
+          // Otherwise use the local path
+          return `\n\n![${alt}](/db-assets/media/${assetPath})\n\n`;
         })
     );
   };

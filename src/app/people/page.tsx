@@ -20,7 +20,13 @@ export default function FriendsPage() {
         allProjects={shuffledFriendsData}
       />
       <section className="flex flex-col gap-4">
-        <h1>People working on cool things</h1>
+        <h1>People</h1>
+        <p>
+          It&apos;s hard to keep track of all the incredible people I&apos;ve
+          encountered—those whose conversations, work, or lives inspire me in
+          countless ways. Here are some who come to mind when I ask myself whose
+          work has deepened my own practice in some way.
+        </p>
         <ul>
           {shuffledFriendsData.map((friend) => (
             <li key={friend.name}>

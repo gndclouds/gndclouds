@@ -1,8 +1,12 @@
-import { readdir } from "fs/promises";
-import { readFileSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
-import { stat } from "fs/promises";
+import { readFileSync } from "fs";
+import { readdir, stat } from "fs/promises";
+import {
+  getContent,
+  getMarkdownFilePaths,
+  isProduction,
+} from "./content-loader";
 
 export interface Newsletter {
   slug: string;
@@ -25,40 +29,33 @@ export async function getNewsletterBySlug(
   slug: string
 ): Promise<Newsletter | null> {
   const formattedSlug = slug.toLowerCase().replace(/\s+/g, "-");
-  const contentDir = join(process.cwd(), "src/app/db/newsletters");
 
   try {
-    // Check if directory exists
-    try {
-      const dirStat = await stat(contentDir);
-      if (!dirStat.isDirectory()) {
-        console.error(`Path exists but is not a directory: ${contentDir}`);
-        return null;
-      }
-    } catch (error) {
-      console.error(`Error accessing directory ${contentDir}:`, error);
+    // Build the path for the newsletter
+    const filePath = isProduction
+      ? `newsletters/${formattedSlug}.md`
+      : join(process.cwd(), "src/app/db/newsletters", `${formattedSlug}.md`);
+
+    // Get the content using our content loader
+    const content = await getContent(filePath);
+
+    if (!content) {
+      console.warn(`Newsletter not found: ${filePath}`);
       return null;
     }
 
-    const filePath = `${contentDir}/${formattedSlug}.md`;
+    // Parse the content with front matter
+    const { data: metadata, content: markdownContent } = matter(content);
 
-    try {
-      const fileContents = readFileSync(filePath, "utf8");
-      const { data: metadata, content } = matter(fileContents);
-
-      return {
-        slug: titleToSlug(metadata.title),
-        title: metadata.title,
-        content: content,
-        publishedAt: metadata.publishedAt || "",
-        type: metadata.type || [],
-        published: metadata.published || false,
-        tags: metadata.tags || [],
-      } as Newsletter;
-    } catch (error) {
-      console.error(`Error reading newsletter file: ${error}`);
-      return null;
-    }
+    return {
+      slug: titleToSlug(metadata.title),
+      title: metadata.title,
+      content: markdownContent,
+      publishedAt: metadata.publishedAt || "",
+      type: metadata.type || [],
+      published: metadata.published !== false, // Default to published unless explicitly false
+      tags: metadata.tags || [],
+    } as Newsletter;
   } catch (error) {
     console.error(`Unexpected error in getNewsletterBySlug:`, error);
     return null;
@@ -83,7 +80,9 @@ export async function getAllNewsletters(): Promise<Newsletter[]> {
 
       try {
         const parentDir = join(process.cwd(), "src/app/db");
-        const parentContents = await readdir(parentDir);
+        const parentContents = await readdir(parentDir, {
+          withFileTypes: true,
+        });
         console.log(`Contents of ${parentDir}:`, parentContents);
       } catch (parentError) {
         console.error(`Error listing parent directory:`, parentError);

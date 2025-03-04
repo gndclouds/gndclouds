@@ -20,11 +20,6 @@
     "tags": []
   },
   {
-    "name": "Ben Barry",
-    "link": "/",
-    "tags": []
-  },
-  {
     "name": "Jenny Hu",
     "link": "/",
     "tags": []
@@ -32,6 +27,26 @@
   {
     "name": "Indy Johar",
     "link": "/",
+    "tags": []
+  },
+  {
+    "name": "John Bielenberg",
+    "link": "/",
+    "tags": []
+  },
+  {
+    "name": "Neri Oxman",
+    "link": "https://oxman.com/",
+    "tags": []
+  },
+  {
+    "name": "Matt Webb",
+    "link": "/",
+    "tags": []
+  },
+  {
+    "name": "Bryan Boyer",
+    "link": "https://www.bryanboyer.com/",
     "tags": []
   }
 ]
