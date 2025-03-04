@@ -81,10 +81,14 @@ export async function getContent(path: string): Promise<string> {
         headers["Authorization"] = `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`;
       }
 
-      const response = await fetch(`${contentBaseUrl}/${path}`, { headers });
+      // Remove any 'default/' prefix from the path
+      const cleanPath = path.replace(/^default\//, "");
+      const response = await fetch(`${contentBaseUrl}/${cleanPath}`, {
+        headers,
+      });
       if (!response.ok) {
         console.warn(
-          `Failed to fetch content from ${contentBaseUrl}/${path}: ${response.statusText}`
+          `Failed to fetch content from ${contentBaseUrl}/${cleanPath}: ${response.statusText}`
         );
         return "";
       }
@@ -115,8 +119,10 @@ export async function getMarkdownFilePaths(
     const contentDir = join(contentBaseUrl, contentType);
     try {
       const files = await getMarkdownFilesRecursively(contentDir);
-      // Convert absolute paths to relative paths
-      return files.map((file) => file.replace(contentBaseUrl + "/", ""));
+      // Convert absolute paths to relative paths and remove any 'default/' prefix
+      return files.map((file) =>
+        file.replace(contentBaseUrl + "/", "").replace(/^default\//, "")
+      );
     } catch (error) {
       console.error(`Error getting markdown files from ${contentDir}:`, error);
       return [];
