@@ -1,4 +1,26 @@
 {
   "version": 2,
-  "buildCommand": "./vercel-install.sh && npm run build"
+  "buildCommand": "./vercel-install.sh && npm run build",
+  "crons": [{
+    "path": "/api/readwise",
+    "schedule": "0 0 * * *"
+  }],
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
+    }
+  ],
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "redirects": [
+    {
+      "source": "/db/:path*",
+      "destination": "https://raw.githubusercontent.com/gndclouds/db/main/:path*",
+      "permanent": false
+    }
+  ]
 }

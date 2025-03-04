@@ -1,0 +1,58 @@
+# Complete list of patterns to ignore for Vercel deployment
+
+# Development directories
+.git/
+.github/
+node_modules/
+.next/
+.swc/
+.turbo/
+.vercel/
+
+# Content directories that can be accessed via redirects
+src/app/db/assets/
+src/app/db/public/
+# Don't ignore public/db-assets/ as it contains assets needed in production
+
+# Large files
+**/*.zip
+**/*.tar
+**/*.gz
+**/*.mp4
+**/*.mov
+**/*.webm
+**/*.pdf
+**/*.psd
+**/*.ai
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+
+# Tests
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Development configs
+.eslintrc*
+.prettierrc*
+.editorconfig
+tsconfig.tsbuildinfo
+**/*.d.ts.map
+
+# Logs and local files
+*.log
+.DS_Store
+.env.local
+.env.development
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Documentation that's not needed at runtime
+*.md
+!README.md
+LICENSE
+docs/
