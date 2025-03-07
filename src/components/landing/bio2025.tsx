@@ -17,7 +17,7 @@ const Bio2024 = () => (
     </div>
     <div>
       One way I&apos;m exploring this vision at scale is by reducing waste and
-      creating demand for biomaterials at the{" "}
+      creating demand for biomaterials at{" "}
       <Link href="https://interstitial.systems" className="underline">
         Interstitial
       </Link>

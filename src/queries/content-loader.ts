@@ -2,6 +2,7 @@ import { readdir, stat } from "fs/promises";
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
+import fs from "fs/promises";
 
 // Support both local development and production deployments
 export const contentMode = process.env.NEXT_PUBLIC_CONTENT_MODE || "local";
@@ -61,58 +62,17 @@ export const contentStructure = {
     "Issue-2021-05.md",
     "Issue-2021-10.md",
   ],
+  logs: [
+    // List log files
+    "2024-03-20.md",
+    "2024-03-19.md",
+    "2024-03-18.md",
+  ],
 };
-
-// Helper to get content - works with both filesystem and remote URL
-export async function getContent(path: string): Promise<string> {
-  if (!isProduction) {
-    // Local development - read from filesystem
-    const fullPath = join(contentBaseUrl, path);
-    if (existsSync(fullPath)) {
-      return readFileSync(fullPath, "utf8");
-    }
-    console.warn(`File not found: ${fullPath}`);
-    return "";
-  } else {
-    // Production - fetch from remote
-    try {
-      const headers: Record<string, string> = {};
-      if (process.env.GITHUB_ACCESS_TOKEN) {
-        headers["Authorization"] = `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`;
-      }
-
-      // Remove any 'default/' prefix from the path
-      const cleanPath = path.replace(/^default\//, "");
-      const response = await fetch(`${contentBaseUrl}/${cleanPath}`, {
-        headers,
-      });
-      if (!response.ok) {
-        console.warn(
-          `Failed to fetch content from ${contentBaseUrl}/${cleanPath}: ${response.statusText}`
-        );
-        return "";
-      }
-
-      if (useGitHubAPI) {
-        const data = await response.json();
-        // GitHub API returns base64 encoded content
-        return Buffer.from(data.content, "base64").toString("utf8");
-      } else {
-        return await response.text();
-      }
-    } catch (error) {
-      console.error(
-        `Error fetching content from ${contentBaseUrl}/${path}:`,
-        error
-      );
-      return "";
-    }
-  }
-}
 
 // Get file paths either from filesystem or predefined list
 export async function getMarkdownFilePaths(
-  contentType: "projects" | "notes" | "newsletters"
+  contentType: "projects" | "notes" | "newsletters" | "logs"
 ): Promise<string[]> {
   if (!isProduction) {
     // In development, use filesystem
@@ -128,10 +88,14 @@ export async function getMarkdownFilePaths(
       return [];
     }
   } else {
-    // In production, use predefined list
-    return contentStructure[contentType].map((filename) =>
-      join(contentType, filename)
-    );
+    // In production, use predefined list and ensure paths are properly formatted
+    return contentStructure[contentType].map((filename) => {
+      // Remove any leading slashes or 'default/' prefix
+      const cleanFilename = filename
+        .replace(/^\/+/, "")
+        .replace(/^default\//, "");
+      return join(contentType, cleanFilename);
+    });
   }
 }
 
@@ -152,6 +116,55 @@ async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
     console.error(`Error reading directory ${dir}:`, error);
   }
   return files;
+}
+
+// Get content from either filesystem or GitHub API
+export async function getContent(filePath: string): Promise<string | null> {
+  try {
+    if (!isProduction) {
+      // In development, read from filesystem
+      const fullPath = join(process.cwd(), "src/app/db", filePath);
+      const content = await fs.readFile(fullPath, "utf-8");
+      return content;
+    } else {
+      // In production, fetch from GitHub API
+      // Preserve the original case of the filename by looking it up in contentStructure
+      const pathParts = filePath.split("/");
+      const contentType = pathParts[0] as keyof typeof contentStructure;
+      const filename = pathParts[1];
+
+      // Find the actual filename with correct case
+      const actualFilename = contentStructure[contentType].find(
+        (f) => f.toLowerCase() === filename.toLowerCase()
+      );
+
+      if (!actualFilename) {
+        console.error(`File not found in content structure: ${filePath}`);
+        return null;
+      }
+
+      const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${contentType}/${actualFilename}?ref=${githubBranch}`;
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+          Accept: "application/vnd.github.v3.raw",
+        },
+      });
+
+      if (!response.ok) {
+        console.error(
+          `Failed to fetch content from ${apiUrl}: ${response.statusText}`
+        );
+        return null;
+      }
+
+      return await response.text();
+    }
+  } catch (error) {
+    console.error(`Error getting content for ${filePath}:`, error);
+    return null;
+  }
 }
 
 // Fetch and parse a single markdown file
