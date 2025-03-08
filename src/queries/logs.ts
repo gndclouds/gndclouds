@@ -14,14 +14,13 @@ export interface Post {
   type: string[];
   publishedAt: string;
   published: boolean;
-  filePath: string;
   metadata: {
     contentHtml: string;
     [key: string]: any;
   };
 }
 
-export async function getAllLogs(): Promise<Post[]> {
+export async function getAllMarkdownFiles(): Promise<Post[]> {
   try {
     // Get content from the logs directory
     const logPaths = await getMarkdownFilePaths("logs");
@@ -44,8 +43,7 @@ export async function getAllLogs(): Promise<Post[]> {
             relativePath
               .split("/")
               .pop() // Get the filename
-              ?.replace(/\.md$/, "") // Remove .md extension
-              .toLowerCase() || "";
+              ?.replace(/\.md$/, "") || ""; // Remove .md extension
 
           return {
             slug,
@@ -59,7 +57,6 @@ export async function getAllLogs(): Promise<Post[]> {
               ...metadata,
               contentHtml: metadata.contentHtml || "",
             },
-            filePath: relativePath,
           } as Post;
         } catch (error) {
           console.error(`Error processing log ${relativePath}:`, error);
@@ -77,12 +74,16 @@ export async function getAllLogs(): Promise<Post[]> {
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
   } catch (error) {
-    console.error(`Unexpected error in getAllLogs:`, error);
+    console.error(`Unexpected error in getAllMarkdownFiles:`, error);
     return [];
   }
 }
 
+export async function getAllLogs(): Promise<Post[]> {
+  return getAllMarkdownFiles();
+}
+
 export async function getLogBySlug(slug: string): Promise<Post | null> {
-  const allLogs = await getAllLogs();
+  const allLogs = await getAllMarkdownFiles();
   return allLogs.find((log) => log.slug === slug) || null;
 }
