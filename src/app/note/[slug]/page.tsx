@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProjectBySlug } from "@/queries/project";
+import { getNoteBySlug } from "@/queries/notes";
 import PageHero from "@/components/page-hero";
 import ReactMarkdown from "react-markdown";
 import MarkdownContent from "@/components/MarkdownContent";
@@ -10,10 +10,10 @@ interface Params {
   };
 }
 
-export default async function ProjectPage({ params }: Params) {
+export default async function NotePage({ params }: Params) {
   const { slug } = params;
-  const project = await getProjectBySlug(slug);
-  if (!project) {
+  const note = await getNoteBySlug(slug);
+  if (!note) {
     notFound();
   }
 
@@ -22,24 +22,24 @@ export default async function ProjectPage({ params }: Params) {
     return !isNaN(date.getTime());
   };
 
-  const validPublishedAt = isValidDate(project.publishedAt ?? "")
-    ? project.publishedAt ?? ""
+  const validPublishedAt = isValidDate(note.publishedAt)
+    ? note.publishedAt
     : "";
 
   return (
     <div>
       <PageHero
         data={{
-          ...project,
-          tags: project.categories?.join(", ") || "",
+          ...note,
+          tags: [...(note.categories || []), ...(note.tags || [])].join(", "),
           publishedAt: validPublishedAt,
         }}
       />
-      {project.metadata?.contentHtml ? (
+      {note.metadata?.contentHtml ? (
         <MarkdownContent
-          content={project.metadata.contentHtml}
-          links={(project.metadata as any).links ?? []}
-          footnotes={(project.metadata as any).footnotes ?? []} // Type assertion to bypass the TypeScript error
+          content={note.metadata.contentHtml}
+          links={(note.metadata as any).links ?? []}
+          footnotes={(note.metadata as any).footnotes ?? []}
         />
       ) : (
         <p>No content available</p>

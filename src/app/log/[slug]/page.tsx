@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getLogBySlug } from "@/queries/log";
+import { getLogBySlug } from "@/queries/logs";
 import PageHero from "@/components/page-hero";
 import ReactMarkdown from "react-markdown";
 import MarkdownContent from "@/components/MarkdownContent";

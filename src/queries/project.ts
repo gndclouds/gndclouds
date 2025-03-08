@@ -45,7 +45,7 @@ export async function getProjectBySlug(
       title: metadata.title || "",
       categories: metadata.categories || [],
       filePath: projectPath,
-      url: `/research/${slug}`,
+      url: `/project/${slug}`,
       metadata: {
         contentHtml: markdownContent,
       },
@@ -73,7 +73,7 @@ export async function getAllProjects(): Promise<Post[]> {
           title: metadata.title || "",
           categories: metadata.categories || [],
           filePath,
-          url: `/research/${slug}`,
+          url: `/project/${slug}`,
         };
       })
     );

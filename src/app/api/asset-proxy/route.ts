@@ -6,8 +6,11 @@ const GITHUB_OWNER = process.env.GITHUB_OWNER || "gndclouds";
 const GITHUB_REPO = process.env.GITHUB_REPO || "db";
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || "main";
 
-// Configure route to use Edge Runtime
-export const runtime = "edge";
+// Use Node.js runtime instead of Edge
+export const runtime = "nodejs";
+
+// Configure revalidation
+export const revalidate = 3600; // Cache for 1 hour
 
 /**
  * Asset proxy endpoint to securely fetch assets from private GitHub repositories
@@ -16,7 +19,8 @@ export const runtime = "edge";
 export async function GET(request: NextRequest) {
   try {
     // Get the asset path from the query parameter
-    const assetPath = request.nextUrl.searchParams.get("path");
+    const { searchParams } = new URL(request.url);
+    const assetPath = searchParams.get("path");
 
     if (!assetPath) {
       return NextResponse.json(
