@@ -63,56 +63,52 @@ export async function getNewsletterBySlug(
 }
 
 export async function getAllNewsletters(): Promise<Newsletter[]> {
-  const contentDir = join(process.cwd(), "src/app/db/newsletters");
-
   try {
-    // Check if directory exists
-    try {
-      const dirStat = await stat(contentDir);
-      if (!dirStat.isDirectory()) {
-        console.error(`Path exists but is not a directory: ${contentDir}`);
-        return [];
-      }
-    } catch (error) {
-      console.error(`Error accessing directory ${contentDir}:`, error);
-      console.log(`Current working directory: ${process.cwd()}`);
-      console.log(`Attempting to list parent directory...`);
-
-      try {
-        const parentDir = join(process.cwd(), "src/app/db");
-        const parentContents = await readdir(parentDir, {
-          withFileTypes: true,
-        });
-        console.log(`Contents of ${parentDir}:`, parentContents);
-      } catch (parentError) {
-        console.error(`Error listing parent directory:`, parentError);
-      }
-
-      return [];
-    }
-
-    const filePaths = await getMarkdownFilesRecursively(contentDir);
-    console.log(`Found ${filePaths.length} newsletter files in ${contentDir}`);
+    // Get content from the newsletters directory
+    const newsletterPaths = await getMarkdownFilePaths("newsletters");
+    console.log(`Found ${newsletterPaths.length} newsletter markdown files`);
 
     const files = await Promise.all(
-      filePaths.map(async (filePath) => {
+      newsletterPaths.map(async (relativePath) => {
         try {
-          const fileContents = readFileSync(filePath, "utf8");
-          const { data: metadata, content } = matter(fileContents);
+          // Get and parse content
+          const content = await getContent(relativePath);
+          if (!content) {
+            console.warn(`Empty content for ${relativePath}, skipping`);
+            return null;
+          }
+
+          const { data: metadata, content: markdownContent } = matter(content);
+
+          // Generate slug from filename (without extension)
+          const slug =
+            relativePath
+              .split("/")
+              .pop() // Get the filename
+              ?.replace(/\.md$/, "") // Remove .md extension
+              .toLowerCase() || "";
+
           return {
-            slug: titleToSlug(metadata.title),
-            title: metadata.title,
-            content: content,
-            publishedAt: metadata.publishedAt || "",
+            slug,
+            title: metadata.title || "Untitled",
+            content: markdownContent,
+            publishedAt: metadata.publishedAt || new Date().toISOString(),
           } as Newsletter;
         } catch (error) {
-          console.error(`Error processing newsletter file ${filePath}:`, error);
+          console.error(`Error processing newsletter ${relativePath}:`, error);
           return null;
         }
       })
     );
 
-    return files.filter(Boolean) as Newsletter[];
+    // Filter out nulls from failed fetches
+    const validFiles = files.filter(Boolean) as Newsletter[];
+
+    // Sort by publish date
+    return validFiles.sort(
+      (a, b) =>
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    );
   } catch (error) {
     console.error(`Unexpected error in getAllNewsletters:`, error);
     return [];

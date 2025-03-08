@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { join, resolve } from "path";
 import matter from "gray-matter";
 import fetch from "node-fetch";
+import { getContent, getMarkdownFilePaths } from "./content-loader";
 
 export interface Post {
   slug: string;
@@ -88,70 +89,61 @@ async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
 }
 
 export async function getAllMarkdownFiles(): Promise<Post[]> {
-  const contentDir = join(process.cwd(), "src/app/db");
-
   try {
-    // Check if directory exists
-    try {
-      const dirStat = await stat(contentDir);
-      if (!dirStat.isDirectory()) {
-        console.error(`Path exists but is not a directory: ${contentDir}`);
-        return [];
-      }
-    } catch (error) {
-      console.error(`Error accessing directory ${contentDir}:`, error);
-      console.log(`Current working directory: ${process.cwd()}`);
-      console.log(`Attempting to list parent directory...`);
+    // Get all content types
+    const [projectPaths, notePaths, newsletterPaths] = await Promise.all([
+      getMarkdownFilePaths("projects"),
+      getMarkdownFilePaths("notes"),
+      getMarkdownFilePaths("newsletters"),
+    ]);
 
-      try {
-        const parentDir = join(process.cwd(), "src/app/db");
-        const parentContents = await readdir(parentDir);
-        console.log(`Contents of ${parentDir}:`, parentContents);
-      } catch (parentError) {
-        console.error(`Error listing parent directory:`, parentError);
-      }
+    // Combine all paths and remove any 'default/' prefix
+    const allPaths = [...projectPaths, ...notePaths, ...newsletterPaths].map(
+      (path) => path.replace(/^default\//, "")
+    );
 
-      return [];
-    }
+    // Process all files
+    const posts = await Promise.all(
+      allPaths.map(async (filePath) => {
+        try {
+          const content = await getContent(filePath);
+          if (!content) return null;
 
-    const filePaths = await getMarkdownFilesRecursively(contentDir);
-    console.log(`Found ${filePaths.length} markdown files in ${contentDir}`);
+          const { data: metadata, content: markdownContent } = matter(content);
+          // Get the slug from the file path, removing any 'default/' prefix
+          const slug = filePath.split("/").pop()?.replace(".md", "") || "";
 
-    const files = await Promise.all(
-      filePaths.map(async (filePath) => {
-        const { data: metadata } = matter(readFileSync(filePath, "utf8"));
-        let slug = metadata.title
-          ? metadata.title
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/(^-|-$)/g, "")
-          : filePath
-              .substring(contentDir.length + 1)
-              .replace(/\.md$/, "")
-              .replace(/\//g, "-")
-              .toLowerCase()
-              .replace(/^gs-/, "")
-              .replace(/\s+/g, "-");
-        return {
-          slug,
-          title: metadata.title,
-          categories: metadata.categories || [],
-          tags: metadata.tags || [],
-          type: metadata.type || [],
-          publishedAt: metadata.publishedAt || "",
-          published: metadata.published || false,
-          metadata: metadata,
-        } as Post;
+          // Determine the type based on the file path
+          const type = filePath.split("/")[0];
+
+          return {
+            slug,
+            title: metadata.title || "",
+            categories: metadata.categories || [],
+            tags: metadata.tags || [],
+            type: [type],
+            publishedAt: metadata.publishedAt || "",
+            published: metadata.published !== false,
+            metadata: {
+              contentHtml: markdownContent,
+            },
+          };
+        } catch (error) {
+          console.error(`Error processing file ${filePath}:`, error);
+          return null;
+        }
       })
     );
 
-    // Sort posts by newest publishAt date
-    return files.sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
+    // Filter out null values and sort by publishedAt
+    return posts
+      .filter((post): post is Post => post !== null)
+      .sort(
+        (a, b) =>
+          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
   } catch (error) {
-    console.error(`Unexpected error in getAllMarkdownFiles:`, error);
+    console.error("Error getting all markdown files:", error);
     return [];
   }
 }

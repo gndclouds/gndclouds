@@ -1,14 +1,13 @@
 import { readdir } from "fs/promises";
 import { readFileSync } from "fs";
 import matter from "gray-matter";
-import { getAllMarkdownFiles } from "./projects"; // Ensure this function returns filePath
+import { getAllMarkdownFiles } from "./logs"; // Change import from projects to logs
 
 // Define the Log type
 export type Log = {
   slug: string;
   title: string;
   tags: string[];
-  filePath: string; // Ensure filePath is included
   metadata: {
     description: string;
     contentHtml: string;
@@ -25,20 +24,17 @@ export async function getLogBySlug(slug: string): Promise<Log | null> {
   if (!log) {
     return null;
   }
-  const { data: metadata, content } = matter(
-    readFileSync(log.filePath, "utf8")
-  ); // Read the file using the file path
 
   return {
     slug: log.slug,
-    title: metadata.title,
-    tags: metadata.tags || [],
-    filePath: log.filePath, // Ensure filePath is returned
+    title: log.title,
+    tags: log.tags || [],
     metadata: {
-      description: metadata.description || "No description available",
-      contentHtml: content,
-      links: metadata.links || [],
-      footnotes: metadata.footnotes || [],
+      description: log.metadata.description || "No description available",
+      contentHtml: log.metadata.contentHtml,
+      links: log.metadata.links || [],
+      footnotes: log.metadata.footnotes || [],
     },
+    publishedAt: log.publishedAt,
   } as Log;
 }
