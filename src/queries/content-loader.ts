@@ -22,55 +22,7 @@ export const contentBaseUrl = isProduction
       `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}`
   : join(process.cwd(), "src/app/db");
 
-// Content directory structure - for remote fetching in production
-// This lets us avoid requiring the full directory structure at build time
-export const contentStructure = {
-  projects: [
-    // List your project files here - this is used in production to avoid needing filesystem access
-    "a-eye.md",
-    "arena2slides.md",
-    "circulaw.md",
-    "composing-sink.md",
-    "earth-directory.md",
-    "easy-chinese.md",
-    "flexplatform.md",
-    "galileo-starter-kit.md",
-    "global-climate-action-summit-2018.md",
-    "ifttt-maker-platform.md",
-    "logolens-figma-plugin.md",
-    "logolens.md",
-    "palace-games.md",
-    "pico-core.md",
-    "planetary-software.md",
-    "whole-person-care.md",
-  ],
-  notes: [
-    // List note files
-    "Research-on-Protocols.md",
-    "Research-on-Soil-Standards.md",
-    "Screen-Reader-B2B-Market.md",
-    "Storyboarding-with-Midjourney.md",
-    "The-Evolution-of-Energy-Grids-and-the-Case-for-Localization.md",
-    "becoming-a-biodesign-technologist.md",
-  ],
-  newsletters: [
-    // List newsletter files
-    "Issue-2021-01.md",
-    "Issue-2021-02.md",
-    "Issue-2021-03.md",
-    "Issue-2021-04.md",
-    "Issue-2021-05.md",
-    "Issue-2021-10.md",
-  ],
-  logs: [
-    // List log files
-    "2024-03-20.md",
-    "2024-03-19.md",
-    "2024-03-18.md",
-  ],
-};
-
-// Get file paths either from filesystem or predefined list
+// Get file paths either from filesystem or GitHub API
 export async function getMarkdownFilePaths(
   contentType: "projects" | "notes" | "newsletters" | "logs"
 ): Promise<string[]> {
@@ -88,14 +40,39 @@ export async function getMarkdownFilePaths(
       return [];
     }
   } else {
-    // In production, use predefined list and ensure paths are properly formatted
-    return contentStructure[contentType].map((filename) => {
-      // Remove any leading slashes or 'default/' prefix
-      const cleanFilename = filename
-        .replace(/^\/+/, "")
-        .replace(/^default\//, "");
-      return join(contentType, cleanFilename);
-    });
+    // In production, fetch directory contents from GitHub API
+    try {
+      const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${contentType}?ref=${githubBranch}`;
+
+      const response = await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+          Accept: "application/vnd.github.v3.raw",
+          "User-Agent": "gndclouds-website",
+        },
+      });
+
+      if (!response.ok) {
+        console.error(
+          `Failed to fetch directory contents: ${response.statusText}`
+        );
+        return [];
+      }
+
+      const contents = await response.json();
+
+      // Filter for markdown files only
+      const markdownFiles = contents
+        .filter(
+          (item: any) => item.type === "file" && item.name.endsWith(".md")
+        )
+        .map((item: any) => join(contentType, item.name));
+
+      return markdownFiles;
+    } catch (error) {
+      console.error(`Error fetching directory contents from GitHub:`, error);
+      return [];
+    }
   }
 }
 
@@ -127,28 +104,14 @@ export async function getContent(filePath: string): Promise<string | null> {
       const content = await fs.readFile(fullPath, "utf-8");
       return content;
     } else {
-      // In production, fetch from GitHub API
-      // Preserve the original case of the filename by looking it up in contentStructure
-      const pathParts = filePath.split("/");
-      const contentType = pathParts[0] as keyof typeof contentStructure;
-      const filename = pathParts[1];
-
-      // Find the actual filename with correct case
-      const actualFilename = contentStructure[contentType].find(
-        (f) => f.toLowerCase() === filename.toLowerCase()
-      );
-
-      if (!actualFilename) {
-        console.error(`File not found in content structure: ${filePath}`);
-        return null;
-      }
-
-      const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${contentType}/${actualFilename}?ref=${githubBranch}`;
+      // In production, fetch directly from GitHub API
+      const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${filePath}?ref=${githubBranch}`;
 
       const response = await fetch(apiUrl, {
         headers: {
           Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
           Accept: "application/vnd.github.v3.raw",
+          "User-Agent": "gndclouds-website",
         },
       });
 

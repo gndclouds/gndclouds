@@ -6,8 +6,8 @@ const GITHUB_OWNER = process.env.GITHUB_OWNER || "gndclouds";
 const GITHUB_REPO = process.env.GITHUB_REPO || "db";
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || "main";
 
-// Cache responses for 1 hour (in seconds)
-export const revalidate = 3600;
+// Configure route to use Edge Runtime
+export const runtime = "edge";
 
 /**
  * Asset proxy endpoint to securely fetch assets from private GitHub repositories
