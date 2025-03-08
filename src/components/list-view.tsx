@@ -16,9 +16,10 @@ import {
 
 interface ListViewProps {
   data: any[];
+  variant?: "feed" | "default";
 }
 
-export default function ListView({ data }: { data: any[] }) {
+export default function ListView({ data, variant = "default" }: ListViewProps) {
   const renderItem = (item: any, index: number) => {
     // For debugging
     // console.log(`Item ${index}:`, item);
@@ -55,20 +56,35 @@ export default function ListView({ data }: { data: any[] }) {
 
     // Define grid column spans for different content types
     const gridColumnSpan: { [key: string]: string } = {
-      newsletter: "col-span-12 md:col-span-6 lg:col-span-6",
-      log: "col-span-12 md:col-span-6 lg:col-span-6",
-      note: "col-span-12 md:col-span-6 lg:col-span-6",
-      photography: "col-span-12 md:col-span-3 lg:col-span-3", // Make photos same size as Bluesky
-      project: "col-span-12 md:col-span-6 lg:col-span-6",
-      bluesky: "col-span-12 md:col-span-3 lg:col-span-3", // Smaller span for Bluesky posts (4 across in a 12-column grid)
-      arena: "col-span-12 md:col-span-3 lg:col-span-3", // Same size as Bluesky for Are.na content
+      newsletter:
+        variant === "feed"
+          ? "col-span-12 md:col-span-6 lg:col-span-6"
+          : "col-span-12",
+      log:
+        variant === "feed"
+          ? "col-span-12 md:col-span-6 lg:col-span-6"
+          : "col-span-12",
+      note:
+        variant === "feed"
+          ? "col-span-12 md:col-span-6 lg:col-span-6"
+          : "col-span-12",
+      project:
+        variant === "feed"
+          ? "col-span-12 md:col-span-6 lg:col-span-6"
+          : "col-span-12",
+      photography: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for photos
+      bluesky: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for Bluesky posts
+      arena: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for Are.na content
       "arena-image": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-text": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-link": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-attachment": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-media": "col-span-12 md:col-span-3 lg:col-span-3",
-      github: "col-span-12 md:col-span-3 lg:col-span-3", // Same size as Bluesky for GitHub activity
-      default: "col-span-12 md:col-span-6 lg:col-span-6",
+      github: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for GitHub activity
+      default:
+        variant === "feed"
+          ? "col-span-12 md:col-span-6 lg:col-span-6"
+          : "col-span-12",
     };
 
     // Define height classes for different content types
