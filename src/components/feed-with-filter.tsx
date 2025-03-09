@@ -29,7 +29,9 @@ export default function FeedWithFilter({ data }: FeedWithFilterProps) {
               of <span className="font-medium">{data.length}</span> items
             </p>
           </div>
-          <ListView data={filteredData} />
+          <div className="mt-4">
+            <ListView data={filteredData} variant="feed" />
+          </div>
         </>
       )}
     </div>

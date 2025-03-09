@@ -6,8 +6,8 @@ const GITHUB_OWNER = process.env.GITHUB_OWNER || "gndclouds";
 const GITHUB_REPO = process.env.GITHUB_REPO || "db";
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || "main";
 
-// Configure route to use Edge Runtime
-export const runtime = "edge";
+// Configure for dynamic route handling
+export const dynamic = "force-dynamic";
 
 /**
  * Asset proxy endpoint to securely fetch assets from private GitHub repositories
@@ -15,10 +15,10 @@ export const runtime = "edge";
  */
 export async function GET(request: NextRequest) {
   try {
-    // Get the asset path from the query parameter
-    const assetPath = request.nextUrl.searchParams.get("path");
+    // Get the asset path from the query parameter using searchParams
+    const path = request.nextUrl.searchParams.get("path");
 
-    if (!assetPath) {
+    if (!path) {
       return NextResponse.json(
         { error: "Missing path parameter" },
         { status: 400 }
@@ -33,14 +33,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Format the path for the GitHub API
-    const formattedPath = assetPath.startsWith("/")
-      ? assetPath.substring(1)
-      : assetPath;
+    const formattedPath = path.startsWith("/") ? path.substring(1) : path;
 
     // Build the URL to fetch from GitHub
     const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${formattedPath}?ref=${GITHUB_BRANCH}`;
-
-    console.log(`Proxying request to GitHub API: ${apiUrl}`);
 
     // Fetch the content with authentication
     const response = await fetch(apiUrl, {
@@ -49,6 +45,7 @@ export async function GET(request: NextRequest) {
         Accept: "application/vnd.github.v3.raw",
         "User-Agent": "gndclouds-website",
       },
+      next: { revalidate: 3600 }, // Cache for 1 hour
     });
 
     if (!response.ok) {

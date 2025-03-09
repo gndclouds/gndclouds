@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProjectBySlug } from "@/queries/project";
+import { getResearchBySlug } from "@/queries/notes";
 import PageHero from "@/components/page-hero";
 import ReactMarkdown from "react-markdown";
 import MarkdownContent from "@/components/MarkdownContent";
@@ -24,10 +24,10 @@ interface Project {
   categories?: string[]; // Add this line to define the categories property
 }
 
-export default async function ProjectPage({ params }: Params) {
+export default async function ResearchPage({ params }: Params) {
   const { slug } = params;
-  const project: Project | null = await getProjectBySlug(slug);
-  if (!project) {
+  const research = await getResearchBySlug(slug);
+  if (!research) {
     notFound();
   }
 
@@ -36,25 +36,26 @@ export default async function ProjectPage({ params }: Params) {
     return !isNaN(date.getTime());
   };
 
-  const validPublishedAt = isValidDate(project.publishedAt || "")
-    ? project.publishedAt || ""
+  const validPublishedAt = isValidDate(research.publishedAt)
+    ? research.publishedAt
     : "";
 
   return (
     <div>
       <PageHero
         data={{
-          ...project,
-          title: project.title, // Add title to the data object
-          tags: project.categories?.join(", ") || "",
+          ...research,
+          tags: [...(research.categories || []), ...(research.tags || [])].join(
+            ", "
+          ),
           publishedAt: validPublishedAt,
         }}
       />
-      {project.metadata?.contentHtml ? (
+      {research.metadata?.contentHtml ? (
         <MarkdownContent
-          content={project.metadata.contentHtml}
-          links={project.metadata?.links ?? []} // Use optional chaining and nullish coalescing
-          footnotes={project.metadata?.footnotes ?? {}} // Use optional chaining and nullish coalescing
+          content={research.metadata.contentHtml}
+          links={(research.metadata as any).links ?? []}
+          footnotes={(research.metadata as any).footnotes ?? {}}
         />
       ) : (
         <p>No content available</p>

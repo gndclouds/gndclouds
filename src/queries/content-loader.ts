@@ -24,7 +24,7 @@ export const contentBaseUrl = isProduction
 
 // Get file paths either from filesystem or GitHub API
 export async function getMarkdownFilePaths(
-  contentType: "projects" | "notes" | "newsletters" | "logs"
+  contentType: "projects" | "notes" | "newsletters" | "logs" | "research"
 ): Promise<string[]> {
   if (!isProduction) {
     // In development, use filesystem
@@ -152,7 +152,12 @@ export async function getMarkdownFile(filePath: string) {
 export function getAssetUrl(assetPath: string): string {
   if (!isProduction) {
     // In development, serve from the local filesystem via public folder
-    return `/db-assets/${assetPath.replace(/^(assets|public)\//, "")}`;
+    // Handle case where assets directory doesn't exist
+    const publicPath = `/db-assets/${assetPath.replace(
+      /^(assets|public)\//,
+      ""
+    )}`;
+    return publicPath;
   }
 
   // In production with GitHub token, generate a GitHub content URL
