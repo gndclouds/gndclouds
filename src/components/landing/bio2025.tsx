@@ -91,8 +91,8 @@ const Bio2024 = () => (
         notes
       </Link>
       , more rough thoughts in the form of{" "}
-      <Link href="/logs" className="underline">
-        logs
+      <Link href="/journals" className="underline">
+        journals
       </Link>
       , and an archive of{" "}
       <Link href="/projects" className="underline">
