@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getJournalBySlug } from "@/queries/journals";
 import PageHero from "@/components/page-hero";
+import ReactMarkdown from "react-markdown";
 import MarkdownContent from "@/components/MarkdownContent";
 
 interface Params {
@@ -12,7 +13,6 @@ interface Params {
 export default async function JournalPage({ params }: Params) {
   const { slug } = params;
   const journal = await getJournalBySlug(slug);
-
   if (!journal) {
     notFound();
   }

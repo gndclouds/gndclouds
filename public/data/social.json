@@ -1,26 +1,20 @@
 [
   {
     "platform": "Are.na",
-    "url": "https://www.are.na/username",
-    "username": "@username",
+    "url": "https://www.are.na/gndclouds",
+    "username": "are.na",
     "icon": "arena"
   },
   {
-    "platform": "GitHub",
-    "url": "https://github.com/username",
-    "username": "@username",
-    "icon": "github"
-  },
-  {
     "platform": "Bluesky",
-    "url": "https://bsky.app/profile/username",
-    "username": "@username",
-    "icon": "twitter"
+    "url": "https://bsky.app/profile/gndclouds.earth",
+    "username": "bluesky",
+    "icon": "bluesky"
   },
   {
-    "platform": "Dribbble",
-    "url": "https://dribbble.com/username",
-    "username": "@username",
-    "icon": "dribbble"
+    "platform": "GitHub",
+    "url": "https://github.com/gndclouds",
+    "username": "github",
+    "icon": "github"
   }
 ]

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   RiGithubLine,
   RiLinkedinLine,
@@ -8,11 +9,10 @@ import {
   RiDribbbleLine,
   RiGlobalLine,
   RiPrinterLine,
-  RiMoonLine,
-  RiSunLine,
 } from "react-icons/ri";
 import CollectionHero from "@/components/collection-hero";
 import ListView from "@/components/list-view";
+import Bio2025 from "@/components/landing/bio2025";
 
 interface CVItem {
   title: string;
@@ -106,15 +106,8 @@ export default function CVPage() {
   const [educationData, setEducationData] = useState<EducationItem[]>([]);
   const [socialData, setSocialData] = useState<SocialItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check system preference for dark mode
-    if (typeof window !== "undefined") {
-      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setDarkMode(isDark);
-    }
-
     const loadData = async () => {
       try {
         const [cv, pressAwards, education, social] = await Promise.all([
@@ -139,10 +132,6 @@ export default function CVPage() {
     window.print();
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
   if (error) {
     return (
       <div className="container mx-auto p-4 text-red-500">Error: {error}</div>
@@ -154,7 +143,7 @@ export default function CVPage() {
     .filter((item) => item.type === "full-time")
     .map((item) => ({
       title: item.title,
-      description: item.description,
+      description: `${item.company} • ${item.location} • ${item.start} - ${item.end}\n${item.description}`,
       publishedAt: item.start,
       url: `/cv/${item.company.toLowerCase().replace(/\s+/g, "-")}`,
       tags: item.responsibilities,
@@ -171,7 +160,7 @@ export default function CVPage() {
     .filter((item) => item.type === "client")
     .map((item) => ({
       title: item.company,
-      description: item.title,
+      description: `${item.title} • ${item.location} • ${item.start} - ${item.end}\n${item.description}`,
       publishedAt: item.start,
       url: `/cv/${item.company.toLowerCase().replace(/\s+/g, "-")}`,
       tags: item.responsibilities,
@@ -185,7 +174,9 @@ export default function CVPage() {
 
   const educationDataFormatted = educationData.map((item) => ({
     title: item.institution,
-    description: `${item.degree} in ${item.field}`,
+    description: `${item.degree} in ${item.field} • ${item.location} • ${
+      item.start
+    } - ${item.end}\n${item.achievements.join(", ")}`,
     publishedAt: item.start,
     url: `/cv/${item.institution.toLowerCase().replace(/\s+/g, "-")}`,
     tags: item.achievements,
@@ -215,31 +206,37 @@ export default function CVPage() {
 
   return (
     <main className="min-h-screen">
-      <CollectionHero name="CV" projects={allData} allProjects={allData} />
-
+      <CollectionHero
+        name="CV"
+        projects={allData}
+        allProjects={allData}
+        showEntriesCount={false}
+        showRssLink={false}
+      />
       <div className="container mx-auto px-4 py-8">
+        {/* Bio Section with Image */}
+        <div className="mb-12 grid grid-cols-3 gap-8">
+          {/* Image Column */}
+          <div className="relative   overflow-hidden">
+            <Image
+              src="/me/2025_headshot.jpeg"
+              alt="Will's portrait"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          {/* Bio Text Column */}
+          <div className="col-span-2 prose prose-lg max-w-none">
+            <Bio2025 />
+          </div>
+        </div>
+
         {/* Controls */}
         <div className="fixed top-4 right-4 flex gap-4 print:hidden z-50">
           <button
-            onClick={toggleDarkMode}
-            className={`p-2 rounded-full ${
-              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
-            } hover:opacity-80 transition-opacity`}
-            aria-label={
-              darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {darkMode ? (
-              <RiSunLine className="w-5 h-5" />
-            ) : (
-              <RiMoonLine className="w-5 h-5" />
-            )}
-          </button>
-          <button
             onClick={handlePrint}
-            className={`p-2 rounded-full ${
-              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
-            } hover:opacity-80 transition-opacity`}
+            className="p-2 rounded-full bg-gray-100 text-gray-800 hover:opacity-80 transition-opacity"
             aria-label="Print CV"
           >
             <RiPrinterLine className="w-5 h-5" />
@@ -254,11 +251,7 @@ export default function CVPage() {
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors ${
-                darkMode
-                  ? "bg-gray-700 hover:bg-gray-600"
-                  : "bg-white hover:bg-gray-100"
-              }`}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors bg-white hover:bg-gray-100"
             >
               <SocialIcon icon={social.icon} />
               <span className="text-sm font-medium">{social.username}</span>
@@ -269,25 +262,25 @@ export default function CVPage() {
         {/* Experience Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Experience</h2>
-          <ListView data={experienceData} variant="feed" />
+          <ListView data={experienceData} variant="default" />
         </div>
 
         {/* Clients Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Clients & Collaborations</h2>
-          <ListView data={clientData} variant="feed" />
+          <ListView data={clientData} variant="default" />
         </div>
 
         {/* Education Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Education</h2>
-          <ListView data={educationDataFormatted} variant="feed" />
+          <ListView data={educationDataFormatted} variant="default" />
         </div>
 
         {/* Press & Awards Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Press & Awards</h2>
-          <ListView data={pressAwardsDataFormatted} variant="feed" />
+          <ListView data={pressAwardsDataFormatted} variant="default" />
         </div>
       </div>
 

@@ -52,6 +52,8 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
         ? `/note/${item.slug}` // Use /note/ for notes
         : itemType === "research"
         ? `/research/${item.slug}` // Use /research/ for research
+        : itemType === "journal"
+        ? `/journal/${item.slug}` // Use /journal/ for journals
         : `/${itemType}/${item.slug}`; // Use the slug for other content types
 
     // Define grid column spans for different content types
