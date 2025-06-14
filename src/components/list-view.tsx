@@ -74,15 +74,23 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
         variant === "feed"
           ? "col-span-12 md:col-span-6 lg:col-span-6"
           : "col-span-12",
-      photography: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for photos
-      bluesky: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for Bluesky posts
-      arena: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for Are.na content
+      journal:
+        variant === "feed"
+          ? "col-span-12 md:col-span-6 lg:col-span-6"
+          : "col-span-12",
+      research:
+        variant === "feed"
+          ? "col-span-12 md:col-span-6 lg:col-span-6"
+          : "col-span-12",
+      photography: "col-span-12 md:col-span-3 lg:col-span-3",
+      bluesky: "col-span-12 md:col-span-3 lg:col-span-3",
+      arena: "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-image": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-text": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-link": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-attachment": "col-span-12 md:col-span-3 lg:col-span-3",
       "arena-media": "col-span-12 md:col-span-3 lg:col-span-3",
-      github: "col-span-12 md:col-span-3 lg:col-span-3", // Keep small for GitHub activity
+      github: "col-span-12 md:col-span-3 lg:col-span-3",
       default:
         variant === "feed"
           ? "col-span-12 md:col-span-6 lg:col-span-6"
@@ -94,16 +102,18 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
       newsletter: "min-h-[200px]",
       log: "min-h-[200px]",
       note: "min-h-[200px]",
-      photography: "min-h-[180px]", // Taller for photos, same as arena-image
+      journal: "min-h-[200px]",
+      research: "min-h-[200px]",
+      photography: "min-h-[180px]",
       project: "min-h-[200px]",
-      bluesky: "min-h-[120px]", // Even smaller height for Bluesky posts
-      arena: "min-h-[180px]", // Same height as arena-image for consistency
-      "arena-image": "min-h-[180px]", // Taller for images
+      bluesky: "min-h-[180px]",
+      arena: "min-h-[180px]",
+      "arena-image": "min-h-[180px]",
       "arena-text": "min-h-[120px]",
       "arena-link": "min-h-[120px]",
       "arena-attachment": "min-h-[120px]",
-      "arena-media": "min-h-[180px]", // Taller for media
-      github: "min-h-[120px]", // Same height as Bluesky posts
+      "arena-media": "min-h-[180px]",
+      github: "min-h-[120px]",
       default: "min-h-[200px]",
     };
 
@@ -113,6 +123,9 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
 
     // Render different card types based on item type
     if (itemType === "bluesky") {
+      // Only show author if not gndclouds.earth
+      const isOwner = item.author?.handle === "gndclouds.earth";
+      const postBody = item.text || item.description || "";
       return (
         <div
           key={index}
@@ -131,36 +144,50 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
             rel="noopener noreferrer"
             className="block h-full"
           >
-            <div className="flex items-center mb-1">
-              {item.author?.avatar && (
-                <div className="w-5 h-5 rounded-full overflow-hidden mr-1">
-                  <Image
-                    src={item.author.avatar}
-                    alt={item.author.handle}
-                    width={20}
-                    height={20}
-                    className="object-cover"
-                  />
+            {/* Only show author/avatar if not owner */}
+            {!isOwner && (
+              <div className="flex items-center mb-1">
+                {item.author?.avatar && (
+                  <div className="w-5 h-5 rounded-full overflow-hidden mr-1">
+                    <Image
+                      src={item.author.avatar}
+                      alt={item.author.handle}
+                      width={20}
+                      height={20}
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="text-xs font-medium truncate">
+                  {item.author?.displayName || item.author?.handle || "Unknown"}
+                  {item.isRepost && (
+                    <span className="ml-1 text-blue-500 flex items-center text-xs">
+                      <FiRepeat className="inline mr-1" size={10} />
+                      repost
+                    </span>
+                  )}
                 </div>
-              )}
-              <div className="text-xs font-medium truncate">
-                {item.author?.displayName || item.author?.handle || "Unknown"}
-                {item.isRepost && (
-                  <span className="ml-1 text-blue-500 flex items-center text-xs">
-                    <FiRepeat className="inline mr-1" size={10} />
-                    repost
-                  </span>
+              </div>
+            )}
+            <div className="text-xs line-clamp-2 mb-1">{postBody}</div>
+            {item.images && item.images.length > 0 && (
+              <div className="mt-3 grid grid-cols-2 gap-1">
+                {item.images.map(
+                  (image: { alt: string; url: string }, idx: number) => (
+                    <div key={idx} className="relative aspect-square">
+                      <Image
+                        src={image.url}
+                        alt={image.alt || "Post image"}
+                        fill
+                        className="object-cover rounded"
+                      />
+                    </div>
+                  )
                 )}
               </div>
-            </div>
-            <div className="text-xs line-clamp-2 mb-1">{item.text}</div>
+            )}
             <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mt-auto">
-              <div className="text-[10px]">
-                {new Date(item.publishedAt).toLocaleDateString(undefined, {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </div>
+              <div className="text-[10px]">{item.publishedAt}</div>
               <div className="flex space-x-2 text-[10px]">
                 <span>♥ {item.likeCount}</span>
                 <span>↻ {item.repostCount}</span>
@@ -181,7 +208,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
       if (itemType === "arena-media") TypeIcon = FiPlay;
 
       // For image blocks, show the image
-      if (itemType === "arena-image" && item.imageUrl) {
+      if (item.imageUrl) {
         return (
           <div
             key={index}
@@ -196,7 +223,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
               <div className="absolute inset-0">
                 <Image
                   src={item.imageUrl}
-                  alt={item.title}
+                  alt={item.title || "Are.na image"}
                   fill
                   className="object-cover"
                 />
@@ -205,7 +232,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
                 <div className="flex items-center justify-between">
                   <div className="text-xs truncate">{item.title}</div>
                   <div className="text-[10px] bg-gray-800 px-1 rounded">
-                    {item.channelTitle}
+                    {item.channel?.title || "Are.na"}
                   </div>
                 </div>
               </div>
@@ -234,7 +261,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
                 </div>
               </div>
               <div className="text-[10px] bg-gray-200 dark:bg-gray-700 px-1 rounded">
-                {item.channelTitle}
+                {item.channel?.title || "Are.na"}
               </div>
             </div>
             <div className="text-sm font-medium mb-1 truncate">
@@ -255,7 +282,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
     }
 
     if (itemType === "photography") {
-      // Enhanced Unsplash image card
+      // Unsplash image card with no description overlay
       return (
         <div
           key={index}
@@ -271,31 +298,14 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
               <div className="absolute inset-0">
                 <Image
                   src={item.urls.regular || item.urls.small}
-                  alt={
-                    item.description || item.alt_description || "Unsplash photo"
-                  }
+                  alt={item.alt_description || "Unsplash photo"}
                   fill
                   className="object-cover"
                 />
               </div>
             )}
-            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <FiCamera size={12} className="mr-1" />
-                  <div className="text-xs truncate">
-                    {item.description ||
-                      item.alt_description ||
-                      "Unsplash photo"}
-                  </div>
-                </div>
-                <div className="text-[10px]">
-                  {new Date(item.publishedAt).toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </div>
-              </div>
+            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 flex justify-end">
+              <div className="text-[10px]">{item.publishedAt}</div>
             </div>
           </a>
         </div>
@@ -330,6 +340,8 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
 
     // Add GitHub activity rendering
     if (itemType === "github") {
+      // Only show author if not gndclouds
+      const isOwner = item.author?.username === "gndclouds";
       return (
         <div
           key={index}
@@ -341,22 +353,25 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
             rel="noopener noreferrer"
             className="block h-full"
           >
-            <div className="flex items-center mb-1">
-              {item.author?.avatar && (
-                <div className="w-5 h-5 rounded-full overflow-hidden mr-1">
-                  <Image
-                    src={item.author.avatar}
-                    alt={item.author.username}
-                    width={20}
-                    height={20}
-                    className="object-cover"
-                  />
+            {/* Only show author/avatar if not owner */}
+            {!isOwner && (
+              <div className="flex items-center mb-1">
+                {item.author?.avatar && (
+                  <div className="w-5 h-5 rounded-full overflow-hidden mr-1">
+                    <Image
+                      src={item.author.avatar}
+                      alt={item.author.username}
+                      width={20}
+                      height={20}
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="text-xs font-medium truncate">
+                  {item.author?.username || "Unknown"}
                 </div>
-              )}
-              <div className="text-xs font-medium truncate">
-                {item.author?.username || "Unknown"}
               </div>
-            </div>
+            )}
             <div className="text-sm font-medium mb-1 truncate">
               {item.title}
             </div>
@@ -373,6 +388,49 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
               </div>
             </div>
           </a>
+        </div>
+      );
+    }
+
+    // Add local content rendering
+    if (
+      itemType === "journal" ||
+      itemType === "note" ||
+      itemType === "research" ||
+      itemType === "project"
+    ) {
+      return (
+        <div
+          key={index}
+          className={`${itemColSpan} border-2 border-backgroundDark dark:border-backgroundLight relative p-4 ${itemHeight} group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+        >
+          <Link href={linkPath} className="block h-full">
+            <div className="flex flex-col h-full">
+              <h2 className="text-2xl font-bold mb-1 truncate">{item.title}</h2>
+              <div className="text-xs text-gray-500 mb-2">
+                {item.publishedAt}
+              </div>
+              {item.description && (
+                <div className="text-sm mt-2 line-clamp-2">
+                  {item.description}
+                </div>
+              )}
+              {(item.tags?.length > 0 || item.categories?.length > 0) && (
+                <div className="flex flex-wrap gap-2 mt-auto pt-2">
+                  {[...(item.tags || []), ...(item.categories || [])].map(
+                    (tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+                      >
+                        {tag}
+                      </span>
+                    )
+                  )}
+                </div>
+              )}
+            </div>
+          </Link>
         </div>
       );
     }
@@ -421,9 +479,35 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
     );
   };
 
+  // Helper to get year from publishedAt
+  const getYear = (item: any) => {
+    if (!item.publishedAt) return "Unknown";
+    return item.publishedAt.slice(0, 4);
+  };
+
+  let lastYear: string | null = null;
+
   return (
     <div className="grid grid-cols-12 gap-4">
-      {data.map((item, index) => renderItem(item, index))}
+      {data.map((item, index) => {
+        const itemYear = getYear(item);
+        const showYearBreak = itemYear !== lastYear;
+        lastYear = itemYear;
+        return (
+          <React.Fragment key={item.id || index}>
+            {showYearBreak && (
+              <div className="col-span-12 flex items-center my-8">
+                <hr className="flex-grow border-t border-gray-300 dark:border-gray-700 mr-4" />
+                <span className="text-lg font-bold text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                  {itemYear}
+                </span>
+                <hr className="flex-grow border-t border-gray-300 dark:border-gray-700 ml-4" />
+              </div>
+            )}
+            {renderItem(item, index)}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }
