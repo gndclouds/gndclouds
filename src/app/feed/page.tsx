@@ -6,6 +6,9 @@ import ListView from "@/components/list-view";
 import CollectionHero from "@/components/collection-hero";
 import FeedWithFilter from "@/components/feed-with-filter";
 
+// Add revalidation period of 5 minutes (300 seconds)
+export const revalidate = 300;
+
 interface Image {
   created_at: string;
   description?: string; // Ensure description is optional
