@@ -52,7 +52,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             categories: metadata.categories || [],
             tags: metadata.tags || [],
             type: metadata.type || ["Note"],
-            publishedAt: metadata.publishedAt || new Date(),
+            publishedAt: metadata.publishedAt || new Date().toISOString(),
             published: metadata.published !== false,
             metadata: {
               contentHtml: markdownContent,
@@ -116,7 +116,7 @@ export async function getNoteBySlug(slug: string): Promise<Post | null> {
       categories: metadata.categories || [],
       tags: metadata.tags || [],
       type: metadata.type || ["Note"],
-      publishedAt: metadata.publishedAt || new Date(),
+      publishedAt: metadata.publishedAt || new Date().toISOString(),
       published: metadata.published !== false,
       metadata: {
         contentHtml: markdownContent,
@@ -173,7 +173,7 @@ export async function getResearchBySlug(slug: string): Promise<Post | null> {
       categories: metadata.categories || [],
       tags: metadata.tags || [],
       type: metadata.type || ["Research"],
-      publishedAt: metadata.publishedAt || new Date(),
+      publishedAt: metadata.publishedAt || new Date().toISOString(),
       published: metadata.published !== false,
       metadata: {
         contentHtml: markdownContent,

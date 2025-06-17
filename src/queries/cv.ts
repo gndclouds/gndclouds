@@ -59,7 +59,7 @@ export async function getAllMarkdownFiles(): Promise<CVEntry[]> {
             categories: metadata.categories || [],
             tags: metadata.tags || [],
             type: metadata.type || ["Experience"],
-            publishedAt: metadata.start || new Date(), // Use start date as publishedAt for sorting
+            publishedAt: metadata.start || new Date().toISOString(), // Use start date as publishedAt for sorting
             published: metadata.published !== false,
             metadata: {
               ...metadata,

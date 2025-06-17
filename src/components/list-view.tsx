@@ -481,7 +481,8 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
 
   // Helper to get year from publishedAt
   const getYear = (item: any) => {
-    if (!item.publishedAt) return "Unknown";
+    if (!item.publishedAt || typeof item.publishedAt !== "string")
+      return "Unknown";
     return item.publishedAt.slice(0, 4);
   };
 

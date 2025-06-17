@@ -51,7 +51,7 @@ export async function getAllMarkdownFiles(): Promise<Journal[]> {
             categories: metadata.categories || [],
             tags: metadata.tags || [],
             type: metadata.type || ["Journal"],
-            publishedAt: metadata.publishedAt || new Date(),
+            publishedAt: metadata.publishedAt || new Date().toISOString(),
             published: metadata.published !== false, // Default to published unless explicitly false
             metadata: {
               ...metadata,
