@@ -86,19 +86,8 @@ const Bio2024 = () => (
     </div>
     <div>
       <span className="font-bold">This site</span> is to be a public archive
-      divided into more formal{" "}
-      <Link href="/notes" className="underline">
-        notes
-      </Link>
-      , more rough thoughts in the form of{" "}
-      <Link href="/journals" className="underline">
-        journals
-      </Link>
-      , and an archive of{" "}
-      <Link href="/projects" className="underline">
-        projects
-      </Link>
-      .
+      divided into more formal notes, more rough thoughts in the form of
+      journals, and an archive of projects.
     </div>
     <div>
       <span className="font-bold">If you want to connect</span>, let&#39;s grab
