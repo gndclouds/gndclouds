@@ -187,7 +187,9 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
               </div>
             )}
             <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mt-auto">
-              <div className="text-[10px]">{item.publishedAt}</div>
+              <div className="text-[10px]">
+                {String(item.publishedAt || "")}
+              </div>
               <div className="flex space-x-2 text-[10px]">
                 <span>♥ {item.likeCount}</span>
                 <span>↻ {item.repostCount}</span>
@@ -305,7 +307,9 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
               </div>
             )}
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 flex justify-end">
-              <div className="text-[10px]">{item.publishedAt}</div>
+              <div className="text-[10px]">
+                {String(item.publishedAt || "")}
+              </div>
             </div>
           </a>
         </div>
@@ -408,7 +412,9 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
             <div className="flex flex-col h-full">
               <h2 className="text-2xl font-bold mb-1 truncate">{item.title}</h2>
               <div className="text-xs text-gray-500 mb-2">
-                {item.publishedAt}
+                {item.publishedAt
+                  ? new Date(item.publishedAt).toLocaleDateString()
+                  : "Unknown Date"}
               </div>
               {item.description && (
                 <div className="text-sm mt-2 line-clamp-2">
