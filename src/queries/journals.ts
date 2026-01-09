@@ -6,7 +6,7 @@ import {
   isProduction,
 } from "./content-loader";
 
-export interface Post {
+export interface Journal {
   slug: string;
   title: string;
   categories: string[];
@@ -20,14 +20,14 @@ export interface Post {
   };
 }
 
-export async function getAllMarkdownFiles(): Promise<Post[]> {
+export async function getAllMarkdownFiles(): Promise<Journal[]> {
   try {
-    // Get content from the logs directory
-    const logPaths = await getMarkdownFilePaths("logs");
-    console.log(`Found ${logPaths.length} log markdown files`);
+    // Get content from the journals directory
+    const journalPaths = await getMarkdownFilePaths("journals");
+    console.log(`Found ${journalPaths.length} journal markdown files`);
 
     const files = await Promise.all(
-      logPaths.map(async (relativePath) => {
+      journalPaths.map(async (relativePath) => {
         try {
           // Get and parse content
           const content = await getContent(relativePath);
@@ -36,7 +36,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             return null;
           }
 
-          const { data: metadata } = matter(content);
+          const { data: metadata, content: markdownContent } = matter(content);
 
           // Generate slug from filename (without extension)
           const slug =
@@ -50,23 +50,23 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             title: metadata.title || "Untitled",
             categories: metadata.categories || [],
             tags: metadata.tags || [],
-            type: metadata.type || ["Log"],
+            type: metadata.type || ["Journal"],
             publishedAt: metadata.publishedAt || new Date().toISOString(),
             published: metadata.published !== false, // Default to published unless explicitly false
             metadata: {
               ...metadata,
-              contentHtml: metadata.contentHtml || "",
+              contentHtml: markdownContent,
             },
-          } as Post;
+          } as Journal;
         } catch (error) {
-          console.error(`Error processing log ${relativePath}:`, error);
+          console.error(`Error processing journal ${relativePath}:`, error);
           return null;
         }
       })
     );
 
     // Filter out nulls from failed fetches
-    const validFiles = files.filter(Boolean) as Post[];
+    const validFiles = files.filter(Boolean) as Journal[];
 
     // Sort by publish date
     return validFiles.sort(
@@ -79,11 +79,11 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
   }
 }
 
-export async function getAllLogs(): Promise<Post[]> {
+export async function getAllJournals(): Promise<Journal[]> {
   return getAllMarkdownFiles();
 }
 
-export async function getLogBySlug(slug: string): Promise<Post | null> {
-  const allLogs = await getAllMarkdownFiles();
-  return allLogs.find((log) => log.slug === slug) || null;
+export async function getJournalBySlug(slug: string): Promise<Journal | null> {
+  const allJournals = await getAllMarkdownFiles();
+  return allJournals.find((journal) => journal.slug === slug) || null;
 }

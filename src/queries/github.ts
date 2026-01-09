@@ -180,3 +180,43 @@ export async function getGitHubActivity(
     return [];
   }
 }
+
+/**
+ * Fetches all available GitHub activity for a user (up to 300 events)
+ * @param username The GitHub username to fetch activity for
+ * @returns An array of formatted GitHub activity items
+ */
+export async function getAllGitHubActivity(
+  username: string
+): Promise<GitHubActivity[]> {
+  const perPage = 30;
+  const maxPages = 10; // GitHub API allows up to 300 events
+  let allEvents: any[] = [];
+  const githubToken = process.env.GITHUB_TOKEN;
+  const headers: Record<string, string> = {};
+  if (githubToken) {
+    headers.Authorization = `token ${githubToken}`;
+  }
+  for (let page = 1; page <= maxPages; page++) {
+    const response = await axios.get(
+      `https://api.github.com/users/${username}/events/public?per_page=${perPage}&page=${page}`,
+      { headers }
+    );
+    if (
+      !response.data ||
+      !Array.isArray(response.data) ||
+      response.data.length === 0
+    ) {
+      break;
+    }
+    allEvents = allEvents.concat(response.data);
+    if (response.data.length < perPage) {
+      break;
+    }
+  }
+  // Format the events
+  const formattedActivities = allEvents
+    .map(formatGitHubEvent)
+    .filter((activity): activity is GitHubActivity => activity !== null);
+  return formattedActivities;
+}

@@ -24,7 +24,14 @@ export const contentBaseUrl = isProduction
 
 // Get file paths either from filesystem or GitHub API
 export async function getMarkdownFilePaths(
-  contentType: "projects" | "notes" | "newsletters" | "logs" | "research"
+  contentType:
+    | "projects"
+    | "notes"
+    | "newsletters"
+    | "logs"
+    | "research"
+    | "journals"
+    | "cv"
 ): Promise<string[]> {
   if (!isProduction) {
     // In development, use filesystem

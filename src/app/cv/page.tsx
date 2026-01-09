@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   RiGithubLine,
   RiLinkedinLine,
@@ -8,17 +9,22 @@ import {
   RiDribbbleLine,
   RiGlobalLine,
   RiPrinterLine,
-  RiMoonLine,
-  RiSunLine,
 } from "react-icons/ri";
+import CollectionHero from "@/components/collection-hero";
+import ListView from "@/components/list-view";
+import Bio2025 from "@/components/landing/bio2025";
 
 interface CVItem {
   title: string;
   start: string;
   end: string;
   description: string;
-  role: string;
+  company: string;
+  location: string;
+  type: "full-time" | "client";
+  responsibilities: string[];
   projects?: number;
+  collaborators?: string[];
 }
 
 interface PressAwardItem {
@@ -100,15 +106,8 @@ export default function CVPage() {
   const [educationData, setEducationData] = useState<EducationItem[]>([]);
   const [socialData, setSocialData] = useState<SocialItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check system preference for dark mode
-    if (typeof window !== "undefined") {
-      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setDarkMode(isDark);
-    }
-
     const loadData = async () => {
       try {
         const [cv, pressAwards, education, social] = await Promise.all([
@@ -133,222 +132,155 @@ export default function CVPage() {
     window.print();
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
   if (error) {
     return (
       <div className="container mx-auto p-4 text-red-500">Error: {error}</div>
     );
   }
 
+  // Convert CV data to ListView format
+  const experienceData = cvData
+    .filter((item) => item.type === "full-time")
+    .map((item) => ({
+      title: item.title,
+      description: `${item.company} • ${item.location} • ${item.start} - ${item.end}\n${item.description}`,
+      publishedAt: item.start,
+      url: `/cv/${item.company.toLowerCase().replace(/\s+/g, "-")}`,
+      tags: item.responsibilities,
+      metadata: {
+        company: item.company,
+        location: item.location,
+        start: item.start,
+        end: item.end,
+        projects: item.projects,
+      },
+    }));
+
+  const clientData = cvData
+    .filter((item) => item.type === "client")
+    .map((item) => ({
+      title: item.company,
+      description: `${item.title} • ${item.location} • ${item.start} - ${item.end}\n${item.description}`,
+      publishedAt: item.start,
+      url: `/cv/${item.company.toLowerCase().replace(/\s+/g, "-")}`,
+      tags: item.responsibilities,
+      metadata: {
+        company: item.company,
+        location: item.location,
+        start: item.start,
+        end: item.end,
+      },
+    }));
+
+  const educationDataFormatted = educationData.map((item) => ({
+    title: item.institution,
+    description: `${item.degree} in ${item.field} • ${item.location} • ${
+      item.start
+    } - ${item.end}\n${item.achievements.join(", ")}`,
+    publishedAt: item.start,
+    url: `/cv/${item.institution.toLowerCase().replace(/\s+/g, "-")}`,
+    tags: item.achievements,
+    metadata: {
+      location: item.location,
+      start: item.start,
+      end: item.end,
+    },
+  }));
+
+  const pressAwardsDataFormatted = pressAwardsData.map((item) => ({
+    title: item.title,
+    description: item.date,
+    publishedAt: item.date,
+    url: item.link,
+    metadata: {
+      date: item.date,
+    },
+  }));
+
+  const allData = [
+    ...experienceData,
+    ...clientData,
+    ...educationDataFormatted,
+    ...pressAwardsDataFormatted,
+  ];
+
   return (
-    <main
-      className={`min-h-screen transition-colors duration-200 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-black"
-      }`}
-    >
-      <div className="container mx-auto p-4">
+    <main className="min-h-screen">
+      <CollectionHero
+        name="CV"
+        projects={allData}
+        allProjects={allData}
+        showEntriesCount={false}
+        showRssLink={false}
+      />
+      <div className="container mx-auto px-4 py-8">
+        {/* Bio Section with Image */}
+        <div className="mb-12 grid grid-cols-3 gap-8">
+          {/* Image Column */}
+          <div className="relative   overflow-hidden">
+            <Image
+              src="/me/2025_headshot.jpeg"
+              alt="Will's portrait"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          {/* Bio Text Column */}
+          <div className="col-span-2 prose prose-lg max-w-none">
+            <Bio2025 />
+          </div>
+        </div>
+
         {/* Controls */}
-        <div className="fixed top-4 right-4 flex gap-4 print:hidden">
-          <button
-            onClick={toggleDarkMode}
-            className={`p-2 rounded-full ${
-              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
-            } hover:opacity-80 transition-opacity`}
-            aria-label={
-              darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-          >
-            {darkMode ? (
-              <RiSunLine className="w-5 h-5" />
-            ) : (
-              <RiMoonLine className="w-5 h-5" />
-            )}
-          </button>
+        <div className="fixed top-4 right-4 flex gap-4 print:hidden z-50">
           <button
             onClick={handlePrint}
-            className={`p-2 rounded-full ${
-              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
-            } hover:opacity-80 transition-opacity`}
+            className="p-2 rounded-full bg-gray-100 text-gray-800 hover:opacity-80 transition-opacity"
             aria-label="Print CV"
           >
             <RiPrinterLine className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Header Section */}
-          <div
-            className={`col-span-full p-8 rounded-2xl ${
-              darkMode ? "bg-gray-800" : "bg-gray-50"
-            }`}
-          >
-            <div className="flex flex-col md:flex-row md:justify-between md:items-start">
-              <div>
-                <h1 className="text-4xl font-bold mb-4">Bill Winters</h1>
-                <p
-                  className={`text-xl ${
-                    darkMode ? "text-gray-300" : "text-gray-600"
-                  }`}
-                >
-                  Creative Technologist & Developer
-                </p>
-              </div>
-              <div className="mt-6 md:mt-0">
-                <div className="flex gap-4 flex-wrap">
-                  {socialData.map((social, index) => (
-                    <a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${
-                        darkMode
-                          ? "bg-gray-700 hover:bg-gray-600"
-                          : "bg-white hover:bg-gray-100"
-                      }`}
-                    >
-                      <SocialIcon icon={social.icon} />
-                      <span className="text-sm font-medium">
-                        {social.username}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Social Links */}
+        <div className="mb-8 flex gap-2 flex-wrap">
+          {socialData.map((social, index) => (
+            <a
+              key={index}
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors bg-white hover:bg-gray-100"
+            >
+              <SocialIcon icon={social.icon} />
+              <span className="text-sm font-medium">{social.username}</span>
+            </a>
+          ))}
+        </div>
 
-          {/* Experience Section */}
-          <div
-            className={`md:col-span-2 p-8 rounded-2xl transition-shadow ${
-              darkMode
-                ? "bg-gray-800 hover:shadow-lg-dark"
-                : "bg-gray-50 hover:shadow-lg"
-            }`}
-          >
-            <h2 className="text-2xl font-bold mb-6">Experience</h2>
-            <div className="space-y-8">
-              {cvData.map((item, index) => (
-                <div
-                  key={index}
-                  className={`border-b pb-6 last:border-0 ${
-                    darkMode ? "border-gray-700" : "border-gray-200"
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-semibold">{item.title}</h3>
-                    <span
-                      className={darkMode ? "text-gray-400" : "text-gray-500"}
-                    >
-                      {item.start} — {item.end}
-                    </span>
-                  </div>
-                  <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                    {item.description}
-                  </p>
-                  <p
-                    className={`font-medium ${
-                      darkMode ? "text-gray-200" : "text-gray-700"
-                    }`}
-                  >
-                    Role: {item.role}
-                  </p>
-                  {item.projects && (
-                    <p className="mt-2">
-                      <a
-                        href={`/projects?cv=${index}`}
-                        className="text-blue-500 hover:underline"
-                      >
-                        View {item.projects} Projects →
-                      </a>
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Experience Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Experience</h2>
+          <ListView data={experienceData} variant="default" />
+        </div>
 
-          {/* Education Section */}
-          <div
-            className={`p-8 rounded-2xl transition-shadow ${
-              darkMode
-                ? "bg-gray-800 hover:shadow-lg-dark"
-                : "bg-gray-50 hover:shadow-lg"
-            }`}
-          >
-            <h2 className="text-2xl font-bold mb-6">Education</h2>
-            <div className="space-y-6">
-              {educationData.map((edu, index) => (
-                <div
-                  key={index}
-                  className={`border-b pb-6 last:border-0 ${
-                    darkMode ? "border-gray-700" : "border-gray-200"
-                  }`}
-                >
-                  <h3 className="text-xl font-semibold mb-1">
-                    {edu.institution}
-                  </h3>
-                  <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                    {edu.degree}
-                  </p>
-                  <p
-                    className={`text-sm mb-2 ${
-                      darkMode ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    {edu.start} — {edu.end}
-                  </p>
-                  <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                    {edu.location}
-                  </p>
-                  <ul className="mt-2 space-y-1">
-                    {edu.achievements.map((achievement, i) => (
-                      <li
-                        key={i}
-                        className={darkMode ? "text-gray-300" : "text-gray-600"}
-                      >
-                        • {achievement}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Clients Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Clients & Collaborations</h2>
+          <ListView data={clientData} variant="default" />
+        </div>
 
-          {/* Press & Awards Section */}
-          <div
-            className={`col-span-full p-8 rounded-2xl transition-shadow ${
-              darkMode
-                ? "bg-gray-800 hover:shadow-lg-dark"
-                : "bg-gray-50 hover:shadow-lg"
-            }`}
-          >
-            <h2 className="text-2xl font-bold mb-6">Press & Awards</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {pressAwardsData.map((item, index) => (
-                <div key={index} className="group">
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:opacity-80 transition-opacity"
-                  >
-                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                    <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
-                      {item.date}
-                    </p>
-                    <span className="text-blue-500 group-hover:underline mt-2 inline-block">
-                      Read more →
-                    </span>
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Education Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Education</h2>
+          <ListView data={educationDataFormatted} variant="default" />
+        </div>
+
+        {/* Press & Awards Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6">Press & Awards</h2>
+          <ListView data={pressAwardsDataFormatted} variant="default" />
         </div>
       </div>
 

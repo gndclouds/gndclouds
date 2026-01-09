@@ -6,7 +6,7 @@ import {
   isProduction,
 } from "./content-loader";
 
-export interface Post {
+export interface CVEntry {
   slug: string;
   title: string;
   categories: string[];
@@ -16,18 +16,26 @@ export interface Post {
   published: boolean;
   metadata: {
     contentHtml: string;
+    start: string;
+    end: string;
+    company: string;
+    location: string;
+    role: string;
+    responsibilities: string[];
+    projects?: number;
+    collaborators?: string[];
     [key: string]: any;
   };
 }
 
-export async function getAllMarkdownFiles(): Promise<Post[]> {
+export async function getAllMarkdownFiles(): Promise<CVEntry[]> {
   try {
-    // Get content from the logs directory
-    const logPaths = await getMarkdownFilePaths("logs");
-    console.log(`Found ${logPaths.length} log markdown files`);
+    // Get content from the cv directory
+    const cvPaths = await getMarkdownFilePaths("cv");
+    console.log(`Found ${cvPaths.length} CV markdown files`);
 
     const files = await Promise.all(
-      logPaths.map(async (relativePath) => {
+      cvPaths.map(async (relativePath) => {
         try {
           // Get and parse content
           const content = await getContent(relativePath);
@@ -36,7 +44,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             return null;
           }
 
-          const { data: metadata } = matter(content);
+          const { data: metadata, content: markdownContent } = matter(content);
 
           // Generate slug from filename (without extension)
           const slug =
@@ -50,28 +58,29 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             title: metadata.title || "Untitled",
             categories: metadata.categories || [],
             tags: metadata.tags || [],
-            type: metadata.type || ["Log"],
-            publishedAt: metadata.publishedAt || new Date().toISOString(),
-            published: metadata.published !== false, // Default to published unless explicitly false
+            type: metadata.type || ["Experience"],
+            publishedAt: metadata.start || new Date().toISOString(), // Use start date as publishedAt for sorting
+            published: metadata.published !== false,
             metadata: {
               ...metadata,
-              contentHtml: metadata.contentHtml || "",
+              contentHtml: markdownContent,
             },
-          } as Post;
+          } as CVEntry;
         } catch (error) {
-          console.error(`Error processing log ${relativePath}:`, error);
+          console.error(`Error processing CV entry ${relativePath}:`, error);
           return null;
         }
       })
     );
 
     // Filter out nulls from failed fetches
-    const validFiles = files.filter(Boolean) as Post[];
+    const validFiles = files.filter(Boolean) as CVEntry[];
 
-    // Sort by publish date
+    // Sort by start date (most recent first)
     return validFiles.sort(
       (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        new Date(b.metadata.start).getTime() -
+        new Date(a.metadata.start).getTime()
     );
   } catch (error) {
     console.error(`Unexpected error in getAllMarkdownFiles:`, error);
@@ -79,11 +88,11 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
   }
 }
 
-export async function getAllLogs(): Promise<Post[]> {
+export async function getAllCVEntries(): Promise<CVEntry[]> {
   return getAllMarkdownFiles();
 }
 
-export async function getLogBySlug(slug: string): Promise<Post | null> {
-  const allLogs = await getAllMarkdownFiles();
-  return allLogs.find((log) => log.slug === slug) || null;
+export async function getCVEntryBySlug(slug: string): Promise<CVEntry | null> {
+  const allEntries = await getAllMarkdownFiles();
+  return allEntries.find((entry) => entry.slug === slug) || null;
 }

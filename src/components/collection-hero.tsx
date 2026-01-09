@@ -11,12 +11,16 @@ interface CollectionHeroProps {
   name: string;
   projects: any[]; // Specify more detailed type if possible
   allProjects: any[]; // Specify more detailed type if possible
+  showEntriesCount?: boolean;
+  showRssLink?: boolean;
 }
 
 const CollectionHero = ({
   name,
   projects,
   allProjects,
+  showEntriesCount = true,
+  showRssLink = true,
 }: CollectionHeroProps) => {
   const router = useRouter();
   const [backgroundImage, setBackgroundImage] = useState("/background.jpg");
@@ -96,14 +100,18 @@ const CollectionHero = ({
                 v.{format(parseISO(projects[0].publishedAt), "yyyy-MM")}
               </time> */}
             </div>
-            <div className="flex justify-center items-center">
-              {allProjects.length} Entries
-            </div>
-            <div className="flex justify-end items-center">
-              <Link href="/api/projects/rss.xml">
-                <div>RSS</div>
-              </Link>
-            </div>
+            {showEntriesCount && (
+              <div className="flex justify-center items-center">
+                {allProjects.length} Entries
+              </div>
+            )}
+            {showRssLink && (
+              <div className="flex justify-end items-center">
+                <Link href="/api/projects/rss.xml">
+                  <div>RSS</div>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

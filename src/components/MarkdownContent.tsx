@@ -22,7 +22,7 @@ const components: Partial<ExtendedComponents> = {
   img: ({ node, ...props }) => {
     // Extract src and alt from props
     const { src, alt } = props;
-    const isProduction = process.env.NODE_ENV === 'production';
+    const isProduction = process.env.NODE_ENV === "production";
     const hasGitHubToken = !!process.env.GITHUB_ACCESS_TOKEN;
 
     if (!src) {
@@ -71,10 +71,10 @@ const components: Partial<ExtendedComponents> = {
       // Convert from /db-assets/path to assets/path for the proxy
       const assetPath = src
         .replace("/db-assets/", "assets/")
-        .replace(/^\//, ''); // Remove leading slash
-        
+        .replace(/^\//, ""); // Remove leading slash
+
       const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
-      
+
       return (
         <Image
           src={proxySrc}
@@ -89,9 +89,16 @@ const components: Partial<ExtendedComponents> = {
       );
     }
 
-    // For standard internal images
+    // For standard internal images (including db-assets with spaces/special chars)
     // Ensure src starts with a leading slash
-    const imageSrc = src.startsWith("/") ? src : `/${src}`;
+    let imageSrc = src.startsWith("/") ? src : `/${src}`;
+
+    // For db-assets paths, Next.js will handle URL encoding automatically
+    // But we need to make sure the path is correct
+    if (imageSrc.includes("/db-assets/")) {
+      // The path should already be correct from convertImageSyntax
+      // Next.js Image component will handle URL encoding of spaces
+    }
 
     return (
       <Image
@@ -134,8 +141,8 @@ const MarkdownContent = ({
   footnotes: { [key: string]: string };
 }) => {
   // Check if we're in production mode
-  const isProduction = process.env.NODE_ENV === 'production';
-  
+  const isProduction = process.env.NODE_ENV === "production";
+
   // Function to convert ![[image]] to ![](/assets/media/image) or to use asset proxy in production
   const convertImageSyntax = (text: string) => {
     return (
@@ -144,28 +151,32 @@ const MarkdownContent = ({
           // Remove any file extension from the path
           const cleanPath = p1.trim();
 
-          // Encode the path properly
-          const encodedPath = encodeURIComponent(cleanPath)
-            .replace(/%2F/g, "/")
-            .replace(/%40/g, "@"); // Replace %40 with @
+          // For local development, use the path as-is (spaces and special chars need to be URL encoded in the href)
+          // But we need to properly encode it for the URL
+          const pathParts = cleanPath.split("/");
+          const encodedParts = pathParts.map((part: string) =>
+            encodeURIComponent(part)
+          );
+          const encodedPath = encodedParts.join("/");
 
           // In production with GitHub token, use the asset proxy
           if (isProduction && process.env.GITHUB_ACCESS_TOKEN) {
             return `\n\n![${cleanPath}](/api/asset-proxy?path=assets/${encodedPath})\n\n`;
           }
-          
-          // Otherwise use the local path for images
-          return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+
+          // For local development, use the db-assets path
+          // The browser will handle URL encoding of spaces automatically
+          return `\n\n![${cleanPath}](/db-assets/${cleanPath})\n\n`;
         })
         // Also handle standard markdown image syntax with relative paths
         .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
           const assetPath = src.replace("assets/media/", "");
-          
+
           // In production with GitHub token, use the asset proxy
           if (isProduction && process.env.GITHUB_ACCESS_TOKEN) {
             return `\n\n![${alt}](/api/asset-proxy?path=${src})\n\n`;
           }
-          
+
           // Otherwise use the local path
           return `\n\n![${alt}](/db-assets/media/${assetPath})\n\n`;
         })
@@ -189,8 +200,11 @@ const MarkdownContent = ({
     extractedLinks.push(match[2]);
   }
 
-  // Remove footnotes from the main content without re-converting image syntax
-  const updatedContent = content.replace(footnoteRegex, "");
+  // Remove footnotes from the main content
+  const contentWithoutFootnotes = content.replace(footnoteRegex, "");
+
+  // Convert Obsidian-style image syntax ![[image]] to standard markdown
+  const updatedContent = convertImageSyntax(contentWithoutFootnotes);
 
   return (
     <div className="flex">

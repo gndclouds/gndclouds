@@ -1,4 +1,4 @@
-import { BskyAgent, AppBskyFeedDefs } from "@atproto/api";
+import { BskyAgent, AppBskyFeedDefs, AppBskyEmbedImages } from "@atproto/api";
 
 export interface BlueskyPost {
   id: string;
@@ -16,6 +16,10 @@ export interface BlueskyPost {
   likeCount: number;
   repostCount: number;
   isRepost: boolean;
+  images?: {
+    alt: string;
+    url: string;
+  }[];
   reason?: {
     by: {
       did: string;
@@ -107,6 +111,15 @@ export async function getBlueskyPosts(handle: string): Promise<BlueskyPost[]> {
           !!item.reason &&
           item.reason.$type === "app.bsky.feed.defs#reasonRepost";
 
+        // Extract images from embed if present
+        const images =
+          post.embed?.$type === "app.bsky.embed.images#view"
+            ? (post.embed as AppBskyEmbedImages.View).images.map((img) => ({
+                alt: img.alt || "",
+                url: img.fullsize || img.thumb,
+              }))
+            : [];
+
         return {
           id: post.uri.split("/").pop() || "",
           text: record.text || "",
@@ -123,6 +136,7 @@ export async function getBlueskyPosts(handle: string): Promise<BlueskyPost[]> {
           likeCount: post.likeCount || 0,
           repostCount: post.repostCount || 0,
           isRepost: isRepost,
+          images: images,
           reason: isRepost
             ? {
                 by: {

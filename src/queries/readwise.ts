@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { fetchWithRetry, generateCacheKey } from "@/utils/api-utils";
 
 // Define interfaces for book data
 interface ReadwiseBook {
@@ -85,7 +85,9 @@ async function getReadwiseData() {
   }
 }
 
-async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Promise<BookSummary[]> {
+async function getReadwiseBooksSummary(
+  options = { recommendedOnly: false }
+): Promise<BookSummary[]> {
   try {
     console.log(
       `getReadwiseBooksSummary called with recommendedOnly=${options.recommendedOnly}`
@@ -103,15 +105,13 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Pr
     myHeaders.append("Authorization", `Token ${READWISE_TOKEN}`);
     myHeaders.append("Content-Type", "application/json");
 
-    // Switch to using the books endpoint which includes tags
     const apiUrl = "https://readwise.io/api/v2/books/";
     let allItems: any[] = [];
     let pageCount = 0;
-    const MAX_PAGES = 20; // Limit to prevent infinite loops
+    const MAX_PAGES = 20;
     let recommendedCount = 0;
     let nextUrl: string | null = apiUrl;
 
-    // Define possible variations of the recommend tag
     const recommendTagVariations = [
       "recommend",
       "Recommend",
@@ -120,64 +120,67 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Pr
       "Recommended",
     ];
 
-    // First, get all books
     while (nextUrl && pageCount < MAX_PAGES) {
       pageCount++;
       console.log(`Fetching page ${pageCount} from Readwise API: ${nextUrl}`);
 
       try {
-        const response = await fetch(nextUrl, {
-          method: "GET",
-          headers: myHeaders,
+        // Generate cache key for this page
+        const cacheKey = generateCacheKey(nextUrl, {
+          recommendedOnly: options.recommendedOnly,
         });
 
-        if (!response.ok) {
-          console.error(
-            `HTTP error from Readwise API: ${response.status} ${response.statusText}`
-          );
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = (await response.json()) as {
+        // Use fetchWithRetry instead of direct fetch
+        const data = (await fetchWithRetry(
+          nextUrl,
+          {
+            method: "GET",
+            headers: myHeaders,
+          },
+          cacheKey
+        )) as {
           results: ReadwiseBook[];
           next: string | null;
         };
+
         console.log(
           `Page ${pageCount}: Received ${data.results.length} books from Readwise API`
         );
 
-        // Process each book to get its tags
+        // Process each book to get its tags with rate limiting
         const booksWithTags = await Promise.all(
           data.results.map(async (book) => {
             try {
-              // Get tags for this book
-              const tagsResponse = await fetch(
+              const tagsCacheKey = generateCacheKey(
+                `https://readwise.io/api/v2/books/${book.id}/tags`
+              );
+
+              // Use fetchWithRetry for tags endpoint
+              const tagsData = (await fetchWithRetry(
                 `https://readwise.io/api/v2/books/${book.id}/tags`,
                 {
                   method: "GET",
                   headers: myHeaders,
-                }
-              );
-
-              if (!tagsResponse.ok) {
-                console.error(
-                  `Error fetching tags for book ${book.id}: ${tagsResponse.status}`
-                );
-                return { ...book, tags: [] };
-              }
-
-              const tagsData = (await tagsResponse.json()) as {
+                },
+                tagsCacheKey
+              )) as {
                 results?: Array<{ name: string }>;
               };
-              
-              // Safely handle potentially undefined results array
+
               let tags: string[] = [];
               try {
-                if (tagsData && tagsData.results && Array.isArray(tagsData.results)) {
+                if (
+                  tagsData &&
+                  tagsData.results &&
+                  Array.isArray(tagsData.results)
+                ) {
                   tags = tagsData.results.map((tag) => tag.name || "");
                 }
               } catch (tagError) {
-                console.error(`Error processing tags for book ${book.id}:`, tagError);
+                console.error(
+                  `Error processing tags for book ${book.id}:`,
+                  tagError
+                );
               }
 
               console.log(
@@ -215,24 +218,22 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Pr
 
         // Count items with any variation of 'recommend' tag before filtering
         if (options.recommendedOnly) {
-          const recommendedItemsOnPage = booksWithTags.filter(
-            (book: any) => {
-              try {
-                if (!book || !book.tags || !Array.isArray(book.tags)) {
-                  return false;
-                }
-                return book.tags.some((tag: string) => {
-                  if (typeof tag !== 'string') return false;
-                  return recommendTagVariations.some(
-                    (variation) => tag.toLowerCase() === variation.toLowerCase()
-                  );
-                });
-              } catch (error) {
-                console.error("Error filtering recommended items:", error);
+          const recommendedItemsOnPage = booksWithTags.filter((book: any) => {
+            try {
+              if (!book || !book.tags || !Array.isArray(book.tags)) {
                 return false;
               }
+              return book.tags.some((tag: string) => {
+                if (typeof tag !== "string") return false;
+                return recommendTagVariations.some(
+                  (variation) => tag.toLowerCase() === variation.toLowerCase()
+                );
+              });
+            } catch (error) {
+              console.error("Error filtering recommended items:", error);
+              return false;
             }
-          ).length;
+          }).length;
           console.log(
             `Page ${pageCount}: Found ${recommendedItemsOnPage} books with any variation of 'recommend' tag`
           );
@@ -260,7 +261,9 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Pr
             }
 
             // Ensure tags array includes the media type if determined
-            const tags: string[] = Array.isArray(book.tags) ? [...book.tags] : [];
+            const tags: string[] = Array.isArray(book.tags)
+              ? [...book.tags]
+              : [];
             if (mediaType && !tags.includes(mediaType)) {
               tags.push(mediaType);
             }
@@ -270,7 +273,7 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Pr
             try {
               if (Array.isArray(tags)) {
                 isRecommended = tags.some((tag: string) => {
-                  if (typeof tag !== 'string') return false;
+                  if (typeof tag !== "string") return false;
                   return recommendTagVariations.some(
                     (variation) => tag.toLowerCase() === variation.toLowerCase()
                   );
@@ -320,7 +323,8 @@ async function getReadwiseBooksSummary(options = { recommendedOnly: false }): Pr
         }
       } catch (error) {
         console.error(`Error fetching page ${pageCount}:`, error);
-        break; // Stop pagination on error
+        // The error will be handled by fetchWithRetry's retry logic
+        throw error;
       }
     }
 
