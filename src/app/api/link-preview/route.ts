@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
-
 export async function GET(request: NextRequest) {
   const url = request.nextUrl.searchParams.get("url");
 
@@ -27,6 +26,7 @@ export async function GET(request: NextRequest) {
     const $ = cheerio.load(html);
 
     // Extract metadata
+    const ogImage = $('meta[property="og:image"]').attr("content") || null;
     const metadata = {
       title:
         $("title").text() ||
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         $('meta[name="description"]').attr("content") ||
         $('meta[property="og:description"]').attr("content") ||
         "",
-      image: $('meta[property="og:image"]').attr("content") || null,
+      image: ogImage ? getAbsoluteUrl(ogImage, url) : null,
       siteName: $('meta[property="og:site_name"]').attr("content") || null,
       favicon: getFavicon($, url),
     };
@@ -51,6 +51,42 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Helper function to convert relative URLs to absolute URLs
+function getAbsoluteUrl(urlOrPath: string, baseUrl: string): string {
+  // If it's already an absolute URL, return as-is
+  if (urlOrPath.startsWith("http://") || urlOrPath.startsWith("https://")) {
+    return urlOrPath;
+  }
+
+  // If it's a relative URL (starts with /), make it absolute
+  if (urlOrPath.startsWith("/")) {
+    try {
+      const base = new URL(baseUrl);
+      return `${base.protocol}//${base.host}${urlOrPath}`;
+    } catch (e) {
+      return urlOrPath;
+    }
+  }
+
+  // If it's a protocol-relative URL (starts with //), add the protocol
+  if (urlOrPath.startsWith("//")) {
+    try {
+      const base = new URL(baseUrl);
+      return `${base.protocol}${urlOrPath}`;
+    } catch (e) {
+      return urlOrPath;
+    }
+  }
+
+  // Otherwise, treat as relative path and resolve against base URL
+  try {
+    const base = new URL(baseUrl);
+    return new URL(urlOrPath, base).toString();
+  } catch (e) {
+    return urlOrPath;
+  }
+}
+
 // Helper function to get favicon
 function getFavicon($: cheerio.CheerioAPI, url: string): string | null {
   // Try to find favicon in various ways
@@ -60,16 +96,7 @@ function getFavicon($: cheerio.CheerioAPI, url: string): string | null {
     $('link[rel="apple-touch-icon"]').attr("href");
 
   if (faviconLink) {
-    // If the favicon URL is relative, make it absolute
-    if (faviconLink.startsWith("/")) {
-      try {
-        const baseUrl = new URL(url);
-        return `${baseUrl.protocol}//${baseUrl.host}${faviconLink}`;
-      } catch (e) {
-        return null;
-      }
-    }
-    return faviconLink;
+    return getAbsoluteUrl(faviconLink, url);
   }
 
   // Default to favicon.ico at the root of the domain

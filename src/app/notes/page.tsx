@@ -1,6 +1,6 @@
 import { getAllNotesAndResearch } from "@/queries/notes";
 
-import ListView from "@/components/list-view";
+import ListViewWithSearch from "@/components/list-view-with-search";
 import CollectionHero from "@/components/collection-hero";
 
 export default async function NotesPage() {
@@ -25,7 +25,7 @@ export default async function NotesPage() {
         allProjects={combinedData}
       />
       <section className="flex flex-col gap-4 p-4 ">
-        <ListView data={combinedData} />
+        <ListViewWithSearch data={combinedData} placeholder="Search notes..." />
       </section>
     </main>
   );

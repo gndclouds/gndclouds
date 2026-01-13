@@ -2,6 +2,7 @@
   /* Base styles for the markdown container */
   font-family: Arial, sans-serif;
   line-height: 1.6;
+  max-width: 600px; /* Limit content width for better readability */
 }
 
 /* Add the markdown class that's used in the project page */

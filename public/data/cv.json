@@ -1,50 +1,38 @@
 [
   {
-    "title": "Design Technologist",
-    "start": "2025-03-18",
+    "title": "Freelancer, Generalist",
+    "start": "2016",
     "end": "Present",
-    "description": "The next chapter has begun, and I am excited to share more soon.",
-    "company": "FieldKit",
-    "location": "Earth",
+    "description": "For about a decade, I have been working with orgs in a variety of roles across design, research, and development. Some of them include: Audi Air, Decision Labs, FieldKit, Future Partners, Hedra.ai, Reduct.video, San Francisco Games, Speechify, and Workshop Cafe.",
+    "company": "Freelancer",
+    "location": "Various",
     "type": "client",
-    "responsibilities": ["Research", "Development"],
-    "collaborators": ["Alex Grishaver, Nathan Hite"]
+    "responsibilities": ["Design", "Research", "Development"]
   },
   {
-    "title": "Frontend Developer",
-    "start": "2025-03-12",
-    "end": "Present",
-    "description": "The next chapter has begun, and I am excited to share more soon.",
-    "company": "Hedra",
+    "title": "Product Design Lead",
+    "start": "2025",
+    "end": "2026",
+    "description": "We were building a FinTech diligence product to create a cursor-style tool for borrowers and lenders. In hopes that, with the use of AI, we could reduce the cost of diligence and increase spending on climate-related technologies. ",
+    "company": "Ezra",
     "location": "Remote",
-    "type": "client",
-    "responsibilities": ["Development", "Design"]
-  },
-  {
-    "title": "CoFounder",
-    "start": "2025-01-01",
-    "end": "Present",
-    "description": "The next chapter has begun, and I am excited to share more soon.",
-    "company": "Interstitial",
-    "location": "remote",
     "type": "full-time",
-    "responsibilities": ["Leadership", "Development", "Design"]
+    "responsibilities": ["Design", "Development", "Research"]
   },
   {
     "title": "CoFounder",
-    "start": "2017-01-01",
-    "end": "Present",
-    "description": "A tribe of people supporting each other to establish their creative footing.",
-    "company": "Tiny Factories",
-    "location": "Taipei / San Francisco / Tokyo",
+    "start": "2023",
+    "end": "2025",
+    "description": "We designed Cursor for Architecture to make building homes easier while decreasing the waste of time and materials needed for construction. I was one of two technical team members and led all research.",
+    "company": "Flexhouse",
+    "location": "Remote",
     "type": "full-time",
-    "responsibilities": ["Leadership"],
-    "collaborators": ["Weiwei", "Tomo Kihara"]
+    "responsibilities": ["Leadership", "Research", "Development"]
   },
   {
     "title": "CoFounder",
-    "start": "2021-01-01",
-    "end": "2022-01-01",
+    "start": "2021",
+    "end": "2022",
     "description": "Cofounded acting as CTO / CDO while creating a public API for earth science data and bond monitoring and verification service for ReFi.",
     "company": "Anthropogenic",
     "location": "Earth",
@@ -52,78 +40,80 @@
     "responsibilities": ["Leadership", "Development", "Design"]
   },
   {
+    "title": "CoFounder",
+    "start": "2017",
+    "end": "Intermittent",
+    "description": "A community of people supporting each other to establish their creative footing. Over the years, we have held 12 events and built 23 products together across our small community of around 100 members.",
+    "company": "TinyFactories",
+    "location": "Taipei / San Francisco / Tokyo",
+    "type": "full-time",
+    "responsibilities": ["Leadership"]
+  },
+  {
     "title": "Design Technologist",
-    "start": "2021-01-01",
-    "end": "2022-01-01",
-    "description": "Work across project teams in a hybrid role of design and development. The main project that I contributed to was Circulaw.nl.",
+    "start": "2021",
+    "end": "2022",
+    "description": "Worked across project teams in a hybrid role of design and development. The main project that I contributed to was Circulaw.nl, focused on policies around ecological construction.",
     "company": "Dark Matter Labs",
     "location": "Remote",
     "type": "full-time",
-    "responsibilities": ["Design", "Development", "Research"],
-    "collaborators": ["Indy", "Joris", "Lars"]
+    "responsibilities": ["Design", "Development", "Research"]
   },
   {
-    "title": "Software Developer",
-    "start": "2020-01-01",
-    "end": "2020-12-31",
+    "title": "Frontend Developer",
+    "start": "2020",
+    "end": "2020",
     "description": "Contributed to slate.host",
     "company": "Protocol Labs",
     "location": "Remote",
     "type": "full-time",
-    "responsibilities": ["Development"],
-    "collaborators": ["Fan Lin", "Jimmy Lee"]
+    "responsibilities": ["Development"]
   },
   {
     "title": "UX Researcher",
-    "start": "2018-01-01",
-    "end": "2019-12-31",
-    "company": "Speechify",
-    "location": "Remote",
-    "type": "client",
-    "responsibilities": ["Research", "Design"]
-  },
-  {
-    "title": "UX Researcher",
-    "start": "2018-01-01",
-    "end": "2019-12-31",
+    "start": "2018",
+    "end": "2019",
+    "description": "Conducted user research and design work",
     "company": "Udacity",
     "location": "Remote",
     "type": "full-time",
     "responsibilities": ["Research", "Education"]
   },
   {
+    "title": "Research Assistant",
+    "start": "2018",
+    "end": "2018",
+    "description": "Research and development work",
+    "company": "Xerox PARC",
+    "location": "Palo Alto, California",
+    "type": "full-time",
+    "responsibilities": ["Research", "Development"]
+  },
+  {
     "title": "Creative Technologist",
-    "start": "2017-01-01",
-    "end": "2018-01-01",
+    "start": "2017",
+    "end": "2018",
+    "description": "Design, development, and research work",
     "company": "Fjord",
     "location": "San Francisco, California",
     "type": "full-time",
     "responsibilities": ["Design", "Development", "Research"]
   },
   {
-    "title": "Research Assistant",
-    "start": "2018-01-01",
-    "end": "2018-12-31",
-    "company": "PARC, a Xerox Company",
-    "location": "Palo Alto, California",
-    "type": "full-time",
-    "responsibilities": ["Research", "Development"],
-    "collaborators": ["Mike Kuniavsky"]
-  },
-  {
     "title": "Interaction Designer",
-    "start": "2016-01-01",
-    "end": "2017-01-01",
+    "start": "2016",
+    "end": "2017",
+    "description": "Design and research work",
     "company": "IDEO CoLab",
     "location": "San Francisco, California",
     "type": "full-time",
-    "responsibilities": ["Design", "Research"],
-    "collaborators": ["Adam Lukasic, Brett Killoren, Tara Tan, Joe Gurber"]
+    "responsibilities": ["Design", "Research"]
   },
   {
     "title": "UX Researcher",
-    "start": "2017-01-01",
-    "end": "2017-12-31",
+    "start": "2017",
+    "end": "2017",
+    "description": "User research and design",
     "company": "IFTTT",
     "location": "San Francisco, California",
     "type": "full-time",
@@ -131,75 +121,32 @@
   },
   {
     "title": "Interaction Design Intern",
-    "start": "2015-01-01",
-    "end": "2015-12-31",
+    "start": "2015",
+    "end": "2015",
+    "description": "Design and research internship",
     "company": "IDEO",
     "location": "Chicago, Illinois",
     "type": "full-time",
-    "responsibilities": ["Design", "Research"],
-    "collaborators": ["Toi Valentine "]
-  },
-  {
-    "title": "Creative Technologist",
-    "start": "2015-01-01",
-    "end": "2015-12-31",
-    "company": "Palace Games",
-    "location": "San Francisco, CA",
-    "type": "client",
-    "responsibilities": ["Development", "hardware"]
+    "responsibilities": ["Design", "Research"]
   },
   {
     "title": "Creative Technologist Intern",
-    "start": "2015-01-01",
-    "end": "2015-12-31",
+    "start": "2015",
+    "end": "2015",
+    "description": "Development and design work",
     "company": "Maker Media",
     "location": "San Francisco, CA",
     "type": "full-time",
     "responsibilities": ["Development", "Design"]
   },
   {
-    "title": "UXR Hardware & Software Prototyper",
-    "start": "2014-01-01",
-    "end": "2014-12-31",
+    "title": "UXR Hardware & Software Prototyper Intern",
+    "start": "2014",
+    "end": "2014",
+    "description": "Research, development, and hardware prototyping",
     "company": "Intel Labs",
     "location": "Santa Clara, CA",
     "type": "full-time",
     "responsibilities": ["Research", "Development", "Hardware"]
-  },
-  {
-    "title": "Lab Monitor",
-    "start": "2013-01-01",
-    "end": "2016-12-31",
-    "company": "California College of the Arts",
-    "location": "San Francisco, CA",
-    "type": "full-time",
-    "responsibilities": []
-  },
-  {
-    "title": "Game Design TA",
-    "start": "2013-06-01",
-    "end": "2013-08-31",
-    "company": "California College of the Arts",
-    "location": "San Francisco, CA",
-    "type": "full-time",
-    "responsibilities": []
-  },
-  {
-    "title": "Lab Assistant",
-    "start": "2012-01-01",
-    "end": "2012-12-31",
-    "company": "California College of the Arts",
-    "location": "San Francisco, CA",
-    "type": "full-time",
-    "responsibilities": ["Education"]
-  },
-  {
-    "title": "Summer Camp Counsler",
-    "start": "2010-01-01",
-    "end": "209-12-31",
-    "company": "Madison Country Day School",
-    "location": "Madison, WI",
-    "type": "full-time",
-    "responsibilities": ["Education", "Leadership"]
   }
 ]

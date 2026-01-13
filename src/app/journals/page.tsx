@@ -1,5 +1,5 @@
 import { getAllJournals } from "@/queries/journals";
-import ListView from "@/components/list-view";
+import ListViewWithSearch from "@/components/list-view-with-search";
 import CollectionHero from "@/components/collection-hero";
 
 export default async function JournalsPage() {
@@ -23,7 +23,10 @@ export default async function JournalsPage() {
         allProjects={combinedData}
       />
       <section className="flex flex-col gap-4 p-4">
-        <ListView data={combinedData} />
+        <ListViewWithSearch
+          data={combinedData}
+          placeholder="Search journals..."
+        />
       </section>
     </main>
   );

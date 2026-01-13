@@ -133,50 +133,77 @@ export async function getGitHubActivity(
     console.log(`Fetching GitHub activity for user: ${username}`);
 
     // GitHub API has a rate limit, so we'll use a token if available
-    const githubToken = process.env.GITHUB_TOKEN;
+    const githubToken =
+      process.env.GITHUB_TOKEN || process.env.GITHUB_ACCESS_TOKEN;
     const headers: Record<string, string> = {};
 
     if (githubToken) {
       console.log("Using GitHub token for authentication");
-      headers.Authorization = `token ${githubToken}`;
+      headers.Authorization = `Bearer ${githubToken}`;
     } else {
       console.log(
         "No GitHub token found, using unauthenticated requests (rate limited)"
       );
     }
 
-    // Fetch public events for the user
-    const response = await axios.get(
-      `https://api.github.com/users/${username}/events/public?per_page=${limit}`,
-      { headers }
-    );
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
 
-    if (!response.data || !Array.isArray(response.data)) {
-      console.log("No GitHub events found or invalid response");
+    try {
+      // Fetch public events for the user
+      const response = await axios.get(
+        `https://api.github.com/users/${username}/events/public?per_page=${limit}`,
+        {
+          headers,
+          timeout: 15000,
+          signal: controller.signal,
+        }
+      );
+
+      clearTimeout(timeoutId);
+
+      if (!response.data || !Array.isArray(response.data)) {
+        console.log("No GitHub events found or invalid response");
+        return [];
+      }
+
+      const events = response.data;
+      console.log(`Found ${events.length} GitHub events for ${username}`);
+
+      // Format the events
+      const formattedActivities = events
+        .map(formatGitHubEvent)
+        .filter((activity): activity is GitHubActivity => activity !== null);
+
+      console.log(
+        `Formatted ${formattedActivities.length} GitHub activities for feed`
+      );
+      return formattedActivities;
+    } catch (error) {
+      clearTimeout(timeoutId);
+
+      if ((error as Error).name === "AbortError") {
+        console.error("GitHub API request timed out");
+        return [];
+      }
+
+      console.error("Error fetching GitHub activity:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 403) {
+          console.error("GitHub API rate limit exceeded");
+        } else {
+          console.error(
+            "API response:",
+            error.response.status,
+            error.response.data
+          );
+        }
+      }
       return [];
     }
-
-    const events = response.data;
-    console.log(`Found ${events.length} GitHub events for ${username}`);
-
-    // Format the events
-    const formattedActivities = events
-      .map(formatGitHubEvent)
-      .filter((activity): activity is GitHubActivity => activity !== null);
-
-    console.log(
-      `Formatted ${formattedActivities.length} GitHub activities for feed`
-    );
-    return formattedActivities;
   } catch (error) {
-    console.error("Error fetching GitHub activity:", error);
-    if (axios.isAxiosError(error) && error.response) {
-      console.error(
-        "API response:",
-        error.response.status,
-        error.response.data
-      );
-    }
+    console.error("Error in getGitHubActivity:", error);
     return [];
   }
 }

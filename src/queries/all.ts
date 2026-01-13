@@ -91,16 +91,40 @@ async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
 export async function getAllMarkdownFiles(): Promise<Post[]> {
   try {
     // Get all content types
-    const [projectPaths, notePaths, newsletterPaths] = await Promise.all([
+    const [
+      projectPaths,
+      notePaths,
+      newsletterPaths,
+      logPaths,
+      journalPaths,
+      studyPaths,
+      systemPaths,
+      fragmentPaths,
+      researchPaths,
+    ] = await Promise.all([
       getMarkdownFilePaths("projects"),
       getMarkdownFilePaths("notes"),
       getMarkdownFilePaths("newsletters"),
+      getMarkdownFilePaths("logs"),
+      getMarkdownFilePaths("journals"),
+      getMarkdownFilePaths("studies"),
+      getMarkdownFilePaths("systems"),
+      getMarkdownFilePaths("fragments"),
+      getMarkdownFilePaths("research"),
     ]);
 
     // Combine all paths and remove any 'default/' prefix
-    const allPaths = [...projectPaths, ...notePaths, ...newsletterPaths].map(
-      (path) => path.replace(/^default\//, "")
-    );
+    const allPaths = [
+      ...projectPaths,
+      ...notePaths,
+      ...newsletterPaths,
+      ...logPaths,
+      ...journalPaths,
+      ...studyPaths,
+      ...systemPaths,
+      ...fragmentPaths,
+      ...researchPaths,
+    ].map((path) => path.replace(/^default\//, ""));
 
     // Process all files
     const posts = await Promise.all(
@@ -113,15 +137,41 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
           // Get the slug from the file path, removing any 'default/' prefix
           const slug = filePath.split("/").pop()?.replace(".md", "") || "";
 
-          // Determine the type based on the file path
-          const type = filePath.split("/")[0];
+          // Determine the type - prefer metadata.type, fallback to directory name
+          // Normalize metadata type by removing Obsidian brackets and converting to array
+          let type: string[] = [];
+          if (metadata.type) {
+            if (Array.isArray(metadata.type)) {
+              type = metadata.type.map((t: string) =>
+                String(t)
+                  .toLowerCase()
+                  .replace(/\[\[/g, "")
+                  .replace(/\]\]/g, "")
+                  .trim()
+              );
+            } else {
+              type = [
+                String(metadata.type)
+                  .toLowerCase()
+                  .replace(/\[\[/g, "")
+                  .replace(/\]\]/g, "")
+                  .trim(),
+              ];
+            }
+          }
+
+          // If no type from metadata, use directory name
+          if (type.length === 0 || (type.length === 1 && type[0] === "")) {
+            const dirType = filePath.split("/")[0];
+            type = [dirType];
+          }
 
           return {
             slug,
             title: metadata.title || "",
             categories: metadata.categories || [],
             tags: metadata.tags || [],
-            type: [type],
+            type,
             publishedAt: metadata.publishedAt || "",
             published: metadata.published !== false,
             metadata: {

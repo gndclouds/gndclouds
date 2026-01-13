@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const Bio2024 = () => (
-  <div className="grid grid-col gap-4">
+  <div className="grid grid-col gap-4 text-left" style={{ textAlign: "left" }}>
     <div>Hello, my name is Will. Welcome to my corner of the internet.</div>
     <div>
       <span className="font-bold">My focus</span> for the next decade, as a{" "}

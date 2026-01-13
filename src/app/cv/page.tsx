@@ -1,18 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import {
-  RiGithubLine,
-  RiLinkedinLine,
-  RiTwitterXLine,
-  RiDribbbleLine,
-  RiGlobalLine,
-  RiPrinterLine,
-} from "react-icons/ri";
+import Link from "next/link";
 import CollectionHero from "@/components/collection-hero";
-import ListView from "@/components/list-view";
-import Bio2025 from "@/components/landing/bio2025";
+import ObfuscatedEmail from "@/components/ObfuscatedEmail";
 
 interface CVItem {
   title: string;
@@ -23,14 +14,13 @@ interface CVItem {
   location: string;
   type: "full-time" | "client";
   responsibilities: string[];
-  projects?: number;
-  collaborators?: string[];
 }
 
 interface PressAwardItem {
   title: string;
   date: string;
   link: string;
+  description: string;
 }
 
 interface EducationItem {
@@ -43,11 +33,8 @@ interface EducationItem {
   achievements: string[];
 }
 
-interface SocialItem {
-  platform: string;
-  url: string;
-  username: string;
-  icon: string;
+interface Proficiencies {
+  [key: string]: string[];
 }
 
 const fetchCVData = async (): Promise<CVItem[]> => {
@@ -74,52 +61,42 @@ const fetchEducationData = async (): Promise<EducationItem[]> => {
   return response.json();
 };
 
-const fetchSocialData = async (): Promise<SocialItem[]> => {
-  const response = await fetch("/data/social.json");
+const fetchProficienciesData = async (): Promise<Proficiencies> => {
+  const response = await fetch("/data/proficiencies.json");
   if (!response.ok) {
-    throw new Error("Failed to fetch social data");
+    throw new Error("Failed to fetch proficiencies data");
   }
   return response.json();
-};
-
-const SocialIcon = ({ icon }: { icon: string }) => {
-  const iconClass = "w-5 h-5";
-  switch (icon.toLowerCase()) {
-    case "github":
-      return <RiGithubLine className={iconClass} />;
-    case "linkedin":
-      return <RiLinkedinLine className={iconClass} />;
-    case "twitter":
-      return <RiTwitterXLine className={iconClass} />;
-    case "dribbble":
-      return <RiDribbbleLine className={iconClass} />;
-    case "arena":
-      return <RiGlobalLine className={iconClass} />;
-    default:
-      return <RiGlobalLine className={iconClass} />;
-  }
 };
 
 export default function CVPage() {
   const [cvData, setCVData] = useState<CVItem[]>([]);
   const [pressAwardsData, setPressAwardsData] = useState<PressAwardItem[]>([]);
   const [educationData, setEducationData] = useState<EducationItem[]>([]);
-  const [socialData, setSocialData] = useState<SocialItem[]>([]);
+  const [proficienciesData, setProficienciesData] = useState<Proficiencies>({});
   const [error, setError] = useState<string | null>(null);
+
+  // Separate publications from awards
+  const publications = pressAwardsData.filter(
+    (item) => item.title === "Nudging The Needle on the Orphenyade"
+  );
+  const awards = pressAwardsData.filter(
+    (item) => item.title !== "Nudging The Needle on the Orphenyade"
+  );
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [cv, pressAwards, education, social] = await Promise.all([
+        const [cv, pressAwards, education, proficiencies] = await Promise.all([
           fetchCVData(),
           fetchPressAwardsData(),
           fetchEducationData(),
-          fetchSocialData(),
+          fetchProficienciesData(),
         ]);
         setCVData(cv);
         setPressAwardsData(pressAwards);
         setEducationData(education);
-        setSocialData(social);
+        setProficienciesData(proficiencies);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load data");
       }
@@ -138,149 +115,156 @@ export default function CVPage() {
     );
   }
 
-  // Convert CV data to ListView format
-  const experienceData = cvData
-    .filter((item) => item.type === "full-time")
-    .map((item) => ({
-      title: item.title,
-      description: `${item.company} • ${item.location} • ${item.start} - ${item.end}\n${item.description}`,
-      publishedAt: item.start,
-      url: `/cv/${item.company.toLowerCase().replace(/\s+/g, "-")}`,
-      tags: item.responsibilities,
-      metadata: {
-        company: item.company,
-        location: item.location,
-        start: item.start,
-        end: item.end,
-        projects: item.projects,
-      },
-    }));
+  // Separate experience into recent and older items
+  // Recent items: 2021+ or Present/Intermittent
+  const recentExperience = cvData.filter(
+    (item) =>
+      (item.type === "full-time" || item.type === "client") &&
+      (parseInt(item.start) >= 2021 || item.end === "Present" || item.end === "Intermittent")
+  );
 
-  const clientData = cvData
-    .filter((item) => item.type === "client")
-    .map((item) => ({
-      title: item.company,
-      description: `${item.title} • ${item.location} • ${item.start} - ${item.end}\n${item.description}`,
-      publishedAt: item.start,
-      url: `/cv/${item.company.toLowerCase().replace(/\s+/g, "-")}`,
-      tags: item.responsibilities,
-      metadata: {
-        company: item.company,
-        location: item.location,
-        start: item.start,
-        end: item.end,
-      },
-    }));
+  // Older items: everything before 2021 (excluding Present/Intermittent)
+  const olderItems = cvData.filter(
+    (item) =>
+      parseInt(item.start) < 2021 &&
+      item.end !== "Present" &&
+      item.end !== "Intermittent"
+  );
 
-  const educationDataFormatted = educationData.map((item) => ({
-    title: item.institution,
-    description: `${item.degree} in ${item.field} • ${item.location} • ${
-      item.start
-    } - ${item.end}\n${item.achievements.join(", ")}`,
-    publishedAt: item.start,
-    url: `/cv/${item.institution.toLowerCase().replace(/\s+/g, "-")}`,
-    tags: item.achievements,
-    metadata: {
-      location: item.location,
-      start: item.start,
-      end: item.end,
-    },
-  }));
+  // Sort recent experience by start date (most recent first)
+  const sortedRecentExperience = recentExperience.sort((a, b) => {
+    // Sort by start year descending, with "Present" items first
+    if (a.end === "Present" && b.end !== "Present") return -1;
+    if (b.end === "Present" && a.end !== "Present") return 1;
+    return parseInt(b.start) - parseInt(a.start);
+  });
 
-  const pressAwardsDataFormatted = pressAwardsData.map((item) => ({
-    title: item.title,
-    description: item.date,
-    publishedAt: item.date,
-    url: item.link,
-    metadata: {
-      date: item.date,
-    },
-  }));
+  // Sort older items by start date (most recent first)
+  const sortedOlderItems = olderItems.sort((a, b) => {
+    return parseInt(b.start) - parseInt(a.start);
+  });
 
-  const allData = [
-    ...experienceData,
-    ...clientData,
-    ...educationDataFormatted,
-    ...pressAwardsDataFormatted,
-  ];
+  // Format data for CollectionHero
+  const allData: any[] = [];
 
   return (
-    <main className="min-h-screen">
-      <CollectionHero
-        name="CV"
-        projects={allData}
-        allProjects={allData}
-        showEntriesCount={false}
-        showRssLink={false}
-      />
-      <div className="container mx-auto px-4 py-8">
-        {/* Bio Section with Image */}
-        <div className="mb-12 grid grid-cols-3 gap-8">
-          {/* Image Column */}
-          <div className="relative   overflow-hidden">
-            <Image
-              src="/me/2025_headshot.jpeg"
-              alt="Will's portrait"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-          {/* Bio Text Column */}
-          <div className="col-span-2 prose prose-lg max-w-none">
-            <Bio2025 />
+    <main className="min-h-screen bg-white text-black print:bg-white">
+      <div className="relative print:hidden">
+        <CollectionHero
+          name="CV"
+          projects={allData}
+          allProjects={allData}
+          showEntriesCount={false}
+          showRssLink={false}
+        />
+        
+        {/* Print Link - positioned like RSS link */}
+        <div className="absolute bottom-0 right-0 p-4 w-full pointer-events-none z-10">
+          <div className="grid grid-cols-3 text-white uppercase font-bold text-smaller items-center">
+            <div className="flex justify-start items-center"></div>
+            <div className="flex justify-center items-center"></div>
+            <div className="flex justify-end items-center pointer-events-auto">
+              <button onClick={handlePrint} className="cursor-pointer hover:opacity-80">
+                Print
+              </button>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Controls */}
-        <div className="fixed top-4 right-4 flex gap-4 print:hidden z-50">
-          <button
-            onClick={handlePrint}
-            className="p-2 rounded-full bg-gray-100 text-gray-800 hover:opacity-80 transition-opacity"
-            aria-label="Print CV"
-          >
-            <RiPrinterLine className="w-5 h-5" />
-          </button>
+      <div className="container mx-auto px-8 py-12 max-w-6xl">
+        {/* Header */}
+        <div className="mb-8 flex justify-between items-baseline border-b border-black pb-2">
+          <h1 className="text-4xl font-bold uppercase">WILLIAM FELKER</h1>
+          <ObfuscatedEmail className="text-lg" />
         </div>
 
-        {/* Social Links */}
-        <div className="mb-8 flex gap-2 flex-wrap">
-          {socialData.map((social, index) => (
-            <a
-              key={index}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full transition-colors bg-white hover:bg-gray-100"
-            >
-              <SocialIcon icon={social.icon} />
-              <span className="text-sm font-medium">{social.username}</span>
-            </a>
-          ))}
-        </div>
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-2 gap-12">
+          {/* Left Column - Experience */}
+          <div>
+            <h2 className="text-xl font-bold uppercase mb-6 mt-8">EXPERIENCE</h2>
+            
+            {/* Recent Experience Items */}
+            {sortedRecentExperience.map((item, index) => (
+              <div key={index} className="mb-6">
+                <div className="text-lg flex justify-between items-baseline">
+                  <span>
+                    {item.company === "Freelancer" 
+                      ? <><span className="font-bold">{item.company}</span>, <span className="font-normal">{item.title}</span></>
+                      : <><span className="font-bold">{item.company}</span>, <span className="font-normal">{item.title}</span></>}
+                  </span>
+                  <span className="text-xs font-normal">{item.start} - {item.end}</span>
+                </div>
+                <div className="text-sm leading-relaxed mt-2">{item.description}</div>
+              </div>
+            ))}
 
-        {/* Experience Section */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Experience</h2>
-          <ListView data={experienceData} variant="default" />
-        </div>
+            {/* Earlier Endeavors Section - All older items grouped together */}
+            {sortedOlderItems.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-lg font-bold uppercase mb-4">Earlier Endeavors</h3>
+                <div className="text-sm mb-2">
+                  {Math.min(...sortedOlderItems.map(item => parseInt(item.start)))} - {Math.max(...sortedOlderItems.map(item => parseInt(item.end) || parseInt(item.start)))}
+                </div>
+                <ul className="space-y-2 text-sm">
+                  {sortedOlderItems.map((item, index) => (
+                    <li key={index}>
+                      <span className="font-bold">{item.company}</span>, <span className="font-normal">{item.title}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
 
-        {/* Clients Section */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Clients & Collaborations</h2>
-          <ListView data={clientData} variant="default" />
-        </div>
+          {/* Right Column - Proficiencies, Education, Publications, Awards */}
+          <div>
+            {/* Proficiencies Section */}
+            <h2 className="text-xl font-bold uppercase mb-4 mt-8">PROFICIENCIES</h2>
+            {Object.entries(proficienciesData).map(([category, skills]) => (
+              <div key={category} className="mb-6">
+                <h3 className="font-bold text-sm mb-2">{category}</h3>
+                <div className="text-sm">
+                  {skills.join(" · ")}
+                </div>
+              </div>
+            ))}
 
-        {/* Education Section */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Education</h2>
-          <ListView data={educationDataFormatted} variant="default" />
-        </div>
+            {/* Education Section */}
+            <h2 className="text-xl font-bold uppercase mb-4 mt-8">EDUCATION</h2>
+            {educationData.map((item, index) => (
+              <div key={index} className="mb-4">
+                <div className="font-bold text-sm">{item.institution}</div>
+                <div className="text-sm">{item.degree} in {item.field}</div>
+                <div className="text-sm">{item.start}</div>
+              </div>
+            ))}
 
-        {/* Press & Awards Section */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Press & Awards</h2>
-          <ListView data={pressAwardsDataFormatted} variant="default" />
+            {/* Publications Section */}
+            {publications.length > 0 && (
+              <>
+                <h2 className="text-xl font-bold uppercase mb-4 mt-8">PUBLICATIONS</h2>
+                {publications.map((item, index) => (
+                  <div key={index} className="mb-4">
+                    <div className="font-bold text-sm">{item.title}</div>
+                    <div className="text-sm mb-1">{item.date}</div>
+                    <div className="text-sm leading-relaxed">{item.description}</div>
+                  </div>
+                ))}
+              </>
+            )}
+
+            {/* Awards Section */}
+            <h2 className="text-xl font-bold uppercase mb-4 mt-8">AWARDS</h2>
+            {awards.map((item, index) => (
+              <div key={index} className="mb-4">
+                <div className="font-bold text-sm">{item.title}</div>
+                <div className="text-sm mb-1">{item.date}</div>
+                <div className="text-sm leading-relaxed">{item.description}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -290,6 +274,7 @@ export default function CVPage() {
           body {
             background: white !important;
             color: black !important;
+            font-size: 10pt !important;
           }
 
           .print\\:hidden {
@@ -300,35 +285,78 @@ export default function CVPage() {
             padding: 0 !important;
           }
 
+          .container {
+            padding: 0.5cm !important;
+            max-width: 100% !important;
+          }
+
+          h1 {
+            font-size: 18pt !important;
+            margin-bottom: 0.3cm !important;
+          }
+
+          h2 {
+            font-size: 11pt !important;
+            margin-top: 0.4cm !important;
+            margin-bottom: 0.3cm !important;
+          }
+
+          h3 {
+            font-size: 10pt !important;
+            margin-top: 0.3cm !important;
+            margin-bottom: 0.2cm !important;
+          }
+
+          .grid {
+            gap: 1cm !important;
+          }
+
+          .mb-6, .mb-4, .mb-8 {
+            margin-bottom: 0.3cm !important;
+          }
+
+          .mt-8 {
+            margin-top: 0.4cm !important;
+          }
+
+          .text-sm, .text-lg {
+            font-size: 9pt !important;
+            line-height: 1.3 !important;
+          }
+
+          .text-xl {
+            font-size: 10pt !important;
+          }
+
+          .text-4xl {
+            font-size: 18pt !important;
+          }
+
+          .text-2xl {
+            font-size: 11pt !important;
+          }
+
+          .leading-relaxed {
+            line-height: 1.3 !important;
+          }
+
+          ul {
+            margin-top: 0.2cm !important;
+            margin-bottom: 0.2cm !important;
+          }
+
+          li {
+            margin-bottom: 0.1cm !important;
+          }
+
           a {
-            text-decoration: none !important;
+            text-decoration: underline !important;
             color: black !important;
           }
 
-          .rounded-2xl {
-            border-radius: 0 !important;
-          }
-
-          .bg-gray-50,
-          .bg-gray-800,
-          .bg-gray-900 {
-            background: white !important;
-          }
-
-          .text-gray-300,
-          .text-gray-400,
-          .text-gray-500,
-          .text-gray-600 {
-            color: #4b5563 !important;
-          }
-
-          .hover\\:shadow-lg,
-          .hover\\:shadow-lg-dark {
-            box-shadow: none !important;
-          }
-
           @page {
-            margin: 2cm;
+            margin: 1cm;
+            size: letter;
           }
         }
       `}</style>
