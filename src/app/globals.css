@@ -104,3 +104,16 @@
 .header-collapsed {
   @apply py-4 text-xl;
 }
+
+@keyframes pulse-cursor {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.type-indicator {
+  animation: pulse-cursor 1s infinite;
+}

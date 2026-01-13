@@ -64,12 +64,19 @@ export async function getBlueskyPosts(handle: string): Promise<BlueskyPost[]> {
       return [];
     }
 
-    // Login to Bluesky
+    // Login to Bluesky with timeout
     try {
-      await agent.login({
+      const loginPromise = agent.login({
         identifier: username,
         password: password,
       });
+
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Login timeout")), 10000)
+      );
+
+      await Promise.race([loginPromise, timeoutPromise]);
       console.log("Successfully logged in to Bluesky as:", username);
     } catch (loginError) {
       console.error("Bluesky login error:", loginError);
@@ -84,25 +91,43 @@ export async function getBlueskyPosts(handle: string): Promise<BlueskyPost[]> {
 
     console.log("Resolving Bluesky handle:", formattedHandle);
 
-    // Resolve the DID for the provided handle
+    // Resolve the DID for the provided handle with timeout
     try {
-      const { data: resolveData } = await agent.resolveHandle({
+      const resolvePromise = agent.resolveHandle({
         handle: formattedHandle,
       });
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Resolve timeout")), 5000)
+      );
+
+      const { data: resolveData } = (await Promise.race([
+        resolvePromise,
+        timeoutPromise,
+      ])) as any;
 
       const did = resolveData.did;
       console.log("Resolved DID:", did);
 
-      // Get the user's posts
-      const { data } = await agent.getAuthorFeed({
+      // Get the user's posts with timeout
+      const feedPromise = agent.getAuthorFeed({
         actor: did,
         limit: 30,
       });
 
+      const feedTimeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Feed fetch timeout")), 10000)
+      );
+
+      const { data } = (await Promise.race([
+        feedPromise,
+        feedTimeoutPromise,
+      ])) as any;
+
       console.log(`Retrieved ${data.feed.length} posts from Bluesky`);
 
       // Transform the posts into our format
-      return data.feed.map((item) => {
+      return data.feed.map((item: any) => {
         const post = item.post;
         const record = post.record as { text: string; [key: string]: unknown };
 

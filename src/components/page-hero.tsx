@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, isValid } from "date-fns";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { useState, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 interface PageHeroProps {
   data: {
-    publishedAt: string;
+    publishedAt: string | Date;
     title: string;
     tags: string;
     url?: string; // Add this line
@@ -21,10 +21,19 @@ const PageHero = ({ data }: PageHeroProps) => {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  const publishedAt =
-    data.publishedAt && typeof data.publishedAt === "string"
-      ? parseISO(data.publishedAt)
-      : null;
+  // Handle both string and Date object (gray-matter parses dates as Date objects)
+  let publishedAt: Date | null = null;
+  
+  if (data.publishedAt) {
+    if (data.publishedAt instanceof Date) {
+      // Already a Date object (from gray-matter)
+      publishedAt = isValid(data.publishedAt) ? data.publishedAt : null;
+    } else if (typeof data.publishedAt === "string") {
+      // String, parse it
+      const parsed = parseISO(data.publishedAt);
+      publishedAt = isValid(parsed) ? parsed : null;
+    }
+  }
 
   if (!publishedAt) {
     console.error("Invalid publishedAt value:", data.publishedAt);
@@ -64,7 +73,7 @@ const PageHero = ({ data }: PageHeroProps) => {
               onMouseEnter={() => setShowInput(true)}
               onMouseLeave={() => !inputValue && setShowInput(false)}
             >
-              <span className="px-1">/</span>
+              <span className="px-1 type-indicator">/</span>
               {showInput ? (
                 <input
                   type="text"
@@ -89,7 +98,7 @@ const PageHero = ({ data }: PageHeroProps) => {
             <div className="flex justify-end items-center ml-auto">
               Date:{" "}
               {publishedAt ? (
-                <time dateTime={data.publishedAt}>
+                <time dateTime={publishedAt.toISOString()}>
                   v.{format(publishedAt, "yyyy-MM")}
                 </time>
               ) : (

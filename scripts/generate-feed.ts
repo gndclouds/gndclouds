@@ -11,6 +11,10 @@ import { getAllGitHubActivity } from "@/queries/github";
 import { getAllJournals } from "@/queries/journals";
 import { getAllNotesAndResearch } from "@/queries/notes";
 import { getAllProjects } from "@/queries/projects";
+import { getAllFragments } from "@/queries/fragments";
+import { getAllLogs } from "@/queries/logs";
+import { getAllStudies } from "@/queries/studies";
+import { getAllSystems } from "@/queries/systems";
 import fs from "fs/promises";
 import path from "path";
 
@@ -30,7 +34,7 @@ function formatDateYYYYMMDD(date: Date) {
 const FULL_IMPORT = process.env.FULL_IMPORT === "true";
 const DAYS_BACK = process.env.DAYS_BACK
   ? parseInt(process.env.DAYS_BACK, 10)
-  : 30;
+  : 365; // Default to 1 year instead of 30 days
 const startDate = getDateNDaysAgo(DAYS_BACK);
 
 async function generateFeedData() {
@@ -46,6 +50,10 @@ async function generateFeedData() {
     journals,
     notes,
     projects,
+    fragments,
+    logs,
+    studies,
+    systems,
   ] = await Promise.allSettled([
     getAllUnsplashImages("gndclouds"),
     getBlueskyPosts("gndclouds.earth"),
@@ -54,6 +62,10 @@ async function generateFeedData() {
     getAllJournals(),
     getAllNotesAndResearch(),
     getAllProjects(),
+    getAllFragments(),
+    getAllLogs(),
+    getAllStudies(),
+    getAllSystems(),
   ]);
 
   // Process Unsplash images
@@ -130,7 +142,7 @@ async function generateFeedData() {
         }))
       : [];
 
-  // Process local content (journals, notes, projects)
+  // Process local content (journals, notes, projects, fragments, logs, studies, systems)
   const localItems = [
     ...(journals.status === "fulfilled"
       ? journals.value.map((item) => ({
@@ -170,6 +182,54 @@ async function generateFeedData() {
           heroImage: item.metadata.heroImage || "",
         }))
       : []),
+    ...(fragments.status === "fulfilled"
+      ? fragments.value.map((item) => ({
+          id: item.slug,
+          type: "fragment",
+          title: item.title,
+          description: item.metadata.description || "",
+          publishedAt: formatDateYYYYMMDD(new Date(item.publishedAt)),
+          slug: item.slug,
+          tags: item.tags || [],
+          categories: item.categories || [],
+        }))
+      : []),
+    ...(logs.status === "fulfilled"
+      ? logs.value.map((item) => ({
+          id: item.slug,
+          type: "log",
+          title: item.title,
+          description: item.metadata.description || "",
+          publishedAt: formatDateYYYYMMDD(new Date(item.publishedAt)),
+          slug: item.slug,
+          tags: item.tags || [],
+          categories: item.categories || [],
+        }))
+      : []),
+    ...(studies.status === "fulfilled"
+      ? studies.value.map((item) => ({
+          id: item.slug,
+          type: "study",
+          title: item.title,
+          description: item.metadata.description || "",
+          publishedAt: formatDateYYYYMMDD(new Date(item.publishedAt)),
+          slug: item.slug,
+          tags: item.tags || [],
+          categories: item.categories || [],
+        }))
+      : []),
+    ...(systems.status === "fulfilled"
+      ? systems.value.map((item) => ({
+          id: item.slug,
+          type: "system",
+          title: item.title,
+          description: item.metadata.description || "",
+          publishedAt: formatDateYYYYMMDD(new Date(item.publishedAt)),
+          slug: item.slug,
+          tags: item.tags || [],
+          categories: item.categories || [],
+        }))
+      : []),
   ];
 
   // Combine all items and filter by date
@@ -187,40 +247,47 @@ async function generateFeedData() {
   console.log(`GitHub items: ${githubItems.length}`);
   console.log(`Local items: ${localItems.length}`);
 
-  // Filter items from the last N days unless FULL_IMPORT is set
-  const recentItems = FULL_IMPORT
-    ? allItems
-    : allItems.filter((item) => {
-        const itemDate = new Date(item.publishedAt);
-        const isRecent = itemDate >= startDate;
-        if (!isRecent) {
-          console.log(
-            `Filtered out item from ${formatDateYYYYMMDD(itemDate)} (type: ${
-              item.type
-            })`
-          );
-        }
-        return isRecent;
-      });
-
+  // Store ALL items in cache (no date filtering during generation)
+  // Date filtering will happen when reading from cache
   // Sort by date, most recent first
-  const sortedItems = recentItems.sort(
+  const sortedItems = allItems.sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
   // Generate feed data with metadata
+  // Store ALL items in cache - filtering happens on read
   const feedData = {
     generatedAt: formatDateYYYYMMDD(new Date()),
     startDate: formatDateYYYYMMDD(startDate),
     endDate: formatDateYYYYMMDD(new Date()),
-    items: sortedItems,
+    items: sortedItems, // Store ALL items, filtering happens when reading
     stats: {
-      totalItems: sortedItems.length,
+      totalItems: sortedItems.length, // Total items stored in cache
       byType: sortedItems.reduce((acc, item) => {
         acc[item.type] = (acc[item.type] || 0) + 1;
         return acc;
       }, {} as Record<string, number>),
+      sourceStats: {
+        unsplash: unsplashItems.length,
+        bluesky: blueskyItems.length,
+        arena: arenaItems.length,
+        github: githubItems.length,
+        local: localItems.length,
+      },
+      errors: {
+        unsplash: null,
+        bluesky: null,
+        arena: null,
+        github: null,
+        journals: null,
+        notes: null,
+        projects: null,
+        fragments: null,
+        logs: null,
+        studies: null,
+        systems: null,
+      },
     },
   };
 
@@ -229,9 +296,10 @@ async function generateFeedData() {
   await fs.writeFile(outputPath, JSON.stringify(feedData, null, 2));
   console.log("Feed data generated successfully at", outputPath);
   console.log(
-    `Generated ${sortedItems.length} items from the last ${DAYS_BACK} days`
+    `Stored ${sortedItems.length} total items in cache (date filtering happens on read)`
   );
   console.log("Content type distribution:", feedData.stats.byType);
+  console.log("Source stats:", feedData.stats.sourceStats);
 }
 
 // Run the script

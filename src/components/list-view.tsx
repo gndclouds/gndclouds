@@ -26,19 +26,43 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
     // console.log(`Item ${index} type:`, item.type);
     // console.log(`Item ${index} publishedAt:`, item.publishedAt);
 
+    // Helper function to sanitize type by removing Obsidian-style brackets
+    // and normalizing plural forms to singular for routing consistency
+    const sanitizeType = (type: string): string => {
+      let sanitized = type
+        .toLowerCase()
+        .replace(/\[\[/g, "")
+        .replace(/\]\]/g, "")
+        .trim();
+      
+      // Normalize plural forms to singular for routing
+      const pluralToSingular: { [key: string]: string } = {
+        "logs": "log",
+        "journals": "journal",
+        "projects": "project",
+        "notes": "note",
+        "fragments": "fragment",
+        "studies": "study",
+        "systems": "system",
+        "researches": "research",
+      };
+      
+      return pluralToSingular[sanitized] || sanitized;
+    };
+
     // Determine item type
     let itemType = "default";
     if (item.type && typeof item.type === "string") {
-      itemType = item.type.toLowerCase();
+      itemType = sanitizeType(item.type);
     }
 
     if (Array.isArray(item.metadata?.type) && item.metadata.type.length > 0) {
-      itemType = item.metadata.type[0].toLowerCase();
+      itemType = sanitizeType(item.metadata.type[0]);
     } else if (
       typeof item.metadata?.type === "string" &&
       item.metadata.type.length > 0
     ) {
-      itemType = item.metadata.type.toLowerCase();
+      itemType = sanitizeType(item.metadata.type);
     }
 
     const linkPath =
@@ -54,6 +78,14 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
         ? `/research/${item.slug}` // Use /research/ for research
         : itemType === "journal"
         ? `/journal/${item.slug}` // Use /journal/ for journals
+        : itemType === "fragment"
+        ? `/fragment/${item.slug}` // Use /fragment/ for fragments
+        : itemType === "log"
+        ? `/log/${item.slug}` // Use /log/ for logs
+        : itemType === "study"
+        ? `/study/${item.slug}` // Use /study/ for studies
+        : itemType === "system"
+        ? `/system/${item.slug}` // Use /system/ for systems
         : `/${itemType}/${item.slug}`; // Use the slug for other content types
 
     // Define grid column spans for different content types
@@ -65,7 +97,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
       log:
         variant === "feed"
           ? "col-span-12 md:col-span-6 lg:col-span-6"
-          : "col-span-12",
+          : "col-span-12 lg:col-span-6",
       note:
         variant === "feed"
           ? "col-span-12 md:col-span-6 lg:col-span-6"
@@ -73,11 +105,11 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
       project:
         variant === "feed"
           ? "col-span-12 md:col-span-6 lg:col-span-6"
-          : "col-span-12",
+          : "col-span-12 lg:col-span-6",
       journal:
         variant === "feed"
           ? "col-span-12 md:col-span-6 lg:col-span-6"
-          : "col-span-12",
+          : "col-span-12 lg:col-span-6",
       research:
         variant === "feed"
           ? "col-span-12 md:col-span-6 lg:col-span-6"
@@ -445,7 +477,15 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
     return (
       <div
         key={index}
-        className={`${itemColSpan} border-2 border-backgroundDark dark:border-backgroundLight relative p-4 ${itemHeight} group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+        className={`${itemColSpan} ${
+          variant === "feed"
+            ? ""
+            : "border-2 border-backgroundDark dark:border-backgroundLight"
+        } relative p-4 ${itemHeight} group ${
+          variant === "feed"
+            ? ""
+            : "hover:border-backgroundDark dark:hover:border-backgroundLight"
+        }`}
       >
         <Link href={linkPath} className="">
           <div className="text-sm slashed-zero lining-nums">
@@ -487,9 +527,28 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
 
   // Helper to get year from publishedAt
   const getYear = (item: any) => {
-    if (!item.publishedAt || typeof item.publishedAt !== "string")
-      return "Unknown";
-    return item.publishedAt.slice(0, 4);
+    if (!item.publishedAt) return "";
+    
+    try {
+      // If it's already a string, try to extract year
+      if (typeof item.publishedAt === "string") {
+        // Handle ISO format: "2025-02-03T01:00:00" or "2025-02-03"
+        const yearMatch = item.publishedAt.match(/^(\d{4})/);
+        if (yearMatch) {
+          return yearMatch[1];
+        }
+      }
+      
+      // If it's a Date object or can be converted to one
+      const date = new Date(item.publishedAt);
+      if (!isNaN(date.getTime())) {
+        return date.getFullYear().toString();
+      }
+    } catch (error) {
+      console.warn("Error extracting year from publishedAt:", item.publishedAt);
+    }
+    
+    return "";
   };
 
   let lastYear: string | null = null;
@@ -498,11 +557,13 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
     <div className="grid grid-cols-12 gap-4">
       {data.map((item, index) => {
         const itemYear = getYear(item);
-        const showYearBreak = itemYear !== lastYear;
-        lastYear = itemYear;
+        const showYearBreak = itemYear && itemYear !== lastYear;
+        if (itemYear) {
+          lastYear = itemYear;
+        }
         return (
           <React.Fragment key={item.id || index}>
-            {showYearBreak && (
+            {showYearBreak && variant !== "feed" && (
               <div className="col-span-12 flex items-center my-8">
                 <hr className="flex-grow border-t border-gray-300 dark:border-gray-700 mr-4" />
                 <span className="text-lg font-bold text-gray-600 dark:text-gray-300 whitespace-nowrap">

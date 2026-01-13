@@ -74,7 +74,7 @@ const CollectionHero = ({
               onMouseEnter={() => setShowInput(true)}
               onMouseLeave={() => !inputValue && setShowInput(false)}
             >
-              <span className="px-1">/</span>
+              <span className="px-1 type-indicator">/</span>
               {showInput ? (
                 <input
                   type="text"

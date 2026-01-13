@@ -36,7 +36,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             return null;
           }
 
-          const { data: metadata } = matter(content);
+          const { data: metadata, content: markdownContent } = matter(content);
 
           // Generate slug from filename (without extension)
           const slug =
@@ -55,7 +55,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             published: metadata.published !== false, // Default to published unless explicitly false
             metadata: {
               ...metadata,
-              contentHtml: metadata.contentHtml || "",
+              contentHtml: markdownContent,
             },
           } as Post;
         } catch (error) {

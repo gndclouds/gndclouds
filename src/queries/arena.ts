@@ -277,29 +277,33 @@ export async function getArenaActivity(
   try {
     const arenaAccessToken = process.env.ARENA_ACCESS_KEY;
     if (!arenaAccessToken) {
-      throw new Error(
+      console.error(
         "ARENA_ACCESS_KEY is not set in the environment variables."
       );
+      return [];
     }
 
     console.log("Fetching Are.na activity for user:", username);
-    console.log(
-      "Using Are.na token:",
-      arenaAccessToken.substring(0, 5) + "..."
-    );
 
-    // First, get the user's profile to verify the username and token
+    // Add timeout to prevent hanging requests
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 second timeout
+
     try {
+      // First, get the user's profile to verify the username and token
       const userResponse = await axios.get(
         `https://api.are.na/v2/users/${username}`,
         {
           headers: {
             Authorization: `Bearer ${arenaAccessToken}`,
           },
+          timeout: 10000,
+          signal: controller.signal,
         }
       );
       console.log(`Found Are.na user: ${userResponse.data.username}`);
     } catch (error) {
+      clearTimeout(timeoutId);
       console.error("Error fetching Are.na user profile:", error);
       if (axios.isAxiosError(error) && error.response) {
         console.error(
@@ -311,7 +315,7 @@ export async function getArenaActivity(
       return [];
     }
 
-    // Approach 1: Get user's recent blocks directly with increased limit
+    // Get user's recent blocks directly with increased limit
     console.log(`Fetching recent blocks for ${username}...`);
     const blocksResponse = await axios.get(
       `https://api.are.na/v2/users/${username}/blocks?per=${limit}&sort=created_at&direction=desc`,
@@ -319,6 +323,8 @@ export async function getArenaActivity(
         headers: {
           Authorization: `Bearer ${arenaAccessToken}`,
         },
+        timeout: 15000,
+        signal: controller.signal,
       }
     );
 

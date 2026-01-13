@@ -32,6 +32,9 @@ export async function getMarkdownFilePaths(
     | "research"
     | "journals"
     | "cv"
+    | "fragments"
+    | "studies"
+    | "systems"
 ): Promise<string[]> {
   if (!isProduction) {
     // In development, use filesystem

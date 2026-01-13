@@ -15,6 +15,7 @@ interface ExtendedComponents extends Components {
     identifier: string;
     children: React.ReactNode;
   }) => JSX.Element;
+  a?: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => JSX.Element;
 }
 
 // Use the extended type
@@ -29,9 +30,25 @@ const components: Partial<ExtendedComponents> = {
       return null;
     }
 
-    // For SVGs, we still use the img tag as Next.js Image doesn't handle SVGs well
-    if (src.endsWith(".svg")) {
-      return <img {...props} alt={alt || "SVG Image"} />;
+    // For SVGs and GIFs, we still use the img tag as Next.js Image doesn't handle them well
+    if (src.endsWith(".svg") || src.endsWith(".gif")) {
+      // Ensure src starts with / for local paths
+      let imgSrc = src.startsWith("/") ? src : `/${src}`;
+      
+      // For db-assets paths, properly URL encode the filename for special chars
+      if (imgSrc.includes("/db-assets/")) {
+        const pathParts = imgSrc.split("/db-assets/");
+        if (pathParts.length === 2) {
+          const filename = pathParts[1];
+          const encodedFilename = filename
+            .split("/")
+            .map(part => encodeURIComponent(part))
+            .join("/");
+          imgSrc = `/db-assets/${encodedFilename}`;
+        }
+      }
+      
+      return <img src={imgSrc} alt={alt || "Image"} {...props} />;
     }
 
     // For external URLs
@@ -93,11 +110,20 @@ const components: Partial<ExtendedComponents> = {
     // Ensure src starts with a leading slash
     let imageSrc = src.startsWith("/") ? src : `/${src}`;
 
-    // For db-assets paths, Next.js will handle URL encoding automatically
-    // But we need to make sure the path is correct
+    // For db-assets paths, we need to properly URL encode the filename
+    // Next.js Image component needs the path to be properly encoded for special chars like @, spaces, etc.
     if (imageSrc.includes("/db-assets/")) {
-      // The path should already be correct from convertImageSyntax
-      // Next.js Image component will handle URL encoding of spaces
+      // Split the path to encode just the filename part, keeping the /db-assets/ prefix
+      const pathParts = imageSrc.split("/db-assets/");
+      if (pathParts.length === 2) {
+        const filename = pathParts[1];
+        // Encode the filename but preserve forward slashes if there are any
+        const encodedFilename = filename
+          .split("/")
+          .map(part => encodeURIComponent(part))
+          .join("/");
+        imageSrc = `/db-assets/${encodedFilename}`;
+      }
     }
 
     return (
@@ -129,6 +155,33 @@ const components: Partial<ExtendedComponents> = {
       {children}s<a href={`#fnref-${identifier}`}>↩</a>
     </li>
   ),
+  a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+    // If href contains double brackets (dynamic route pattern), render as plain text
+    if (href && (href.includes("[[") || href.includes("]]"))) {
+      return <span>{children}</span>;
+    }
+
+    // If href is invalid or empty, render as plain text
+    if (!href || href.trim() === "") {
+      return <span>{children}</span>;
+    }
+
+    // For internal links (starting with /), use Next.js Link
+    if (href.startsWith("/")) {
+      return (
+        <Link href={href} {...props}>
+          {children}
+        </Link>
+      );
+    }
+
+    // For external links, use regular anchor tag
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+        {children}
+      </a>
+    );
+  },
 };
 
 const MarkdownContent = ({
@@ -143,13 +196,43 @@ const MarkdownContent = ({
   // Check if we're in production mode
   const isProduction = process.env.NODE_ENV === "production";
 
-  // Function to convert ![[image]] to ![](/assets/media/image) or to use asset proxy in production
+  // Function to convert Obsidian-style internal links [[link]] to plain text
+  // This prevents Next.js from interpreting them as dynamic routes
+  // NOTE: This should NOT convert ![[image]] or ![[video]] patterns (those are handled by convertImageSyntax)
+  const convertInternalLinks = (text: string) => {
+    return text
+      // Handle Obsidian links with display text: [[link|display text]] (but not ![[...]])
+      .replace(/(?<!!)\[\[([^\]]+)\|([^\]]+)\]\]/g, (match, link, displayText) => {
+        return displayText.trim();
+      })
+      // Handle simple Obsidian links: [[link]] - but NOT ![[image/video]]
+      // Use negative lookbehind to skip patterns that start with !
+      .replace(/(?<!!)\[\[([^\]]+)\]\]/g, (match, link) => {
+        return link.trim();
+      })
+      // Also handle any remaining markdown links that might have been created from Obsidian syntax
+      // This catches cases like [[logs]]/Footnotes that might become markdown links
+      .replace(/\[([^\]]+)\]\((\/\[\[[^\]]+\]\]\/[^\)]+)\)/g, (match, text, href) => {
+        // If the href contains double brackets, just return the text
+        return text;
+      });
+  };
+
+  // Function to convert ![[image]] or ![[video]] to markdown or HTML
   const convertImageSyntax = (text: string) => {
+    // Video file extensions
+    const videoExtensions = [".mp4", ".webm", ".mov", ".avi", ".mkv"];
+    
     return (
       text
         .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
           // Remove any file extension from the path
           const cleanPath = p1.trim();
+          
+          // Check if it's a video file
+          const isVideo = videoExtensions.some(ext => 
+            cleanPath.toLowerCase().endsWith(ext)
+          );
 
           // For local development, use the path as-is (spaces and special chars need to be URL encoded in the href)
           // But we need to properly encode it for the URL
@@ -159,6 +242,25 @@ const MarkdownContent = ({
           );
           const encodedPath = encodedParts.join("/");
 
+          if (isVideo) {
+            // For videos, generate HTML video tag
+            // Use encoded path for proper URL handling of spaces and special chars
+            const videoSrc = isProduction && process.env.GITHUB_ACCESS_TOKEN
+              ? `/api/asset-proxy?path=assets/${encodedPath}`
+              : `/db-assets/${encodeURIComponent(cleanPath)}`;
+            
+            // Determine video type from extension
+            const videoType = cleanPath.toLowerCase().endsWith('.webm') ? 'video/webm' :
+                             cleanPath.toLowerCase().endsWith('.mov') ? 'video/quicktime' :
+                             'video/mp4';
+            
+            return `\n\n<video controls style="max-width: 100%; height: auto; display: block; margin: 1rem 0;">
+  <source src="${videoSrc}" type="${videoType}">
+  Your browser does not support the video tag.
+</video>\n\n`;
+          }
+
+          // For images, use markdown image syntax
           // In production with GitHub token, use the asset proxy
           if (isProduction && process.env.GITHUB_ACCESS_TOKEN) {
             return `\n\n![${cleanPath}](/api/asset-proxy?path=assets/${encodedPath})\n\n`;
@@ -203,8 +305,11 @@ const MarkdownContent = ({
   // Remove footnotes from the main content
   const contentWithoutFootnotes = content.replace(footnoteRegex, "");
 
+  // Convert Obsidian-style internal links [[link]] to plain text first
+  const contentWithoutInternalLinks = convertInternalLinks(contentWithoutFootnotes);
+
   // Convert Obsidian-style image syntax ![[image]] to standard markdown
-  const updatedContent = convertImageSyntax(contentWithoutFootnotes);
+  const updatedContent = convertImageSyntax(contentWithoutInternalLinks);
 
   return (
     <div className="flex">
