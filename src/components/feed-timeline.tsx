@@ -60,7 +60,7 @@ export default function FeedTimeline({
   // Memoize item positions to avoid recalculating
   const itemPositions = useMemo(() => {
     return items.map((_, index) => (index / (items.length - 1 || 1)) * 100);
-  }, [items.length]);
+  }, [items]);
 
   // Find the item closest to current scroll position
   const closestItemIndex = useMemo(() => {

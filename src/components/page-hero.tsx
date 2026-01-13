@@ -98,7 +98,7 @@ const PageHero = ({ data }: PageHeroProps) => {
             <div className="flex justify-end items-center ml-auto">
               Date:{" "}
               {publishedAt ? (
-                <time dateTime={data.publishedAt}>
+                <time dateTime={publishedAt.toISOString()}>
                   v.{format(publishedAt, "yyyy-MM")}
                 </time>
               ) : (
