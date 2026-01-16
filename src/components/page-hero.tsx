@@ -87,7 +87,7 @@ const PageHero = ({ data }: PageHeroProps) => {
               <ArrowLeftIcon className="font-bold" /> gndclouds
             </Link>
             <div
-              className="inline-flex items-center cursor-pointer"
+              className="hidden sm:inline-flex items-center cursor-pointer"
               onMouseEnter={() => setShowInput(true)}
               onMouseLeave={() => !inputValue && setShowInput(false)}
             >

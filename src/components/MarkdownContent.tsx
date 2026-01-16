@@ -312,7 +312,7 @@ const MarkdownContent = ({
   const updatedContent = convertImageSyntax(contentWithoutInternalLinks);
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full flex-col md:flex-row">
       <div className="flex-1 min-w-0 p-4">
         <div className={styles.reactMarkDown}>
           {/* Apply the CSS class here */}
@@ -327,7 +327,7 @@ const MarkdownContent = ({
           </ReactMarkdown>
         </div>
       </div>
-      <div className="w-80 shrink-0 p-4 ml-auto">
+      <div className="w-full md:w-80 shrink-0 p-4 md:ml-auto">
         <h3 className="uppercase text-sm opacity-50">References</h3>
         {extractedLinks.length > 0 && (
           <>
