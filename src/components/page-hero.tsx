@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { parseISO, format, isValid } from "date-fns";
+import { parseISO, isValid } from "date-fns";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { useState, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -21,19 +21,37 @@ const PageHero = ({ data }: PageHeroProps) => {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
-  // Handle both string and Date object (gray-matter parses dates as Date objects)
-  let publishedAt: Date | null = null;
-  
-  if (data.publishedAt) {
-    if (data.publishedAt instanceof Date) {
-      // Already a Date object (from gray-matter)
-      publishedAt = isValid(data.publishedAt) ? data.publishedAt : null;
-    } else if (typeof data.publishedAt === "string") {
-      // String, parse it
-      const parsed = parseISO(data.publishedAt);
-      publishedAt = isValid(parsed) ? parsed : null;
+  const normalizeDate = (value: string | Date) => {
+    if (value instanceof Date) {
+      return isValid(value) ? value : null;
     }
-  }
+
+    if (typeof value === "string") {
+      const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (match) {
+        const year = Number(match[1]);
+        const month = Number(match[2]) - 1;
+        const day = Number(match[3]);
+        const utcDate = new Date(Date.UTC(year, month, day));
+        return isValid(utcDate) ? utcDate : null;
+      }
+
+      const parsed = parseISO(value);
+      return isValid(parsed) ? parsed : null;
+    }
+
+    return null;
+  };
+
+  const formatUtcDate = (value: Date) => {
+    const year = value.getUTCFullYear();
+    const month = String(value.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(value.getUTCDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
+
+  // Handle both string and Date object (gray-matter parses dates as Date objects)
+  const publishedAt = data.publishedAt ? normalizeDate(data.publishedAt) : null;
 
   if (!publishedAt) {
     console.error("Invalid publishedAt value:", data.publishedAt);
@@ -99,7 +117,7 @@ const PageHero = ({ data }: PageHeroProps) => {
               Date:{" "}
               {publishedAt ? (
                 <time dateTime={publishedAt.toISOString()}>
-                  v.{format(publishedAt, "yyyy-MM")}
+                  {formatUtcDate(publishedAt)}
                 </time>
               ) : (
                 "N/A"

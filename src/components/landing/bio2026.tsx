@@ -90,11 +90,11 @@ const Bio2026 = () => (
     <div>
       <span className="font-bold">This site</span> is to be a public archive
       divided into{" "}
-      <Link href="/" className="underline">
+      <Link href="/logs" className="underline">
         logs
       </Link>
       ,{" "}
-      <Link href="/" className="underline">
+      <Link href="/journals" className="underline">
         journals
       </Link>
       , and a project archive.
