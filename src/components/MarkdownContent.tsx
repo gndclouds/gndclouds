@@ -312,20 +312,22 @@ const MarkdownContent = ({
   const updatedContent = convertImageSyntax(contentWithoutInternalLinks);
 
   return (
-    <div className="flex">
-      <div className={`w-2/3 p-4 ${styles.reactMarkDown}`}>
-        {/* Apply the CSS class here */}
-        {/* Debug: Log the content to see what's being passed to ReactMarkdown */}
-        <ReactMarkdown
-          className="markdown"
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeRaw]}
-          components={components}
-        >
-          {updatedContent}
-        </ReactMarkdown>
+    <div className="flex w-full">
+      <div className="flex-1 min-w-0 p-4">
+        <div className={styles.reactMarkDown}>
+          {/* Apply the CSS class here */}
+          {/* Debug: Log the content to see what's being passed to ReactMarkdown */}
+          <ReactMarkdown
+            className="markdown"
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
+            components={components}
+          >
+            {updatedContent}
+          </ReactMarkdown>
+        </div>
       </div>
-      <div className="w-1/3 p-4">
+      <div className="w-80 shrink-0 p-4 ml-auto">
         <h3 className="uppercase text-sm opacity-50">References</h3>
         {extractedLinks.length > 0 && (
           <>

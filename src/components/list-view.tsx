@@ -20,6 +20,15 @@ interface ListViewProps {
 }
 
 export default function ListView({ data, variant = "default" }: ListViewProps) {
+  const formatDateDisplay = (value: string | Date) => {
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return "Unknown Date";
+    }
+
+    return date.toLocaleDateString(undefined, { timeZone: "UTC" });
+  };
+
   const renderItem = (item: any, index: number) => {
     // For debugging
     // console.log(`Item ${index}:`, item);
@@ -445,7 +454,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
               <h2 className="text-2xl font-bold mb-1 truncate">{item.title}</h2>
               <div className="text-xs text-gray-500 mb-2">
                 {item.publishedAt
-                  ? new Date(item.publishedAt).toLocaleDateString()
+                  ? formatDateDisplay(item.publishedAt)
                   : "Unknown Date"}
               </div>
               {item.description && (
@@ -459,7 +468,7 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
                     (tag) => (
                       <span
                         key={tag}
-                        className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded"
+                        className="border-2 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 text-xs uppercase hover:bg-gray-200 dark:hover:bg-gray-700/40 hover:text-gray-900 dark:hover:text-gray-100"
                       >
                         {tag}
                       </span>
