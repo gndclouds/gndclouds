@@ -13,6 +13,7 @@ export const useGitHubAPI = !!process.env.GITHUB_ACCESS_TOKEN;
 export const githubOwner = process.env.GITHUB_OWNER || "gndclouds";
 export const githubRepo = process.env.GITHUB_REPO || "db";
 export const githubBranch = process.env.GITHUB_BRANCH || "main";
+const hasGitHubToken = !!process.env.GITHUB_ACCESS_TOKEN;
 
 // This URL is used to fetch content
 export const contentBaseUrl = isProduction
@@ -49,40 +50,94 @@ export async function getMarkdownFilePaths(
       console.error(`Error getting markdown files from ${contentDir}:`, error);
       return [];
     }
-  } else {
-    // In production, fetch directory contents from GitHub API
-    try {
-      const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${contentType}?ref=${githubBranch}`;
+  }
 
-      const response = await fetch(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
-          Accept: "application/vnd.github.v3.raw",
-          "User-Agent": "gndclouds-website",
-        },
-      });
+  // In production, fetch directory contents from GitHub API
+  if (process.env.NODE_ENV === "production") {
+    console.log(
+      `Content loader (prod): owner=${githubOwner}, repo=${githubRepo}, branch=${githubBranch}, token=${hasGitHubToken ? "set" : "missing"}`
+    );
+  }
+  const treePaths = await getMarkdownPathsFromGitTree(contentType);
+  if (treePaths.length > 0) {
+    return treePaths;
+  }
 
-      if (!response.ok) {
-        console.error(
-          `Failed to fetch directory contents: ${response.statusText}`
-        );
-        return [];
-      }
+  try {
+    const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${contentType}?ref=${githubBranch}`;
 
-      const contents = await response.json();
+    const response = await fetch(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "gndclouds-website",
+      },
+    });
 
-      // Filter for markdown files only
-      const markdownFiles = contents
-        .filter(
-          (item: any) => item.type === "file" && item.name.endsWith(".md")
-        )
-        .map((item: any) => join(contentType, item.name));
-
-      return markdownFiles;
-    } catch (error) {
-      console.error(`Error fetching directory contents from GitHub:`, error);
+    if (!response.ok) {
+      console.error(
+        `Failed to fetch directory contents: ${response.status} ${response.statusText}`
+      );
       return [];
     }
+
+    const contents = await response.json();
+
+    if (!Array.isArray(contents)) {
+      console.error("Unexpected GitHub contents response:", contents);
+      return [];
+    }
+
+    // Filter for markdown files only
+    return contents
+      .filter(
+        (item: any) => item.type === "file" && item.name.endsWith(".md")
+      )
+      .map((item: any) => join(contentType, item.name));
+  } catch (error) {
+    console.error(`Error fetching directory contents from GitHub:`, error);
+    return [];
+  }
+}
+
+async function getMarkdownPathsFromGitTree(
+  contentType: string
+): Promise<string[]> {
+  try {
+    const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/git/trees/${githubBranch}?recursive=1`;
+
+    const response = await fetch(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "gndclouds-website",
+      },
+    });
+
+    if (!response.ok) {
+      console.warn(
+        `Failed to fetch git tree: ${response.status} ${response.statusText}`
+      );
+      return [];
+    }
+
+    const data = await response.json();
+    if (!Array.isArray(data?.tree)) {
+      return [];
+    }
+
+    return data.tree
+      .filter(
+        (item: any) =>
+          item.type === "blob" &&
+          typeof item.path === "string" &&
+          item.path.startsWith(`${contentType}/`) &&
+          item.path.endsWith(".md")
+      )
+      .map((item: any) => item.path);
+  } catch (error) {
+    console.warn("Error fetching git tree for markdown files:", error);
+    return [];
   }
 }
 
