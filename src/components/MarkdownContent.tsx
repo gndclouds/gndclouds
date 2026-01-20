@@ -48,6 +48,7 @@ const components: Partial<ExtendedComponents> = {
         }
       }
       
+      // eslint-disable-next-line @next/next/no-img-element -- SVG/GIF need <img> for proper rendering
       return <img src={imgSrc} alt={alt || "Image"} {...props} />;
     }
 
@@ -247,7 +248,7 @@ const MarkdownContent = ({
             // Use encoded path for proper URL handling of spaces and special chars
             const videoSrc = isProduction && process.env.GITHUB_ACCESS_TOKEN
               ? `/api/asset-proxy?path=assets/${encodedPath}`
-              : `/db-assets/${encodeURIComponent(cleanPath)}`;
+              : `/db-assets/${encodedPath}`;
             
             // Determine video type from extension
             const videoType = cleanPath.toLowerCase().endsWith('.webm') ? 'video/webm' :

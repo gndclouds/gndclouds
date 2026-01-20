@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Fira_Code } from "next/font/google";
 import Script from "next/script";
+import { getBaseUrl } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -12,8 +13,32 @@ const firaCode = Fira_Code({
 });
 
 export const metadata: Metadata = {
-  title: "gndclouds",
+  metadataBase: new URL(getBaseUrl()),
+  title: {
+    default: "gndclouds",
+    template: "%s · gndclouds",
+  },
   description: "Will's corner of the internet",
+  openGraph: {
+    type: "website",
+    siteName: "gndclouds",
+    title: "gndclouds",
+    description: "Will's corner of the internet",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "gndclouds",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "gndclouds",
+    description: "Will's corner of the internet",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function RootLayout({

@@ -59,6 +59,49 @@
   margin-bottom: 1em;
 }
 
+.reactMarkDown pre,
+.markdown pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.reactMarkDown code,
+.markdown code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9em;
+  background: rgba(15, 23, 42, 0.08);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.25rem;
+}
+
+.reactMarkDown pre code,
+.markdown pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+@media (prefers-color-scheme: dark) {
+  .reactMarkDown pre,
+  .markdown pre {
+    background: #0b0f1a;
+    border-color: rgba(148, 163, 184, 0.2);
+  }
+
+  .reactMarkDown code,
+  .markdown code {
+    background: rgba(148, 163, 184, 0.15);
+  }
+}
+
 .reactMarkDown ul,
 .reactMarkDown ol,
 .markdown ul,
