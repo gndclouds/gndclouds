@@ -1,6 +1,21 @@
+import type { Metadata } from "next";
 import { getAllJournals } from "@/queries/journals";
 import ListViewWithSearch from "@/components/list-view-with-search";
 import CollectionHero from "@/components/collection-hero";
+
+export const metadata: Metadata = {
+  title: "Journals",
+  description: "Daily reflections, field notes, and personal writing.",
+  openGraph: {
+    title: "Journals",
+    description: "Daily reflections, field notes, and personal writing.",
+    url: "/journals",
+  },
+  twitter: {
+    title: "Journals",
+    description: "Daily reflections, field notes, and personal writing.",
+  },
+};
 
 export default async function JournalsPage() {
   const data = await getAllJournals();
@@ -26,6 +41,8 @@ export default async function JournalsPage() {
         <ListViewWithSearch
           data={combinedData}
           placeholder="Search journals..."
+          showFilters
+          showProjectImages
         />
       </section>
     </main>

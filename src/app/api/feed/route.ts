@@ -30,6 +30,8 @@ function formatDateYYYYMMDD(date: Date) {
 const CACHE_FILE_PATH = path.join(process.cwd(), "public", "data", "feed.json");
 const CACHE_MAX_AGE = 15 * 60 * 1000; // 15 minutes in milliseconds
 
+export const dynamic = "force-dynamic";
+
 // Load cached feed data
 async function loadCachedFeed(): Promise<any | null> {
   try {

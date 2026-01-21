@@ -48,6 +48,7 @@ const components: Partial<ExtendedComponents> = {
         }
       }
       
+      // eslint-disable-next-line @next/next/no-img-element -- SVG/GIF need <img> for proper rendering
       return <img src={imgSrc} alt={alt || "Image"} {...props} />;
     }
 
@@ -247,7 +248,7 @@ const MarkdownContent = ({
             // Use encoded path for proper URL handling of spaces and special chars
             const videoSrc = isProduction && process.env.GITHUB_ACCESS_TOKEN
               ? `/api/asset-proxy?path=assets/${encodedPath}`
-              : `/db-assets/${encodeURIComponent(cleanPath)}`;
+              : `/db-assets/${encodedPath}`;
             
             // Determine video type from extension
             const videoType = cleanPath.toLowerCase().endsWith('.webm') ? 'video/webm' :
@@ -266,9 +267,9 @@ const MarkdownContent = ({
             return `\n\n![${cleanPath}](/api/asset-proxy?path=assets/${encodedPath})\n\n`;
           }
 
-          // For local development, use the db-assets path
-          // The browser will handle URL encoding of spaces automatically
-          return `\n\n![${cleanPath}](/db-assets/${cleanPath})\n\n`;
+          // For local development, use the db-assets path with properly encoded filename
+          // Use encodedPath to handle spaces and special characters properly
+          return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
         })
         // Also handle standard markdown image syntax with relative paths
         .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
@@ -312,7 +313,7 @@ const MarkdownContent = ({
   const updatedContent = convertImageSyntax(contentWithoutInternalLinks);
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full flex-col md:flex-row">
       <div className="flex-1 min-w-0 p-4">
         <div className={styles.reactMarkDown}>
           {/* Apply the CSS class here */}
@@ -327,7 +328,7 @@ const MarkdownContent = ({
           </ReactMarkdown>
         </div>
       </div>
-      <div className="w-80 shrink-0 p-4 ml-auto">
+      <div className="w-full md:w-80 shrink-0 p-4 md:ml-auto">
         <h3 className="uppercase text-sm opacity-50">References</h3>
         {extractedLinks.length > 0 && (
           <>

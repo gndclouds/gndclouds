@@ -1,6 +1,21 @@
+import type { Metadata } from "next";
 import { getAllLogs } from "@/queries/logs";
-import ListViewWithSearch from "@/components/list-view-with-search";
 import CollectionHero from "@/components/collection-hero";
+import LogsLayout from "./LogsLayout";
+
+export const metadata: Metadata = {
+  title: "Logs",
+  description: "Short updates, experiments, and the day-to-day stream.",
+  openGraph: {
+    title: "Logs",
+    description: "Short updates, experiments, and the day-to-day stream.",
+    url: "/logs",
+  },
+  twitter: {
+    title: "Logs",
+    description: "Short updates, experiments, and the day-to-day stream.",
+  },
+};
 
 export default async function LogsPage() {
   const data = await getAllLogs();
@@ -23,7 +38,7 @@ export default async function LogsPage() {
         allProjects={combinedData}
       />
       <section className="flex flex-col gap-4 p-4">
-        <ListViewWithSearch data={combinedData} placeholder="Search logs..." />
+        <LogsLayout logs={combinedData} />
       </section>
     </main>
   );

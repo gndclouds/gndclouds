@@ -124,22 +124,34 @@ function copyFiles(src, dest, isRootDbDir = false) {
 
       try {
         if (fs.lstatSync(srcFile).isDirectory()) {
-          // For root db directory, don't recurse into subdirectories (only copy files directly in root)
+          // For root db directory, recurse into subdirectories to find media files
+          // but skip markdown/content directories that don't contain media
           // For assets/ and public/ directories, recurse normally
           if (!isRootDbDir) {
             copyFiles(srcFile, destFile, false);
           } else {
-            console.log(`Skipping subdirectory in root db dir: ${srcFile}`);
-            totalFilesSkipped++;
+            // For root db dir, recurse into subdirectories to find media files
+            // Skip known content directories that don't contain assets
+            const dirName = path.basename(srcFile);
+            const skipContentDirs = ['node_modules', '.git'];
+            if (!skipContentDirs.includes(dirName)) {
+              copyFiles(srcFile, dest, true); // Pass dest (not destFile) to flatten structure
+            } else {
+              console.log(`Skipping content directory: ${srcFile}`);
+              totalFilesSkipped++;
+            }
           }
         } else {
           if (shouldCopyFile(srcFile)) {
-            fs.copyFileSync(srcFile, destFile);
+            // For root db dir subdirectories, copy to flat dest structure (just filename)
+            // For assets/ and public/, preserve directory structure
+            const finalDestFile = isRootDbDir ? path.join(dest, path.basename(srcFile)) : destFile;
+            fs.copyFileSync(srcFile, finalDestFile);
             const fileSize = fs.statSync(srcFile).size;
             totalBytesCopied += fileSize;
             totalFilesCopied++;
             console.log(
-              `Copied ${srcFile} to ${destFile} (${(fileSize / 1024).toFixed(
+              `Copied ${srcFile} to ${finalDestFile} (${(fileSize / 1024).toFixed(
                 2
               )} KB)`
             );

@@ -17,9 +17,14 @@ import {
 interface ListViewProps {
   data: any[];
   variant?: "feed" | "default";
+  showProjectImages?: boolean;
 }
 
-export default function ListView({ data, variant = "default" }: ListViewProps) {
+export default function ListView({
+  data,
+  variant = "default",
+  showProjectImages = false,
+}: ListViewProps) {
   const formatDateDisplay = (value: string | Date) => {
     const date = value instanceof Date ? value : new Date(value);
     if (Number.isNaN(date.getTime())) {
@@ -444,6 +449,26 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
       itemType === "research" ||
       itemType === "project"
     ) {
+      const previewImageCandidate =
+        typeof item.metadata?.heroImage === "string"
+          ? item.metadata.heroImage.trim()
+          : typeof item.heroImage === "string"
+          ? item.heroImage.trim()
+          : "";
+      const isValidImagePath =
+        /(\.(png|jpe?g|gif|webp|avif|svg))$/i.test(previewImageCandidate) ||
+        previewImageCandidate.startsWith("http") ||
+        previewImageCandidate.startsWith("/");
+      const supportsPreviewImage =
+        showProjectImages && (itemType === "project" || itemType === "journal");
+      const previewImage =
+        isValidImagePath && previewImageCandidate.length > 0
+          ? previewImageCandidate
+          : supportsPreviewImage
+          ? "/background.jpg"
+          : "";
+      const hasPreviewImage = supportsPreviewImage && previewImage.length > 0;
+
       return (
         <div
           key={index}
@@ -451,6 +476,17 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
         >
           <Link href={linkPath} className="block h-full">
             <div className="flex flex-col h-full">
+              {hasPreviewImage && (
+                <div className="relative w-full aspect-[16/9] overflow-hidden mb-3">
+                  <Image
+                    src={previewImage}
+                    alt={`${item.title} preview`}
+                    fill
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              )}
               <h2 className="text-2xl font-bold mb-1 truncate">{item.title}</h2>
               <div className="text-xs text-gray-500 mb-2">
                 {item.publishedAt
@@ -462,20 +498,35 @@ export default function ListView({ data, variant = "default" }: ListViewProps) {
                   {item.description}
                 </div>
               )}
-              {(item.tags?.length > 0 || item.categories?.length > 0) && (
-                <div className="flex flex-wrap gap-2 mt-auto pt-2">
-                  {[...(item.tags || []), ...(item.categories || [])].map(
-                    (tag) => (
+              {(() => {
+                const rawTags = [
+                  ...(item.tags || []),
+                  ...(item.categories || []),
+                ];
+                const normalizeTag = (tag: string) =>
+                  tag.replace(/\[\[|\]\]/g, "").trim().toLowerCase();
+                const filteredTags =
+                  itemType === "project" && showProjectImages
+                    ? rawTags.filter(
+                        (tag) => normalizeTag(tag) !== "projects"
+                      )
+                    : rawTags;
+
+                if (filteredTags.length === 0) return null;
+
+                return (
+                  <div className="flex flex-wrap gap-2 mt-auto pt-2">
+                    {filteredTags.map((tag) => (
                       <span
                         key={tag}
                         className="border-2 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 text-xs uppercase hover:bg-gray-200 dark:hover:bg-gray-700/40 hover:text-gray-900 dark:hover:text-gray-100"
                       >
                         {tag}
                       </span>
-                    )
-                  )}
-                </div>
-              )}
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           </Link>
         </div>
