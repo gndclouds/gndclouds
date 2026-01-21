@@ -7,37 +7,23 @@ const Bio2026 = () => (
   >
     <div>Hello, my name is Will. Welcome to my corner of the internet.</div>
     <div>
-      <span className="font-bold">My focus</span> for the next decade, as a{" "}
-      <Link
-        href="/note/becoming-a-biodesign-technologist"
-        className="underline"
-      >
-        BioDesign Technologist
-      </Link>
-      , is to contribute to work that makes critical elements of natural systems
-      visible. This focus on making the unseen seen looks at how we can change
-      and see ourselves as a part of nature rather than adjacent to it.
+      <span className="font-bold">My focus</span> for the next decade is
+      contributing to work that makes critical elements of natural systems
+      visible. This means changing how we see ourselves as part of nature rather
+      than adjacent to it.
     </div>
     <div>
-      One way I&apos;m exploring this vision at scale is by reducing waste and
-      creating demand for biomaterials at{" "}
+      I&apos;m exploring this vision at scale through{" "}
       <Link href="https://interstitial.systems" className="underline">
         Interstitial
       </Link>
-      .
+      , building infrastructure that connects physical world sensor data to AI
+      systems.
     </div>
     <div>
-      In parallel, to deepen my understanding of climate action and to develop
-      new practices, I tinker with personal projects at{" "}
-      <Link href="https://tinyfactories.space/" className="underline">
-        TinyFactories
-      </Link>
-      , a tribe of people supporting each other to establish their creative
-      footing.
-    </div>
-    <div>
-      <span className="font-bold">Previously</span>, I served as a design
-      technologist at{" "}
+      <span className="font-bold">Previously</span>, I&apos;ve worked as a
+      creative technologist, product designer,
+      and design researcher at{" "}
       <Link href="https://www.intel.com" className="underline">
         Intel Labs
       </Link>
@@ -57,39 +43,61 @@ const Bio2026 = () => (
       <Link href="https://darkmatterlabs.org/" className="underline">
         Dark Matter Labs
       </Link>
-      , and{" "}
+      ,{" "}
       <Link
         href="https://en.wikipedia.org/wiki/PARC_(company)"
         className="underline"
       >
         Xerox PARC
       </Link>
-      , where I specialized in translating emerging technologies into prototypes
-      that simplified complex technologies to focus on their intended functions.
+      , Fjord,{" "}
+      <Link href="https://ezra.fi" className="underline">
+        Ezra
+      </Link>
+      ,{" "}
+      <Link href="https://makezine.com/" className="underline">
+        Maker Media
+      </Link>
+      , and{" "}
+      <Link href="https://ifttt.com/" className="underline">
+        IFTTT
+      </Link>
+      . Across these roles, I specialized
+      in translating emerging technologies into working prototypes—simplifying
+      complexity to focus on core function. Along the way, I&apos;ve managed
+      teams, led products from prototype to v0, and shipped work that brought
+      new technologies to market.
     </div>
     <div>
-      <span className="font-bold">My academic journey</span> began at the{" "}
+      I also cofounded{" "}
+      <Link href="https://tinyfactories.space/" className="underline">
+        Tiny Factories
+      </Link>
+      , a tribe of makers supporting each other to establish creative footing
+      where I deepened my practice through personal projects and climate-focused
+      tinkering.
+    </div>
+    <div>
+      <span className="font-bold">My academic journey</span> began at{" "}
       <Link href="https://cca.edu/" className="underline">
         California College of the Arts
       </Link>
-      , where I pursued a BFA in{" "}
+      , where I studied{" "}
       <Link href="https://www.cca.edu/design/ixd/" className="underline">
         Interaction Design
       </Link>
-      . Around this time, I had the chance to participate in John
-      Bielenberg&apos;s experimental education program. This program focused on{" "}
+      . Around that time, I participated in John Bielenberg&apos;s experimental
+      education program focused on{" "}
       <Link
         href="https://www.youtube.com/watch?v=PZJoJ-b2MIY"
         className="underline"
       >
         thinking wrong
-      </Link>
-      , which largely shaped my thinking about how to apply my capabilities to
-      the world.
+      </Link>{" "}
+      which shaped how I approach applying my capabilities to the world.
     </div>
     <div>
-      <span className="font-bold">This site</span> is to be a public archive
-      divided into{" "}
+      <span className="font-bold">This site</span> is a public archive of:{" "}
       <Link href="/logs" className="underline">
         logs
       </Link>
@@ -97,11 +105,10 @@ const Bio2026 = () => (
       <Link href="/journals" className="underline">
         journals
       </Link>
-      , and a project archive.
+      , and projects.
     </div>
     <div>
-      <span className="font-bold">If you want to connect</span>, let&#39;s grab
-      a{" "}
+      <span className="font-bold">If you want to connect</span>, let&apos;s grab{" "}
       <Link
         href="https://www.corner.inc/list/f98ae632-b6c6-41cb-b34f-5aab2d4cd15d"
         className="underline"
