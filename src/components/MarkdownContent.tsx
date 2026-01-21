@@ -267,9 +267,9 @@ const MarkdownContent = ({
             return `\n\n![${cleanPath}](/api/asset-proxy?path=assets/${encodedPath})\n\n`;
           }
 
-          // For local development, use the db-assets path
-          // The browser will handle URL encoding of spaces automatically
-          return `\n\n![${cleanPath}](/db-assets/${cleanPath})\n\n`;
+          // For local development, use the db-assets path with properly encoded filename
+          // Use encodedPath to handle spaces and special characters properly
+          return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
         })
         // Also handle standard markdown image syntax with relative paths
         .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
