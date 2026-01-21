@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getJournalBySlug } from "@/queries/journals";
+import { getJournalBySlug, getAllJournals } from "@/queries/journals";
 import PageHero from "@/components/page-hero";
 import ReactMarkdown from "react-markdown";
 import MarkdownContent from "@/components/MarkdownContent";
@@ -8,6 +8,13 @@ interface Params {
   params: {
     slug: string;
   };
+}
+
+export async function generateStaticParams() {
+  const journals = await getAllJournals();
+  return journals.map((journal) => ({
+    slug: journal.slug,
+  }));
 }
 
 export default async function JournalPage({ params }: Params) {
