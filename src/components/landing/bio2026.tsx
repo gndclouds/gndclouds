@@ -9,8 +9,20 @@ const Bio2026 = () => (
     <div>
       <span className="font-bold">My focus</span> for the next decade is
       contributing to work that makes critical elements of natural systems
-      visible. This means changing how we see ourselves as part of nature rather
-      than adjacent to it.
+      visible. This means changing how we see ourselves as part of nature
+      rather than adjacent to it.
+    </div>
+    <div>
+      These days, I tend to be classified as a design engineer or creative
+      technologist depending on the context though I&apos;m still aspiring to
+      become a{" "}
+      <Link
+        href="/note/becoming-a-biodesign-technologist"
+        className="underline"
+      >
+        biodesign technologist
+      </Link>
+      .
     </div>
     <div>
       I&apos;m exploring this vision at scale through{" "}
@@ -21,9 +33,8 @@ const Bio2026 = () => (
       systems.
     </div>
     <div>
-      <span className="font-bold">Previously</span>, I&apos;ve worked as a
-      creative technologist, product designer,
-      and design researcher at{" "}
+      <span className="font-bold">Previously</span>, I&apos;ve worked at the
+      intersection of design and development at{" "}
       <Link href="https://www.intel.com" className="underline">
         Intel Labs
       </Link>
@@ -63,19 +74,19 @@ const Bio2026 = () => (
         IFTTT
       </Link>
       . Across these roles, I specialized
-      in translating emerging technologies into working prototypes—simplifying
+      in translating emerging technologies into working prototypes simplifying
       complexity to focus on core function. Along the way, I&apos;ve managed
       teams, led products from prototype to v0, and shipped work that brought
       new technologies to market.
     </div>
     <div>
-      I also cofounded{" "}
+      Alongside this work, I cofounded{" "}
       <Link href="https://tinyfactories.space/" className="underline">
         Tiny Factories
       </Link>
-      , a tribe of makers supporting each other to establish creative footing
-      where I deepened my practice through personal projects and climate-focused
-      tinkering.
+      , a tribe of makers supporting each other to establish creative
+      footing where I deepened my practice through personal projects and
+      climate-focused tinkering.
     </div>
     <div>
       <span className="font-bold">My academic journey</span> began at{" "}
@@ -93,11 +104,11 @@ const Bio2026 = () => (
         className="underline"
       >
         thinking wrong
-      </Link>{" "}
+      </Link>
       which shaped how I approach applying my capabilities to the world.
     </div>
     <div>
-      <span className="font-bold">This site</span> is a public archive of:{" "}
+      <span className="font-bold">This site</span> is a public archive:{" "}
       <Link href="/logs" className="underline">
         logs
       </Link>
