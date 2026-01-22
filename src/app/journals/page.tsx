@@ -42,7 +42,6 @@ export default async function JournalsPage() {
           data={combinedData}
           placeholder="Search journals..."
           showFilters
-          showProjectImages
         />
       </section>
     </main>

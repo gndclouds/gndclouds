@@ -60,9 +60,13 @@ export async function getMarkdownFilePaths(
   }
   const treePaths = await getMarkdownPathsFromGitTree(contentType);
   if (treePaths.length > 0) {
+    if (process.env.NODE_ENV === "production") {
+      console.log(`Found ${treePaths.length} ${contentType} files via git tree`);
+    }
     return treePaths;
   }
 
+  // Fallback to contents API if git tree didn't work
   try {
     const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${contentType}?ref=${githubBranch}`;
 
@@ -75,9 +79,18 @@ export async function getMarkdownFilePaths(
     });
 
     if (!response.ok) {
-      console.error(
-        `Failed to fetch directory contents: ${response.status} ${response.statusText}`
-      );
+      // Only log as error if it's not a 404 (directory might not exist)
+      if (response.status === 404) {
+        if (process.env.NODE_ENV === "production") {
+          console.warn(
+            `Directory ${contentType} not found in repo (404). This may be expected if the directory doesn't exist.`
+          );
+        }
+      } else {
+        console.error(
+          `Failed to fetch directory contents for ${contentType}: ${response.status} ${response.statusText}`
+        );
+      }
       return [];
     }
 
@@ -104,9 +117,10 @@ async function getMarkdownPathsFromGitTree(
   contentType: string
 ): Promise<string[]> {
   try {
-    const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/git/trees/${githubBranch}?recursive=1`;
-
-    const response = await fetch(apiUrl, {
+    // First, get the SHA of the branch
+    const refUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/git/ref/heads/${githubBranch}`;
+    
+    const refResponse = await fetch(refUrl, {
       headers: {
         Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
         Accept: "application/vnd.github+json",
@@ -114,19 +128,45 @@ async function getMarkdownPathsFromGitTree(
       },
     });
 
-    if (!response.ok) {
+    if (!refResponse.ok) {
       console.warn(
-        `Failed to fetch git tree: ${response.status} ${response.statusText}`
+        `Failed to fetch branch ref: ${refResponse.status} ${refResponse.statusText}`
       );
       return [];
     }
 
-    const data = await response.json();
-    if (!Array.isArray(data?.tree)) {
+    const refData = await refResponse.json();
+    const commitSha = refData?.object?.sha;
+
+    if (!commitSha) {
+      console.warn("Could not get commit SHA from branch ref");
       return [];
     }
 
-    return data.tree
+    // Now get the tree using the commit SHA
+    const treeUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/git/trees/${commitSha}?recursive=1`;
+
+    const treeResponse = await fetch(treeUrl, {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "gndclouds-website",
+      },
+    });
+
+    if (!treeResponse.ok) {
+      console.warn(
+        `Failed to fetch git tree: ${treeResponse.status} ${treeResponse.statusText}`
+      );
+      return [];
+    }
+
+    const treeData = await treeResponse.json();
+    if (!Array.isArray(treeData?.tree)) {
+      return [];
+    }
+
+    return treeData.tree
       .filter(
         (item: any) =>
           item.type === "blob" &&

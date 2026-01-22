@@ -26,35 +26,79 @@ export async function GET(request: NextRequest) {
     }
 
     if (!GITHUB_TOKEN) {
+      console.error("Asset proxy: GITHUB_ACCESS_TOKEN is not configured");
+      // Return 503 Service Unavailable to indicate the service is not available
+      // This allows clients to handle it as a temporary issue and fall back to alternatives
       return NextResponse.json(
-        { error: "GitHub token not configured" },
-        { status: 500 }
+        { 
+          error: "GitHub token not configured",
+          message: "Asset proxy service is not available. Please configure GITHUB_ACCESS_TOKEN or use local asset paths."
+        },
+        { status: 503 }
       );
     }
 
     // Format the path for the GitHub API
-    const formattedPath = path.startsWith("/") ? path.substring(1) : path;
+    let formattedPath = path.startsWith("/") ? path.substring(1) : path;
 
     // Build the URL to fetch from GitHub
-    const apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${formattedPath}?ref=${GITHUB_BRANCH}`;
+    let apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${formattedPath}?ref=${GITHUB_BRANCH}`;
+    
+    // Log the path being requested for debugging nested asset issues
+    console.log(`Asset proxy: requesting path="${formattedPath}" from GitHub (owner=${GITHUB_OWNER}, repo=${GITHUB_REPO}, branch=${GITHUB_BRANCH})`);
 
     // Fetch the content with authentication
-    const response = await fetch(apiUrl, {
+    let response = await fetch(apiUrl, {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
         Accept: "application/vnd.github.v3.raw",
         "User-Agent": "gndclouds-website",
       },
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      // Remove next.revalidate as it can cause issues with dynamic routes
+      cache: "no-store",
     });
 
+    // If the path doesn't start with assets/ and the request failed, try with assets/ prefix
+    // This handles cases where paths like "child/image.png" need to become "assets/child/image.png"
+    if (!response.ok && response.status === 404 && !formattedPath.startsWith("assets/")) {
+      const fallbackPath = `assets/${formattedPath}`;
+      const fallbackUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fallbackPath}?ref=${GITHUB_BRANCH}`;
+      
+      if (process.env.NODE_ENV === "production") {
+        console.log(`Asset proxy: trying fallback path="${fallbackPath}"`);
+      }
+      
+      response = await fetch(fallbackUrl, {
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3.raw",
+          "User-Agent": "gndclouds-website",
+        },
+        cache: "no-store",
+      });
+      
+      if (response.ok) {
+        formattedPath = fallbackPath;
+        apiUrl = fallbackUrl;
+      }
+    }
+
     if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
       console.error(
-        `Failed to fetch asset: ${response.status} ${response.statusText}`
+        `Failed to fetch asset from ${apiUrl}: ${response.status} ${response.statusText}`,
+        errorText ? `Response: ${errorText.substring(0, 500)}` : ""
       );
+      // Return the GitHub API error status, but cap at 500 to avoid exposing internal errors
+      const statusCode = response.status >= 500 ? 500 : response.status;
       return NextResponse.json(
-        { error: `Failed to fetch asset: ${response.status}` },
-        { status: response.status }
+        { 
+          error: `Failed to fetch asset: ${response.status} ${response.statusText}`,
+          path: formattedPath,
+          url: apiUrl,
+          details: process.env.NODE_ENV === "development" ? errorText.substring(0, 500) : undefined
+        },
+        { status: statusCode }
       );
     }
 
@@ -75,8 +119,14 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error in asset proxy:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("Error details:", { errorMessage, errorStack });
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unknown error" },
+      { 
+        error: errorMessage,
+        details: process.env.NODE_ENV === "development" ? errorStack : undefined
+      },
       { status: 500 }
     );
   }

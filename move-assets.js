@@ -28,6 +28,11 @@ const allowedExtensions = [
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB for video files
 
+// Set to true to normalize filenames (removes spaces, special chars)
+// NOTE: If enabled, you'll need to update markdown references to use normalized names
+// OR implement a runtime lookup using the mapping file
+const NORMALIZE_FILENAMES = process.env.NORMALIZE_ASSETS === "true" || false;
+
 // Ensure destination directory exists
 if (!fs.existsSync(destDir)) {
   fs.mkdirSync(destDir, { recursive: true });
@@ -47,6 +52,27 @@ let totalFilesProcessed = 0;
 let totalFilesCopied = 0;
 let totalFilesSkipped = 0;
 let totalBytesCopied = 0;
+
+// Mapping of original filenames to normalized filenames
+// This can be used to update markdown references if needed
+const filenameMapping = {};
+
+// Function to normalize filenames to URL-safe versions
+// Converts: "CleanShot 2026-01-20 at 15.23.54.mp4" -> "cleanshot-2026-01-20-at-15-23-54.mp4"
+function normalizeFilename(filename) {
+  const ext = path.extname(filename);
+  const nameWithoutExt = path.basename(filename, ext);
+  
+  // Convert to lowercase, replace spaces and special chars with hyphens
+  // Remove multiple consecutive hyphens, trim hyphens from start/end
+  const normalized = nameWithoutExt
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')  // Replace non-alphanumeric with hyphens
+    .replace(/-+/g, '-')           // Replace multiple hyphens with single
+    .replace(/^-|-$/g, '');        // Remove leading/trailing hyphens
+  
+  return normalized + ext;
+}
 
 // Check if a file should be copied
 // A list of essential media files we want to include even if they are in subdirectories
@@ -143,18 +169,46 @@ function copyFiles(src, dest, isRootDbDir = false) {
           }
         } else {
           if (shouldCopyFile(srcFile)) {
+            const originalFilename = path.basename(srcFile);
+            let finalFilename = originalFilename;
+            
+            // Normalize filename if enabled
+            if (NORMALIZE_FILENAMES) {
+              finalFilename = normalizeFilename(originalFilename);
+              
+              // Store mapping if filename changed
+              if (originalFilename !== finalFilename) {
+                const relativePath = path.relative(path.join(__dirname, "src/app/db"), srcFile);
+                filenameMapping[originalFilename] = finalFilename;
+                filenameMapping[relativePath] = finalFilename;
+              }
+            }
+            
             // For root db dir subdirectories, copy to flat dest structure (just filename)
             // For assets/ and public/, preserve directory structure
-            const finalDestFile = isRootDbDir ? path.join(dest, path.basename(srcFile)) : destFile;
+            let finalDestFile;
+            if (isRootDbDir) {
+              finalDestFile = path.join(dest, finalFilename);
+            } else {
+              // For nested directories, use normalized filename but preserve directory structure
+              const dir = path.dirname(destFile);
+              finalDestFile = path.join(dir, finalFilename);
+            }
+            
             fs.copyFileSync(srcFile, finalDestFile);
             const fileSize = fs.statSync(srcFile).size;
             totalBytesCopied += fileSize;
             totalFilesCopied++;
-            console.log(
-              `Copied ${srcFile} to ${finalDestFile} (${(fileSize / 1024).toFixed(
-                2
-              )} KB)`
-            );
+            
+            if (NORMALIZE_FILENAMES && originalFilename !== finalFilename) {
+              console.log(
+                `Copied and normalized: ${originalFilename} -> ${finalFilename} (${(fileSize / 1024).toFixed(2)} KB)`
+              );
+            } else {
+              console.log(
+                `Copied ${srcFile} to ${finalDestFile} (${(fileSize / 1024).toFixed(2)} KB)`
+              );
+            }
           } else {
             totalFilesSkipped++;
           }
@@ -199,3 +253,16 @@ console.log(
   ).toFixed(2)} MB)`
 );
 console.log(`Time taken: ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
+
+// Save filename mapping to a JSON file for reference (only if normalization is enabled)
+// This can be used to update markdown references or implement runtime lookup
+if (NORMALIZE_FILENAMES && Object.keys(filenameMapping).length > 0) {
+  const mappingFile = path.join(__dirname, "public/db-assets", ".filename-mapping.json");
+  fs.writeFileSync(mappingFile, JSON.stringify(filenameMapping, null, 2));
+  console.log(`\nFilename mapping saved to: ${mappingFile}`);
+  console.log(`Total files normalized: ${Object.keys(filenameMapping).length}`);
+  console.log(`\n⚠️  NOTE: Markdown files still reference original filenames.`);
+  console.log(`   You'll need to either:`);
+  console.log(`   1. Update markdown references to use normalized names, or`);
+  console.log(`   2. Implement runtime lookup using the mapping file`);
+}

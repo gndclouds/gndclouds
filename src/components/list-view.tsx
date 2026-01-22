@@ -461,9 +461,34 @@ export default function ListView({
         previewImageCandidate.startsWith("/");
       const supportsPreviewImage =
         showProjectImages && (itemType === "project" || itemType === "journal");
+      
+      // Convert hero image paths to use asset proxy in production
+      // Paths like /projects/hero-*.ext should become assets/projects/hero-*.ext for GitHub
+      // Note: In development, these should be in public folder. In production, use asset proxy.
+      let processedImagePath = previewImageCandidate;
+      const isProduction = process.env.NODE_ENV === "production";
+      if (
+        isValidImagePath &&
+        previewImageCandidate.length > 0 &&
+        previewImageCandidate.startsWith("/") &&
+        !previewImageCandidate.startsWith("http") &&
+        !previewImageCandidate.startsWith("/api/asset-proxy") &&
+        !previewImageCandidate.startsWith("/db-assets/") &&
+        !previewImageCandidate.startsWith("/background") &&
+        isProduction
+      ) {
+        // Remove leading slash and convert to assets path for GitHub repo
+        const pathWithoutSlash = previewImageCandidate.substring(1);
+        // Ensure it starts with assets/ for the GitHub repo structure
+        const assetPath = pathWithoutSlash.startsWith("assets/")
+          ? pathWithoutSlash
+          : `assets/${pathWithoutSlash}`;
+        processedImagePath = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+      }
+      
       const previewImage =
         isValidImagePath && previewImageCandidate.length > 0
-          ? previewImageCandidate
+          ? processedImagePath
           : supportsPreviewImage
           ? "/background.jpg"
           : "";

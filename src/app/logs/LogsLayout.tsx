@@ -168,8 +168,15 @@ export default function LogsLayout({ logs }: { logs: LogItem[] }) {
 
   return (
     <div className="space-y-6">
+      <input
+        type="search"
+        value={searchQuery}
+        onChange={(event) => setSearchQuery(event.target.value)}
+        placeholder="Search logs, tags, descriptions"
+        className="w-full border-2 border-backgroundDark dark:border-backgroundLight bg-transparent px-3 py-2 text-sm text-gray-800 dark:text-gray-100 placeholder:text-gray-400"
+      />
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_minmax(0,1fr)] md:gap-10">
-        <aside className="md:sticky md:top-6 md:h-[calc(100vh-220px)] md:overflow-y-auto">
+        <aside className="md:sticky md:top-6 md:self-start">
           <div className="space-y-6">
             <div>
               <h3 className="text-xs uppercase tracking-wide text-gray-500 mb-3">
@@ -290,18 +297,6 @@ export default function LogsLayout({ logs }: { logs: LogItem[] }) {
           className="min-h-[40vh]"
           ref={listRef}
         >
-          <div className="mb-4 border-2 border-backgroundDark dark:border-backgroundLight p-3">
-            <label className="text-xs uppercase tracking-wide text-gray-500">
-              Search
-            </label>
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search logs, tags, descriptions"
-              className="mt-2 w-full border-2 border-backgroundDark dark:border-backgroundLight bg-transparent px-3 py-2 text-sm text-gray-800 dark:text-gray-100 placeholder:text-gray-400"
-            />
-          </div>
           {currentItems.length === 0 ? (
             <div className="border-2 border-backgroundDark dark:border-backgroundLight p-6 text-sm text-gray-500">
               No logs match the selected filters.
@@ -350,6 +345,8 @@ export default function LogsLayout({ logs }: { logs: LogItem[] }) {
                           content={log.metadata.contentHtml}
                           links={(log.metadata as any).links ?? []}
                           footnotes={(log.metadata as any).footnotes ?? {}}
+                          showReferences={false}
+                          filePath={(log.metadata as any).filePath}
                         />
                       </div>
                     ) : (
