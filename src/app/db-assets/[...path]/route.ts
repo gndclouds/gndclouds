@@ -2,7 +2,31 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join } from "path";
-import { lookup } from "mime-types";
+
+// Simple content type mapping based on file extension
+function getContentType(filePath: string): string {
+  const ext = filePath.split('.').pop()?.toLowerCase() || '';
+  const contentTypes: Record<string, string> = {
+    // Images
+    'png': 'image/png',
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'gif': 'image/gif',
+    'webp': 'image/webp',
+    'svg': 'image/svg+xml',
+    'ico': 'image/x-icon',
+    // Videos
+    'mp4': 'video/mp4',
+    'webm': 'video/webm',
+    'mov': 'video/quicktime',
+    'avi': 'video/x-msvideo',
+    'mkv': 'video/x-matroska',
+    // Other
+    'zip': 'application/zip',
+    'pdf': 'application/pdf',
+  };
+  return contentTypes[ext] || 'application/octet-stream';
+}
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +69,7 @@ export async function GET(
     if (existsSync(publicPath)) {
       try {
         const fileBuffer = await readFile(publicPath);
-        const contentType = lookup(publicPath) || "application/octet-stream";
+        const contentType = getContentType(publicPath);
 
         return new NextResponse(fileBuffer, {
           status: 200,
@@ -68,7 +92,7 @@ export async function GET(
     if (existsSync(srcAssetsPath)) {
       try {
         const fileBuffer = await readFile(srcAssetsPath);
-        const contentType = lookup(srcAssetsPath) || "application/octet-stream";
+        const contentType = getContentType(srcAssetsPath);
 
         return new NextResponse(fileBuffer, {
           status: 200,
@@ -93,7 +117,7 @@ export async function GET(
         try {
           console.log(`Found asset at: ${srcAssetsPathFilenameOnly} (using filename only from path: ${decodedPath})`);
           const fileBuffer = await readFile(srcAssetsPathFilenameOnly);
-          const contentType = lookup(srcAssetsPathFilenameOnly) || "application/octet-stream";
+          const contentType = getContentType(srcAssetsPathFilenameOnly);
 
           return new NextResponse(fileBuffer, {
             status: 200,
@@ -117,7 +141,7 @@ export async function GET(
     if (existsSync(srcPublicPath)) {
       try {
         const fileBuffer = await readFile(srcPublicPath);
-        const contentType = lookup(srcPublicPath) || "application/octet-stream";
+        const contentType = getContentType(srcPublicPath);
 
         return new NextResponse(fileBuffer, {
           status: 200,
