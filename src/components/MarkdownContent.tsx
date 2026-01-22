@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
@@ -475,7 +477,7 @@ const MarkdownContent = ({
   // Client-side effect to convert /db-assets/ paths in video tags to asset proxy
   // This handles cases where videos are rendered as HTML and need path conversion
   // Also handles fallback when asset proxy fails
-  React.useEffect(() => {
+  useEffect(() => {
     // Helper function to convert asset proxy URL back to db-assets path
     const proxyToLocalPath = (proxyUrl: string): string | null => {
       try {

@@ -198,7 +198,7 @@ export async function GET(
         // Determine content type from file extension
         const ext = decodedPath.split('.').pop()?.toLowerCase();
         let contentType = "application/octet-stream";
-        let placeholder: ArrayBuffer;
+        let placeholder: Buffer;
         
         if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext || '')) {
           // Return a transparent 1x1 PNG for images
