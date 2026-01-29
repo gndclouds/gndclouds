@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const HERO_STYLE_PROMPT = `Duotone isometric cutaway illustration, coral and blue-gray palette, risograph-inspired flat vector style. Architectural diagram of a house with interior visible, connected to a minimal data visualization panel. Clean geometric shapes, no gradients, overlapping colors creating third tones. Editorial infographic aesthetic.`;
+const HERO_STYLE_PROMPT = `Duotone isometric cutaway illustration, coral and blue-gray palette, risograph-inspired flat vector style. Based on a core theme to the post, create a minimalistic illustration. or a texture for no core theme is aparent. Clean geometric shapes, no gradients, overlapping colors creating third tones. Editorial infographic aesthetic.`;
 
 export async function GET(request: NextRequest) {
   const summary = request.nextUrl.searchParams.get("summary") ?? "";
