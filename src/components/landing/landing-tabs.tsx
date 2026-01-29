@@ -3,12 +3,25 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen, ChevronRight, FolderKanban, LayoutGrid, ScrollText, type LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  FolderKanban,
+  LayoutGrid,
+  ScrollText,
+  type LucideIcon,
+} from "lucide-react";
 import type { Journal } from "@/queries/journals";
 import type { Post as LogPost } from "@/queries/logs";
 import type { Post as ProjectPost } from "@/queries/projects";
-import type { TabItem, TabItemType } from "@/components/landing/hover-preview-card";
-import { MorphingTitle, getTypewriterDuration } from "@/components/landing/morphing-title";
+import type {
+  TabItem,
+  TabItemType,
+} from "@/components/landing/hover-preview-card";
+import {
+  MorphingTitle,
+  getTypewriterDuration,
+} from "@/components/landing/morphing-title";
 
 interface JournalWithDescription extends Journal {
   description?: string;
@@ -23,10 +36,34 @@ interface LandingTabsProps {
 }
 
 const TABS = [
-  { id: "all" as const, label: "All", href: "/feed", dotColor: "#94a3b8", Icon: LayoutGrid },
-  { id: "journals" as const, label: "Journals", href: "/journals", dotColor: "#fadc4b", Icon: BookOpen },
-  { id: "projects" as const, label: "Projects", href: "/projects", dotColor: "#0068e2", Icon: FolderKanban },
-  { id: "logs" as const, label: "Logs", href: "/logs", dotColor: "#ff6622", Icon: ScrollText },
+  {
+    id: "all" as const,
+    label: "All",
+    href: "/feed",
+    dotColor: "#94a3b8",
+    Icon: LayoutGrid,
+  },
+  {
+    id: "journals" as const,
+    label: "Journals",
+    href: "/journals",
+    dotColor: "#fadc4b",
+    Icon: BookOpen,
+  },
+  {
+    id: "projects" as const,
+    label: "Projects",
+    href: "/projects",
+    dotColor: "#0068e2",
+    Icon: FolderKanban,
+  },
+  {
+    id: "logs" as const,
+    label: "Logs",
+    href: "/logs",
+    dotColor: "#ff6622",
+    Icon: ScrollText,
+  },
 ] as const;
 
 const TYPE_PILL: Record<TabItemType, { Icon: LucideIcon; color: string }> = {
@@ -35,15 +72,23 @@ const TYPE_PILL: Record<TabItemType, { Icon: LucideIcon; color: string }> = {
   log: { Icon: ScrollText, color: "#ff6622" },
 };
 
+const TYPE_LABEL: Record<TabItemType, string> = {
+  journal: "JOURNAL",
+  project: "PROJECT",
+  log: "LOG",
+};
+
 function TypePill({ type }: { type: TabItemType }) {
-  const { Icon, color } = TYPE_PILL[type];
+  const { Icon } = TYPE_PILL[type];
   return (
     <span
-      className="inline-flex items-center justify-center shrink-0 w-6 h-6 rounded-full text-white text-xs"
-      style={{ backgroundColor: color }}
+      className="inline-flex items-center gap-1 shrink-0 rounded-full bg-gray-200 px-2 py-0.5 text-gray-600"
       aria-hidden
     >
-      <Icon size={12} />
+      <Icon size={12} className="shrink-0" />
+      <span className="text-[10px] font-medium tracking-wide">
+        {TYPE_LABEL[type]}
+      </span>
     </span>
   );
 }
@@ -78,13 +123,23 @@ function TabButton({
       />
       <span
         className={`text-lg font-normal transition-colors ${
-          isActive ? "text-primary-black" : "text-gray-500 hover:text-primary-black"
+          isActive
+            ? "text-primary-black"
+            : "text-gray-500 hover:text-primary-black"
         }`}
       >
         {label}
       </span>
     </button>
   );
+}
+
+function formatSlotDate(publishedAt: string): string {
+  const d = new Date(publishedAt);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}.${m}.${day}`;
 }
 
 const tabItemLinkClass =
@@ -95,20 +150,38 @@ function TabItemLink({
   children,
   isEmpty,
   pill,
-}: { href: string; children: React.ReactNode; isEmpty?: boolean; pill?: React.ReactNode }) {
+  date,
+}: {
+  href: string;
+  children: React.ReactNode;
+  isEmpty?: boolean;
+  pill?: React.ReactNode;
+  date?: string;
+}) {
   if (isEmpty) {
-    return <span className="min-w-0 truncate text-gray-400 flex items-center gap-2">{pill}{children}</span>;
+    return (
+      <span className="min-w-0 truncate text-gray-400 flex items-center gap-2">
+        {children}
+      </span>
+    );
   }
   return (
     <Link href={href} className={tabItemLinkClass}>
-      <span className="flex items-center gap-2 min-w-0">
-        {pill}
+      <span className="flex items-center min-w-0">
         <span className="min-w-0 truncate">{children}</span>
       </span>
-      <ChevronRight
-        className="size-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-        aria-hidden
-      />
+      <span className="flex shrink-0 items-center gap-2 text-right">
+        {pill}
+        {date ? (
+          <time dateTime={date} className="text-sm text-gray-500 tabular-nums">
+            {formatSlotDate(date)}
+          </time>
+        ) : null}
+        <ChevronRight
+          className="size-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+          aria-hidden
+        />
+      </span>
     </Link>
   );
 }
@@ -126,7 +199,7 @@ function getSlotsForTab(
   tab: TabId,
   journals: JournalWithDescription[],
   projects: ProjectPost[],
-  logs: LogPost[]
+  logs: LogPost[],
 ): SlotItem[] {
   if (tab === "all") {
     const journalSlots: SlotItem[] = journals.slice(0, 6).map((j) => ({
@@ -135,30 +208,53 @@ function getSlotsForTab(
       item: j,
       type: "journal",
     }));
-    const projectSlots: SlotItem[] = projects.slice(0, 3).map((p) => ({
+    const projectSlots: SlotItem[] = projects.slice(0, 6).map((p) => ({
       title: p.title,
       href: `/project/${p.slug}`,
       item: p,
       type: "project",
     }));
-    const logSlots: SlotItem[] = logs.slice(0, 3).map((l) => ({
+    const logSlots: SlotItem[] = logs.slice(0, 6).map((l) => ({
       title: l.title,
       href: `/log/${l.slug}`,
       item: l,
       type: "log",
     }));
     const combined = [...journalSlots, ...projectSlots, ...logSlots].sort(
-      (a, b) => new Date(b.item.publishedAt).getTime() - new Date(a.item.publishedAt).getTime()
+      (a, b) =>
+        new Date(b.item.publishedAt).getTime() -
+        new Date(a.item.publishedAt).getTime(),
     );
     return combined;
   }
   if (tab === "journals") {
-    return journals.slice(0, 6).map((j) => ({ title: j.title, href: `/journal/${j.slug}`, item: j, type: "journal" }));
+    return journals
+      .slice(0, 6)
+      .map((j) => ({
+        title: j.title,
+        href: `/journal/${j.slug}`,
+        item: j,
+        type: "journal",
+      }));
   }
   if (tab === "projects") {
-    return projects.slice(0, 6).map((p) => ({ title: p.title, href: `/project/${p.slug}`, item: p, type: "project" }));
+    return projects
+      .slice(0, 6)
+      .map((p) => ({
+        title: p.title,
+        href: `/project/${p.slug}`,
+        item: p,
+        type: "project",
+      }));
   }
-  return logs.slice(0, 6).map((l) => ({ title: l.title, href: `/log/${l.slug}`, item: l, type: "log" }));
+  return logs
+    .slice(0, 6)
+    .map((l) => ({
+      title: l.title,
+      href: `/log/${l.slug}`,
+      item: l,
+      type: "log",
+    }));
 }
 
 const SLOT_COUNT = 12;
@@ -174,19 +270,33 @@ export default function LandingTabs({
 }: LandingTabsProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabId>("journals");
-  const [previousTitles, setPreviousTitles] = useState<string[]>(() => Array(SLOT_COUNT).fill(""));
+  const [previousTitles, setPreviousTitles] = useState<string[]>(() =>
+    Array(SLOT_COUNT).fill(""),
+  );
   const [isMorphing, setIsMorphing] = useState(false);
   const [isArrowFlying, setIsArrowFlying] = useState(false);
   const viewAllTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const viewAllHref = TABS.find((t) => t.id === activeTab)?.href ?? "/journals";
 
-  const currentSlots = getSlotsForTab(activeTab, recentJournals, recentProjects, recentLogs);
+  const currentSlots = getSlotsForTab(
+    activeTab,
+    recentJournals,
+    recentProjects,
+    recentLogs,
+  );
 
   const handleTabClick = (newTab: TabId) => {
     if (newTab === activeTab) return;
-    const prevSlots = getSlotsForTab(activeTab, recentJournals, recentProjects, recentLogs);
+    const prevSlots = getSlotsForTab(
+      activeTab,
+      recentJournals,
+      recentProjects,
+      recentLogs,
+    );
     const titles = prevSlots.map((s) => s.title);
-    setPreviousTitles([...titles, ...Array(SLOT_COUNT).fill("")].slice(0, SLOT_COUNT));
+    setPreviousTitles(
+      [...titles, ...Array(SLOT_COUNT).fill("")].slice(0, SLOT_COUNT),
+    );
     setActiveTab(newTab);
     setIsMorphing(true);
   };
@@ -195,9 +305,12 @@ export default function LandingTabs({
     if (!isMorphing) return;
     const maxDuration = Math.max(
       ...Array.from({ length: SLOT_COUNT }, (_, i) =>
-        getTypewriterDuration(previousTitles[i]?.length ?? 0, currentSlots[i]?.title.length ?? 0)
+        getTypewriterDuration(
+          previousTitles[i]?.length ?? 0,
+          currentSlots[i]?.title.length ?? 0,
+        ),
       ),
-      800
+      800,
     );
     const t = setTimeout(() => setIsMorphing(false), maxDuration + 120);
     return () => clearTimeout(t);
@@ -212,7 +325,8 @@ export default function LandingTabs({
           ? "No projects yet."
           : "No logs yet.";
 
-  const activeDotColor = TABS.find((t) => t.id === activeTab)?.dotColor ?? "#eeeeee";
+  const activeDotColor =
+    TABS.find((t) => t.id === activeTab)?.dotColor ?? "#eeeeee";
 
   const handleViewAllClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -226,9 +340,12 @@ export default function LandingTabs({
     }, PAPER_PLANE_FLY_DURATION_MS);
   };
 
-  useEffect(() => () => {
-    if (viewAllTimeoutRef.current) clearTimeout(viewAllTimeoutRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (viewAllTimeoutRef.current) clearTimeout(viewAllTimeoutRef.current);
+    },
+    [],
+  );
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -256,7 +373,9 @@ export default function LandingTabs({
           id={`tabpanel-${activeTab}`}
           role="tabpanel"
           style={{
-            ["--typewriter-cursor-color" as string]: TABS.find((t) => t.id === activeTab)?.dotColor,
+            ["--typewriter-cursor-color" as string]: TABS.find(
+              (t) => t.id === activeTab,
+            )?.dotColor,
           }}
         >
           {currentSlots.length === 0 ? (
@@ -271,13 +390,22 @@ export default function LandingTabs({
                 return (
                   <li
                     key={slot ? `${slot.type}-${slot.item.slug}` : `slot-${i}`}
-                    onMouseEnter={slot ? () => onHoverItem?.(slot.item, slot.type) : undefined}
+                    onMouseEnter={
+                      slot
+                        ? () => onHoverItem?.(slot.item, slot.type)
+                        : undefined
+                    }
                     onMouseLeave={slot ? onHoverEnd : undefined}
                   >
                     <TabItemLink
                       href={slot?.href ?? "#"}
                       isEmpty={isEmpty}
-                      pill={activeTab === "all" && slot ? <TypePill type={slot.type} /> : undefined}
+                      pill={
+                        activeTab === "all" && slot ? (
+                          <TypePill type={slot.type} />
+                        ) : undefined
+                      }
+                      date={slot?.item.publishedAt}
                     >
                       <MorphingTitle
                         prevText={prevTitle}
