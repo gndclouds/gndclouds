@@ -272,7 +272,7 @@ export default function LandingTabs({
   onHoverEnd,
 }: LandingTabsProps) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabId>("logs");
+  const [activeTab, setActiveTab] = useState<TabId>("all");
   const [previousTitles, setPreviousTitles] = useState<string[]>(() =>
     Array(SLOT_COUNT).fill(""),
   );
