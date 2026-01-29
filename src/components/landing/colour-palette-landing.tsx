@@ -188,14 +188,13 @@ export default function ColourPaletteLanding({
               }}
             >
               {hoveredPreview ? (
-                <div className="max-w-sm">
-                  <HoverPreviewCard
-                    item={hoveredPreview.item}
-                    type={hoveredPreview.type}
-                    onMouseEnter={cancelHide}
-                    onMouseLeave={() => setHoveredPreview(null)}
-                  />
-                </div>
+                <HoverPreviewCard
+                  variant="full"
+                  item={hoveredPreview.item}
+                  type={hoveredPreview.type}
+                  onMouseEnter={cancelHide}
+                  onMouseLeave={() => setHoveredPreview(null)}
+                />
               ) : (
                 <section className="animate-fade-in">
                   <LatestBio />

@@ -143,7 +143,7 @@ function formatSlotDate(publishedAt: string): string {
 }
 
 const tabItemLinkClass =
-  "group flex w-full items-center justify-between gap-2 rounded-lg px-3 py-1.5 text-primary-black transition-[background-color,opacity] hover:bg-gray-100";
+  "group flex w-full items-center justify-between gap-2 rounded-lg px-3 py-1.5 min-h-9 text-primary-black transition-[background-color,opacity] hover:bg-gray-100";
 
 function TabItemLink({
   href,
@@ -173,7 +173,10 @@ function TabItemLink({
       <span className="flex shrink-0 items-center gap-2 text-right">
         {pill}
         {date ? (
-          <time dateTime={date} className="text-sm text-gray-500 tabular-nums">
+          <time
+            dateTime={date}
+            className="text-sm text-gray-500 tabular-nums leading-6"
+          >
             {formatSlotDate(date)}
           </time>
         ) : null}
@@ -269,7 +272,7 @@ export default function LandingTabs({
   onHoverEnd,
 }: LandingTabsProps) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabId>("journals");
+  const [activeTab, setActiveTab] = useState<TabId>("logs");
   const [previousTitles, setPreviousTitles] = useState<string[]>(() =>
     Array(SLOT_COUNT).fill(""),
   );
@@ -390,6 +393,7 @@ export default function LandingTabs({
                 return (
                   <li
                     key={slot ? `${slot.type}-${slot.item.slug}` : `slot-${i}`}
+                    className="min-h-9 flex items-center"
                     onMouseEnter={
                       slot
                         ? () => onHoverItem?.(slot.item, slot.type)

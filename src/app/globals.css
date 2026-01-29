@@ -163,19 +163,25 @@
   animation: pulse-cursor 1s infinite;
 }
 
-/* Typewriter effect: delete then type with blinking cursor */
+/* Typewriter effect: delete then type with blinking cursor.
+   Fixed-height box so caps/descenders (g, y, p) don't change line box and cause jitter. */
 .typewriter-title {
   min-width: 0;
+  display: inline-block;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  overflow: visible; /* descenders still paint, but don't affect layout */
+  vertical-align: top; /* consistent alignment inside the fixed box */
 }
 
 .typewriter-cursor {
   display: inline-block;
   width: 2px;
-  height: 1em;
+  height: 1.5rem;
   margin-left: 1px;
   background: var(--typewriter-cursor-color, currentColor);
   animation: typewriter-blink 0.8s step-end infinite;
-  vertical-align: text-bottom;
+  vertical-align: top; /* align with typewriter-title box */
 }
 
 @keyframes typewriter-blink {
