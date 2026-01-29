@@ -309,6 +309,16 @@ const components: Partial<ExtendedComponents> = {
       </a>
     );
   },
+  table: ({ children }) => (
+    <div className={styles.tableWrapper}>
+      <table>{children}</table>
+    </div>
+  ),
+  pre: ({ children }) => (
+    <div className={styles.codeBlockWrapper}>
+      <pre>{children}</pre>
+    </div>
+  ),
 };
 
 const MarkdownContent = ({
@@ -626,12 +636,18 @@ const MarkdownContent = ({
     });
   }, [updatedContent]);
 
+  const hasReferences =
+    showReferences &&
+    (extractedLinks.length > 0 || Object.keys(extractedFootnotes).length > 0);
+
   return (
-    <div className={showReferences ? "flex w-full flex-col md:flex-row" : "w-full"}>
+    <div
+      className={
+        hasReferences ? "flex w-full flex-col md:flex-row" : "w-full"
+      }
+    >
       <div className="flex-1 min-w-0 p-4">
         <div className={styles.reactMarkDown}>
-          {/* Apply the CSS class here */}
-          {/* Debug: Log the content to see what's being passed to ReactMarkdown */}
           <ReactMarkdown
             className="markdown"
             remarkPlugins={[remarkGfm]}
@@ -642,7 +658,7 @@ const MarkdownContent = ({
           </ReactMarkdown>
         </div>
       </div>
-      {showReferences && (
+      {hasReferences && (
         <div className="w-full md:w-80 shrink-0 p-4 md:ml-auto">
           <h3 className="uppercase text-sm opacity-50">References</h3>
           {extractedLinks.length > 0 && (

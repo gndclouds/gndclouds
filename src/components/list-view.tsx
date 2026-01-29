@@ -48,19 +48,19 @@ export default function ListView({
         .replace(/\[\[/g, "")
         .replace(/\]\]/g, "")
         .trim();
-      
+
       // Normalize plural forms to singular for routing
       const pluralToSingular: { [key: string]: string } = {
-        "logs": "log",
-        "journals": "journal",
-        "projects": "project",
-        "notes": "note",
-        "fragments": "fragment",
-        "studies": "study",
-        "systems": "system",
-        "researches": "research",
+        logs: "log",
+        journals: "journal",
+        projects: "project",
+        notes: "note",
+        fragments: "fragment",
+        studies: "study",
+        systems: "system",
+        researches: "research",
       };
-      
+
       return pluralToSingular[sanitized] || sanitized;
     };
 
@@ -83,24 +83,24 @@ export default function ListView({
       itemType === "bluesky" || itemType.startsWith("arena")
         ? item.uri // Use the URI for Bluesky posts and Are.na blocks
         : itemType === "photography" && item.links?.html
-        ? item.links.html // Use the Unsplash link for photos
-        : itemType === "project"
-        ? `/project/${item.slug}` // Use /project/ for projects
-        : itemType === "note"
-        ? `/note/${item.slug}` // Use /note/ for notes
-        : itemType === "research"
-        ? `/research/${item.slug}` // Use /research/ for research
-        : itemType === "journal"
-        ? `/journal/${item.slug}` // Use /journal/ for journals
-        : itemType === "fragment"
-        ? `/fragment/${item.slug}` // Use /fragment/ for fragments
-        : itemType === "log"
-        ? `/log/${item.slug}` // Use /log/ for logs
-        : itemType === "study"
-        ? `/study/${item.slug}` // Use /study/ for studies
-        : itemType === "system"
-        ? `/system/${item.slug}` // Use /system/ for systems
-        : `/${itemType}/${item.slug}`; // Use the slug for other content types
+          ? item.links.html // Use the Unsplash link for photos
+          : itemType === "project"
+            ? `/project/${item.slug}` // Use /project/ for projects
+            : itemType === "note"
+              ? `/note/${item.slug}` // Use /note/ for notes
+              : itemType === "research"
+                ? `/research/${item.slug}` // Use /research/ for research
+                : itemType === "journal"
+                  ? `/journal/${item.slug}` // Use /journal/ for journals
+                  : itemType === "fragment"
+                    ? `/fragment/${item.slug}` // Use /fragment/ for fragments
+                    : itemType === "log"
+                      ? `/log/${item.slug}` // Use /log/ for logs
+                      : itemType === "study"
+                        ? `/study/${item.slug}` // Use /study/ for studies
+                        : itemType === "system"
+                          ? `/system/${item.slug}` // Use /system/ for systems
+                          : `/${itemType}/${item.slug}`; // Use the slug for other content types
 
     // Define grid column spans for different content types
     const gridColumnSpan: { [key: string]: string } = {
@@ -207,7 +207,7 @@ export default function ListView({
                 <div className="text-xs font-medium truncate">
                   {item.author?.displayName || item.author?.handle || "Unknown"}
                   {item.isRepost && (
-                    <span className="ml-1 text-blue-500 flex items-center text-xs">
+                    <span className="ml-1 text-forest-green flex items-center text-xs">
                       <FiRepeat className="inline mr-1" size={10} />
                       repost
                     </span>
@@ -228,7 +228,7 @@ export default function ListView({
                         className="object-cover rounded"
                       />
                     </div>
-                  )
+                  ),
                 )}
               </div>
             )}
@@ -453,15 +453,15 @@ export default function ListView({
         typeof item.metadata?.heroImage === "string"
           ? item.metadata.heroImage.trim()
           : typeof item.heroImage === "string"
-          ? item.heroImage.trim()
-          : "";
+            ? item.heroImage.trim()
+            : "";
       const isValidImagePath =
         /(\.(png|jpe?g|gif|webp|avif|svg))$/i.test(previewImageCandidate) ||
         previewImageCandidate.startsWith("http") ||
         previewImageCandidate.startsWith("/");
       const supportsPreviewImage =
         showProjectImages && (itemType === "project" || itemType === "journal");
-      
+
       // Convert hero image paths to use asset proxy in production
       // Paths like /projects/hero-*.ext should become assets/projects/hero-*.ext for GitHub
       // Note: In development, these should be in public folder. In production, use asset proxy.
@@ -485,13 +485,13 @@ export default function ListView({
           : `assets/${pathWithoutSlash}`;
         processedImagePath = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
       }
-      
+
       const previewImage =
         isValidImagePath && previewImageCandidate.length > 0
           ? processedImagePath
           : supportsPreviewImage
-          ? "/background.jpg"
-          : "";
+            ? "/background.jpg"
+            : "";
       const hasPreviewImage = supportsPreviewImage && previewImage.length > 0;
 
       return (
@@ -529,12 +529,13 @@ export default function ListView({
                   ...(item.categories || []),
                 ];
                 const normalizeTag = (tag: string) =>
-                  tag.replace(/\[\[|\]\]/g, "").trim().toLowerCase();
+                  tag
+                    .replace(/\[\[|\]\]/g, "")
+                    .trim()
+                    .toLowerCase();
                 const filteredTags =
                   itemType === "project" && showProjectImages
-                    ? rawTags.filter(
-                        (tag) => normalizeTag(tag) !== "projects"
-                      )
+                    ? rawTags.filter((tag) => normalizeTag(tag) !== "projects")
                     : rawTags;
 
                 if (filteredTags.length === 0) return null;
@@ -613,7 +614,7 @@ export default function ListView({
   // Helper to get year from publishedAt
   const getYear = (item: any) => {
     if (!item.publishedAt) return "";
-    
+
     try {
       // If it's already a string, try to extract year
       if (typeof item.publishedAt === "string") {
@@ -623,7 +624,7 @@ export default function ListView({
           return yearMatch[1];
         }
       }
-      
+
       // If it's a Date object or can be converted to one
       const date = new Date(item.publishedAt);
       if (!isNaN(date.getTime())) {
@@ -632,7 +633,7 @@ export default function ListView({
     } catch (error) {
       console.warn("Error extracting year from publishedAt:", item.publishedAt);
     }
-    
+
     return "";
   };
 
