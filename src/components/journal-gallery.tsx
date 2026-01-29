@@ -131,9 +131,15 @@ export default function JournalGallery({
               {selected.metadata?.contentHtml ? (
                 <MarkdownContent
                   content={selected.metadata.contentHtml}
-                  links={(selected.metadata as Record<string, unknown>).links ?? []}
+                  links={
+                    (Array.isArray((selected.metadata as Record<string, unknown>).links)
+                      ? (selected.metadata as Record<string, unknown>).links
+                      : []) as string[]
+                  }
                   footnotes={
-                    (selected.metadata as Record<string, unknown>).footnotes ?? {}
+                    ((selected.metadata as Record<string, unknown>).footnotes as
+                      | { [key: string]: string }
+                      | undefined) ?? {}
                   }
                 />
               ) : (

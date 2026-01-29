@@ -30,12 +30,9 @@ function toPlainExcerpt(raw: string): string {
 }
 
 function getExcerpt(item: TabItem, maxLength = 200): string {
+  const desc = (item.metadata as Record<string, unknown> | undefined)?.description;
   const fromMeta =
-    item.description ??
-    (typeof (item.metadata as { description?: string })?.description ===
-    "string"
-      ? (item.metadata as { description: string }).description
-      : null);
+    item.description ?? (typeof desc === "string" ? desc : null);
   if (fromMeta) return fromMeta.slice(0, maxLength);
   const raw = item.metadata?.contentHtml;
   if (typeof raw !== "string") return "";

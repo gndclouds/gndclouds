@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import MarkdownContent from "@/components/MarkdownContent";
 import type { LogItem } from "./types";
@@ -29,20 +29,23 @@ export default function LogsLayout({ logs }: { logs: LogItem[] }) {
     label.replace(/\[\[|\]\]/g, "").trim().toLowerCase();
   const cleanLabel = (label: string) => label.replace(/\[\[|\]\]/g, "").trim();
 
-  const toArray = (value?: string | string[]) => {
+  const toArray = useCallback((value?: string | string[]) => {
     if (!value) return [];
     if (Array.isArray(value)) return value;
     return [value];
-  };
+  }, []);
 
-  const getProjects = (log: LogItem) => {
-    return [
-      ...toArray(log.project),
-      ...toArray(log.projects),
-      ...toArray(log.metadata?.project),
-      ...toArray(log.metadata?.projects),
-    ];
-  };
+  const getProjects = useCallback(
+    (log: LogItem) => {
+      return [
+        ...toArray(log.project),
+        ...toArray(log.projects),
+        ...toArray(log.metadata?.project),
+        ...toArray(log.metadata?.projects),
+      ];
+    },
+    [toArray]
+  );
 
   const tagOptions = useMemo(() => {
     const tagMap = new Map<string, string>();
@@ -80,7 +83,7 @@ export default function LogsLayout({ logs }: { logs: LogItem[] }) {
     return Array.from(projectMap.entries())
       .map(([value, label]) => ({ value, label }))
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [logs]);
+  }, [logs, getProjects]);
 
   const filteredLogs = useMemo(() => {
     if (selectedTags.length === 0 && selectedProjects.length === 0) {
@@ -114,7 +117,7 @@ export default function LogsLayout({ logs }: { logs: LogItem[] }) {
 
       return matchesTags && matchesProjects && matchesSearch;
     });
-  }, [logs, selectedTags, selectedProjects, searchQuery]);
+  }, [logs, selectedTags, selectedProjects, searchQuery, getProjects]);
 
   const currentItems = useMemo(
     () => filteredLogs.slice(0, visibleCount),
