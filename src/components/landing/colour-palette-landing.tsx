@@ -157,18 +157,18 @@ export default function ColourPaletteLanding({
   const LatestBio = BIO_COMPONENTS[latestBioYear];
 
   return (
-    <main className="h-screen w-full flex flex-col bg-primary-gray text-primary-black font-inter overflow-hidden">
-      <div className="flex-1 flex flex-col lg:flex-row min-h-0 w-full">
+    <main className="h-screen w-full flex flex-col bg-primary-gray text-primary-black font-inter overflow-x-hidden overflow-hidden max-lg:overflow-y-auto max-lg:min-h-screen">
+      <div className="flex-1 flex flex-col lg:flex-row min-h-0 w-full max-lg:flex-none">
         {/* Left: preview card (when hovering list item) + text; content scrolls, footer stays at bottom */}
-        <div className="w-full lg:w-2/3 xl:w-1/2 lg:min-w-0 p-4 sm:p-6 lg:py-8 lg:pl-8 lg:pr-4 flex flex-col bg-primary-gray min-h-0 gap-4 sm:gap-6">
-          <div className="flex-1 min-h-0 rounded-2xl overflow-hidden bg-primary-white flex flex-col px-6 py-6">
+        <div className="w-full max-w-full lg:w-2/3 xl:w-1/2 lg:min-w-0 max-lg:min-h-screen lg:min-h-0 px-4 py-4 sm:p-6 lg:py-8 lg:pl-8 lg:pr-4 flex flex-col bg-primary-gray gap-4 sm:gap-6">
+          <div className="flex-1 max-lg:min-h-screen max-lg:flex-none lg:min-h-0 rounded-2xl overflow-hidden bg-primary-white flex flex-col px-6 py-6">
             <h1 className="text-2xl sm:text-3xl mb-6 sm:mb-8 shrink-0">
               <span className="font-bold text-gray-800">gndclouds</span>
             </h1>
 
             <div
               ref={scrollRef}
-              className="space-y-10 sm:space-y-12 flex-1 min-h-0 overflow-y-auto scroll-smooth"
+              className="space-y-10 sm:space-y-12 flex-1 min-h-0 overflow-y-auto max-lg:overflow-y-visible max-lg:flex-none scroll-smooth"
               onScroll={updateScrollState}
               style={{
                 maskImage: scrollState.atTop
@@ -203,7 +203,7 @@ export default function ColourPaletteLanding({
             </div>
           </div>
 
-          <footer className="shrink-0 rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark flex flex-wrap justify-between items-center gap-x-4 gap-y-1 px-6 py-4 text-sm text-primary-black dark:text-textDark">
+          <footer className="max-lg:hidden shrink-0 rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark flex flex-wrap justify-between items-center gap-x-4 gap-y-1 px-6 py-4 text-sm text-primary-black dark:text-textDark">
             <nav className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1">
               <Link
                 href="/feed"
@@ -258,8 +258,8 @@ export default function ColourPaletteLanding({
         </div>
 
         {/* Right: tabs — Journals, Projects, Logs */}
-        <div className="w-full lg:w-1/3 xl:w-1/2 lg:min-w-0 p-4 sm:p-6 lg:py-8 lg:pr-8 lg:pl-4 flex flex-col min-h-0">
-          <div className="flex-1 min-h-0 rounded-2xl overflow-hidden bg-primary-white flex flex-col px-6 py-6">
+        <div className="w-full max-w-full lg:w-1/3 xl:w-1/2 lg:min-w-0 max-lg:min-h-screen lg:min-h-0 px-4 py-4 sm:p-6 lg:py-8 lg:pr-8 lg:pl-4 flex flex-col">
+          <div className="flex-1 max-lg:min-h-screen max-lg:flex-none lg:min-h-0 rounded-2xl overflow-hidden bg-primary-white flex flex-col px-6 py-6">
             <LandingTabs
               recentJournals={recentJournals}
               recentLogs={recentLogs}
@@ -269,6 +269,60 @@ export default function ColourPaletteLanding({
             />
           </div>
         </div>
+
+        {/* Footer at bottom on small screens (after intro + tabs) */}
+        <footer className="lg:hidden shrink-0 rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark flex flex-wrap justify-between items-center gap-x-4 gap-y-1 px-6 py-4 text-sm text-primary-black dark:text-textDark mx-4 mb-4 sm:mx-6 sm:mb-6">
+          <nav className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1">
+            <Link
+              href="/feed"
+              className="transition-opacity hover:opacity-70"
+            >
+              feed
+            </Link>
+            <Link
+              href="https://webring.xxiivv.com/#xxiivv"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+            >
+              webring <span className="font-mono">↗</span>
+            </Link>
+            <Link href="/cv" className="transition-opacity hover:opacity-70">
+              cv
+            </Link>
+            <Link
+              href="https://are.na/gndclouds"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+            >
+              are.na <span className="font-mono">↗</span>
+            </Link>
+            <Link
+              href="https://bsky.app/profile/gndclouds.earth"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+            >
+              bluesky <span className="font-mono">↗</span>
+            </Link>
+            <Link
+              href="https://github.com/gndclouds"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+            >
+              github <span className="font-mono">↗</span>
+            </Link>
+            <Link
+              href="/newsletters"
+              className="transition-opacity hover:opacity-70"
+            >
+              newsletter
+            </Link>
+          </nav>
+          {SHOW_THEME_CHOOSER && <ThemeChooser />}
+        </footer>
       </div>
     </main>
   );

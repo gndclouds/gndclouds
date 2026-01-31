@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   BookOpen,
   ChevronRight,
@@ -82,7 +81,7 @@ function TypePill({ type }: { type: TabItemType }) {
   const { Icon } = TYPE_PILL[type];
   return (
     <span
-      className="inline-flex items-center gap-1 shrink-0 rounded-full bg-gray-200 px-2 py-0.5 text-gray-600"
+      className="hidden sm:inline-flex items-center gap-1 shrink-0 rounded-full bg-gray-200 px-2 py-0.5 text-gray-600"
       aria-hidden
     >
       <Icon size={12} className="shrink-0" />
@@ -262,8 +261,6 @@ function getSlotsForTab(
 
 const SLOT_COUNT = 12;
 
-const PAPER_PLANE_FLY_DURATION_MS = 1800;
-
 export default function LandingTabs({
   recentJournals = [],
   recentLogs = [],
@@ -271,15 +268,11 @@ export default function LandingTabs({
   onHoverItem,
   onHoverEnd,
 }: LandingTabsProps) {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabId>("all");
   const [previousTitles, setPreviousTitles] = useState<string[]>(() =>
     Array(SLOT_COUNT).fill(""),
   );
   const [isMorphing, setIsMorphing] = useState(false);
-  const [isArrowFlying, setIsArrowFlying] = useState(false);
-  const viewAllTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const viewAllHref = TABS.find((t) => t.id === activeTab)?.href ?? "/journals";
 
   const currentSlots = getSlotsForTab(
     activeTab,
@@ -331,25 +324,6 @@ export default function LandingTabs({
   const activeDotColor =
     TABS.find((t) => t.id === activeTab)?.dotColor ?? "#eeeeee";
 
-  const handleViewAllClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    if (isArrowFlying) return;
-    setIsArrowFlying(true);
-    if (viewAllTimeoutRef.current) clearTimeout(viewAllTimeoutRef.current);
-    viewAllTimeoutRef.current = setTimeout(() => {
-      viewAllTimeoutRef.current = null;
-      router.push(viewAllHref);
-      setIsArrowFlying(false);
-    }, PAPER_PLANE_FLY_DURATION_MS);
-  };
-
-  useEffect(
-    () => () => {
-      if (viewAllTimeoutRef.current) clearTimeout(viewAllTimeoutRef.current);
-    },
-    [],
-  );
-
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div
@@ -370,7 +344,7 @@ export default function LandingTabs({
         ))}
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto max-lg:overflow-visible max-lg:min-h-0">
         <section
           aria-labelledby={`tab-${activeTab}`}
           id={`tabpanel-${activeTab}`}
@@ -423,26 +397,6 @@ export default function LandingTabs({
             </ul>
           )}
         </section>
-      </div>
-
-      <div
-        className="shrink-0 pt-4 mt-auto border-t overflow-visible"
-        style={{ borderTopColor: activeDotColor }}
-      >
-        <a
-          href={viewAllHref}
-          onClick={handleViewAllClick}
-          className="text-primary-black text-sm inline-flex items-center gap-1.5 overflow-visible"
-          aria-label={`View all ${activeTab}`}
-        >
-          View all{" "}
-          <span
-            aria-hidden
-            className={`inline-block text-lg font-bold will-change-transform ${isArrowFlying ? "animate-paper-plane-fly" : ""}`}
-          >
-            →
-          </span>
-        </a>
       </div>
     </div>
   );
