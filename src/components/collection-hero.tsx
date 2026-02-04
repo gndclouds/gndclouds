@@ -13,6 +13,8 @@ interface CollectionHeroProps {
   allProjects: any[]; // Specify more detailed type if possible
   showEntriesCount?: boolean;
   showRssLink?: boolean;
+  /** When set, hero image is generated from this topic (e.g. journal post summary). */
+  topicSummary?: string | null;
 }
 
 const CollectionHero = ({
@@ -21,6 +23,7 @@ const CollectionHero = ({
   allProjects,
   showEntriesCount = true,
   showRssLink = true,
+  topicSummary,
 }: CollectionHeroProps) => {
   const router = useRouter();
   const [backgroundImage, setBackgroundImage] = useState("/background.jpg");
@@ -29,18 +32,18 @@ const CollectionHero = ({
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    // This code only runs on the client side
-    if (typeof window !== "undefined") {
-      // Get current hour (0-23)
-      const currentHour = new Date().getHours();
-      const hourlyImagePath = `/backgrounds/hour-${currentHour}.jpg`;
-
-      // Set the image path based on the current hour
-      setBackgroundImage(hourlyImagePath);
-      // Reset error state when trying a new image
+    if (typeof window === "undefined") return;
+    if (topicSummary != null && topicSummary.trim() !== "") {
+      const topicUrl = `/api/journals/hero-image?summary=${encodeURIComponent(topicSummary.trim())}`;
+      setBackgroundImage(topicUrl);
       setImageError(false);
+      return;
     }
-  }, []);
+    const currentHour = new Date().getHours();
+    const hourlyImagePath = `/backgrounds/hour-${currentHour}.jpg`;
+    setBackgroundImage(hourlyImagePath);
+    setImageError(false);
+  }, [topicSummary]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputValue.trim()) {
@@ -66,7 +69,7 @@ const CollectionHero = ({
         <div className="absolute inset-0 bg-black opacity-40"></div>
         <div className="absolute top-0 left-0 p-4">
           <div className="text-white uppercase font-bold flex items-center">
-            <Link href="/" className="inline-flex items-center">
+            <Link href="/about" className="inline-flex items-center">
               <ArrowLeftIcon className="font-bold" /> gndclouds
             </Link>
             <div

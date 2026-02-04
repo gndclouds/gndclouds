@@ -49,8 +49,8 @@ export default function FeedFilter({
         }
 
         return itemType;
-      })
-    )
+      }),
+    ),
   ).sort();
 
   // Apply filters whenever search term, selected types, or date change
@@ -185,7 +185,7 @@ export default function FeedFilter({
             <h3 className="text-lg font-semibold">Filters</h3>
             {hasActiveFilters && (
               <button
-                className="text-sm text-blue-500 hover:text-blue-700 underline"
+                className="text-sm text-forest-green hover:text-forest-green-dark underline"
                 onClick={clearFilters}
               >
                 Clear
@@ -212,7 +212,7 @@ export default function FeedFilter({
                     onChange={() => toggleType(type)}
                     className="w-4 h-4 border-2 border-backgroundDark dark:border-backgroundLight checked:bg-backgroundDark dark:checked:bg-backgroundLight focus:ring-0 focus:ring-offset-0 cursor-pointer"
                   />
-                  <span className="text-sm flex-1 group-hover:text-blue-500">
+                  <span className="text-sm flex-1 group-hover:text-forest-green">
                     {formatTypeName(type)}
                   </span>
                   <span className="text-xs text-gray-500">{count}</span>
@@ -229,12 +229,12 @@ export default function FeedFilter({
             type="date"
             value={startDate}
             onChange={(e) => onDateChange(e.target.value)}
-            className="w-full px-3 py-2 border-2 border-backgroundDark dark:border-backgroundLight bg-transparent rounded-none focus:outline-none focus:ring-0 focus:border-blue-500 text-sm"
+            className="w-full px-3 py-2 border-2 border-backgroundDark dark:border-backgroundLight bg-transparent rounded-none focus:outline-none focus:ring-0 focus:border-forest-green text-sm"
           />
           {startDate && (
             <button
               onClick={() => onDateChange("")}
-              className="mt-2 text-xs text-blue-500 hover:text-blue-700 underline"
+              className="mt-2 text-xs text-forest-green hover:text-forest-green-dark underline"
               aria-label="Clear date filter"
             >
               Clear date

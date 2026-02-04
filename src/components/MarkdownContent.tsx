@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
@@ -23,8 +25,15 @@ const components: Partial<ExtendedComponents> = {
   img: ({ node, ...props }) => {
     // Extract src and alt from props
     const { src, alt } = props;
+    // In client components, we can't access server-side env vars
+    // But we can check if we should use the asset proxy
+    // The asset proxy will handle authentication server-side
     const isProduction = process.env.NODE_ENV === "production";
-    const hasGitHubToken = !!process.env.GITHUB_ACCESS_TOKEN;
+    // Use asset proxy if:
+    // 1. We're in production, OR
+    // 2. NEXT_PUBLIC_USE_ASSET_PROXY is explicitly set to "true"
+    // This allows development to also use the proxy if files aren't local
+    const useAssetProxy = isProduction || process.env.NEXT_PUBLIC_USE_ASSET_PROXY === "true";
 
     if (!src) {
       return null;
@@ -34,22 +43,53 @@ const components: Partial<ExtendedComponents> = {
     if (src.endsWith(".svg") || src.endsWith(".gif")) {
       // Ensure src starts with / for local paths
       let imgSrc = src.startsWith("/") ? src : `/${src}`;
+      let fallbackSrc: string | null = null;
       
-      // For db-assets paths, properly URL encode the filename for special chars
+      // For db-assets paths, try to convert to asset proxy if enabled
       if (imgSrc.includes("/db-assets/")) {
         const pathParts = imgSrc.split("/db-assets/");
         if (pathParts.length === 2) {
-          const filename = pathParts[1];
-          const encodedFilename = filename
+          let pathAfterDbAssets = pathParts[1];
+          // Decode first in case it's already encoded (to avoid double encoding)
+          try {
+            pathAfterDbAssets = decodeURIComponent(pathAfterDbAssets);
+          } catch (e) {
+            // If decoding fails, continue with original
+          }
+          
+          // Store the original local path as fallback
+          const encodedFilename = pathAfterDbAssets
             .split("/")
             .map(part => encodeURIComponent(part))
             .join("/");
-          imgSrc = `/db-assets/${encodedFilename}`;
+          fallbackSrc = `/db-assets/${encodedFilename}`;
+          
+          // If asset proxy is enabled, use it; otherwise use local path
+          if (useAssetProxy) {
+            // Ensure it starts with assets/ for the GitHub repo structure
+            const assetPath = pathAfterDbAssets.startsWith("assets/")
+              ? pathAfterDbAssets
+              : `assets/${pathAfterDbAssets}`;
+            imgSrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+          } else {
+            imgSrc = fallbackSrc;
+            fallbackSrc = null; // No fallback needed if we're already using local
+          }
         }
       }
       
+      // Handle error: if asset proxy fails, fall back to local path
+      const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        if (fallbackSrc && imgSrc.startsWith("/api/asset-proxy")) {
+          const img = e.currentTarget;
+          img.src = fallbackSrc;
+          // Remove the error handler to prevent infinite loops
+          img.onerror = null;
+        }
+      };
+      
       // eslint-disable-next-line @next/next/no-img-element -- SVG/GIF need <img> for proper rendering
-      return <img src={imgSrc} alt={alt || "Image"} {...props} />;
+      return <img src={imgSrc} alt={alt || "Image"} onError={fallbackSrc ? handleError : undefined} {...props} />;
     }
 
     // For external URLs
@@ -70,6 +110,29 @@ const components: Partial<ExtendedComponents> = {
 
     // For asset-proxy URLs (these are our authenticated GitHub requests)
     if (src.startsWith("/api/asset-proxy")) {
+      // Extract the path from the proxy URL to create a fallback
+      const urlParams = new URLSearchParams(src.split("?")[1] || "");
+      const assetPath = urlParams.get("path");
+      let fallbackSrc: string | null = null;
+      
+      // If we have a path, create a fallback to local db-assets
+      if (assetPath) {
+        try {
+          // Remove "assets/" prefix if present to get the relative path
+          const relativePath = assetPath.startsWith("assets/") 
+            ? assetPath.substring(7) 
+            : assetPath;
+          // Encode each part of the path
+          const encodedPath = relativePath
+            .split("/")
+            .map(part => encodeURIComponent(part))
+            .join("/");
+          fallbackSrc = `/db-assets/${encodedPath}`;
+        } catch (e) {
+          // If path extraction fails, no fallback
+        }
+      }
+      
       return (
         <Image
           src={src}
@@ -80,31 +143,86 @@ const components: Partial<ExtendedComponents> = {
           style={{ objectFit: "contain" }}
           sizes="(max-width: 768px) 100vw, 700px"
           unoptimized // Must use unoptimized for proxy requests
+          onError={fallbackSrc ? (e) => {
+            // Fallback to local path if proxy fails
+            const img = e.currentTarget;
+            img.src = fallbackSrc!;
+            img.onerror = null; // Prevent infinite loops
+          } : undefined}
         />
       );
     }
 
-    // For db-assets paths that may need to use the proxy in production
-    if (src.includes("/db-assets/") && isProduction && hasGitHubToken) {
-      // Convert from /db-assets/path to assets/path for the proxy
-      const assetPath = src
-        .replace("/db-assets/", "assets/")
-        .replace(/^\//, ""); // Remove leading slash
+    // For db-assets paths, try to convert to asset proxy if enabled
+    // Otherwise use local path directly
+    if (src.includes("/db-assets/")) {
+      // Extract the path after /db-assets/
+      let pathAfterDbAssets = src.split("/db-assets/")[1];
+      if (!pathAfterDbAssets) {
+        console.warn(`Invalid db-assets path: ${src}`);
+        return null;
+      }
+      
+      // Decode the path first in case it's already URL-encoded (to avoid double encoding)
+      try {
+        pathAfterDbAssets = decodeURIComponent(pathAfterDbAssets);
+      } catch (e) {
+        // If decoding fails, it might not be encoded or might be partially encoded
+        // Continue with the original path
+      }
+      
+      // Store the local path as fallback
+      const encodedPath = pathAfterDbAssets
+        .split("/")
+        .map(part => encodeURIComponent(part))
+        .join("/");
+      const localSrc = `/db-assets/${encodedPath}`;
+      
+      // If asset proxy is enabled, use it; otherwise use local path
+      if (useAssetProxy) {
+        // The path after /db-assets/ should be used as-is for GitHub
+        // It might already be assets/child/image.png or just child/image.png
+        // We need to ensure it starts with assets/ for the GitHub repo structure
+        let assetPath = pathAfterDbAssets;
+        if (!assetPath.startsWith("assets/")) {
+          assetPath = `assets/${assetPath}`;
+        }
 
-      const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+        const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
 
-      return (
-        <Image
-          src={proxySrc}
-          alt={alt || "Asset Image"}
-          width={700}
-          height={400}
-          className={styles.responsiveImage}
-          style={{ objectFit: "contain" }}
-          sizes="(max-width: 768px) 100vw, 700px"
-          unoptimized // Must use unoptimized for proxy requests
-        />
-      );
+        return (
+          <Image
+            src={proxySrc}
+            alt={alt || "Asset Image"}
+            width={700}
+            height={400}
+            className={styles.responsiveImage}
+            style={{ objectFit: "contain" }}
+            sizes="(max-width: 768px) 100vw, 700px"
+            unoptimized // Must use unoptimized for proxy requests
+            onError={(e) => {
+              // Fallback to local path if proxy fails
+              const img = e.currentTarget;
+              img.src = localSrc;
+              img.onerror = null; // Prevent infinite loops
+            }}
+          />
+        );
+      } else {
+        // Use local path directly
+        return (
+          <Image
+            src={localSrc}
+            alt={alt || "Asset Image"}
+            width={700}
+            height={400}
+            className={styles.responsiveImage}
+            style={{ objectFit: "contain" }}
+            sizes="(max-width: 768px) 100vw, 700px"
+            unoptimized={isProduction}
+          />
+        );
+      }
     }
 
     // For standard internal images (including db-assets with spaces/special chars)
@@ -117,7 +235,15 @@ const components: Partial<ExtendedComponents> = {
       // Split the path to encode just the filename part, keeping the /db-assets/ prefix
       const pathParts = imageSrc.split("/db-assets/");
       if (pathParts.length === 2) {
-        const filename = pathParts[1];
+        let filename = pathParts[1];
+        // Decode first in case it's already encoded (to avoid double encoding)
+        // Then re-encode to ensure proper encoding
+        try {
+          filename = decodeURIComponent(filename);
+        } catch (e) {
+          // If decoding fails, it might not be encoded or might be partially encoded
+          // Continue with the original filename
+        }
         // Encode the filename but preserve forward slashes if there are any
         const encodedFilename = filename
           .split("/")
@@ -183,19 +309,40 @@ const components: Partial<ExtendedComponents> = {
       </a>
     );
   },
+  table: ({ children }) => (
+    <div className={styles.tableWrapper}>
+      <table>{children}</table>
+    </div>
+  ),
+  pre: ({ children }) => (
+    <div className={styles.codeBlockWrapper}>
+      <pre>{children}</pre>
+    </div>
+  ),
 };
 
 const MarkdownContent = ({
   content,
   links,
   footnotes,
+  showReferences = true,
+  filePath,
 }: {
   content: string;
   links: string[];
   footnotes: { [key: string]: string };
+  showReferences?: boolean;
+  filePath?: string;
 }) => {
   // Check if we're in production mode
+  // In client components, we can't access server-side env vars
+  // But we can check if we should use the asset proxy
   const isProduction = process.env.NODE_ENV === "production";
+  // Use asset proxy if:
+  // 1. We're in production, OR
+  // 2. NEXT_PUBLIC_USE_ASSET_PROXY is explicitly set to "true"
+  // This allows development to also use the proxy if files aren't local
+  const useAssetProxy = isProduction || process.env.NEXT_PUBLIC_USE_ASSET_PROXY === "true";
 
   // Function to convert Obsidian-style internal links [[link]] to plain text
   // This prevents Next.js from interpreting them as dynamic routes
@@ -219,6 +366,21 @@ const MarkdownContent = ({
       });
   };
 
+  // Function to resolve image path relative to the markdown file
+  const resolveImagePath = (imageName: string): string => {
+    if (!filePath) {
+      // If no filePath is provided, use the image name as-is (backward compatibility)
+      return imageName;
+    }
+
+    // Get the directory of the markdown file (e.g., "logs/ezra" from "logs/ezra/elements-of-a-dynamic-document-v1.md")
+    const fileDir = filePath.substring(0, filePath.lastIndexOf("/"));
+    
+    // Construct the relative path: directory/imageName
+    // In Obsidian, child images are typically in the same directory as the markdown file
+    return fileDir ? `${fileDir}/${imageName}` : imageName;
+  };
+
   // Function to convert ![[image]] or ![[video]] to markdown or HTML
   const convertImageSyntax = (text: string) => {
     // Video file extensions
@@ -230,6 +392,9 @@ const MarkdownContent = ({
           // Remove any file extension from the path
           const cleanPath = p1.trim();
           
+          // Resolve the image path relative to the markdown file
+          const resolvedPath = resolveImagePath(cleanPath);
+          
           // Check if it's a video file
           const isVideo = videoExtensions.some(ext => 
             cleanPath.toLowerCase().endsWith(ext)
@@ -237,7 +402,7 @@ const MarkdownContent = ({
 
           // For local development, use the path as-is (spaces and special chars need to be URL encoded in the href)
           // But we need to properly encode it for the URL
-          const pathParts = cleanPath.split("/");
+          const pathParts = resolvedPath.split("/");
           const encodedParts = pathParts.map((part: string) =>
             encodeURIComponent(part)
           );
@@ -246,7 +411,7 @@ const MarkdownContent = ({
           if (isVideo) {
             // For videos, generate HTML video tag
             // Use encoded path for proper URL handling of spaces and special chars
-            const videoSrc = isProduction && process.env.GITHUB_ACCESS_TOKEN
+            const videoSrc = useAssetProxy
               ? `/api/asset-proxy?path=assets/${encodedPath}`
               : `/db-assets/${encodedPath}`;
             
@@ -255,15 +420,22 @@ const MarkdownContent = ({
                              cleanPath.toLowerCase().endsWith('.mov') ? 'video/quicktime' :
                              'video/mp4';
             
-            return `\n\n<video controls style="max-width: 100%; height: auto; display: block; margin: 1rem 0;">
-  <source src="${videoSrc}" type="${videoType}">
-  Your browser does not support the video tag.
-</video>\n\n`;
+            // Generate video with clickable link
+            // Wrap video in a link so users can click to open/download the video
+            // Video controls will still function normally
+            return `\n\n<div style="margin: 1rem 0;">
+  <a href="${videoSrc}" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none;">
+    <video controls style="max-width: 100%; height: auto; display: block;">
+      <source src="${videoSrc}" type="${videoType}">
+      Your browser does not support the video tag.
+    </video>
+  </a>
+</div>\n\n`;
           }
 
           // For images, use markdown image syntax
-          // In production with GitHub token, use the asset proxy
-          if (isProduction && process.env.GITHUB_ACCESS_TOKEN) {
+          // In production, use the asset proxy
+          if (useAssetProxy) {
             return `\n\n![${cleanPath}](/api/asset-proxy?path=assets/${encodedPath})\n\n`;
           }
 
@@ -276,7 +448,7 @@ const MarkdownContent = ({
           const assetPath = src.replace("assets/media/", "");
 
           // In production with GitHub token, use the asset proxy
-          if (isProduction && process.env.GITHUB_ACCESS_TOKEN) {
+          if (useAssetProxy) {
             return `\n\n![${alt}](/api/asset-proxy?path=${src})\n\n`;
           }
 
@@ -312,12 +484,170 @@ const MarkdownContent = ({
   // Convert Obsidian-style image syntax ![[image]] to standard markdown
   const updatedContent = convertImageSyntax(contentWithoutInternalLinks);
 
+  // Client-side effect to convert /db-assets/ paths in video tags to asset proxy
+  // This handles cases where videos are rendered as HTML and need path conversion
+  // Also handles fallback when asset proxy fails
+  useEffect(() => {
+    // Helper function to convert asset proxy URL back to db-assets path
+    const proxyToLocalPath = (proxyUrl: string): string | null => {
+      try {
+        const url = new URL(proxyUrl, window.location.origin);
+        const pathParam = url.searchParams.get('path');
+        if (pathParam) {
+          // Remove "assets/" prefix if present
+          const relativePath = pathParam.startsWith('assets/') 
+            ? pathParam.substring(7) 
+            : pathParam;
+          // Encode each part of the path
+          const encodedPath = relativePath
+            .split('/')
+            .map(part => encodeURIComponent(part))
+            .join('/');
+          return `/db-assets/${encodedPath}`;
+        }
+      } catch (e) {
+        // If URL parsing fails, return null
+      }
+      return null;
+    };
+
+    // Add error handlers for videos using asset proxy
+    const proxyVideos = document.querySelectorAll('video[src*="/api/asset-proxy"], video source[src*="/api/asset-proxy"]');
+    proxyVideos.forEach((element) => {
+      const videoElement = element as HTMLVideoElement | HTMLSourceElement;
+      const src = videoElement.getAttribute('src');
+      if (src && src.includes('/api/asset-proxy')) {
+        const fallbackSrc = proxyToLocalPath(src);
+        if (fallbackSrc) {
+          const handleError = () => {
+            videoElement.setAttribute('src', fallbackSrc);
+            if (videoElement.tagName === 'SOURCE' && videoElement.parentElement?.tagName === 'VIDEO') {
+              const parentVideo = videoElement.parentElement as HTMLVideoElement;
+              parentVideo.load();
+            }
+            videoElement.removeEventListener('error', handleError);
+          };
+          videoElement.addEventListener('error', handleError, { once: true });
+        }
+      }
+    });
+
+    // Convert /db-assets/ paths to asset proxy if enabled
+    // Only convert if useAssetProxy is true (checked via NEXT_PUBLIC_USE_ASSET_PROXY or production mode)
+    const shouldUseProxy = process.env.NODE_ENV === "production" || process.env.NEXT_PUBLIC_USE_ASSET_PROXY === "true";
+    
+    if (shouldUseProxy) {
+      // Find all video and source elements with /db-assets/ paths
+      const videos = document.querySelectorAll('video[src*="/db-assets/"], video source[src*="/db-assets/"]');
+      videos.forEach((element) => {
+        const videoElement = element as HTMLVideoElement | HTMLSourceElement;
+        const src = videoElement.getAttribute('src');
+        if (src && src.includes('/db-assets/')) {
+          const pathAfterDbAssets = src.split('/db-assets/')[1];
+          if (pathAfterDbAssets) {
+            try {
+              const decodedPath = decodeURIComponent(pathAfterDbAssets);
+              const assetPath = decodedPath.startsWith('assets/') ? decodedPath : `assets/${decodedPath}`;
+              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+              videoElement.setAttribute('src', proxySrc);
+              // Store original path as data attribute for fallback
+              videoElement.setAttribute('data-fallback-src', src);
+              // Also update parent video element if this is a source element
+              if (videoElement.tagName === 'SOURCE' && videoElement.parentElement?.tagName === 'VIDEO') {
+                const parentVideo = videoElement.parentElement as HTMLVideoElement;
+                parentVideo.load(); // Reload video with new source
+              }
+            } catch (e) {
+              // If decoding fails, skip
+            }
+          }
+        }
+      });
+
+      // Also handle images with /db-assets/ paths
+      const images = document.querySelectorAll('img[src*="/db-assets/"]');
+      images.forEach((img) => {
+        const imgElement = img as HTMLImageElement;
+        const src = imgElement.getAttribute('src');
+        if (src && src.includes('/db-assets/')) {
+          const pathAfterDbAssets = src.split('/db-assets/')[1];
+          if (pathAfterDbAssets) {
+            try {
+              const decodedPath = decodeURIComponent(pathAfterDbAssets);
+              const assetPath = decodedPath.startsWith('assets/') ? decodedPath : `assets/${decodedPath}`;
+              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+              imgElement.setAttribute('src', proxySrc);
+              // Store original path as data attribute for fallback
+              imgElement.setAttribute('data-fallback-src', src);
+            } catch (e) {
+              // If decoding fails, skip
+            }
+          }
+        }
+      });
+
+      // Also handle anchor tags that link to /db-assets/ videos
+      const links = document.querySelectorAll('a[href*="/db-assets/"]');
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (href && href.includes('/db-assets/') && /\.(mp4|webm|mov|avi|mkv|png|jpg|jpeg|gif|webp|svg)$/i.test(href)) {
+          const pathAfterDbAssets = href.split('/db-assets/')[1];
+          if (pathAfterDbAssets) {
+            try {
+              const decodedPath = decodeURIComponent(pathAfterDbAssets);
+              const assetPath = decodedPath.startsWith('assets/') ? decodedPath : `assets/${decodedPath}`;
+              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+              link.setAttribute('href', proxySrc);
+              // Store original path as data attribute for fallback
+              link.setAttribute('data-fallback-href', href);
+            } catch (e) {
+              // If decoding fails, skip
+            }
+          }
+        }
+      });
+    }
+
+    // Add error handlers for images using asset proxy
+    const proxyImages = document.querySelectorAll('img[src*="/api/asset-proxy"]');
+    proxyImages.forEach((img) => {
+      const imgElement = img as HTMLImageElement;
+      const src = imgElement.getAttribute('src');
+      const fallbackSrc = imgElement.getAttribute('data-fallback-src') || (src ? proxyToLocalPath(src) : null);
+      if (fallbackSrc) {
+        const handleError = () => {
+          imgElement.setAttribute('src', fallbackSrc);
+          imgElement.removeEventListener('error', handleError);
+        };
+        imgElement.addEventListener('error', handleError, { once: true });
+      }
+    });
+
+    // Add error handlers for links using asset proxy
+    const proxyLinks = document.querySelectorAll('a[href*="/api/asset-proxy"]');
+    proxyLinks.forEach((link) => {
+      const href = link.getAttribute('href');
+      const fallbackHref = link.getAttribute('data-fallback-href') || (href ? proxyToLocalPath(href) : null);
+      if (fallbackHref) {
+        // For links, we can't easily detect errors, but we can add a click handler
+        // that checks if the resource exists before navigating
+        // For now, just store the fallback - the video/image error handlers will handle the actual fallback
+      }
+    });
+  }, [updatedContent]);
+
+  const hasReferences =
+    showReferences &&
+    (extractedLinks.length > 0 || Object.keys(extractedFootnotes).length > 0);
+
   return (
-    <div className="flex w-full flex-col md:flex-row">
+    <div
+      className={
+        hasReferences ? "flex w-full flex-col md:flex-row" : "w-full"
+      }
+    >
       <div className="flex-1 min-w-0 p-4">
         <div className={styles.reactMarkDown}>
-          {/* Apply the CSS class here */}
-          {/* Debug: Log the content to see what's being passed to ReactMarkdown */}
           <ReactMarkdown
             className="markdown"
             remarkPlugins={[remarkGfm]}
@@ -328,37 +658,39 @@ const MarkdownContent = ({
           </ReactMarkdown>
         </div>
       </div>
-      <div className="w-full md:w-80 shrink-0 p-4 md:ml-auto">
-        <h3 className="uppercase text-sm opacity-50">References</h3>
-        {extractedLinks.length > 0 && (
-          <>
-            <h4 className="uppercase text-sm opacity-50 mb-3">Links:</h4>
-            <div className="space-y-3">
-              {extractedLinks.map((link, index) => (
-                <LinkPreview key={index} url={link} />
-              ))}
-            </div>
-          </>
-        )}
-        {Object.keys(extractedFootnotes).length > 0 && (
-          <>
-            <h4 className="uppercase text-sm opacity-50 mt-6 mb-3">
-              Footnotes:
-            </h4>
-            <ul>
-              {Object.entries(extractedFootnotes).map(([key, text]) => (
-                <li
-                  key={key}
-                  id={`fn-${key}`}
-                  className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
-                >
-                  {text} <a href={`#fnref-${key}`}>↩</a>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
+      {hasReferences && (
+        <div className="w-full md:w-80 shrink-0 p-4 md:ml-auto">
+          <h3 className="uppercase text-sm opacity-50">References</h3>
+          {extractedLinks.length > 0 && (
+            <>
+              <h4 className="uppercase text-sm opacity-50 mb-3">Links:</h4>
+              <div className="space-y-3">
+                {extractedLinks.map((link, index) => (
+                  <LinkPreview key={index} url={link} />
+                ))}
+              </div>
+            </>
+          )}
+          {Object.keys(extractedFootnotes).length > 0 && (
+            <>
+              <h4 className="uppercase text-sm opacity-50 mt-6 mb-3">
+                Footnotes:
+              </h4>
+              <ul>
+                {Object.entries(extractedFootnotes).map(([key, text]) => (
+                  <li
+                    key={key}
+                    id={`fn-${key}`}
+                    className="text-sm bg-textDark dark:bg-textLight p-2 mb-4"
+                  >
+                    {text} <a href={`#fnref-${key}`}>↩</a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getAllJournals } from "@/queries/journals";
-import ListViewWithSearch from "@/components/list-view-with-search";
-import CollectionHero from "@/components/collection-hero";
+import JournalsView from "./JournalsView";
 
 export const metadata: Metadata = {
   title: "Journals",
@@ -22,7 +21,7 @@ export default async function JournalsPage() {
   const combinedData = data
     .map((item) => ({
       ...item,
-      description: item.metadata.description || "No description available",
+      description: item.metadata?.description ?? "No description available",
     }))
     .sort((a, b) => {
       const dateA = new Date(a.publishedAt).getTime();
@@ -32,19 +31,7 @@ export default async function JournalsPage() {
 
   return (
     <main>
-      <CollectionHero
-        name="Journals"
-        projects={combinedData}
-        allProjects={combinedData}
-      />
-      <section className="flex flex-col gap-4 p-4">
-        <ListViewWithSearch
-          data={combinedData}
-          placeholder="Search journals..."
-          showFilters
-          showProjectImages
-        />
-      </section>
+      <JournalsView initialData={combinedData} />
     </main>
   );
 }

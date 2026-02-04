@@ -56,6 +56,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             metadata: {
               ...metadata,
               contentHtml: markdownContent,
+              filePath: relativePath, // Store the file path for resolving relative images
             },
           } as Post;
         } catch (error) {

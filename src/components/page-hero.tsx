@@ -83,7 +83,7 @@ const PageHero = ({ data }: PageHeroProps) => {
         <div className="absolute inset-0 opacity-40"></div>
         <div className="absolute top-0 left-0 p-4">
           <div className="text-white uppercase font-bold flex items-center">
-            <Link href="/" className="inline-flex items-center">
+            <Link href="/about" className="inline-flex items-center">
               <ArrowLeftIcon className="font-bold" /> gndclouds
             </Link>
             <div

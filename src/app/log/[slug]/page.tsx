@@ -49,6 +49,7 @@ export default async function LogPage({ params }: Params) {
           content={log.metadata.contentHtml}
           links={(log.metadata as any).links ?? []}
           footnotes={(log.metadata as any).footnotes ?? {}}
+          filePath={(log.metadata as any).filePath}
         />
       ) : (
         <p>No content available</p>
