@@ -95,6 +95,7 @@ async function getMarkdownPathsFromContentsAPI(
         Accept: "application/vnd.github+json",
         "User-Agent": "gndclouds-website",
       },
+      cache: "no-store", // Always fetch fresh - prevents stale content from Next.js/Vercel build cache
     });
 
     if (!response.ok) {
@@ -144,6 +145,7 @@ async function getMarkdownPathsFromGitTree(
         Accept: "application/vnd.github+json",
         "User-Agent": "gndclouds-website",
       },
+      cache: "no-store",
     });
 
     if (!refResponse.ok) {
@@ -170,6 +172,7 @@ async function getMarkdownPathsFromGitTree(
         Accept: "application/vnd.github+json",
         "User-Agent": "gndclouds-website",
       },
+      cache: "no-store",
     });
 
     if (!treeResponse.ok) {
@@ -243,6 +246,7 @@ export async function getContent(filePath: string): Promise<string | null> {
           Accept: "application/vnd.github.v3.raw",
           "User-Agent": "gndclouds-website",
         },
+        cache: "no-store", // Always fetch fresh content from GitHub
       });
 
       if (!response.ok) {
