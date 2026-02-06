@@ -14,34 +14,60 @@ interface Params {
   };
 }
 
+// Resolve asset path for db repo
+// Project markdown uses ![[assets/foo.png]] - files live in projects/assets/, not root assets/
+function resolveAssetPath(cleanPath: string): string {
+  if (cleanPath.startsWith("assets/")) {
+    return `projects/${cleanPath}`; // projects/assets/foo.png
+  }
+  if (cleanPath.includes("/")) return `assets/${cleanPath}`;
+  return `assets/${cleanPath}`;
+}
+
 // Define the processMarkdown function
 async function processMarkdown(content: string) {
-  // Convert Obsidian-style image syntax to standard markdown
+  const videoExtensions = [".mp4", ".webm", ".mov", ".avi", ".mkv"];
+
+  // Convert Obsidian-style image/video syntax to markdown or HTML
   const convertedContent = content
     .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
-      // Remove any file extension from the path
       const cleanPath = p1.trim();
+      const resolvedPath = resolveAssetPath(cleanPath);
+      const encodedPath = resolvedPath
+        .split("/")
+        .map((part) => encodeURIComponent(part))
+        .join("/");
 
-      // Encode the path properly
-      const encodedPath = encodeURIComponent(cleanPath)
-        .replace(/%2F/g, "/")
-        .replace(/%40/g, "@");
+      const isVideo = videoExtensions.some((ext) =>
+        cleanPath.toLowerCase().endsWith(ext)
+      );
 
-      // Use the correct path for images in src/app/db/assets
-      // Add a line break before and after the image to ensure it's not inside a paragraph
+      if (isVideo) {
+        const videoType = cleanPath.toLowerCase().endsWith(".webm")
+          ? "video/webm"
+          : cleanPath.toLowerCase().endsWith(".mov")
+            ? "video/quicktime"
+            : "video/mp4";
+        const videoSrc = `/db-assets/${encodedPath}`;
+        return `\n\n<div style="margin: 1rem 0;">
+  <a href="${videoSrc}" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none;">
+    <video controls style="max-width: 100%; height: auto; display: block;">
+      <source src="${videoSrc}" type="${videoType}">
+      Your browser does not support the video tag.
+    </video>
+  </a>
+</div>\n\n`;
+      }
+
       return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
     })
-    // Also handle standard markdown image syntax with relative paths
     .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
-      // Ensure the path starts with a slash
-      // Add a line break before and after the image to ensure it's not inside a paragraph
       return `\n\n![${alt}](/db-assets/media/${src.replace(
         "assets/media/",
         ""
       )})\n\n`;
     });
 
-  // Process the markdown content
   const processor = remark().use(remarkGfm);
   const processedContent = await processor.process(convertedContent);
   return processedContent.toString();
@@ -49,19 +75,14 @@ async function processMarkdown(content: string) {
 
 // Extract links and footnotes for MarkdownContent component
 function extractLinksAndFootnotes(content: string) {
-  // Convert Obsidian-style image syntax to standard markdown
   const convertedContent = content
     .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
-      // Remove any file extension from the path
       const cleanPath = p1.trim();
-
-      // Encode the path properly
-      const encodedPath = encodeURIComponent(cleanPath)
-        .replace(/%2F/g, "/")
-        .replace(/%40/g, "@");
-
-      // Use the correct path for images in src/app/db/assets
-      // Add a line break before and after the image to ensure it's not inside a paragraph
+      const resolvedPath = resolveAssetPath(cleanPath);
+      const encodedPath = resolvedPath
+        .split("/")
+        .map((part) => encodeURIComponent(part))
+        .join("/");
       return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
     })
     // Also handle standard markdown image syntax with relative paths

@@ -38,11 +38,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Format the path for the GitHub API
+    // Format the path for the GitHub API (decode first in case it's double-encoded)
     let formattedPath = path.startsWith("/") ? path.substring(1) : path;
+    try {
+      formattedPath = decodeURIComponent(formattedPath);
+    } catch {
+      // Keep original if decode fails
+    }
+
+    // Encode each path segment for the URL (spaces, @, etc. must be encoded for GitHub API)
+    const encodedPath = formattedPath
+      .split("/")
+      .map((segment) => encodeURIComponent(segment))
+      .join("/");
 
     // Build the URL to fetch from GitHub
-    let apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${formattedPath}?ref=${GITHUB_BRANCH}`;
+    let apiUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodedPath}?ref=${GITHUB_BRANCH}`;
     
     // Log the path being requested for debugging nested asset issues
     console.log(`Asset proxy: requesting path="${formattedPath}" from GitHub (owner=${GITHUB_OWNER}, repo=${GITHUB_REPO}, branch=${GITHUB_BRANCH})`);
@@ -62,7 +73,11 @@ export async function GET(request: NextRequest) {
     // This handles cases where paths like "child/image.png" need to become "assets/child/image.png"
     if (!response.ok && response.status === 404 && !formattedPath.startsWith("assets/")) {
       const fallbackPath = `assets/${formattedPath}`;
-      const fallbackUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fallbackPath}?ref=${GITHUB_BRANCH}`;
+      const fallbackEncodedPath = fallbackPath
+        .split("/")
+        .map((segment) => encodeURIComponent(segment))
+        .join("/");
+      const fallbackUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fallbackEncodedPath}?ref=${GITHUB_BRANCH}`;
       
       if (process.env.NODE_ENV === "production") {
         console.log(`Asset proxy: trying fallback path="${fallbackPath}"`);

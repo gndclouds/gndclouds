@@ -25,11 +25,11 @@ export async function getProjectBySlug(
 ): Promise<PostWithFilePath | null> {
   try {
     const filePaths = await getMarkdownFilePaths("projects");
-    const projectPath = filePaths.find((path) => path.endsWith(`${slug}.md`));
+    let projectPath = filePaths.find((path) => path.endsWith(`${slug}.md`));
 
+    // Fallback: try direct path if not in list (handles edge cases like tree truncation)
     if (!projectPath) {
-      console.warn(`Project not found: ${slug}`);
-      return null;
+      projectPath = `projects/${slug}.md`;
     }
 
     const content = await getContent(projectPath);

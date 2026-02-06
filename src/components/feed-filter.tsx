@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FiX } from "react-icons/fi";
+import { track } from "@/lib/umami";
 
 interface FeedFilterProps {
   data: any[];
@@ -110,6 +111,7 @@ export default function FeedFilter({
       ? selectedTypes.filter((t) => t !== type)
       : [...selectedTypes, type];
     onTypesChange(newTypes);
+    track("feed-filter-type", { type, selected: !selectedTypes.includes(type) });
   };
 
   // Clear all filters
@@ -117,6 +119,7 @@ export default function FeedFilter({
     onSearchChange("");
     onTypesChange([]);
     onDateChange("");
+    track("feed-filter-clear");
   };
 
   // Format type name for display
@@ -178,14 +181,15 @@ export default function FeedFilter({
   const hasActiveFilters = selectedTypes.length > 0 || startDate !== "";
 
   return (
-    <div className="w-full lg:w-64 flex-shrink-0">
-      <div className="lg:sticky lg:top-8 space-y-6">
+    <div className="w-full lg:w-56 flex-shrink-0">
+      <div className="lg:sticky lg:top-8 space-y-5">
         <div>
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Filters</h3>
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-sm font-medium text-gray-700">Filters</h3>
             {hasActiveFilters && (
               <button
-                className="text-sm text-forest-green hover:text-forest-green-dark underline"
+                type="button"
+                className="text-sm text-gray-500 hover:text-primary-black transition-colors"
                 onClick={clearFilters}
               >
                 Clear
@@ -196,26 +200,26 @@ export default function FeedFilter({
 
         {/* Type Filter */}
         <div>
-          <h4 className="text-sm font-medium mb-3">Type</h4>
-          <div className="space-y-2">
+          <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Type</h4>
+          <div className="space-y-1.5">
             {contentTypes.map((type) => {
               const isSelected = selectedTypes.includes(type);
               const count = getTypeCount(type);
               return (
                 <label
                   key={type}
-                  className="flex items-center gap-2 cursor-pointer group"
+                  className="flex items-center gap-2 cursor-pointer group py-1 rounded-lg hover:bg-gray-50 px-1.5 -mx-1.5 transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => toggleType(type)}
-                    className="w-4 h-4 border-2 border-backgroundDark dark:border-backgroundLight checked:bg-backgroundDark dark:checked:bg-backgroundLight focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                    className="w-4 h-4 border border-gray-300 rounded text-gray-600 focus:ring-gray-200 focus:ring-offset-0 cursor-pointer"
                   />
-                  <span className="text-sm flex-1 group-hover:text-forest-green">
+                  <span className="text-sm flex-1 text-gray-700 group-hover:text-primary-black">
                     {formatTypeName(type)}
                   </span>
-                  <span className="text-xs text-gray-500">{count}</span>
+                  <span className="text-xs text-gray-400 tabular-nums">{count}</span>
                 </label>
               );
             })}
@@ -224,17 +228,21 @@ export default function FeedFilter({
 
         {/* Date Filter */}
         <div>
-          <h4 className="text-sm font-medium mb-3">Start Date</h4>
+          <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Start date</h4>
           <input
             type="date"
             value={startDate}
-            onChange={(e) => onDateChange(e.target.value)}
-            className="w-full px-3 py-2 border-2 border-backgroundDark dark:border-backgroundLight bg-transparent rounded-none focus:outline-none focus:ring-0 focus:border-forest-green text-sm"
+            onChange={(e) => {
+              const value = e.target.value;
+              onDateChange(value);
+              track("feed-filter-date", { date: value || "cleared" });
+            }}
+            className="w-full px-3 py-2 border border-gray-200 bg-white rounded-xl text-sm text-primary-black focus:outline-none focus:ring-1 focus:ring-gray-200 focus:border-gray-300"
           />
           {startDate && (
             <button
               onClick={() => onDateChange("")}
-              className="mt-2 text-xs text-forest-green hover:text-forest-green-dark underline"
+              className="mt-1.5 text-xs text-gray-500 hover:text-primary-black transition-colors"
               aria-label="Clear date filter"
             >
               Clear date

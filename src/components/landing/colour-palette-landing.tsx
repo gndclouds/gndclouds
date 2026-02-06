@@ -196,7 +196,7 @@ export default function ColourPaletteLanding({
                   onMouseLeave={() => setHoveredPreview(null)}
                 />
               ) : (
-                <section className="animate-fade-in">
+                <section className="group animate-fade-in flex flex-col gap-4">
                   <LatestBio />
                 </section>
               )}
@@ -208,6 +208,7 @@ export default function ColourPaletteLanding({
               <Link
                 href="/feed"
                 className="transition-opacity hover:opacity-70"
+                data-umami-event="nav-feed"
               >
                 feed
               </Link>
@@ -216,10 +217,15 @@ export default function ColourPaletteLanding({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-opacity hover:opacity-70"
+                data-umami-event="outbound-webring"
               >
                 webring <span className="font-mono">↗</span>
               </Link>
-              <Link href="/cv" className="transition-opacity hover:opacity-70">
+              <Link
+                href="/cv"
+                className="transition-opacity hover:opacity-70"
+                data-umami-event="nav-cv"
+              >
                 cv
               </Link>
               <Link
@@ -227,6 +233,7 @@ export default function ColourPaletteLanding({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-opacity hover:opacity-70"
+                data-umami-event="outbound-arena"
               >
                 are.na <span className="font-mono">↗</span>
               </Link>
@@ -235,6 +242,7 @@ export default function ColourPaletteLanding({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-opacity hover:opacity-70"
+                data-umami-event="outbound-bluesky"
               >
                 bluesky <span className="font-mono">↗</span>
               </Link>
@@ -243,12 +251,14 @@ export default function ColourPaletteLanding({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-opacity hover:opacity-70"
+                data-umami-event="outbound-github"
               >
                 github <span className="font-mono">↗</span>
               </Link>
               <Link
                 href="/newsletters"
                 className="transition-opacity hover:opacity-70"
+                data-umami-event="nav-newsletter"
               >
                 newsletter
               </Link>
@@ -276,6 +286,7 @@ export default function ColourPaletteLanding({
             <Link
               href="/feed"
               className="transition-opacity hover:opacity-70"
+              data-umami-event="nav-feed"
             >
               feed
             </Link>
@@ -284,10 +295,15 @@ export default function ColourPaletteLanding({
               target="_blank"
               rel="noopener noreferrer"
               className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-webring"
             >
               webring <span className="font-mono">↗</span>
             </Link>
-            <Link href="/cv" className="transition-opacity hover:opacity-70">
+            <Link
+              href="/cv"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="nav-cv"
+            >
               cv
             </Link>
             <Link
@@ -295,6 +311,7 @@ export default function ColourPaletteLanding({
               target="_blank"
               rel="noopener noreferrer"
               className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-arena"
             >
               are.na <span className="font-mono">↗</span>
             </Link>
@@ -303,6 +320,7 @@ export default function ColourPaletteLanding({
               target="_blank"
               rel="noopener noreferrer"
               className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-bluesky"
             >
               bluesky <span className="font-mono">↗</span>
             </Link>
@@ -311,12 +329,14 @@ export default function ColourPaletteLanding({
               target="_blank"
               rel="noopener noreferrer"
               className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-github"
             >
               github <span className="font-mono">↗</span>
             </Link>
             <Link
               href="/newsletters"
               className="transition-opacity hover:opacity-70"
+              data-umami-event="nav-newsletter"
             >
               newsletter
             </Link>

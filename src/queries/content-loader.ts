@@ -58,6 +58,20 @@ export async function getMarkdownFilePaths(
       `Content loader (prod): owner=${githubOwner}, repo=${githubRepo}, branch=${githubBranch}, token=${hasGitHubToken ? "set" : "missing"}`
     );
   }
+
+  // Prefer Contents API for directory listing - more reliable than git tree
+  // (tree can truncate on large repos, and Contents API returns exact dir contents)
+  const contentsPaths = await getMarkdownPathsFromContentsAPI(contentType);
+  if (contentsPaths.length > 0) {
+    if (process.env.NODE_ENV === "production") {
+      console.log(
+        `Found ${contentsPaths.length} ${contentType} files via contents API`
+      );
+    }
+    return contentsPaths;
+  }
+
+  // Fallback to git tree if Contents API failed (e.g. 404 for directory)
   const treePaths = await getMarkdownPathsFromGitTree(contentType);
   if (treePaths.length > 0) {
     if (process.env.NODE_ENV === "production") {
@@ -66,7 +80,12 @@ export async function getMarkdownFilePaths(
     return treePaths;
   }
 
-  // Fallback to contents API if git tree didn't work
+  return [];
+}
+
+async function getMarkdownPathsFromContentsAPI(
+  contentType: string
+): Promise<string[]> {
   try {
     const apiUrl = `https://api.github.com/repos/${githubOwner}/${githubRepo}/contents/${contentType}?ref=${githubBranch}`;
 
@@ -79,7 +98,6 @@ export async function getMarkdownFilePaths(
     });
 
     if (!response.ok) {
-      // Only log as error if it's not a 404 (directory might not exist)
       if (response.status === 404) {
         if (process.env.NODE_ENV === "production") {
           console.warn(
@@ -101,7 +119,7 @@ export async function getMarkdownFilePaths(
       return [];
     }
 
-    // Filter for markdown files only
+    // Filter for markdown files only (Contents API returns flat list for directory)
     return contents
       .filter(
         (item: any) => item.type === "file" && item.name.endsWith(".md")
@@ -164,6 +182,13 @@ async function getMarkdownPathsFromGitTree(
     const treeData = await treeResponse.json();
     if (!Array.isArray(treeData?.tree)) {
       return [];
+    }
+
+    // If tree was truncated, don't use it - Contents API should have been tried first
+    if (treeData.truncated) {
+      console.warn(
+        `Git tree truncated for ${contentType}, some files may be missing. Consider using Contents API.`
+      );
     }
 
     return treeData.tree

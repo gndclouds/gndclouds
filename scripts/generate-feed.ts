@@ -103,6 +103,9 @@ async function generateFeedData() {
             .pop()}`,
           likeCount: post.likeCount || 0,
           repostCount: post.repostCount || 0,
+          author: post.author,
+          images: post.images || [],
+          isRepost: post.isRepost || false,
         }))
       : [];
 

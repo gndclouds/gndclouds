@@ -107,31 +107,60 @@ export async function GET(
       }
     }
 
-    // If the path includes subdirectories (like "logs/file.mp4"), also try just the filename
-    // Some assets might be directly in assets/ without subdirectory structure
+    // If the path includes subdirectories, try filename-only (move-assets flattens to public/db-assets/)
+    // e.g. projects/assets/CleanShot.png -> public/db-assets/CleanShot.png
     if (decodedPath.includes("/")) {
       const filenameOnly = decodedPath.split("/").pop() || decodedPath;
-      const srcAssetsPathFilenameOnly = join(process.cwd(), "src", "app", "db", "assets", filenameOnly);
-      
-      if (existsSync(srcAssetsPathFilenameOnly)) {
+      // Try public/db-assets first (Vercel deploy - move-assets copies flattened files here)
+      const publicPathFilenameOnly = join(process.cwd(), "public", "db-assets", filenameOnly);
+      if (existsSync(publicPathFilenameOnly)) {
         try {
-          console.log(`Found asset at: ${srcAssetsPathFilenameOnly} (using filename only from path: ${decodedPath})`);
-          const fileBuffer = await readFile(srcAssetsPathFilenameOnly);
-          const contentType = getContentType(srcAssetsPathFilenameOnly);
-
+          const fileBuffer = await readFile(publicPathFilenameOnly);
+          const contentType = getContentType(publicPathFilenameOnly);
           return new NextResponse(fileBuffer, {
             status: 200,
             headers: {
               "Content-Type": contentType,
-              "Cache-Control": "public, max-age=3600", // Cache for 1 hour
+              "Cache-Control": "public, max-age=3600",
+            },
+          });
+        } catch (error) {
+          console.error(`Error reading ${publicPathFilenameOnly}:`, error);
+        }
+      }
+      // Try src/app/db/assets/ (development - projects/assets/ or assets/)
+      const srcAssetsPathFilenameOnly = join(process.cwd(), "src", "app", "db", "assets", filenameOnly);
+      if (existsSync(srcAssetsPathFilenameOnly)) {
+        try {
+          const fileBuffer = await readFile(srcAssetsPathFilenameOnly);
+          const contentType = getContentType(srcAssetsPathFilenameOnly);
+          return new NextResponse(fileBuffer, {
+            status: 200,
+            headers: {
+              "Content-Type": contentType,
+              "Cache-Control": "public, max-age=3600",
             },
           });
         } catch (error) {
           console.error(`Error reading local file ${srcAssetsPathFilenameOnly}:`, error);
-          // Fall through to proxy
         }
-      } else {
-        console.log(`Asset not found at: ${srcAssetsPathFilenameOnly} (tried filename only from: ${decodedPath})`);
+      }
+      // Also try projects/assets/ for project-specific assets
+      const projectsAssetsPath = join(process.cwd(), "src", "app", "db", "projects", "assets", filenameOnly);
+      if (existsSync(projectsAssetsPath)) {
+        try {
+          const fileBuffer = await readFile(projectsAssetsPath);
+          const contentType = getContentType(projectsAssetsPath);
+          return new NextResponse(fileBuffer, {
+            status: 200,
+            headers: {
+              "Content-Type": contentType,
+              "Cache-Control": "public, max-age=3600",
+            },
+          });
+        } catch (error) {
+          console.error(`Error reading ${projectsAssetsPath}:`, error);
+        }
       }
     }
 

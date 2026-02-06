@@ -366,19 +366,19 @@ const MarkdownContent = ({
       });
   };
 
-  // Function to resolve image path relative to the markdown file
+  // Function to resolve image path for the GitHub db repo structure
+  // Images and videos live in assets/ at repo root; markdown is in journals/, logs/, projects/
   const resolveImagePath = (imageName: string): string => {
-    if (!filePath) {
-      // If no filePath is provided, use the image name as-is (backward compatibility)
+    // If path already starts with assets/, use as-is (full path from repo root)
+    if (imageName.startsWith("assets/")) {
       return imageName;
     }
-
-    // Get the directory of the markdown file (e.g., "logs/ezra" from "logs/ezra/elements-of-a-dynamic-document-v1.md")
-    const fileDir = filePath.substring(0, filePath.lastIndexOf("/"));
-    
-    // Construct the relative path: directory/imageName
-    // In Obsidian, child images are typically in the same directory as the markdown file
-    return fileDir ? `${fileDir}/${imageName}` : imageName;
+    // If path has subdir (e.g. "media/IFTTT.png", "decision-labs/hero.png"), it's under assets/
+    if (imageName.includes("/")) {
+      return `assets/${imageName}`;
+    }
+    // Bare filename (e.g. "CleanShot.png") - images live in assets/ in the db repo
+    return `assets/${imageName}`;
   };
 
   // Function to convert ![[image]] or ![[video]] to markdown or HTML
@@ -410,9 +410,9 @@ const MarkdownContent = ({
 
           if (isVideo) {
             // For videos, generate HTML video tag
-            // Use encoded path for proper URL handling of spaces and special chars
+            // resolvedPath already includes assets/ prefix; encodedPath has it encoded
             const videoSrc = useAssetProxy
-              ? `/api/asset-proxy?path=assets/${encodedPath}`
+              ? `/api/asset-proxy?path=${encodeURIComponent(resolvedPath)}`
               : `/db-assets/${encodedPath}`;
             
             // Determine video type from extension
@@ -434,13 +434,12 @@ const MarkdownContent = ({
           }
 
           // For images, use markdown image syntax
-          // In production, use the asset proxy
+          // resolvedPath already includes assets/; use encodeURIComponent for the path param
           if (useAssetProxy) {
-            return `\n\n![${cleanPath}](/api/asset-proxy?path=assets/${encodedPath})\n\n`;
+            return `\n\n![${cleanPath}](/api/asset-proxy?path=${encodeURIComponent(resolvedPath)})\n\n`;
           }
 
           // For local development, use the db-assets path with properly encoded filename
-          // Use encodedPath to handle spaces and special characters properly
           return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
         })
         // Also handle standard markdown image syntax with relative paths
