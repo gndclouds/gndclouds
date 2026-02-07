@@ -24,18 +24,23 @@ if [ -z "$username" ] || [ -z "$token" ]; then
   
   # Try to clone without auth first
   echo "Attempting public clone: https://github.com/gndclouds/db.git"
-  git clone --depth=1 https://github.com/gndclouds/db.git src/app/db
-  
-  # Check if clone was successful
-  if [ $? -ne 0 ]; then
-    echo "WARNING: Public clone failed. Build will continue without content."
-    exit 0 # Don't fail the build
-  else
+  if git clone --depth=1 https://github.com/gndclouds/db.git src/app/db 2>/dev/null; then
     echo "Public clone successful"
     ls -la src/app/db
     echo "Repository setup completed successfully"
     exit 0
   fi
+
+  # Fallback: try to init submodule (in case main repo was cloned with submodule ref)
+  echo "Public clone failed. Trying git submodule update --init --recursive..."
+  if git submodule update --init --recursive 2>/dev/null; then
+    echo "Submodule init successful"
+    ls -la src/app/db 2>/dev/null || true
+    exit 0
+  fi
+
+  echo "WARNING: Public clone and submodule init failed. Images will load via asset-proxy (requires GITHUB_ACCESS_TOKEN)."
+  exit 0 # Don't fail the build
 else
   echo "Git credentials found, using authenticated access"
   

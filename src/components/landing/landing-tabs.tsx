@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { track } from "@/lib/umami";
 import {
   BookOpen,
   ChevronRight,
@@ -283,6 +284,7 @@ export default function LandingTabs({
 
   const handleTabClick = (newTab: TabId) => {
     if (newTab === activeTab) return;
+    track("landing-tab", { tab: newTab });
     const prevSlots = getSlotsForTab(
       activeTab,
       recentJournals,

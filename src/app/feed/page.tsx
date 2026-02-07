@@ -1,4 +1,4 @@
-import CollectionHero from "@/components/collection-hero";
+import Link from "next/link";
 import FeedWithFilter from "@/components/feed-with-filter";
 
 // Revalidate every 5 minutes to check for updated feed.json
@@ -72,39 +72,89 @@ export default async function FeedPage() {
   }
 
   return (
-    <div className="flex flex-col">
-      <CollectionHero
-        name="Feed"
-        projects={feedData.items}
-        allProjects={feedData.items}
-      />
-      <main className="">
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4 px-4">
-            <h2 className="text-2xl font-bold">Latest Updates</h2>
-            <div className="text-sm text-gray-600">
-              Last updated: {feedData.generatedAt}
-            </div>
-          </div>
-
-          {/* Show source statistics */}
-          <div className="mb-4 text-sm text-gray-600 px-4">
-            <span>Sources: </span>
-            {Object.entries(feedData.stats.sourceStats).map(
-              ([source, count], index) => (
-                <span key={source}>
-                  {source}: {count}
-                  {index < Object.entries(feedData.stats.sourceStats).length - 1
-                    ? ", "
-                    : ""}
-                </span>
-              )
+    <main className="min-h-screen w-full flex flex-col bg-primary-gray text-primary-black font-inter overflow-x-hidden">
+      <div className="flex-1 flex flex-col w-full px-4 py-4 sm:p-6 lg:py-8 lg:px-8 gap-4 sm:gap-6">
+        {/* Card 1: Header only */}
+        <header className="shrink-0 rounded-2xl overflow-hidden bg-primary-white flex flex-col px-6 py-6">
+          <h1 className="text-2xl sm:text-3xl mb-2">
+            <Link href="/" className="font-bold text-gray-800 hover:opacity-70 transition-opacity">
+              gndclouds
+            </Link>
+            <span className="font-bold text-gray-800"> / feed</span>
+          </h1>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+            <span>Last updated: {feedData.generatedAt}</span>
+            {Object.keys(feedData.stats.sourceStats).length > 0 && (
+              <span>
+                Sources:{" "}
+                {Object.entries(feedData.stats.sourceStats)
+                  .map(([source, count]) => `${source}: ${count}`)
+                  .join(", ")}
+              </span>
             )}
           </div>
+        </header>
 
-          <FeedWithFilter data={feedData.items} />
-        </div>
-      </main>
-    </div>
+        {/* Card 2: Filters — Card 3: Feed items (inside FeedWithFilter when cardLayout) */}
+        <FeedWithFilter data={feedData.items} cardLayout />
+
+        {/* Footer — matches landing footer card */}
+        <footer className="shrink-0 rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark flex flex-wrap justify-between items-center gap-x-4 gap-y-1 px-6 py-4 text-sm text-primary-black dark:text-textDark">
+          <nav className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1">
+            <span className="text-gray-400">feed</span>
+            <Link
+              href="https://webring.xxiivv.com/#xxiivv"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-webring"
+            >
+              webring <span className="font-mono">↗</span>
+            </Link>
+            <Link
+              href="/cv"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="nav-cv"
+            >
+              cv
+            </Link>
+            <Link
+              href="https://are.na/gndclouds"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-arena"
+            >
+              are.na <span className="font-mono">↗</span>
+            </Link>
+            <Link
+              href="https://bsky.app/profile/gndclouds.earth"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-bluesky"
+            >
+              bluesky <span className="font-mono">↗</span>
+            </Link>
+            <Link
+              href="https://github.com/gndclouds"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="outbound-github"
+            >
+              github <span className="font-mono">↗</span>
+            </Link>
+            <Link
+              href="/newsletters"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="nav-newsletter"
+            >
+              newsletter
+            </Link>
+          </nav>
+        </footer>
+      </div>
+    </main>
   );
 }

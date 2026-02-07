@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { track } from "@/lib/umami";
 import type { ThemeMode, ThemeStyle } from "./ThemeContext";
 import { useTheme } from "./ThemeContext";
 
@@ -66,6 +67,7 @@ export default function ThemeChooser() {
                     role="menuitem"
                     onClick={() => {
                       setMode(m);
+                      track("theme-mode", { mode: m });
                     }}
                     className={`w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center gap-2 ${
                       mode === m
@@ -96,6 +98,7 @@ export default function ThemeChooser() {
                     role="menuitem"
                     onClick={() => {
                       setStyle(s);
+                      track("theme-style", { style: s });
                     }}
                     className={`w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center gap-2 ${
                       style === s

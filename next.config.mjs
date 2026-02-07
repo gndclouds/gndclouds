@@ -22,6 +22,7 @@ const nextConfig = {
       { protocol: "https", hostname: "readwise-assets.s3.amazonaws.com" },
       { protocol: "https", hostname: "m.media-amazon.com" },
       { protocol: "https", hostname: "cdn.bsky.app" },
+      { protocol: "https", hostname: "video.bsky.app" },
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
     ],
   },

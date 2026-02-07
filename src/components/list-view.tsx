@@ -167,15 +167,24 @@ export default function ListView({
     const itemColSpan = gridColumnSpan[itemType] || gridColumnSpan.default;
     const itemHeight = heightClass[itemType] || heightClass.default;
 
+    const feedCardBase =
+      variant === "feed"
+        ? "rounded-xl border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/50 transition-colors"
+        : "";
+
     // Render different card types based on item type
     if (itemType === "bluesky") {
       // Only show author if not gndclouds.earth
       const isOwner = item.author?.handle === "gndclouds.earth";
       const postBody = item.text || item.description || "";
+      const blueskyBorder =
+        variant === "feed"
+          ? "rounded-xl border border-blue-100 bg-blue-50/50 hover:border-blue-200 hover:bg-blue-50/70"
+          : "border-2 border-blue-300 dark:border-blue-500 hover:border-blue-500 dark:hover:border-blue-300 bg-blue-50 dark:bg-blue-900/20";
       return (
         <div
           key={index}
-          className={`${itemColSpan} border-2 border-blue-300 dark:border-blue-500 relative p-2 ${itemHeight} group hover:border-blue-500 dark:hover:border-blue-300 bg-blue-50 dark:bg-blue-900/20`}
+          className={`${itemColSpan} ${blueskyBorder} relative p-2 ${itemHeight} group`}
         >
           {/* Repost indicator */}
           {item.isRepost && (
@@ -189,6 +198,8 @@ export default function ListView({
             target="_blank"
             rel="noopener noreferrer"
             className="block h-full"
+            data-umami-event="feed-item-click"
+            data-umami-event-type="bluesky"
           >
             {/* Only show author/avatar if not owner */}
             {!isOwner && (
@@ -257,16 +268,22 @@ export default function ListView({
 
       // For image blocks, show the image
       if (item.imageUrl) {
+        const arenaImageBorder =
+          variant === "feed"
+            ? "rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300"
+            : "border-2 border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-400 overflow-hidden";
         return (
           <div
             key={index}
-            className={`${itemColSpan} border-2 border-gray-300 dark:border-gray-600 relative ${itemHeight} group hover:border-gray-500 dark:hover:border-gray-400 overflow-hidden`}
+            className={`${itemColSpan} ${arenaImageBorder} relative ${itemHeight} group`}
           >
             <a
               href={item.uri}
               target="_blank"
               rel="noopener noreferrer"
               className="block h-full"
+              data-umami-event="feed-item-click"
+              data-umami-event-type="arena"
             >
               <div className="absolute inset-0">
                 <Image
@@ -290,16 +307,22 @@ export default function ListView({
       }
 
       // For other Are.na blocks
+      const arenaBlockBorder =
+        variant === "feed"
+          ? "rounded-xl border border-gray-200 bg-gray-50/50 hover:border-gray-300 hover:bg-gray-50"
+          : "border-2 border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-400 bg-gray-50 dark:bg-gray-900/20";
       return (
         <div
           key={index}
-          className={`${itemColSpan} border-2 border-gray-300 dark:border-gray-600 relative p-2 ${itemHeight} group hover:border-gray-500 dark:hover:border-gray-400 bg-gray-50 dark:bg-gray-900/20`}
+          className={`${itemColSpan} ${arenaBlockBorder} relative p-2 ${itemHeight} group`}
         >
           <a
             href={item.uri}
             target="_blank"
             rel="noopener noreferrer"
             className="block h-full"
+            data-umami-event="feed-item-click"
+            data-umami-event-type="arena"
           >
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center">
@@ -330,17 +353,22 @@ export default function ListView({
     }
 
     if (itemType === "photography") {
-      // Unsplash image card with no description overlay
+      const photoBorder =
+        variant === "feed"
+          ? "rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300"
+          : "border-2 border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-400 overflow-hidden";
       return (
         <div
           key={index}
-          className={`${itemColSpan} border-2 border-gray-300 dark:border-gray-600 relative ${itemHeight} group hover:border-gray-500 dark:hover:border-gray-400 overflow-hidden`}
+          className={`${itemColSpan} ${photoBorder} relative ${itemHeight} group`}
         >
           <a
             href={linkPath}
             target="_blank"
             rel="noopener noreferrer"
             className="block h-full"
+            data-umami-event="feed-item-click"
+            data-umami-event-type="photography"
           >
             {item.urls && (
               <div className="absolute inset-0">
@@ -363,10 +391,14 @@ export default function ListView({
     }
 
     if (itemType === "newsletter") {
+      const newsletterBorder =
+        variant === "feed"
+          ? "rounded-xl border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/50"
+          : "border-2 border-backgroundDark dark:border-backgroundLight hover:border-backgroundDark dark:hover:border-backgroundLight";
       return (
         <div
           key={index}
-          className={`${itemColSpan} border-2 border-backgroundDark dark:border-backgroundLight relative p-4 ${itemHeight} group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          className={`${itemColSpan} ${newsletterBorder} relative p-4 ${itemHeight} group`}
         >
           {" "}
           <div className="absolute top-0 left-0 p-2">
@@ -390,18 +422,24 @@ export default function ListView({
 
     // Add GitHub activity rendering
     if (itemType === "github") {
+      const githubBorder =
+        variant === "feed"
+          ? "rounded-xl border border-gray-200 bg-gray-50/50 hover:border-gray-300 hover:bg-gray-50"
+          : "border-2 border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-400 bg-gray-50 dark:bg-gray-900/20";
       // Only show author if not gndclouds
       const isOwner = item.author?.username === "gndclouds";
       return (
         <div
           key={index}
-          className={`${itemColSpan} border-2 border-gray-300 dark:border-gray-600 relative p-2 ${itemHeight} group hover:border-gray-500 dark:hover:border-gray-400 bg-gray-50 dark:bg-gray-900/20`}
+          className={`${itemColSpan} ${githubBorder} relative p-2 ${itemHeight} group`}
         >
           <a
             href={item.uri}
             target="_blank"
             rel="noopener noreferrer"
             className="block h-full"
+            data-umami-event="feed-item-click"
+            data-umami-event-type="github"
           >
             {/* Only show author/avatar if not owner */}
             {!isOwner && (
@@ -494,10 +532,14 @@ export default function ListView({
             : "";
       const hasPreviewImage = supportsPreviewImage && previewImage.length > 0;
 
+      const localContentBorder =
+        variant === "feed"
+          ? "rounded-xl border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/50"
+          : "border-2 border-backgroundDark dark:border-backgroundLight hover:border-backgroundDark dark:hover:border-backgroundLight";
       return (
         <div
           key={index}
-          className={`${itemColSpan} border-2 border-backgroundDark dark:border-backgroundLight relative p-4 ${itemHeight} group hover:border-backgroundDark dark:hover:border-backgroundLight`}
+          className={`${itemColSpan} ${localContentBorder} relative p-4 ${itemHeight} group`}
         >
           <Link href={linkPath} className="block h-full">
             <div className="flex flex-col h-full">
@@ -565,13 +607,9 @@ export default function ListView({
         key={index}
         className={`${itemColSpan} ${
           variant === "feed"
-            ? ""
-            : "border-2 border-backgroundDark dark:border-backgroundLight"
-        } relative p-4 ${itemHeight} group ${
-          variant === "feed"
-            ? ""
-            : "hover:border-backgroundDark dark:hover:border-backgroundLight"
-        }`}
+            ? feedCardBase
+            : "border-2 border-backgroundDark dark:border-backgroundLight hover:border-backgroundDark dark:hover:border-backgroundLight"
+        } relative p-4 ${itemHeight} group`}
       >
         <Link href={linkPath} className="">
           <div className="text-sm slashed-zero lining-nums">
