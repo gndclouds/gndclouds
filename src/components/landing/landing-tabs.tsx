@@ -332,9 +332,9 @@ export default function LandingTabs({
         className="flex flex-wrap items-center gap-1 border-b pb-3 mb-4 shrink-0"
         style={{ borderBottomColor: activeDotColor }}
         role="tablist"
-        aria-label="Journals, projects, and logs"
+        aria-label="Journals and logs"
       >
-        {TABS.map((tab) => (
+        {TABS.filter((tab) => tab.id !== "projects").map((tab) => (
           <TabButton
             key={tab.id}
             dotColor={tab.dotColor}
