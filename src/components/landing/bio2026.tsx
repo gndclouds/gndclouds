@@ -6,38 +6,25 @@ const Bio2026 = () => {
 
   const paragraphs = [
     <div key="intro">
-      Hello, my name is Will(iam). Welcome to my corner of the internet.
+      Hello, {"I'm"} Will. Welcome to my corner of the internet.
     </div>,
     <div key="focus">
       <span className="font-bold">My focus</span> for the next decade is
       contributing to work that makes critical elements of natural systems
-      visible. This means changing how we see ourselves as part of nature rather
-      than adjacent to it.
+      visible, I refer to this as making the unseen-seen. This means changing
+      how we see ourselves as part of nature rather than adjacent to it.
     </div>,
     <div key="role">
-      These days, I tend to be classified as a{" "}
-      <Link
-        href="/journal/design-engineer-is-the-new-interaction-designer"
-        className={linkClass}
-      >
-        design engineer or creative technologist
-      </Link>{" "}
-      depending on the context though I&apos;m still aspiring to become a{" "}
-      <Link
-        href="/note/becoming-a-biodesign-technologist"
-        className={linkClass}
-      >
-        biodesign technologist
+      These days, I do this as a Design Engineer at{" "}
+      <Link href="https://www.archetypeai.io/" className={linkClass}>
+        Archetype
       </Link>
-      .
-    </div>,
-    <div key="interstitial">
-      I&apos;m exploring this vision at scale through{" "}
+      . While continuing to grow my understanding of biology and the build
+      environments through my personal practice at{" "}
       <Link href="https://interstitial.systems" className={linkClass}>
         Interstitial
       </Link>
-      , building infrastructure that connects physical world sensor data to AI
-      systems.
+      .
     </div>,
     <div key="previously">
       <span className="font-bold">Previously</span>, I&apos;ve worked at the

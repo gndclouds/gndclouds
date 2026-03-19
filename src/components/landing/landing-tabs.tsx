@@ -35,6 +35,7 @@ interface LandingTabsProps {
   onHoverEnd?: () => void;
 }
 
+/* Projects hidden for now — only journals and logs on landing */
 const TABS = [
   {
     id: "all" as const,
@@ -49,13 +50,6 @@ const TABS = [
     href: "/journals",
     dotColor: "#fadc4b",
     Icon: BookOpen,
-  },
-  {
-    id: "projects" as const,
-    label: "Projects",
-    href: "/projects",
-    dotColor: "#0068e2",
-    Icon: FolderKanban,
   },
   {
     id: "logs" as const,
@@ -189,7 +183,7 @@ function TabItemLink({
   );
 }
 
-type TabId = "all" | "journals" | "projects" | "logs";
+type TabId = "all" | "journals" | "logs";
 
 interface SlotItem {
   title: string;
@@ -211,19 +205,13 @@ function getSlotsForTab(
       item: j,
       type: "journal",
     }));
-    const projectSlots: SlotItem[] = projects.slice(0, 6).map((p) => ({
-      title: p.title,
-      href: `/project/${p.slug}`,
-      item: p,
-      type: "project",
-    }));
     const logSlots: SlotItem[] = logs.slice(0, 6).map((l) => ({
       title: l.title,
       href: `/log/${l.slug}`,
       item: l,
       type: "log",
     }));
-    const combined = [...journalSlots, ...projectSlots, ...logSlots].sort(
+    const combined = [...journalSlots, ...logSlots].sort(
       (a, b) =>
         new Date(b.item.publishedAt).getTime() -
         new Date(a.item.publishedAt).getTime(),
@@ -238,16 +226,6 @@ function getSlotsForTab(
         href: `/journal/${j.slug}`,
         item: j,
         type: "journal",
-      }));
-  }
-  if (tab === "projects") {
-    return projects
-      .slice(0, 6)
-      .map((p) => ({
-        title: p.title,
-        href: `/project/${p.slug}`,
-        item: p,
-        type: "project",
       }));
   }
   return logs
@@ -319,9 +297,7 @@ export default function LandingTabs({
       ? "No items yet."
       : activeTab === "journals"
         ? "No journals yet."
-        : activeTab === "projects"
-          ? "No projects yet."
-          : "No logs yet.";
+        : "No logs yet.";
 
   const activeDotColor =
     TABS.find((t) => t.id === activeTab)?.dotColor ?? "#eeeeee";
@@ -334,7 +310,7 @@ export default function LandingTabs({
         role="tablist"
         aria-label="Journals and logs"
       >
-        {TABS.filter((tab) => tab.id !== "projects").map((tab) => (
+        {TABS.map((tab) => (
           <TabButton
             key={tab.id}
             dotColor={tab.dotColor}
