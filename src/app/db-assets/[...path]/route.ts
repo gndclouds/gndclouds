@@ -107,11 +107,11 @@ export async function GET(
       }
     }
 
-    // If the path includes subdirectories, try filename-only (move-assets flattens to public/db-assets/)
-    // e.g. projects/assets/CleanShot.png -> public/db-assets/CleanShot.png
+    // If the path includes subdirectories, try filename-only (legacy: older flat db-assets copies)
+    // move-assets now preserves paths like journals/... and projects/... under public/db-assets/
     if (decodedPath.includes("/")) {
       const filenameOnly = decodedPath.split("/").pop() || decodedPath;
-      // Try public/db-assets first (Vercel deploy - move-assets copies flattened files here)
+      // Try public/db-assets root (flat legacy layout)
       const publicPathFilenameOnly = join(process.cwd(), "public", "db-assets", filenameOnly);
       if (existsSync(publicPathFilenameOnly)) {
         try {
