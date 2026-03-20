@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
+import ProjectCardMedia from "@/components/project-card-media";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   FiArrowRight,
@@ -25,6 +26,27 @@ export default function ListView({
   variant = "default",
   showProjectImages = false,
 }: ListViewProps) {
+  const toProcessedAssetUrl = (candidate: string): string => {
+    let out = candidate;
+    const isProduction = process.env.NODE_ENV === "production";
+    if (
+      candidate.length > 0 &&
+      candidate.startsWith("/") &&
+      !candidate.startsWith("http") &&
+      !candidate.startsWith("/api/asset-proxy") &&
+      !candidate.startsWith("/db-assets/") &&
+      !candidate.startsWith("/background") &&
+      isProduction
+    ) {
+      const pathWithoutSlash = candidate.substring(1);
+      const assetPath = pathWithoutSlash.startsWith("assets/")
+        ? pathWithoutSlash
+        : `assets/${pathWithoutSlash}`;
+      out = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+    }
+    return out;
+  };
+
   const formatDateDisplay = (value: string | Date) => {
     const date = value instanceof Date ? value : new Date(value);
     if (Number.isNaN(date.getTime())) {
@@ -485,44 +507,48 @@ export default function ListView({
       itemType === "journal" ||
       itemType === "note" ||
       itemType === "research" ||
-      itemType === "project"
+      itemType === "project" ||
+      itemType === "log"
     ) {
+      const fromCardDisplay =
+        typeof item.metadata?.cardImageDisplayUrl === "string"
+          ? item.metadata.cardImageDisplayUrl.trim()
+          : "";
       const previewImageCandidate =
-        typeof item.metadata?.heroImage === "string"
+        fromCardDisplay ||
+        (typeof item.metadata?.heroImage === "string"
           ? item.metadata.heroImage.trim()
           : typeof item.heroImage === "string"
             ? item.heroImage.trim()
-            : "";
+            : "");
       const isValidImagePath =
         /(\.(png|jpe?g|gif|webp|avif|svg))$/i.test(previewImageCandidate) ||
         previewImageCandidate.startsWith("http") ||
         previewImageCandidate.startsWith("/");
       const supportsPreviewImage =
-        showProjectImages && (itemType === "project" || itemType === "journal");
+        showProjectImages &&
+        (itemType === "project" ||
+          itemType === "journal" ||
+          itemType === "log");
 
-      // Convert hero image paths to use asset proxy in production
-      // Paths like /projects/hero-*.ext should become assets/projects/hero-*.ext for GitHub
-      // Note: In development, these should be in public folder. In production, use asset proxy.
-      let processedImagePath = previewImageCandidate;
-      const isProduction = process.env.NODE_ENV === "production";
-      if (
-        isValidImagePath &&
-        previewImageCandidate.length > 0 &&
-        previewImageCandidate.startsWith("/") &&
-        !previewImageCandidate.startsWith("http") &&
-        !previewImageCandidate.startsWith("/api/asset-proxy") &&
-        !previewImageCandidate.startsWith("/db-assets/") &&
-        !previewImageCandidate.startsWith("/background") &&
-        isProduction
-      ) {
-        // Remove leading slash and convert to assets path for GitHub repo
-        const pathWithoutSlash = previewImageCandidate.substring(1);
-        // Ensure it starts with assets/ for the GitHub repo structure
-        const assetPath = pathWithoutSlash.startsWith("assets/")
-          ? pathWithoutSlash
-          : `assets/${pathWithoutSlash}`;
-        processedImagePath = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
-      }
+      const processedImagePath =
+        isValidImagePath && previewImageCandidate.length > 0
+          ? toProcessedAssetUrl(previewImageCandidate)
+          : "";
+
+      const hoverGifRaw =
+        (itemType === "project" || itemType === "log") &&
+        typeof item.metadata?.cardImageHoverGifUrl === "string"
+          ? item.metadata.cardImageHoverGifUrl.trim()
+          : "";
+      const hoverGifValid =
+        hoverGifRaw.length > 0 &&
+        (/(\.(png|jpe?g|gif|webp|avif|svg))$/i.test(hoverGifRaw) ||
+          hoverGifRaw.startsWith("http") ||
+          hoverGifRaw.startsWith("/"));
+      const processedHoverGif = hoverGifValid
+        ? toProcessedAssetUrl(hoverGifRaw)
+        : null;
 
       const previewImage =
         isValidImagePath && previewImageCandidate.length > 0
@@ -545,12 +571,16 @@ export default function ListView({
             <div className="flex flex-col h-full">
               {hasPreviewImage && (
                 <div className="relative w-full aspect-[16/9] overflow-hidden mb-3">
-                  <Image
-                    src={previewImage}
+                  <ProjectCardMedia
+                    displaySrc={previewImage}
+                    hoverGifSrc={
+                      itemType === "project" || itemType === "log"
+                        ? processedHoverGif
+                        : null
+                    }
                     alt={`${item.title} preview`}
-                    fill
                     sizes="(min-width: 1024px) 50vw, 100vw"
-                    className="object-cover"
+                    imgClassName="object-cover"
                   />
                 </div>
               )}

@@ -1,10 +1,6 @@
-import { join } from "path";
 import matter from "gray-matter";
-import {
-  getContent,
-  getMarkdownFilePaths,
-  isProduction,
-} from "./content-loader";
+import { buildProjectCardImageFields } from "@/lib/project-card-images";
+import { getContent, getMarkdownFilePaths } from "./content-loader";
 
 export interface Post {
   slug: string;
@@ -17,6 +13,8 @@ export interface Post {
   filePath: string;
   metadata: {
     contentHtml: string;
+    cardImageDisplayUrl?: string | null;
+    cardImageHoverGifUrl?: string | null;
     [key: string]: any;
   };
 }
@@ -37,7 +35,12 @@ export async function getAllProjects(): Promise<Post[]> {
             return null;
           }
 
-          const { data: metadata } = matter(content);
+          const { data: metadata, content: markdownContent } = matter(content);
+          const cardImages = buildProjectCardImageFields({
+            heroImage: metadata.heroImage,
+            heroImagePoster: metadata.heroImagePoster,
+            markdownBody: markdownContent,
+          });
 
           // Generate slug from filename (without extension)
           const slug =
@@ -57,7 +60,9 @@ export async function getAllProjects(): Promise<Post[]> {
             published: metadata.published !== false, // Default to published unless explicitly false
             metadata: {
               ...metadata,
-              contentHtml: metadata.contentHtml || "",
+              contentHtml: markdownContent,
+              cardImageDisplayUrl: cardImages.cardImageDisplayUrl,
+              cardImageHoverGifUrl: cardImages.cardImageHoverGifUrl,
             },
             filePath: relativePath,
           } as Post;

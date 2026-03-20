@@ -1,8 +1,11 @@
 import Link from "next/link";
+import {
+  bioLinkClassTight,
+  bioProseGridClass,
+} from "@/components/landing/bio-shared";
 
 const Bio2026 = () => {
-  const linkClass =
-    "underline text-gray-800 decoration-gray-300 hover:text-forest-green hover:decoration-forest-green transition-colors";
+  const linkClass = bioLinkClassTight;
 
   const paragraphs = [
     <div key="intro">
@@ -15,11 +18,7 @@ const Bio2026 = () => {
       how we see ourselves as part of nature rather than adjacent to it.
     </div>,
     <div key="role">
-      These days, I do this as a Design Engineer at{" "}
-      <Link href="https://www.archetypeai.io/" className={linkClass}>
-        Archetype
-      </Link>
-      . While continuing to grow my understanding of biology and the build
+      These days, I do this to grow my understanding of biology and the build
       environments through my personal practice at{" "}
       <Link href="https://interstitial.systems" className={linkClass}>
         Interstitial
@@ -126,11 +125,7 @@ const Bio2026 = () => {
     </div>,
   ];
 
-  return (
-    <div className="grid grid-cols-1 gap-6 text-left max-w-[65ch] leading-[1.7] text-[17px] text-gray-800 antialiased [hyphens:auto] [text-wrap:pretty]">
-      {paragraphs}
-    </div>
-  );
+  return <div className={bioProseGridClass}>{paragraphs}</div>;
 };
 
 export default Bio2026;

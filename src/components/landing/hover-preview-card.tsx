@@ -86,7 +86,7 @@ export default function HoverPreviewCard({
       className={
         isFull
           ? "flex flex-col min-h-0 flex-1 animate-fade-in"
-          : "rounded-2xl overflow-hidden bg-primary-white border border-[#eeeeee] shadow-sm flex flex-col min-h-0 animate-fade-in"
+          : "rounded-2xl overflow-hidden bg-primary-white dark:bg-zinc-900 border border-[#eeeeee] dark:border-zinc-700 shadow-sm flex flex-col min-h-0 animate-fade-in"
       }
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -94,23 +94,23 @@ export default function HoverPreviewCard({
       <div
         className={
           isFull
-            ? "relative w-full min-h-[55vh] bg-primary-gray shrink-0"
-            : "relative w-full aspect-[4/3] bg-primary-gray shrink-0"
+            ? "relative w-full min-h-[55vh] bg-primary-gray dark:bg-zinc-800 shrink-0"
+            : "relative w-full aspect-[4/3] bg-primary-gray dark:bg-zinc-800 shrink-0"
         }
       >
         <Image
           src={imageSrc}
           alt=""
           fill
-          className="object-cover"
+          className="object-cover dark:brightness-[0.88] dark:contrast-[1.05]"
           sizes={
             isFull
-              ? "(max-width: 1024px) 100vw, 50vw"
-              : "(max-width: 1024px) 100vw, 33vw"
+              ? "(max-width: 768px) 100vw, 50vw"
+              : "(max-width: 768px) 100vw, 33vw"
           }
           unoptimized
         />
-        <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium bg-primary-white/90 text-primary-black">
+        <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium bg-primary-white/90 dark:bg-zinc-900/90 text-primary-black dark:text-textDark">
           {TYPE_LABELS[type]}
         </span>
       </div>
@@ -124,8 +124,8 @@ export default function HoverPreviewCard({
         <h3
           className={
             isFull
-              ? "font-medium text-primary-black text-base line-clamp-1"
-              : "font-medium text-primary-black text-sm line-clamp-1"
+              ? "font-medium text-primary-black dark:text-textDark text-base line-clamp-1"
+              : "font-medium text-primary-black dark:text-textDark text-sm line-clamp-1"
           }
         >
           {item.title}
@@ -134,21 +134,21 @@ export default function HoverPreviewCard({
           <p
             className={
               isFull
-                ? "text-gray-600 text-sm line-clamp-2 leading-relaxed"
-                : "text-gray-600 text-xs line-clamp-3 leading-relaxed"
+                ? "text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed"
+                : "text-gray-600 dark:text-gray-400 text-xs line-clamp-3 leading-relaxed"
             }
           >
             {excerpt}
           </p>
         ) : null}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
           {publishedLabel ? (
             <time dateTime={item.publishedAt}>{publishedLabel}</time>
           ) : null}
           {tags.length > 0 ? (
             <span className="flex flex-wrap gap-1">
               {tags.map((tag) => (
-                <span key={tag} className="rounded bg-gray-100 px-1.5 py-0.5">
+                <span key={tag} className="rounded bg-gray-100 dark:bg-zinc-800 px-1.5 py-0.5">
                   {tag}
                 </span>
               ))}

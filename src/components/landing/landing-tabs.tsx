@@ -6,7 +6,7 @@ import { track } from "@/lib/umami";
 import {
   BookOpen,
   ChevronRight,
-  FolderKanban,
+  Box,
   LayoutGrid,
   ScrollText,
   type LucideIcon,
@@ -62,7 +62,7 @@ const TABS = [
 
 const TYPE_PILL: Record<TabItemType, { Icon: LucideIcon; color: string }> = {
   journal: { Icon: BookOpen, color: "#fadc4b" },
-  project: { Icon: FolderKanban, color: "#0068e2" },
+  project: { Icon: Box, color: "#0068e2" },
   log: { Icon: ScrollText, color: "#ff6622" },
 };
 

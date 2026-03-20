@@ -1,5 +1,5 @@
 const Bio2017 = () => (
-  <div>
+  <div className="text-gray-800 dark:text-textDark">
     I’m a creative technologist focused on creating energy systems, knowledge
     preservation, and information accessibility.
     <div>Think Wrong Institute Bursting open the status quo Read More</div>

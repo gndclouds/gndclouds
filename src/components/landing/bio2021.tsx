@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { bioLinkClass } from "@/components/landing/bio-shared";
 
 const Bio2021 = () => (
-  <div>
+  <div className="text-gray-800 dark:text-textDark">
     <div className="text-2xl font-bold"> Hi, I&apos;m Will.</div>
     <div className="mt-4">
       I currently focused on decarbonizing human system at{" "}
@@ -19,10 +20,7 @@ const Bio2021 = () => (
         Dark Matter Labs
       </Link>{" "}
       co-running a community of{" "}
-      <Link
-        href="https://tinyfactories.space"
-        className="underline underline-offset-4"
-      >
+      <Link href="https://tinyfactories.space" className={bioLinkClass}>
         Tiny Factories
       </Link>
       .

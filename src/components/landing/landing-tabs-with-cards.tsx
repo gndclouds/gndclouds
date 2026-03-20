@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState, useRef, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { track } from "@/lib/umami";
-import { BookOpen, FolderKanban, ScrollText, Search, X, type LucideIcon } from "lucide-react";
+import { BookOpen, Box, ScrollText, Search, type LucideIcon } from "lucide-react";
+import HoverTooltip from "@/components/ui/hover-tooltip";
 import type { Journal } from "@/queries/journals";
 import type { Post as LogPost } from "@/queries/logs";
 import type { Post as ProjectPost } from "@/queries/projects";
@@ -20,48 +21,67 @@ interface LandingTabsWithCardsProps {
   recentProjects?: ProjectPost[];
 }
 
-const FILTER_PILLS = [
-  { id: "journals" as const, label: "Journals", dotColor: "#fadc4b", Icon: BookOpen },
-  { id: "logs" as const, label: "Logs", dotColor: "#ff6622", Icon: ScrollText },
-  { id: "projects" as const, label: "Projects", dotColor: "#0068e2", Icon: FolderKanban },
-] as const;
+type FilterKey = "journals" | "logs" | "projects";
 
-type TabId = "all" | "journals" | "logs" | "projects";
+const FILTER_TOGGLES = [
+  {
+    id: "journals" as const,
+    label: "Journals",
+    dotColor: "#fadc4b",
+    Icon: BookOpen,
+  },
+  {
+    id: "logs" as const,
+    label: "Logs",
+    dotColor: "#ff6622",
+    Icon: ScrollText,
+  },
+  {
+    id: "projects" as const,
+    label: "Projects",
+    dotColor: "#0068e2",
+    Icon: Box,
+  },
+] as const;
 
 interface CardItem {
   item: JournalWithDescription | LogPost | ProjectPost;
   type: TabItemType;
 }
 
-function getItemsForTab(
-  tab: TabId,
+const defaultEnabled: Record<FilterKey, boolean> = {
+  journals: true,
+  logs: true,
+  projects: true,
+};
+
+function getItemsForFilters(
+  enabled: Record<FilterKey, boolean>,
   journals: JournalWithDescription[],
   projects: ProjectPost[],
   logs: LogPost[]
 ): CardItem[] {
-  if (tab === "all") {
-    const journalItems: CardItem[] = journals.map((j) => ({ item: j, type: "journal" }));
-    const logItems: CardItem[] = logs.map((l) => ({ item: l, type: "log" }));
-    const projectItems: CardItem[] = projects.map((p) => ({ item: p, type: "project" }));
-    const combined = [...journalItems, ...logItems, ...projectItems].sort(
-      (a, b) =>
-        new Date(b.item.publishedAt).getTime() -
-        new Date(a.item.publishedAt).getTime()
-    );
-    return combined;
+  const out: CardItem[] = [];
+  if (enabled.journals) {
+    journals.forEach((j) => out.push({ item: j, type: "journal" }));
   }
-  if (tab === "journals") {
-    return journals.map((j) => ({ item: j, type: "journal" as const }));
+  if (enabled.logs) {
+    logs.forEach((l) => out.push({ item: l, type: "log" }));
   }
-  if (tab === "logs") {
-    return logs.map((l) => ({ item: l, type: "log" as const }));
+  if (enabled.projects) {
+    projects.forEach((p) => out.push({ item: p, type: "project" }));
   }
-  return projects.map((p) => ({ item: p, type: "project" as const }));
+  return out.sort(
+    (a, b) =>
+      new Date(b.item.publishedAt).getTime() -
+      new Date(a.item.publishedAt).getTime()
+  );
 }
 
 function getSearchableText(item: TabItem): string {
   const desc = (item.metadata as Record<string, unknown> | undefined)?.description;
-  const fromMeta = item.description ?? (typeof desc === "string" ? desc : null);
+  const fromMeta =
+    item.description ?? (typeof desc === "string" ? desc : null);
   const raw = item.metadata?.contentHtml;
   const content =
     typeof raw === "string"
@@ -76,149 +96,80 @@ function filterBySearchQuery(items: CardItem[], query: string): CardItem[] {
   return items.filter(({ item }) => getSearchableText(item).includes(q));
 }
 
-function FilterPill({
-  dotColor,
-  label,
-  isActive,
-  onClick,
-  Icon,
-}: {
-  dotColor: string;
-  label: string;
-  isActive: boolean;
-  onClick: () => void;
-  Icon: LucideIcon;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs transition-colors duration-200 border-0 shadow-none outline-none focus:ring-0 ${
-        !isActive ? "bg-gray-100 text-gray-500 dark:bg-gray-700/60 dark:text-gray-400" : ""
-      }`}
-      style={isActive ? { backgroundColor: `${dotColor}28`, color: dotColor } : undefined}
-      aria-pressed={isActive}
-    >
-      <Icon size={12} aria-hidden />
-      <span className={isActive ? "font-medium" : "font-normal"}>{label}</span>
-    </button>
-  );
+/** Split into N columns in round-robin order so row-wise reading matches array order (newest → oldest left-to-right, then next row). */
+function splitIntoColumns<T>(items: T[], columnCount: number): T[][] {
+  const cols: T[][] = Array.from({ length: columnCount }, () => []);
+  items.forEach((item, i) => {
+    cols[i % columnCount]!.push(item);
+  });
+  return cols;
 }
 
-function RemovableFilterChip({
-  dotColor,
+/** Matches Tailwind sm/md breakpoints; gated until mount to avoid SSR/client hydration mismatch. */
+function useFeedColumnCount(): 1 | 2 | 3 {
+  const [count, setCount] = useState<1 | 2 | 3>(1);
+
+  useEffect(() => {
+    const mqMd = window.matchMedia("(min-width: 768px)");
+    const mqSm = window.matchMedia("(min-width: 640px)");
+    const read = (): 1 | 2 | 3 =>
+      mqMd.matches ? 3 : mqSm.matches ? 2 : 1;
+    setCount(read());
+    const onChange = () => setCount(read());
+    mqMd.addEventListener("change", onChange);
+    mqSm.addEventListener("change", onChange);
+    return () => {
+      mqMd.removeEventListener("change", onChange);
+      mqSm.removeEventListener("change", onChange);
+    };
+  }, []);
+
+  return count;
+}
+
+function FilterToggleButton({
+  id,
   label,
-  onRemove,
+  dotColor,
   Icon,
+  pressed,
+  onToggle,
 }: {
-  dotColor: string;
+  id: FilterKey;
   label: string;
-  onRemove: () => void;
+  dotColor: string;
   Icon: LucideIcon;
+  pressed: boolean;
+  onToggle: () => void;
 }) {
+  const tipId = `landing-filter-toggle-${id}`;
   return (
-    <span
-      className="inline-flex items-center gap-1 rounded-full pl-2 pr-1 py-1 text-xs font-medium border-0"
-      style={{ backgroundColor: `${dotColor}28`, color: dotColor }}
-    >
-      <Icon size={12} aria-hidden />
-      <span>{label}</span>
+    <HoverTooltip label={label} id={tipId}>
       <button
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemove();
-        }}
-        className="rounded-full p-0.5 hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-0"
-        style={{ color: dotColor }}
-        aria-label={`Remove ${label} filter`}
+        aria-pressed={pressed}
+        aria-label={`${label}: ${pressed ? "on" : "off"}. Click to toggle.`}
+        aria-describedby={tipId}
+        onClick={onToggle}
+        className={`inline-flex size-9 shrink-0 items-center justify-center rounded-full border-0 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-600 ${
+          pressed
+            ? "bg-black/[0.04] dark:bg-white/[0.08]"
+            : "bg-transparent hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+        }`}
       >
-        <X size={12} aria-hidden />
+        <Icon
+          size={18}
+          aria-hidden
+          className={
+            pressed
+              ? "shrink-0"
+              : "shrink-0 text-gray-400 dark:text-gray-500"
+          }
+          style={pressed ? { color: dotColor } : undefined}
+        />
       </button>
-    </span>
+    </HoverTooltip>
   );
-}
-
-/** Pills/chips as non-editable spans for use inside contenteditable (method 2) */
-function FilterPillSpan({
-  pillId,
-  dotColor,
-  label,
-  Icon,
-}: {
-  pillId: TabId;
-  dotColor: string;
-  label: string;
-  Icon: LucideIcon;
-}) {
-  return (
-    <span
-      contentEditable={false}
-      data-pill={pillId}
-      role="button"
-      tabIndex={-1}
-      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-normal bg-gray-100 text-gray-500 dark:bg-gray-700/60 dark:text-gray-400 cursor-pointer select-none border-0"
-      aria-label={`Filter by ${label}`}
-    >
-      <Icon size={12} aria-hidden />
-      <span>{label}</span>
-    </span>
-  );
-}
-
-function RemovableChipSpan({
-  dotColor,
-  label,
-  Icon,
-  onRemove,
-}: {
-  dotColor: string;
-  label: string;
-  Icon: LucideIcon;
-  onRemove: () => void;
-}) {
-  return (
-    <span
-      contentEditable={false}
-      data-chip
-      className="inline-flex items-center gap-1 rounded-full pl-2 pr-1 py-1 text-xs font-medium border-0 select-none"
-      style={{ backgroundColor: `${dotColor}28`, color: dotColor }}
-    >
-      <Icon size={12} aria-hidden />
-      <span>{label}</span>
-      <button
-        type="button"
-        data-remove-chip
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onRemove();
-        }}
-        className="rounded-full p-0.5 hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-offset-0"
-        style={{ color: dotColor }}
-        aria-label={`Remove ${label} filter`}
-      >
-        <X size={12} aria-hidden />
-      </button>
-    </span>
-  );
-}
-
-function getTextFromContentEditable(editable: HTMLDivElement): string {
-  let text = "";
-  const walk = (node: Node) => {
-    if (node.nodeType === Node.TEXT_NODE) {
-      text += node.textContent ?? "";
-      return;
-    }
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      const el = node as Element;
-      if (el.getAttribute("contenteditable") === "false" || el.hasAttribute("data-pill") || el.hasAttribute("data-chip")) return;
-      for (let i = 0; i < node.childNodes.length; i++) walk(node.childNodes[i]!);
-    }
-  };
-  for (let i = 0; i < editable.childNodes.length; i++) walk(editable.childNodes[i]!);
-  return text;
 }
 
 export default function LandingTabsWithCards({
@@ -226,16 +177,14 @@ export default function LandingTabsWithCards({
   recentLogs = [],
   recentProjects = [],
 }: LandingTabsWithCardsProps) {
-  const [activeTab, setActiveTab] = useState<TabId>("all");
+  const [enabled, setEnabled] = useState<Record<FilterKey, boolean>>(defaultEnabled);
   const [searchQuery, setSearchQuery] = useState("");
-  const editableRef = useRef<HTMLDivElement>(null);
-  const textSpanRef = useRef<HTMLSpanElement>(null);
-  const isProgrammaticUpdate = useRef(false);
+  const columnCount = useFeedColumnCount();
 
   const itemsByType = useMemo(
     () =>
-      getItemsForTab(activeTab, recentJournals, recentProjects, recentLogs),
-    [activeTab, recentJournals, recentProjects, recentLogs]
+      getItemsForFilters(enabled, recentJournals, recentProjects, recentLogs),
+    [enabled, recentJournals, recentProjects, recentLogs]
   );
 
   const items = useMemo(
@@ -243,184 +192,106 @@ export default function LandingTabsWithCards({
     [itemsByType, searchQuery]
   );
 
-  const handlePillClick = useCallback((pillId: TabId) => {
-    const nextTab = activeTab === pillId ? "all" : pillId;
-    track("landing-tab", { tab: nextTab });
-    isProgrammaticUpdate.current = true;
-    setActiveTab(nextTab);
-    queueMicrotask(() => {
-      const span = textSpanRef.current;
-      if (span) span.textContent = searchQuery;
+  const itemColumns = useMemo(
+    () => splitIntoColumns(items, columnCount),
+    [items, columnCount]
+  );
+
+  const toggleFilter = useCallback((key: FilterKey) => {
+    setEnabled((prev) => {
+      const next = { ...prev, [key]: !prev[key] };
+      track("landing-filter-toggle", {
+        journals: next.journals,
+        logs: next.logs,
+        projects: next.projects,
+      });
+      return next;
     });
-  }, [activeTab, searchQuery]);
-
-  const clearTypeFilter = useCallback(() => {
-    track("landing-tab", { tab: "all" });
-    isProgrammaticUpdate.current = true;
-    setActiveTab("all");
-    queueMicrotask(() => {
-      const span = textSpanRef.current;
-      if (span) span.textContent = searchQuery;
-    });
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (!isProgrammaticUpdate.current) return;
-    isProgrammaticUpdate.current = false;
-    const span = textSpanRef.current;
-    if (span) span.textContent = searchQuery;
-  }, [activeTab, searchQuery]);
-
-  const syncTextFromEditable = useCallback(() => {
-    const editable = editableRef.current;
-    if (!editable) return "";
-    return getTextFromContentEditable(editable);
   }, []);
 
-  const handleEditableInput = useCallback(() => {
-    if (isProgrammaticUpdate.current) return;
-    const text = syncTextFromEditable();
-    setSearchQuery(text);
-    const hashtagMatch = text.match(/#(journals|logs|projects)(?:\s|$)/i);
-    if (hashtagMatch) {
-      const type = hashtagMatch[1].toLowerCase() as "journals" | "logs" | "projects";
-      const start = text.indexOf(hashtagMatch[0]);
-      const before = text.slice(0, start);
-      const after = text.slice(start + hashtagMatch[0].length);
-      const remaining = (before + after).trim().replace(/\s+/g, " ");
-      isProgrammaticUpdate.current = true;
-      setSearchQuery(remaining);
-      setActiveTab(type);
-      track("landing-tab", { tab: type });
-      queueMicrotask(() => {
-        const span = textSpanRef.current;
-        if (span) span.textContent = remaining;
-      });
-    }
-  }, [syncTextFromEditable]);
+  const noneEnabled = !enabled.journals && !enabled.logs && !enabled.projects;
 
-  const handleEditableKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === "Backspace") {
-        const text = editableRef.current ? getTextFromContentEditable(editableRef.current) : "";
-        if (text === "" && activeTab !== "all") {
-          e.preventDefault();
-          clearTypeFilter();
-        }
-      }
-    },
-    [activeTab, clearTypeFilter]
-  );
-
-  const handleEditableClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const target = e.target as Element;
-      const removeBtn = target.closest("[data-remove-chip]");
-      if (removeBtn) {
-        e.preventDefault();
-        clearTypeFilter();
-        return;
-      }
-      const pill = target.closest("[data-pill]");
-      if (pill) {
-        const id = pill.getAttribute("data-pill") as TabId | null;
-        if (id && id !== "all") {
-          e.preventDefault();
-          handlePillClick(id);
-        }
-      }
-    },
-    [clearTypeFilter, handlePillClick]
-  );
-
-  const activePillConfig =
-    activeTab !== "all"
-      ? FILTER_PILLS.find((p) => p.id === activeTab)
-      : null;
-
-  const emptyMessage =
-    itemsByType.length === 0
-      ? activeTab === "all"
-        ? "No items yet."
-        : activeTab === "journals"
-          ? "No journals yet."
-          : activeTab === "logs"
-            ? "No logs yet."
-            : "No projects yet."
+  const emptyMessage = noneEnabled
+    ? "Turn on at least one type (icons on the right) to see posts."
+    : itemsByType.length === 0
+      ? "No items yet."
       : "No results match your search.";
 
   return (
-    <>
-      {/* Method 2: contenteditable so the pill is literally inside the same element you type in */}
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+      {/* One scroll surface: sticky search row, posts flow below */}
       <div
-        role="search"
-        aria-label="Search and filter"
-        className="shrink-0 flex items-center gap-2 min-w-0 rounded-2xl border border-gray-200 bg-primary-white dark:bg-backgroundDark dark:border-gray-700 text-sm text-primary-black dark:text-textDark focus-within:ring-1 focus-within:ring-gray-200 dark:focus-within:ring-gray-600 cursor-text px-3 py-2.5"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain max-md:grow-0 max-md:flex-none max-md:overflow-visible max-md:min-h-0"
       >
-        <Search className="size-4 text-gray-400 shrink-0 pointer-events-none" aria-hidden />
         <div
-          ref={editableRef}
-          contentEditable
-          suppressContentEditableWarning
-          className="flex-1 min-w-[8rem] outline-none py-0.5 inline-flex flex-wrap items-center gap-1 gap-y-1"
-          onInput={handleEditableInput}
-          onKeyDown={handleEditableKeyDown}
-          onClick={handleEditableClick}
-          aria-label="Search journals, logs, and projects"
+          className="sticky top-0 z-20 -mx-4 box-content border-b-0 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:-mx-6 sm:px-6"
         >
-          {activeTab === "all" ? (
-            <>
-              {FILTER_PILLS.map((pill) => (
-                <FilterPillSpan
-                  key={pill.id}
-                  pillId={pill.id}
-                  dotColor={pill.dotColor}
-                  label={pill.label}
-                  Icon={pill.Icon}
+          <div
+            role="search"
+            aria-label="Search and filter feed"
+            className="flex min-w-0 items-stretch gap-2 rounded-2xl border-0 bg-primary-white/80 px-2 py-2 text-sm text-primary-black backdrop-blur-md dark:bg-zinc-900/55 sm:gap-3 sm:px-3"
+          >
+            <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-gray-100/85 px-3 py-2 dark:bg-zinc-800/80">
+              <Search
+                className="size-4 shrink-0 text-gray-400 dark:text-white/40"
+                aria-hidden
+              />
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search…"
+                className="min-w-0 flex-1 border-0 bg-transparent text-sm text-primary-black placeholder:text-gray-400 outline-none ring-0 dark:text-textDark dark:placeholder:text-gray-500"
+                aria-label="Search journals, logs, and projects"
+              />
+            </div>
+
+            <div
+              className="flex shrink-0 items-center gap-0.5 border-l border-gray-200/70 pl-2 dark:border-gray-600/60 sm:gap-1 sm:pl-3"
+              role="group"
+              aria-label="Show or hide content types"
+            >
+              {FILTER_TOGGLES.map((t) => (
+                <FilterToggleButton
+                  key={t.id}
+                  id={t.id}
+                  label={t.label}
+                  dotColor={t.dotColor}
+                  Icon={t.Icon}
+                  pressed={enabled[t.id]}
+                  onToggle={() => toggleFilter(t.id)}
                 />
               ))}
-            </>
-          ) : activePillConfig ? (
-            <RemovableChipSpan
-              dotColor={activePillConfig.dotColor}
-              label={activePillConfig.label}
-              Icon={activePillConfig.Icon}
-              onRemove={clearTypeFilter}
-            />
-          ) : null}
-          <span
-            ref={textSpanRef}
-            data-search-text
-            data-placeholder="Search..."
-            className="empty:before:content-[attr(data-placeholder)] empty:before:text-gray-400"
-          />
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Column layout: consistent vertical gap between cards, height variety preserved */}
-      <div className="flex-1 min-h-0 overflow-y-auto max-lg:overflow-visible max-lg:min-h-0">
         <section
-          aria-labelledby={`tab-${activeTab}`}
-          id={`tabpanel-${activeTab}`}
-          role="tabpanel"
-          className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1rem]"
+          aria-label="Filtered posts"
+          className="relative z-0 min-w-0"
         >
           {items.length === 0 ? (
-            <p className="text-gray-500 text-sm py-8 [column-span:all]">
+            <p className="text-gray-500 dark:text-gray-400 text-sm py-8">
               {emptyMessage}
             </p>
           ) : (
-            items.map(({ item, type }) => (
-              <div
-                key={`${type}-${item.slug}`}
-                className="mb-4 break-inside-avoid"
-              >
-                <LandingItemCard item={item} type={type} />
-              </div>
-            ))
+            <div className="flex flex-row items-start gap-4">
+              {itemColumns.map((col, colIndex) => (
+                <div
+                  key={colIndex}
+                  className="flex min-w-0 flex-1 flex-col gap-4"
+                >
+                  {col.map(({ item, type }) => (
+                    <div key={`${type}-${item.slug}`}>
+                      <LandingItemCard item={item} type={type} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           )}
         </section>
       </div>
-    </>
+    </div>
   );
 }
