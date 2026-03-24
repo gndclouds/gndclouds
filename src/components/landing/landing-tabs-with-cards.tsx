@@ -10,6 +10,7 @@ import type { Post as ProjectPost } from "@/queries/projects";
 import type { TabItemType } from "@/components/landing/hover-preview-card";
 import type { TabItem } from "@/components/landing/hover-preview-card";
 import LandingItemCard from "@/components/landing/landing-item-card";
+import { itemMatchesLibraryFilters } from "@/components/landing/design-skill-filters";
 
 interface JournalWithDescription extends Journal {
   description?: string;
@@ -19,6 +20,8 @@ interface LandingTabsWithCardsProps {
   recentJournals?: JournalWithDescription[];
   recentLogs?: LogPost[];
   recentProjects?: ProjectPost[];
+  /** When non-empty, only posts whose tags match these design/skill groups are shown. */
+  designSkillFilterIds?: string[];
 }
 
 type FilterKey = "journals" | "logs" | "projects";
@@ -58,8 +61,8 @@ const defaultEnabled: Record<FilterKey, boolean> = {
 function getItemsForFilters(
   enabled: Record<FilterKey, boolean>,
   journals: JournalWithDescription[],
-  projects: ProjectPost[],
-  logs: LogPost[]
+  logs: LogPost[],
+  projects: ProjectPost[]
 ): CardItem[] {
   const out: CardItem[] = [];
   if (enabled.journals) {
@@ -96,6 +99,16 @@ function filterBySearchQuery(items: CardItem[], query: string): CardItem[] {
   return items.filter(({ item }) => getSearchableText(item).includes(q));
 }
 
+function filterByDesignSkillFilters(
+  items: CardItem[],
+  designSkillFilterIds: string[]
+): CardItem[] {
+  if (designSkillFilterIds.length === 0) return items;
+  return items.filter(({ item }) =>
+    itemMatchesLibraryFilters(item, designSkillFilterIds)
+  );
+}
+
 /** Split into N columns in round-robin order so row-wise reading matches array order (newest → oldest left-to-right, then next row). */
 function splitIntoColumns<T>(items: T[], columnCount: number): T[][] {
   const cols: T[][] = Array.from({ length: columnCount }, () => []);
@@ -105,22 +118,18 @@ function splitIntoColumns<T>(items: T[], columnCount: number): T[][] {
   return cols;
 }
 
-/** Matches Tailwind sm/md breakpoints; gated until mount to avoid SSR/client hydration mismatch. */
-function useFeedColumnCount(): 1 | 2 | 3 {
-  const [count, setCount] = useState<1 | 2 | 3>(1);
+/** Matches Tailwind md: 1 col default, 2 from md up. Gated until mount to avoid SSR/client mismatch. */
+function useFeedColumnCount(): 1 | 2 {
+  const [count, setCount] = useState<1 | 2>(1);
 
   useEffect(() => {
     const mqMd = window.matchMedia("(min-width: 768px)");
-    const mqSm = window.matchMedia("(min-width: 640px)");
-    const read = (): 1 | 2 | 3 =>
-      mqMd.matches ? 3 : mqSm.matches ? 2 : 1;
+    const read = (): 1 | 2 => (mqMd.matches ? 2 : 1);
     setCount(read());
     const onChange = () => setCount(read());
     mqMd.addEventListener("change", onChange);
-    mqSm.addEventListener("change", onChange);
     return () => {
       mqMd.removeEventListener("change", onChange);
-      mqSm.removeEventListener("change", onChange);
     };
   }, []);
 
@@ -176,6 +185,7 @@ export default function LandingTabsWithCards({
   recentJournals = [],
   recentLogs = [],
   recentProjects = [],
+  designSkillFilterIds = [],
 }: LandingTabsWithCardsProps) {
   const [enabled, setEnabled] = useState<Record<FilterKey, boolean>>(defaultEnabled);
   const [searchQuery, setSearchQuery] = useState("");
@@ -183,13 +193,23 @@ export default function LandingTabsWithCards({
 
   const itemsByType = useMemo(
     () =>
-      getItemsForFilters(enabled, recentJournals, recentProjects, recentLogs),
-    [enabled, recentJournals, recentProjects, recentLogs]
+      getItemsForFilters(
+        enabled,
+        recentJournals,
+        recentLogs,
+        recentProjects
+      ),
+    [enabled, recentJournals, recentLogs, recentProjects]
+  );
+
+  const itemsAfterSkill = useMemo(
+    () => filterByDesignSkillFilters(itemsByType, designSkillFilterIds),
+    [itemsByType, designSkillFilterIds]
   );
 
   const items = useMemo(
-    () => filterBySearchQuery(itemsByType, searchQuery),
-    [itemsByType, searchQuery]
+    () => filterBySearchQuery(itemsAfterSkill, searchQuery),
+    [itemsAfterSkill, searchQuery]
   );
 
   const itemColumns = useMemo(
@@ -209,13 +229,16 @@ export default function LandingTabsWithCards({
     });
   }, []);
 
-  const noneEnabled = !enabled.journals && !enabled.logs && !enabled.projects;
+  const noneEnabled =
+    !enabled.journals && !enabled.logs && !enabled.projects;
 
   const emptyMessage = noneEnabled
     ? "Turn on at least one type (icons on the right) to see posts."
     : itemsByType.length === 0
       ? "No items yet."
-      : "No results match your search.";
+      : itemsAfterSkill.length === 0
+        ? "No posts match these topic filters."
+        : "No results match your search.";
 
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -224,12 +247,12 @@ export default function LandingTabsWithCards({
         className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain max-md:grow-0 max-md:flex-none max-md:overflow-visible max-md:min-h-0"
       >
         <div
-          className="sticky top-0 z-20 -mx-4 box-content border-b-0 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:-mx-6 sm:px-6"
+          className="sticky top-0 z-20 border-b-0 pb-4 pt-[max(1rem,env(safe-area-inset-top))]"
         >
           <div
             role="search"
             aria-label="Search and filter feed"
-            className="flex min-w-0 items-stretch gap-2 rounded-2xl border-0 bg-primary-white/80 px-2 py-2 text-sm text-primary-black backdrop-blur-md dark:bg-zinc-900/55 sm:gap-3 sm:px-3"
+            className="flex min-w-0 items-stretch gap-0 border-0 bg-primary-white/80 px-2 py-2 text-sm text-primary-black backdrop-blur-md dark:bg-zinc-900/55 sm:px-3"
           >
             <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-gray-100/85 px-3 py-2 dark:bg-zinc-800/80">
               <Search
@@ -275,7 +298,7 @@ export default function LandingTabsWithCards({
               {emptyMessage}
             </p>
           ) : (
-            <div className="flex flex-row items-start gap-4">
+            <div className="flex flex-row items-start gap-4 px-1 sm:px-1.5">
               {itemColumns.map((col, colIndex) => (
                 <div
                   key={colIndex}

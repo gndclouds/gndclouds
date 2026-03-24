@@ -1,5 +1,9 @@
 import matter from "gray-matter";
 import { buildProjectCardImageFields } from "@/lib/project-card-images";
+import {
+  normalizeCompanyStrings,
+  normalizeLibraryFacets,
+} from "@/lib/content-frontmatter-schema";
 import { getContent, getMarkdownFilePaths } from "./content-loader";
 
 export interface Post {
@@ -7,6 +11,8 @@ export interface Post {
   title: string;
   categories: string[];
   tags: string[];
+  facets: string[];
+  companies: string[];
   type: string[];
   publishedAt: string;
   published: boolean;
@@ -21,12 +27,11 @@ export interface Post {
 
 export async function getAllProjects(): Promise<Post[]> {
   try {
-    // Get content from the projects directory
-    const projectPaths = await getMarkdownFilePaths("projects");
-    console.log(`Found ${projectPaths.length} project markdown files`);
+    const artifactPaths = await getMarkdownFilePaths("artifacts");
+    console.log(`Found ${artifactPaths.length} artifact markdown files`);
 
     const files = await Promise.all(
-      projectPaths.map(async (relativePath) => {
+      artifactPaths.map(async (relativePath) => {
         try {
           // Get and parse content
           const content = await getContent(relativePath);
@@ -36,10 +41,15 @@ export async function getAllProjects(): Promise<Post[]> {
           }
 
           const { data: metadata, content: markdownContent } = matter(content);
+          const facets = normalizeLibraryFacets(metadata.facets);
+          const companies = normalizeCompanyStrings(
+            metadata.companies ?? metadata.orgs ?? metadata.org
+          );
           const cardImages = buildProjectCardImageFields({
             heroImage: metadata.heroImage,
             heroImagePoster: metadata.heroImagePoster,
             markdownBody: markdownContent,
+            markdownFilePath: relativePath,
           });
 
           // Generate slug from filename (without extension)
@@ -55,6 +65,8 @@ export async function getAllProjects(): Promise<Post[]> {
             title: metadata.title || "Untitled",
             categories: metadata.categories || [],
             tags: metadata.tags || [],
+            facets,
+            companies,
             type: metadata.type || ["Project"],
             publishedAt: metadata.publishedAt || new Date().toISOString(),
             published: metadata.published !== false, // Default to published unless explicitly false
@@ -67,7 +79,7 @@ export async function getAllProjects(): Promise<Post[]> {
             filePath: relativePath,
           } as Post;
         } catch (error) {
-          console.error(`Error processing project ${relativePath}:`, error);
+          console.error(`Error processing artifact ${relativePath}:`, error);
           return null;
         }
       })
@@ -82,7 +94,7 @@ export async function getAllProjects(): Promise<Post[]> {
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
   } catch (error) {
-    console.error(`Unexpected error in getAllProjects:`, error);
+    console.error(`Unexpected error in getAllProjects (artifacts):`, error);
     return [];
   }
 }

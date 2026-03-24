@@ -161,7 +161,7 @@ function copyFiles(src, dest, isRootDbDir = false) {
             const dirName = path.basename(srcFile);
             const skipContentDirs = ['node_modules', '.git'];
             if (!skipContentDirs.includes(dirName)) {
-              // Preserve journals/, projects/, etc. under db-assets to avoid basename collisions
+              // Preserve journals/, 3-artifacts/, etc. under db-assets to avoid basename collisions
               copyFiles(srcFile, path.join(dest, dirName), false);
             } else {
               console.log(`Skipping content directory: ${srcFile}`);

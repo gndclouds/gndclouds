@@ -1,6 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import {
+  journalHeroImageApiQuery,
+  journalHeroUrlForDisplay,
+} from "@/lib/journal-hero-image";
 import type { Journal } from "@/queries/journals";
 import type { Post as LogPost } from "@/queries/logs";
 import type { Post as ProjectPost } from "@/queries/projects";
@@ -75,7 +79,25 @@ export default function HoverPreviewCard({
 }: HoverPreviewCardProps) {
   const excerpt = getExcerpt(item);
   const imageSummary = excerpt.slice(0, 150) || item.title;
-  const imageSrc = `/api/journals/hero-image?summary=${encodeURIComponent(imageSummary)}`;
+  const staticJournalHero =
+    type === "journal"
+      ? journalHeroUrlForDisplay(
+          (item.metadata as Record<string, unknown> | undefined)?.heroImage
+        )
+      : null;
+  const tagList = [
+    ...(item.tags ?? []),
+    ...("categories" in item && Array.isArray(item.categories)
+      ? item.categories
+      : []),
+  ].filter((t): t is string => typeof t === "string");
+  const imageSrc =
+    staticJournalHero ??
+    `/api/journals/hero-image?${journalHeroImageApiQuery({
+      summary: imageSummary,
+      title: item.title,
+      tags: tagList.length ? tagList : undefined,
+    })}`;
   const tags = item.tags?.slice(0, 4) ?? [];
   const publishedLabel = formatDate(item.publishedAt);
 

@@ -1,5 +1,9 @@
 import matter from "gray-matter";
 import { buildLogCardImageFields } from "@/lib/project-card-images";
+import {
+  normalizeCompanyStrings,
+  normalizeLibraryFacets,
+} from "@/lib/content-frontmatter-schema";
 import { getContent, getMarkdownFilePaths } from "./content-loader";
 
 export interface Post {
@@ -7,6 +11,8 @@ export interface Post {
   title: string;
   categories: string[];
   tags: string[];
+  facets: string[];
+  companies: string[];
   type: string[];
   publishedAt: string;
   published: boolean;
@@ -35,6 +41,10 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
           }
 
           const { data: metadata, content: markdownContent } = matter(content);
+          const facets = normalizeLibraryFacets(metadata.facets);
+          const companies = normalizeCompanyStrings(
+            metadata.companies ?? metadata.orgs ?? metadata.org
+          );
           const cardImages = buildLogCardImageFields({
             heroImage: metadata.heroImage,
             heroImagePoster: metadata.heroImagePoster,
@@ -53,6 +63,8 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             title: metadata.title || "Untitled",
             categories: metadata.categories || [],
             tags: metadata.tags || [],
+            facets,
+            companies,
             type: metadata.type || ["Log"],
             publishedAt: metadata.publishedAt || new Date().toISOString(),
             published: metadata.published !== false, // Default to published unless explicitly false

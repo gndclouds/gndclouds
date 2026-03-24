@@ -1,6 +1,8 @@
+import { ARTIFACTS_DB_DIRECTORY, resolveArtifactWikiAssetRepoPath } from "@/lib/artifacts-paths";
+
 /**
  * Resolve preview/hero URLs for cards and extract the first image from markdown.
- * - `project` wiki mode: same as `project/[slug]/page.tsx` (assets/ → projects/assets/…).
+ * - `project` wiki mode: same as `project/[slug]/page.tsx` (artifact `assets/` → `3-artifacts/…/assets/…`).
  * - `content` wiki mode: same as `MarkdownContent` resolveImagePath (logs, journals, etc.).
  */
 
@@ -21,11 +23,16 @@ function isGifPath(path: string): boolean {
 }
 
 /** Same rules as `project/[slug]/page.tsx` resolveAssetPath + encoding. */
-export function resolveWikiInnerPathToDbAssetsUrl(cleanPath: string): string {
+export function resolveWikiInnerPathToDbAssetsUrl(
+  cleanPath: string,
+  markdownFilePath?: string
+): string {
   const trimmed = cleanPath.trim();
   let resolvedPath: string;
   if (trimmed.startsWith("assets/")) {
-    resolvedPath = `projects/${trimmed}`;
+    resolvedPath = markdownFilePath
+      ? resolveArtifactWikiAssetRepoPath(trimmed, markdownFilePath)
+      : `${ARTIFACTS_DB_DIRECTORY}/${trimmed}`;
   } else if (trimmed.includes("/")) {
     resolvedPath = `assets/${trimmed}`;
   } else {
@@ -38,7 +45,7 @@ export function resolveWikiInnerPathToDbAssetsUrl(cleanPath: string): string {
   return `/db-assets/${encodedPath}`;
 }
 
-/** Same rules as `MarkdownContent` resolveImagePath (no `projects/` prefix). */
+/** Same rules as `MarkdownContent` resolveImagePath (no artifact prefix). */
 export function resolveWikiInnerPathForContentRepo(cleanPath: string): string {
   const trimmed = cleanPath.trim();
   let resolvedPath: string;
@@ -93,7 +100,8 @@ export function normalizeProjectImageUrlForCard(candidate: string): string | nul
 
 function normalizeAnyImageRef(
   ref: string,
-  wikiMode: WikiImageResolveMode
+  wikiMode: WikiImageResolveMode,
+  projectMarkdownFilePath?: string
 ): string | null {
   const t = ref.trim();
   if (!t) return null;
@@ -106,7 +114,7 @@ function normalizeAnyImageRef(
   if (isImagePath(t)) {
     const dbUrl =
       wikiMode === "project"
-        ? resolveWikiInnerPathToDbAssetsUrl(t)
+        ? resolveWikiInnerPathToDbAssetsUrl(t, projectMarkdownFilePath)
         : resolveWikiInnerPathForContentRepo(t);
     return normalizeProjectImageUrlForCard(dbUrl);
   }
@@ -145,12 +153,13 @@ function collectImageMatches(markdown: string): Match[] {
 
 function matchToUrl(
   match: Match,
-  wikiMode: WikiImageResolveMode
+  wikiMode: WikiImageResolveMode,
+  projectMarkdownFilePath?: string
 ): string | null {
   if (match.kind === "wiki") {
     const dbUrl =
       wikiMode === "project"
-        ? resolveWikiInnerPathToDbAssetsUrl(match.raw)
+        ? resolveWikiInnerPathToDbAssetsUrl(match.raw, projectMarkdownFilePath)
         : resolveWikiInnerPathForContentRepo(match.raw);
     return normalizeProjectImageUrlForCard(dbUrl);
   }
@@ -167,16 +176,17 @@ function matchToUrl(
       .join("/");
     return normalizeProjectImageUrlForCard(`/db-assets/media/${encoded}`);
   }
-  return normalizeAnyImageRef(url, wikiMode);
+  return normalizeAnyImageRef(url, wikiMode, projectMarkdownFilePath);
 }
 
 export function extractFirstImageUrlFromMarkdown(
   markdown: string,
-  wikiMode: WikiImageResolveMode
+  wikiMode: WikiImageResolveMode,
+  projectMarkdownFilePath?: string
 ): string | null {
   const matches = collectImageMatches(markdown);
   for (const match of matches) {
-    const url = matchToUrl(match, wikiMode);
+    const url = matchToUrl(match, wikiMode, projectMarkdownFilePath);
     if (url) return url;
   }
   return null;
@@ -184,12 +194,13 @@ export function extractFirstImageUrlFromMarkdown(
 
 export function extractFirstNonGifImageUrlFromMarkdown(
   markdown: string,
-  wikiMode: WikiImageResolveMode
+  wikiMode: WikiImageResolveMode,
+  projectMarkdownFilePath?: string
 ): string | null {
   const matches = collectImageMatches(markdown);
   for (const match of matches) {
     if (isGifPath(match.raw)) continue;
-    const url = matchToUrl(match, wikiMode);
+    const url = matchToUrl(match, wikiMode, projectMarkdownFilePath);
     if (url && !isGifPath(url)) return url;
   }
   return null;
@@ -224,11 +235,15 @@ function buildCardImageFieldsWithWikiMode(input: {
   heroImagePoster?: unknown;
   markdownBody: string;
   wikiMode: WikiImageResolveMode;
+  markdownFilePath?: string;
 }): ProjectCardComputedImages {
+  const projectMarkdownFilePath =
+    input.wikiMode === "project" ? input.markdownFilePath : undefined;
   const fromFm = normalizeFrontMatterHero(input.heroImage);
   const fromMd = extractFirstImageUrlFromMarkdown(
     input.markdownBody,
-    input.wikiMode
+    input.wikiMode,
+    projectMarkdownFilePath
   );
   const primary = fromFm ?? fromMd ?? null;
 
@@ -243,7 +258,8 @@ function buildCardImageFieldsWithWikiMode(input: {
   const posterFm = normalizeFrontMatterHero(input.heroImagePoster);
   const posterMd = extractFirstNonGifImageUrlFromMarkdown(
     input.markdownBody,
-    input.wikiMode
+    input.wikiMode,
+    projectMarkdownFilePath
   );
   const poster = posterFm ?? posterMd ?? null;
 
@@ -258,6 +274,7 @@ export function buildProjectCardImageFields(input: {
   heroImage: unknown;
   heroImagePoster?: unknown;
   markdownBody: string;
+  markdownFilePath?: string;
 }): ProjectCardComputedImages {
   return buildCardImageFieldsWithWikiMode({ ...input, wikiMode: "project" });
 }

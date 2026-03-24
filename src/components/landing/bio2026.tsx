@@ -24,6 +24,17 @@ const Bio2026 = () => {
         Interstitial
       </Link>
       .
+      {/* <div key="role">
+      These days, I do this as a Design Engineer at{" "}
+      <Link href="https://www.archetypeai.io/" className={linkClass}>
+        Archetype
+      </Link>
+      . While continuing to grow my understanding of biology and the build
+      environments through my personal practice at{" "}
+      <Link href="https://interstitial.systems" className={linkClass}>
+        Interstitial
+      </Link>
+      . */}
     </div>,
     <div key="previously">
       <span className="font-bold">Previously</span>, I&apos;ve worked at the

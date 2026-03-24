@@ -327,12 +327,15 @@ const MarkdownContent = ({
   footnotes,
   showReferences = true,
   filePath,
+  /** Use "p-0" with landing detail pages so the parent card controls padding. */
+  innerPaddingClass = "p-4",
 }: {
   content: string;
   links: string[];
   footnotes: { [key: string]: string };
   showReferences?: boolean;
   filePath?: string;
+  innerPaddingClass?: string;
 }) => {
   // Check if we're in production mode
   // In client components, we can't access server-side env vars
@@ -367,7 +370,7 @@ const MarkdownContent = ({
   };
 
   // Function to resolve image path for the GitHub db repo structure
-  // Images and videos live in assets/ at repo root; markdown is in journals/, logs/, projects/
+  // Images and videos live in assets/ at repo root; markdown is in journals/, logs/, 3-artifacts/, etc.
   const resolveImagePath = (imageName: string): string => {
     // If path already starts with assets/, use as-is (full path from repo root)
     if (imageName.startsWith("assets/")) {
@@ -645,7 +648,7 @@ const MarkdownContent = ({
         hasReferences ? "flex w-full flex-col md:flex-row" : "w-full"
       }
     >
-      <div className="flex-1 min-w-0 p-4">
+      <div className={`flex-1 min-w-0 ${innerPaddingClass}`}>
         <div className={styles.reactMarkDown}>
           <ReactMarkdown
             className="markdown"
@@ -658,7 +661,7 @@ const MarkdownContent = ({
         </div>
       </div>
       {hasReferences && (
-        <div className="w-full md:w-80 shrink-0 p-4 md:ml-auto">
+        <div className="w-full shrink-0 p-4 md:ml-auto md:w-80">
           <h3 className="uppercase text-sm opacity-50">References</h3>
           {extractedLinks.length > 0 && (
             <>

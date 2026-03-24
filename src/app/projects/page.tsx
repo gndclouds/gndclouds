@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getAllProjects } from "@/queries/projects";
 
 import ListViewWithSearch from "@/components/list-view-with-search";
-import CollectionHero from "@/components/collection-hero";
+import LandingListingShell from "@/components/landing/landing-listing-shell";
 
 type Post = {
   description?: string;
@@ -37,20 +37,19 @@ export default async function ProjectsPage() {
     });
 
   return (
-    <main>
-      <CollectionHero
-        name="Projects"
-        projects={combinedData}
-        allProjects={combinedData}
+    <LandingListingShell
+      kind="projects"
+      title="Projects"
+      description="Selected work, experiments, and ongoing builds."
+      entryCount={combinedData.length}
+      rssHref="/api/projects/rss.xml"
+    >
+      <ListViewWithSearch
+        data={combinedData}
+        placeholder="Search projects..."
+        showProjectImages
+        showFilters
       />
-      <section className="flex flex-col gap-4 p-4 ">
-        <ListViewWithSearch
-          data={combinedData}
-          placeholder="Search projects..."
-          showProjectImages
-          showFilters
-        />
-      </section>
-    </main>
+    </LandingListingShell>
   );
 }

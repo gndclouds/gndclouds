@@ -1,3 +1,4 @@
+import { ARTIFACTS_DB_DIRECTORY } from "@/lib/artifacts-paths";
 import { getContent, getMarkdownFilePaths } from "./content-loader";
 import matter from "gray-matter";
 
@@ -6,6 +7,7 @@ export type Post = {
   slug: string;
   title: string;
   categories: string[];
+  tags: string[];
   filePath: string;
   url: string;
 };
@@ -24,15 +26,19 @@ export async function getProjectBySlug(
   slug: string
 ): Promise<PostWithFilePath | null> {
   try {
-    const filePaths = await getMarkdownFilePaths("projects");
-    let projectPath = filePaths.find((path) => path.endsWith(`${slug}.md`));
+    const filePaths = await getMarkdownFilePaths("artifacts");
+    let projectPath =
+      filePaths.find((path) => path.endsWith(`${slug}.md`)) ??
+      `${ARTIFACTS_DB_DIRECTORY}/${slug}.md`;
 
-    // Fallback: try direct path if not in list (handles edge cases like tree truncation)
-    if (!projectPath) {
-      projectPath = `projects/${slug}.md`;
+    let content = await getContent(projectPath);
+    if (!content) {
+      const nested = `${ARTIFACTS_DB_DIRECTORY}/${slug}/${slug}.md`;
+      if (nested !== projectPath) {
+        projectPath = nested;
+        content = await getContent(projectPath);
+      }
     }
-
-    const content = await getContent(projectPath);
     if (!content) {
       console.warn(`Empty content for ${projectPath}, skipping`);
       return null;
@@ -44,6 +50,7 @@ export async function getProjectBySlug(
       slug,
       title: metadata.title || "",
       categories: metadata.categories || [],
+      tags: metadata.tags || [],
       filePath: projectPath,
       url: `/project/${slug}`,
       metadata: {
@@ -59,7 +66,7 @@ export async function getProjectBySlug(
 
 export async function getAllProjects(): Promise<Post[]> {
   try {
-    const filePaths = await getMarkdownFilePaths("projects");
+    const filePaths = await getMarkdownFilePaths("artifacts");
     const projects = await Promise.all(
       filePaths.map(async (filePath) => {
         const content = await getContent(filePath);
@@ -72,6 +79,7 @@ export async function getAllProjects(): Promise<Post[]> {
           slug,
           title: metadata.title || "",
           categories: metadata.categories || [],
+          tags: metadata.tags || [],
           filePath,
           url: `/project/${slug}`,
         };

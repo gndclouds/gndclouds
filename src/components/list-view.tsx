@@ -26,6 +26,43 @@ export default function ListView({
   variant = "default",
   showProjectImages = false,
 }: ListViewProps) {
+  const normalizeTagValue = (tag: string): string =>
+    tag.replace(/\[\[|\]\]/g, "").trim();
+
+  const isProjectCardTag = (tag: string): boolean => {
+    const lower = tag.toLowerCase();
+    return (
+      lower.startsWith("skills/") ||
+      lower.startsWith("skill/") ||
+      lower.startsWith("topic/")
+    );
+  };
+
+  const getProjectCardTagLabel = (tag: string): string => {
+    const slashIndex = tag.indexOf("/");
+    if (slashIndex < 0) return tag;
+    const label = tag.slice(slashIndex + 1).trim();
+    return label || tag;
+  };
+
+  const getProjectCardTags = (item: any, max = 4): string[] => {
+    const all = [...(item.tags || []), ...(item.categories || [])];
+    const seen = new Set<string>();
+    const out: string[] = [];
+    all.forEach((tag: unknown) => {
+      if (typeof tag !== "string") return;
+      const normalized = normalizeTagValue(tag);
+      if (!normalized) return;
+      if (!isProjectCardTag(normalized)) return;
+      const label = getProjectCardTagLabel(normalized);
+      const lower = label.toLowerCase();
+      if (seen.has(lower)) return;
+      seen.add(lower);
+      out.push(label);
+    });
+    return out.slice(0, max);
+  };
+
   const toProcessedAssetUrl = (candidate: string): string => {
     let out = candidate;
     const isProduction = process.env.NODE_ENV === "production";
@@ -596,19 +633,8 @@ export default function ListView({
                 </div>
               )}
               {(() => {
-                const rawTags = [
-                  ...(item.tags || []),
-                  ...(item.categories || []),
-                ];
-                const normalizeTag = (tag: string) =>
-                  tag
-                    .replace(/\[\[|\]\]/g, "")
-                    .trim()
-                    .toLowerCase();
                 const filteredTags =
-                  itemType === "project" && showProjectImages
-                    ? rawTags.filter((tag) => normalizeTag(tag) !== "projects")
-                    : rawTags;
+                  itemType === "project" ? getProjectCardTags(item) : [...(item.tags || []), ...(item.categories || [])];
 
                 if (filteredTags.length === 0) return null;
 

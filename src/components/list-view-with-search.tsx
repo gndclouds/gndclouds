@@ -193,7 +193,7 @@ export default function ListViewWithSearch({
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-10 py-2 border-2 border-backgroundDark dark:border-backgroundLight bg-transparent rounded-none focus:outline-none focus:ring-0 focus:border-blue-500"
+            className="block w-full rounded-none border border-gray-200/90 bg-transparent py-2 pl-10 pr-10 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-0 dark:border-gray-600/50 dark:text-textDark"
             placeholder={placeholder}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -213,7 +213,7 @@ export default function ListViewWithSearch({
             <label className="text-sm text-gray-500 flex items-center gap-2">
               Year
               <select
-                className="border-2 border-backgroundDark dark:border-backgroundLight bg-transparent px-2 py-2 text-sm rounded-none"
+                className="rounded-none border border-gray-200/90 bg-transparent px-2 py-2 text-sm text-gray-900 dark:border-gray-600/50 dark:text-textDark"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
                 aria-label="Filter by year"
@@ -228,11 +228,11 @@ export default function ListViewWithSearch({
             </label>
             <div className="text-sm text-gray-500 flex items-center gap-2">
               <details className="relative">
-                <summary className="cursor-pointer select-none border-2 border-backgroundDark dark:border-backgroundLight bg-transparent px-2 py-2 text-sm rounded-none text-gray-700 dark:text-gray-200 min-w-[120px]">
+                <summary className="min-w-[120px] cursor-pointer select-none rounded-none border border-gray-200/90 bg-transparent px-2 py-2 text-sm text-gray-700 dark:border-gray-600/50 dark:text-gray-200">
                   Tags
                   {selectedTags.length > 0 ? ` (${selectedTags.length})` : ""}
                 </summary>
-                <div className="absolute right-0 z-20 mt-2 w-56 max-h-56 overflow-auto border-2 border-backgroundDark dark:border-backgroundLight bg-white dark:bg-black p-3 shadow-lg">
+                <div className="absolute right-0 z-20 mt-2 max-h-56 w-56 overflow-auto border border-gray-200/90 bg-primary-white p-3 shadow-lg dark:border-gray-600/50 dark:bg-[#242424]">
                   {tagOptions.map((tag) => (
                     <label
                       key={tag.value}
@@ -277,7 +277,7 @@ export default function ListViewWithSearch({
 
       {/* No results message */}
       {hasActiveFilters && filteredData.length === 0 ? (
-        <div className="text-center py-12 border-2 border-backgroundDark dark:border-backgroundLight">
+        <div className="border border-gray-200/90 py-12 text-center dark:border-gray-600/50">
           <p className="text-lg">
             No results found
           </p>

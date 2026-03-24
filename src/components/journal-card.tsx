@@ -1,5 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  journalExcerptForHero,
+  journalHeroImageApiQuery,
+  journalHeroUrlForDisplay,
+} from "@/lib/journal-hero-image";
 import type { Journal } from "@/queries/journals";
 
 interface JournalWithDescription extends Journal {
@@ -16,8 +21,26 @@ export default function JournalCard({ journal }: JournalCardProps) {
     (typeof journal.metadata?.description === "string"
       ? journal.metadata.description
       : "No description available");
-  const imageSummary = description.slice(0, 200);
-  const imageSrc = `/api/journals/hero-image?summary=${encodeURIComponent(imageSummary)}`;
+  const staticHero = journalHeroUrlForDisplay(
+    journal.metadata?.heroImage as string | undefined
+  );
+  const imageSummary =
+    journalExcerptForHero({
+      description:
+        journal.description ?? journal.metadata?.description,
+      contentHtml: journal.metadata?.contentHtml,
+    }) || description.slice(0, 200);
+  const tagList = [
+    ...(journal.tags ?? []),
+    ...(journal.categories ?? []),
+  ].filter((t): t is string => typeof t === "string");
+  const imageSrc =
+    staticHero ??
+    `/api/journals/hero-image?${journalHeroImageApiQuery({
+      summary: imageSummary,
+      title: journal.title,
+      tags: tagList,
+    })}`;
 
   return (
     <Link

@@ -1,13 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, Box, ScrollText, ChevronRight } from "lucide-react";
+import {
+  journalHeroImageApiQuery,
+  journalHeroUrlForDisplay,
+} from "@/lib/journal-hero-image";
 import ProjectCardMedia from "@/components/project-card-media";
 import type { TabItemType } from "@/components/landing/hover-preview-card";
 import type { TabItem } from "@/components/landing/hover-preview-card";
 
-/** Single border radius for all card types so image and text cards match. */
-const CARD_ROUNDED = "rounded-xl";
+/** Frosted pill behind type icon on image cards so it stays readable on busy photos. */
+const IMAGE_CARD_ICON_BACKDROP =
+  "rounded-full bg-primary-white/70 p-0.5 shadow-sm ring-1 ring-black/[0.1] backdrop-blur-lg dark:bg-zinc-950/65 dark:ring-white/[0.14] dark:backdrop-blur-lg";
 
 const TYPE_CONFIG: Record<
   TabItemType,
@@ -36,6 +42,24 @@ function TypeIconBadge({
     >
       <config.Icon size={14} style={{ color: config.color }} aria-hidden />
       <span className="sr-only">{config.label}</span>
+    </span>
+  );
+}
+
+/** Frosted corner pill on image cards: icon by default; expands to “Journal” / “Log” / “Project” when the card is hovered. */
+function ImageCornerTypePill({ type }: { type: TabItemType }) {
+  const config = TYPE_CONFIG[type];
+  return (
+    <span
+      className={`absolute left-2 top-2 z-10 inline-flex max-h-8 items-center overflow-hidden rounded-full ${IMAGE_CARD_ICON_BACKDROP} max-w-8 gap-0 transition-[max-width,gap] duration-200 ease-out group-hover:max-w-[10rem] group-hover:gap-1.5`}
+    >
+      <TypeIconBadge type={type} plain className="size-6" />
+      <span
+        aria-hidden
+        className="select-none pr-1.5 text-xs font-medium tabular-nums text-primary-black/90 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-zinc-100"
+      >
+        {config.label}
+      </span>
     </span>
   );
 }
@@ -126,6 +150,45 @@ function getSharedCardHoverGifUrl(item: TabItem): string | null {
   return typeof raw === "string" && raw.trim() ? raw.trim() : null;
 }
 
+function normalizeTagValue(tag: string): string {
+  return tag.replace(/\[\[|\]\]/g, "").trim();
+}
+
+function isProjectCardTag(tag: string): boolean {
+  const lower = tag.toLowerCase();
+  return (
+    lower.startsWith("skills/") ||
+    lower.startsWith("skill/") ||
+    lower.startsWith("topic/")
+  );
+}
+
+function getProjectCardTagLabel(tag: string): string {
+  const slashIndex = tag.indexOf("/");
+  if (slashIndex < 0) return tag;
+  const label = tag.slice(slashIndex + 1).trim();
+  return label || tag;
+}
+
+function getProjectCardTags(item: TabItem, max = 3): string[] {
+  const all = [...(item.tags ?? []), ...(("categories" in item && Array.isArray(item.categories) ? item.categories : []))];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of all) {
+    if (typeof raw !== "string") continue;
+    const normalized = normalizeTagValue(raw);
+    if (!normalized) continue;
+    if (!isProjectCardTag(normalized)) continue;
+    const label = getProjectCardTagLabel(normalized);
+    const lower = label.toLowerCase();
+    if (seen.has(lower)) continue;
+    seen.add(lower);
+    out.push(label);
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
 interface LandingItemCardProps {
   item: TabItem;
   type: TabItemType;
@@ -144,23 +207,21 @@ function ProjectCardWithImage({
   hoverGifSrc?: string | null;
 }) {
   const description = getExcerpt(item, 160);
+  const tags = getProjectCardTags(item);
   const imgTone = "object-cover dark:brightness-[0.88] dark:contrast-[1.05]";
 
   return (
     <Link
       href={href}
-      className={`group relative block aspect-[4/3] w-full overflow-hidden ${CARD_ROUNDED} bg-primary-white dark:bg-zinc-900`}
+      className="group relative block aspect-[4/3] w-full overflow-hidden bg-primary-white dark:bg-zinc-900"
     >
-      <span className="absolute left-2 top-2 z-10 rounded-full bg-primary-white/92 p-0.5 shadow-sm dark:bg-zinc-900/92">
-        <TypeIconBadge type="project" plain className="size-6" />
-      </span>
+      <ImageCornerTypePill type="project" />
       <div className="absolute inset-0 overflow-hidden">
         <ProjectCardMedia
           displaySrc={imageSrc}
           hoverGifSrc={hoverGifSrc}
           alt=""
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-          className="transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 767px) 100vw, 50vw"
           imgClassName={imgTone}
         />
       </div>
@@ -174,6 +235,18 @@ function ProjectCardWithImage({
             {description}
           </p>
         ) : null}
+        {tags.length > 0 ? (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded bg-white/15 px-1.5 py-0.5 text-[11px] font-medium text-white/95 backdrop-blur-sm"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
     </Link>
   );
@@ -182,11 +255,12 @@ function ProjectCardWithImage({
 /** Project card when no hero image: simple card (title + optional description). */
 function ProjectCardDefault({ item, href }: { item: TabItem; href: string }) {
   const excerpt = getExcerpt(item);
+  const tags = getProjectCardTags(item);
 
   return (
     <Link
       href={href}
-      className={`group flex flex-col ${CARD_ROUNDED} overflow-hidden bg-primary-white dark:bg-zinc-900 p-6 min-h-[120px] transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-zinc-800/80`}
+      className="group flex flex-col overflow-hidden bg-primary-white dark:bg-zinc-900 p-6 min-h-[120px] transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-zinc-800/80"
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <TypeIconBadge type="project" />
@@ -200,24 +274,63 @@ function ProjectCardDefault({ item, href }: { item: TabItem; href: string }) {
           {excerpt}
         </p>
       ) : null}
+      {tags.length > 0 ? (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded border border-gray-200 px-1.5 py-0.5 text-[11px] text-gray-600 dark:border-zinc-700 dark:text-zinc-300"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      ) : null}
     </Link>
   );
 }
 
-/** Journal card: square image placeholder, title + date at bottom; slightly taller. */
+/** Journal card: hero from front matter or live-generated API, title + date below. */
 function JournalCard({ item, href }: { item: TabItem; href: string }) {
   const dateStr = formatDate(item.publishedAt);
+  const staticHero = journalHeroUrlForDisplay(
+    (item.metadata as Record<string, unknown> | undefined)?.heroImage
+  );
+  const excerpt = getExcerpt(item, 200);
+  const imageSummary = excerpt.slice(0, 150) || item.title;
+  const tagList = [
+    ...(item.tags ?? []),
+    ...("categories" in item && Array.isArray(item.categories)
+      ? item.categories
+      : []),
+  ].filter((t): t is string => typeof t === "string");
+  const imageSrc =
+    staticHero ??
+    `/api/journals/hero-image?${journalHeroImageApiQuery({
+      summary: imageSummary,
+      title: item.title,
+      tags: tagList.length ? tagList : undefined,
+    })}`;
+  const hasStaticHero = Boolean(staticHero);
+  const imageMotionClass = hasStaticHero
+    ? ""
+    : "transition-transform duration-300 group-hover:scale-[1.02]";
 
   return (
     <Link
       href={href}
-      className={`group flex flex-col ${CARD_ROUNDED} overflow-hidden bg-primary-white dark:bg-zinc-900 transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-zinc-800/80`}
+      className="group box-border flex flex-col border-2 border-transparent bg-primary-white transition-[background-color,border-color] duration-200 hover:border-gray-400 hover:bg-gray-50/50 dark:bg-zinc-900 dark:hover:border-zinc-500 dark:hover:bg-zinc-800/80"
     >
-      {/* Placeholder for future preview image */}
-      <div
-        className="relative w-full aspect-square shrink-0 bg-gray-200 dark:bg-zinc-800 rounded-t-xl"
-        aria-hidden
-      />
+      <div className="relative w-full aspect-square shrink-0 bg-gray-200 dark:bg-zinc-800 overflow-hidden">
+        <Image
+          src={imageSrc}
+          alt=""
+          fill
+          className={`object-cover dark:brightness-[0.88] dark:contrast-[1.05] ${imageMotionClass}`}
+          sizes="(max-width: 768px) 100vw, 33vw"
+          unoptimized
+        />
+      </div>
       <div className="flex flex-col flex-1 p-4">
         <div className="flex items-start justify-between gap-2 mb-2">
           <TypeIconBadge type="journal" />
@@ -258,18 +371,15 @@ function LogCardWithImage({
   return (
     <Link
       href={href}
-      className={`group relative block aspect-[4/3] w-full overflow-hidden ${CARD_ROUNDED} bg-primary-white dark:bg-zinc-900`}
+      className="group relative block aspect-[4/3] w-full overflow-hidden bg-primary-white dark:bg-zinc-900"
     >
-      <span className="absolute left-2 top-2 z-10 rounded-full bg-primary-white/92 p-0.5 shadow-sm dark:bg-zinc-900/92">
-        <TypeIconBadge type="log" plain className="size-6" />
-      </span>
+      <ImageCornerTypePill type="log" />
       <div className="absolute inset-0 overflow-hidden">
         <ProjectCardMedia
           displaySrc={imageSrc}
           hoverGifSrc={hoverGifSrc}
           alt=""
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-          className="transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 767px) 100vw, 50vw"
           imgClassName={imgTone}
         />
       </div>
@@ -304,7 +414,7 @@ function LogCard({ item, href }: { item: TabItem; href: string }) {
   return (
     <Link
       href={href}
-      className={`group flex flex-col ${CARD_ROUNDED} overflow-hidden bg-primary-white dark:bg-zinc-900 p-6 min-h-[120px] transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-zinc-800/80`}
+      className="group flex flex-col overflow-hidden bg-primary-white dark:bg-zinc-900 p-6 min-h-[120px] transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-zinc-800/80"
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <TypeIconBadge type="log" />

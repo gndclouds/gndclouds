@@ -1,16 +1,19 @@
-import { join } from "path";
 import matter from "gray-matter";
 import {
-  getContent,
-  getMarkdownFilePaths,
-  isProduction,
-} from "./content-loader";
+  normalizeCompanyStrings,
+  normalizeLibraryFacets,
+} from "@/lib/content-frontmatter-schema";
+import { getContent, getMarkdownFilePaths } from "./content-loader";
 
 export interface Journal {
   slug: string;
   title: string;
   categories: string[];
   tags: string[];
+  /** Canonical landing facet ids; see `src/lib/content-frontmatter-schema.ts`. */
+  facets: string[];
+  /** Organization names from front matter (`companies` / `org`). */
+  companies: string[];
   type: string[];
   publishedAt: string;
   published: boolean;
@@ -38,6 +41,11 @@ export async function getAllMarkdownFiles(): Promise<Journal[]> {
 
           const { data: metadata, content: markdownContent } = matter(content);
 
+          const facets = normalizeLibraryFacets(metadata.facets);
+          const companies = normalizeCompanyStrings(
+            metadata.companies ?? metadata.orgs ?? metadata.org
+          );
+
           // Generate slug from filename (without extension)
           const slug =
             relativePath
@@ -50,6 +58,8 @@ export async function getAllMarkdownFiles(): Promise<Journal[]> {
             title: metadata.title || "Untitled",
             categories: metadata.categories || [],
             tags: metadata.tags || [],
+            facets,
+            companies,
             type: metadata.type || ["Journal"],
             publishedAt:
               metadata.created ||

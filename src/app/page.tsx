@@ -11,10 +11,6 @@ export default async function Home() {
   ]);
 
   return (
-    <HomeLanding
-      journals={journals}
-      logs={logs}
-      projects={projects}
-    />
+    <HomeLanding journals={journals} logs={logs} projects={projects} />
   );
 }
