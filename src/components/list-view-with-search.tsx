@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import ListView from "./list-view";
+import LandingCardMasonryGrid from "@/components/landing/landing-card-masonry-grid";
+import type { TabItem, TabItemType } from "@/components/landing/hover-preview-card";
 import { FiSearch, FiX } from "react-icons/fi";
 
 interface ListViewWithSearchProps {
@@ -9,6 +11,8 @@ interface ListViewWithSearchProps {
   placeholder?: string;
   showProjectImages?: boolean;
   showFilters?: boolean;
+  /** Same `LandingItemCard` grid as the home feed (e.g. `project` on /projects). */
+  landingCardType?: TabItemType;
 }
 
 export default function ListViewWithSearch({
@@ -17,6 +21,7 @@ export default function ListViewWithSearch({
   placeholder = "Search...",
   showProjectImages = false,
   showFilters = false,
+  landingCardType,
 }: ListViewWithSearchProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedYear, setSelectedYear] = useState("all");
@@ -183,6 +188,14 @@ export default function ListViewWithSearch({
   const hasActiveFilters =
     searchTerm !== "" || selectedYear !== "all" || selectedTags.length > 0;
 
+  const landingMasonryItems = useMemo(() => {
+    if (!landingCardType) return null;
+    return filteredData.map((item) => ({
+      item: item as TabItem,
+      type: landingCardType,
+    }));
+  }, [filteredData, landingCardType]);
+
   return (
     <div className="space-y-6">
       {/* Search and filters */}
@@ -285,6 +298,8 @@ export default function ListViewWithSearch({
             Try adjusting your search terms
           </p>
         </div>
+      ) : landingMasonryItems ? (
+        <LandingCardMasonryGrid items={landingMasonryItems} />
       ) : (
         <ListView
           data={filteredData}

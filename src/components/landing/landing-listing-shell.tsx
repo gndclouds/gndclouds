@@ -57,7 +57,7 @@ export default function LandingListingShell({
       <div className="flex flex-1 flex-col md:flex-row min-h-0 w-full max-md:flex-none">
         {/* Left: intro — matches HomeLanding */}
         <div className="flex w-full max-w-full shrink-0 flex-col bg-primary-gray px-4 py-4 sm:p-6 md:w-1/3 md:min-h-0 md:min-w-0 md:px-4 md:py-4 md:pt-4 md:pb-4 md:pl-2 md:pr-2 dark:bg-backgroundDark">
-          <div className="flex min-h-0 flex-col overflow-y-auto bg-primary-white px-6 py-6 text-gray-800 shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:text-textDark dark:ring-gray-600/50">
+          <div className="flex min-h-0 flex-col overflow-y-auto rounded-2xl bg-primary-white px-6 py-6 text-gray-800 shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:text-textDark dark:ring-gray-600/50">
             <Link
               href="/"
               className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-primary-black dark:text-gray-400 dark:hover:text-textDark"
@@ -132,7 +132,7 @@ export default function LandingListingShell({
 
         {/* Right: list — matches HomeLanding right column */}
         <div className="flex w-full max-w-full min-h-0 flex-1 flex-col px-4 pb-4 pt-4 sm:px-6 md:w-2/3 md:min-h-0 md:px-6 md:py-4 md:pb-4 md:pl-4 md:pr-4">
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-primary-white shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:ring-gray-600/50">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-primary-white shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:ring-gray-600/50">
             <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
               {children}
             </div>

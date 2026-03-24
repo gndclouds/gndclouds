@@ -47,8 +47,8 @@ export default async function ProjectsPage() {
       <ListViewWithSearch
         data={combinedData}
         placeholder="Search projects..."
-        showProjectImages
         showFilters
+        landingCardType="project"
       />
     </LandingListingShell>
   );

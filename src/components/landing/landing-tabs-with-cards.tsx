@@ -8,6 +8,7 @@ import type { Post as ProjectPost } from "@/queries/projects";
 import type { TabItemType } from "@/components/landing/hover-preview-card";
 import type { TabItem } from "@/components/landing/hover-preview-card";
 import LandingItemCard from "@/components/landing/landing-item-card";
+import LandingCardMasonryGrid from "@/components/landing/landing-card-masonry-grid";
 import { itemMatchesLibraryFilters } from "@/components/landing/design-skill-filters";
 import {
   FEED_TYPE_DEFAULT_ENABLED,
@@ -197,16 +198,6 @@ export default function LandingTabsWithCards({
     [itemsAfterTag, searchQuery]
   );
 
-  /** Split feed into two columns (even / odd index) so each column stacks under the card above — no shared row heights. */
-  const gridColumns = useMemo(() => {
-    const left: CardItem[] = [];
-    const right: CardItem[] = [];
-    items.forEach((entry, i) => {
-      (i % 2 === 0 ? left : right).push(entry);
-    });
-    return { left, right };
-  }, [items]);
-
   const noneEnabled = hasLogs
     ? !enabled.journals && !enabled.logs && !enabled.projects
     : !enabled.journals && !enabled.projects;
@@ -313,46 +304,10 @@ export default function LandingTabsWithCards({
               ))}
             </ul>
           ) : (
-            <>
-              <div className="flex flex-col gap-5 sm:gap-6 md:hidden">
-                {items.map(({ item, type }) => (
-                  <div key={`${type}-${item.slug}`} className="min-w-0">
-                    <LandingItemCard
-                      item={item}
-                      type={type}
-                      layout="grid"
-                      onLibraryTagPathSelect={onLibraryTagPathSelect}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="hidden min-w-0 md:flex md:flex-row md:items-start md:gap-6">
-                <div className="flex min-w-0 flex-1 flex-col gap-5 sm:gap-6">
-                  {gridColumns.left.map(({ item, type }) => (
-                    <div key={`${type}-${item.slug}`} className="min-w-0">
-                      <LandingItemCard
-                        item={item}
-                        type={type}
-                        layout="grid"
-                        onLibraryTagPathSelect={onLibraryTagPathSelect}
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-5 sm:gap-6">
-                  {gridColumns.right.map(({ item, type }) => (
-                    <div key={`${type}-${item.slug}`} className="min-w-0">
-                      <LandingItemCard
-                        item={item}
-                        type={type}
-                        layout="grid"
-                        onLibraryTagPathSelect={onLibraryTagPathSelect}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
+            <LandingCardMasonryGrid
+              items={items}
+              onLibraryTagPathSelect={onLibraryTagPathSelect}
+            />
           )}
         </section>
       </div>
