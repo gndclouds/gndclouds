@@ -1,7 +1,14 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: "class",
+  // Class `.dark` from ThemeProvider + OS `prefers-color-scheme: dark` when `html` is not `.light`
+  darkMode: [
+    "variant",
+    [
+      "&:is(.dark *)",
+      "@media (prefers-color-scheme: dark) { &:is(html:not(.light), html:not(.light) *) }",
+    ],
+  ],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",

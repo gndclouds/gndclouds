@@ -37,7 +37,6 @@ interface LandingDetailPageProps {
   title: string;
   publishedAt: string;
   tagList?: string[];
-  externalUrl?: string;
   children: ReactNode;
 }
 
@@ -50,7 +49,6 @@ export default function LandingDetailPage({
   title,
   publishedAt,
   tagList = [],
-  externalUrl,
   children,
 }: LandingDetailPageProps) {
   const config = KIND_CONFIG[kind];
@@ -68,18 +66,25 @@ export default function LandingDetailPage({
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [title, tagList.length, externalUrl, dateStr]);
+  }, [title, tagList.length, dateStr]);
 
   return (
     <main className="min-h-screen w-full bg-primary-gray font-inter text-primary-black dark:bg-backgroundDark dark:text-textDark">
       <div className="w-full px-4 pb-6 pt-4 sm:px-6 sm:pb-8 sm:pt-6 md:pb-10">
-        <div className="flex flex-col bg-primary-white shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:ring-gray-600/50">
+        <div className="flex flex-col overflow-hidden rounded-2xl bg-primary-white shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:ring-gray-600/50">
           <header
             ref={headerRef}
-            className="fixed left-4 right-4 top-4 z-30 border-b border-gray-200/80 bg-primary-white/95 px-4 py-3 backdrop-blur-md dark:border-gray-600/40 dark:bg-[#242424]/95 sm:left-6 sm:right-6 sm:px-6 sm:py-3.5"
+            className="fixed left-4 right-4 top-4 z-30 rounded-t-2xl border-b border-gray-200/80 bg-primary-white/95 px-4 py-3 backdrop-blur-md dark:border-gray-600/40 dark:bg-[#242424]/95 sm:left-6 sm:right-6 sm:px-6 sm:py-3.5"
             role="banner"
           >
-            <div className="mb-2">
+            <div className="mb-2 flex flex-wrap items-baseline gap-x-1.5">
+              <Link
+                href="/"
+                className="text-xs font-medium text-gray-500 transition-colors hover:text-primary-black dark:text-gray-400 dark:hover:text-textDark"
+                data-umami-event="landing-detail-site-name"
+              >
+                gndclouds
+              </Link>
               <Link
                 href={config.backHref}
                 className="text-xs font-medium text-gray-500 transition-colors hover:text-primary-black dark:text-gray-400 dark:hover:text-textDark"
@@ -104,20 +109,6 @@ export default function LandingDetailPage({
             </div>
 
             <LibraryTagsGrouped tags={tagList} />
-
-            {externalUrl ? (
-              <p className="mt-3 mb-0">
-                <a
-                  href={externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-medium text-primary-black underline underline-offset-2 hover:text-gray-800 dark:text-textDark dark:hover:text-white"
-                  data-umami-event="landing-detail-external-url"
-                >
-                  View live project
-                </a>
-              </p>
-            ) : null}
           </header>
 
           <div

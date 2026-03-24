@@ -23,10 +23,20 @@ function getSystemDark(): boolean {
 
 function applyMode(mode: ThemeMode) {
   if (typeof document === "undefined") return;
-  const isDark =
-    mode === "dark" || (mode === "system" && getSystemDark());
-  if (isDark) document.documentElement.classList.add("dark");
-  else document.documentElement.classList.remove("dark");
+  const root = document.documentElement;
+  if (mode === "light") {
+    root.classList.add("light");
+    root.classList.remove("dark");
+    return;
+  }
+  root.classList.remove("light");
+  if (mode === "dark") {
+    root.classList.add("dark");
+    return;
+  }
+  const isDark = getSystemDark();
+  if (isDark) root.classList.add("dark");
+  else root.classList.remove("dark");
 }
 
 function applyStyle(style: ThemeStyle) {

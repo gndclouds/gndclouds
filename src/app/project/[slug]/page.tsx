@@ -140,7 +140,6 @@ export default async function ProjectPage({ params }: Params) {
       title={project.title}
       publishedAt={project.publishedAt || ""}
       tagList={pageTags}
-      externalUrl={project.url || undefined}
     >
       <div className={styles.markdown}>
         <MarkdownContent

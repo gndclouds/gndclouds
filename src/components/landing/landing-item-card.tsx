@@ -71,26 +71,24 @@ const IMAGE_CORNER_MONO =
 const CARD_TAGS_CLASS =
   "mt-2 flex flex-wrap items-start gap-x-4 gap-y-2 text-gray-600 dark:text-gray-400";
 
-/** Matches `landing-tabs` / colour-palette list rows (`TabItemLink` + `TypePill` colors). */
-const LIST_TYPE_PILL: Record<TabItemType, { Icon: LucideIcon; color: string }> =
-  {
-    journal: { Icon: BookOpen, color: "#fadc4b" },
-    project: { Icon: Box, color: "#0068e2" },
-    log: { Icon: ScrollText, color: "#ff6622" },
-  };
+/** List row: type icon only (neutral; no tinted pill). */
+const LIST_TYPE_ICON: Record<TabItemType, { Icon: LucideIcon }> = {
+  journal: { Icon: BookOpen },
+  project: { Icon: Box },
+  log: { Icon: ScrollText },
+};
 
 const LIST_ROW_LINK_CLASS =
   "group flex w-full items-center justify-between gap-2 rounded-lg px-3 py-1.5 min-h-9 text-primary-black transition-[background-color,opacity] hover:bg-gray-100 dark:text-textDark dark:hover:bg-white/[0.06]";
 
 function ListTypeIconOnly({ type }: { type: TabItemType }) {
-  const { Icon, color } = LIST_TYPE_PILL[type];
+  const { Icon } = LIST_TYPE_ICON[type];
   return (
     <span
-      className="inline-flex size-7 shrink-0 items-center justify-center rounded-full"
-      style={{ backgroundColor: `${color}29` }}
+      className="inline-flex size-7 shrink-0 items-center justify-center text-primary-black/55 dark:text-textDark/55"
       aria-hidden
     >
-      <Icon size={14} style={{ color }} strokeWidth={2} />
+      <Icon size={14} strokeWidth={2} />
     </span>
   );
 }
