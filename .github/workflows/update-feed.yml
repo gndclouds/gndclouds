@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Submodule src/app/db holds journals, projects, notes, etc. update-feed reads
-      # them from disk when NEXT_PUBLIC_CONTENT_MODE is not "remote" (the default).
+      # Submodule src/app/db holds journals, projects, notes, fragments, logs, etc.
+      # npm run update-feed delegates to the same script as generate-feed (full content types).
       # Token must be a PAT with repo access to gndclouds/db if the submodule is private.
       - uses: actions/checkout@v4
         with:
