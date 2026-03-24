@@ -44,10 +44,19 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+function initialEffectiveDarkForMode(m: ThemeMode): boolean {
+  if (typeof window === "undefined") return false;
+  if (m === "dark") return true;
+  if (m === "light") return false;
+  return getSystemDark();
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>("system");
   const [style, setStyleState] = useState<ThemeStyle>("minimal");
-  const [effectiveDark, setEffectiveDark] = useState(false);
+  const [effectiveDark, setEffectiveDark] = useState(() =>
+    initialEffectiveDarkForMode("system")
+  );
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -75,13 +84,28 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (mode !== "system") return;
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const handle = () => {
+    const syncFromSystem = () => {
       applyMode("system");
       setEffectiveDark(getSystemDark());
     };
-    mq.addEventListener("change", handle);
-    return () => mq.removeEventListener("change", handle);
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", syncFromSystem);
+    } else {
+      mq.addListener(syncFromSystem);
+    }
+    const onVisible = () => {
+      if (document.visibilityState === "visible") syncFromSystem();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      if (typeof mq.removeEventListener === "function") {
+        mq.removeEventListener("change", syncFromSystem);
+      } else {
+        mq.removeListener(syncFromSystem);
+      }
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [mode]);
 
   const setMode = useCallback((next: ThemeMode) => {

@@ -24,11 +24,34 @@ export default function HomeLanding({
         {/* Left: intro — scrolls inside a viewport-tall column on md+ */}
         <div className="flex w-full max-w-full flex-col bg-primary-gray md:min-h-0 md:w-1/3 md:min-w-0 md:overflow-hidden px-4 py-4 sm:p-6 max-md:pb-0 md:pt-4 md:pb-4 md:pl-2 md:pr-2 dark:bg-backgroundDark">
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto rounded-2xl bg-primary-white max-md:flex-none dark:bg-[#242424] px-6 py-6 text-gray-800 dark:text-textDark">
-            <section className="animate-fade-in flex min-h-0 flex-1 flex-col pb-2 max-md:flex-none">
+            <section className="animate-fade-in flex min-h-0 flex-1 flex-col pb-2 max-md:flex-none space-y-4">
               <p className="text-lg sm:text-xl md:text-[1.35rem] leading-snug sm:leading-relaxed text-gray-800 dark:text-textDark">
                 Will focuses on the layer where humans, AI, and the physical
-                environment meet—working to make natural systems more legible so
-                we can live with nature, not only adjacent to it.
+                environment meet, working to make natural systems more legible
+                so we can live with nature, not adjacent to it.
+              </p>
+              <p className="text-base sm:text-lg md:text-[1rem] leading-snug sm:leading-relaxed text-gray-800 dark:text-textDark">
+                Previously, I&apos;ve worked at the intersection of design and
+                development at Intel Labs, IDEO, CoLab, Protocol Labs, Dark
+                Matter Labs, Xerox PARC, Fjord, Ezra, Maker Media, and IFTTT.
+                Across these roles, I specialized in translating emerging
+                technologies into working prototypes—simplifying complexity to
+                focus on core function. Along the way, I&apos;ve managed teams,
+                led products from prototype to v0, and shipped work that brought
+                new technologies to market.
+              </p>
+              <p className="text-base sm:text-lg md:text-[0.95rem] leading-snug sm:leading-relaxed text-gray-800 dark:text-textDark">
+                Alongside this work, I cofounded Tiny Factories, a tribe of
+                makers supporting each other to establish creative footing,
+                where I deepened my practice through personal projects and
+                climate-focused tinkering.
+              </p>
+              <p className="text-base sm:text-lg md:text-[0.95rem] leading-snug sm:leading-relaxed text-gray-800 dark:text-textDark">
+                My academic journey began at California College of the Arts,
+                where I studied Interaction Design. Around that time, I
+                participated in John Bielenberg&apos;s experimental education
+                program focused on &quot;thinking wrong&quot;, which shaped how
+                I approach applying my capabilities to the world.
               </p>
             </section>
 
