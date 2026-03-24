@@ -1,4 +1,5 @@
 import matter from "gray-matter";
+import { buildJournalCardImageFields } from "@/lib/project-card-images";
 import {
   normalizeCompanyStrings,
   normalizeLibraryFacets,
@@ -19,8 +20,24 @@ export interface Journal {
   published: boolean;
   metadata: {
     contentHtml: string;
+    cardImageDisplayUrl?: string | null;
+    cardImageHoverGifUrl?: string | null;
     [key: string]: any;
   };
+}
+
+function toTimestamp(value: unknown): number {
+  if (typeof value !== "string" || !value.trim()) return 0;
+  const ts = new Date(value).getTime();
+  return Number.isNaN(ts) ? 0 : ts;
+}
+
+function journalSortTimestamp(journal: Journal): number {
+  const created = journal.metadata?.created;
+  if (typeof created === "string" && created.trim()) {
+    return toTimestamp(created);
+  }
+  return toTimestamp(journal.publishedAt);
 }
 
 export async function getAllMarkdownFiles(): Promise<Journal[]> {
@@ -45,6 +62,9 @@ export async function getAllMarkdownFiles(): Promise<Journal[]> {
           const companies = normalizeCompanyStrings(
             metadata.companies ?? metadata.orgs ?? metadata.org
           );
+          const cardImages = buildJournalCardImageFields({
+            markdownBody: markdownContent,
+          });
 
           // Generate slug from filename (without extension)
           const slug =
@@ -69,6 +89,8 @@ export async function getAllMarkdownFiles(): Promise<Journal[]> {
             metadata: {
               ...metadata,
               contentHtml: markdownContent,
+              cardImageDisplayUrl: cardImages.cardImageDisplayUrl,
+              cardImageHoverGifUrl: cardImages.cardImageHoverGifUrl,
             },
           } as Journal;
         } catch (error) {
@@ -83,8 +105,7 @@ export async function getAllMarkdownFiles(): Promise<Journal[]> {
 
     // Sort by publish date
     return validFiles.sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      (a, b) => journalSortTimestamp(b) - journalSortTimestamp(a)
     );
   } catch (error) {
     console.error(`Unexpected error in getAllMarkdownFiles:`, error);

@@ -1,72 +1,52 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Box, ScrollText, ChevronRight } from "lucide-react";
 import {
-  journalHeroImageApiQuery,
-  journalHeroUrlForDisplay,
-} from "@/lib/journal-hero-image";
+  ArrowBigRight,
+  BookOpen,
+  Box,
+  ChevronRight,
+  ScrollText,
+  type LucideIcon,
+} from "lucide-react";
 import ProjectCardMedia from "@/components/project-card-media";
+import {
+  formatCardHeading,
+  markdownBodyToCardPlainText,
+  stripMarkdownMediaEmbeds,
+  stripObsidianWikiLinksForPreview,
+} from "@/lib/markdown-to-card-plain-text";
+import LibraryTagsGrouped from "@/components/landing/library-tags-grouped";
+import {
+  getJournalListingRawTagPaths,
+  getProjectCardRawTagPaths,
+} from "@/lib/library-tag-paths";
+import {
+  getJournalCardMediaUrls,
+  getProjectCardMediaUrls,
+} from "@/lib/project-card-images";
 import type { TabItemType } from "@/components/landing/hover-preview-card";
 import type { TabItem } from "@/components/landing/hover-preview-card";
 
-/** Frosted pill behind type icon on image cards so it stays readable on busy photos. */
-const IMAGE_CARD_ICON_BACKDROP =
-  "rounded-full bg-primary-white/70 p-0.5 shadow-sm ring-1 ring-black/[0.1] backdrop-blur-lg dark:bg-zinc-950/65 dark:ring-white/[0.14] dark:backdrop-blur-lg";
+/** Image + text landing cards — flat surface (no drop shadow). */
+const LANDING_IMAGE_CARD_LINK =
+  "group box-border flex min-h-0 flex-col overflow-hidden rounded-2xl border border-primary-black/[0.08] bg-primary-white dark:border-white/[0.08] dark:bg-zinc-900";
 
-const TYPE_CONFIG: Record<
-  TabItemType,
-  { label: string; Icon: typeof BookOpen; color: string }
-> = {
-  journal: { label: "Journal", Icon: BookOpen, color: "#fadc4b" },
-  project: { label: "Project", Icon: Box, color: "#0068e2" },
-  log: { label: "Log", Icon: ScrollText, color: "#ff6622" },
+/** Short mono tags: artifact (project), journal, log — right corner uses date, not type prefix. */
+const TYPE_CONFIG: Record<TabItemType, { shortLabel: string }> = {
+  project: { shortLabel: "A" },
+  journal: { shortLabel: "K" },
+  log: { shortLabel: "LOG" },
 };
 
-function TypeIconBadge({
-  type,
-  className = "",
-  plain = false,
-}: {
-  type: TabItemType;
-  className?: string;
-  /** No tinted circle — use when a parent supplies the backdrop. */
-  plain?: boolean;
-}) {
-  const config = TYPE_CONFIG[type];
-  return (
-    <span
-      className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full ${className}`}
-      style={plain ? undefined : { backgroundColor: `${config.color}24` }}
-    >
-      <config.Icon size={14} style={{ color: config.color }} aria-hidden />
-      <span className="sr-only">{config.label}</span>
-    </span>
-  );
-}
-
-/** Frosted corner pill on image cards: icon by default; expands to “Journal” / “Log” / “Project” when the card is hovered. */
-function ImageCornerTypePill({ type }: { type: TabItemType }) {
-  const config = TYPE_CONFIG[type];
-  return (
-    <span
-      className={`absolute left-2 top-2 z-10 inline-flex max-h-8 items-center overflow-hidden rounded-full ${IMAGE_CARD_ICON_BACKDROP} max-w-8 gap-0 transition-[max-width,gap] duration-200 ease-out group-hover:max-w-[10rem] group-hover:gap-1.5`}
-    >
-      <TypeIconBadge type={type} plain className="size-6" />
-      <span
-        aria-hidden
-        className="select-none pr-1.5 text-xs font-medium tabular-nums text-primary-black/90 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-zinc-100"
-      >
-        {config.label}
-      </span>
-    </span>
-  );
-}
+/** Natural image aspect ratio in card media; cap height so very tall assets do not dominate the feed. */
+const LANDING_CARD_IMAGE_MEDIA_CLASSES =
+  "max-h-[min(68vh,560px)] h-auto w-full object-contain dark:brightness-[0.88] dark:contrast-[1.05]";
 
 function formatDate(iso: string): string {
   try {
     const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
@@ -76,22 +56,106 @@ function formatDate(iso: string): string {
   }
 }
 
+/** Upper-right: post date `YYYY.MM.DD`; if missing, stable numeric fallback from slug. */
+function getCornerDateDisplay(publishedAt: string, slug: string): string {
+  const d = formatDate(publishedAt);
+  if (d) return d;
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+  return String(100 + (h % 900));
+}
+
+const IMAGE_CORNER_MONO =
+  "pointer-events-none absolute top-2.5 z-10 max-w-[48%] font-mono text-[10px] tracking-wide text-primary-black/40 tabular-nums dark:text-textDark/45";
+
+const CARD_TAGS_CLASS =
+  "mt-2 flex flex-wrap items-start gap-x-4 gap-y-2 text-gray-600 dark:text-gray-400";
+
+/** Matches `landing-tabs` / colour-palette list rows (`TabItemLink` + `TypePill` colors). */
+const LIST_TYPE_PILL: Record<TabItemType, { Icon: LucideIcon; color: string }> =
+  {
+    journal: { Icon: BookOpen, color: "#fadc4b" },
+    project: { Icon: Box, color: "#0068e2" },
+    log: { Icon: ScrollText, color: "#ff6622" },
+  };
+
+const LIST_ROW_LINK_CLASS =
+  "group flex w-full items-center justify-between gap-2 rounded-lg px-3 py-1.5 min-h-9 text-primary-black transition-[background-color,opacity] hover:bg-gray-100 dark:text-textDark dark:hover:bg-white/[0.06]";
+
+function ListTypeIconOnly({ type }: { type: TabItemType }) {
+  const { Icon, color } = LIST_TYPE_PILL[type];
+  return (
+    <span
+      className="inline-flex size-7 shrink-0 items-center justify-center rounded-full"
+      style={{ backgroundColor: `${color}29` }}
+      aria-hidden
+    >
+      <Icon size={14} style={{ color }} strokeWidth={2} />
+    </span>
+  );
+}
+
+/** Upper-left on image: short kind tag (A / K / LOG). */
+function ImageCornerKindLabel({ type }: { type: TabItemType }) {
+  const config = TYPE_CONFIG[type];
+  return (
+    <span className={`${IMAGE_CORNER_MONO} left-2.5`} aria-hidden>
+      {config.shortLabel}
+    </span>
+  );
+}
+
+/** Upper-right on image: publication date (no type prefix — kind is on the left). */
+function ImageCornerSysId({
+  publishedAt,
+  slug,
+}: {
+  publishedAt: string;
+  slug: string;
+}) {
+  return (
+    <span
+      className={`${IMAGE_CORNER_MONO} right-2.5 text-right`}
+      aria-hidden
+    >
+      {getCornerDateDisplay(publishedAt, slug)}
+    </span>
+  );
+}
+
+/** Same top bar as image cards (A/K/LOG + date), without media — text-only grid cards. */
+function TextCardTopChrome({
+  type,
+  publishedAt,
+  slug,
+}: {
+  type: TabItemType;
+  publishedAt: string;
+  slug: string;
+}) {
+  return (
+    <div className="p-3 pb-0">
+      <div className="relative min-h-10 w-full shrink-0 overflow-hidden rounded-xl">
+        <ImageCornerKindLabel type={type} />
+        <ImageCornerSysId publishedAt={publishedAt} slug={slug} />
+      </div>
+    </div>
+  );
+}
+
 function getExcerpt(item: TabItem, maxLength = 100): string {
   const desc = (item.metadata as Record<string, unknown> | undefined)
     ?.description;
   const fromMeta =
     item.description ?? (typeof desc === "string" ? desc : null);
-  if (fromMeta) return fromMeta.slice(0, maxLength);
+  if (fromMeta) {
+    return stripObsidianWikiLinksForPreview(
+      stripMarkdownMediaEmbeds(fromMeta).replace(/\s+/g, " ").trim()
+    ).slice(0, maxLength);
+  }
   const raw = item.metadata?.contentHtml;
   if (typeof raw !== "string") return "";
-  const plain = raw
-    .replace(/<[^>]*>/g, "")
-    .replace(/^#+\s*/gm, "")
-    .replace(/\*+([^*]*)\*+/g, "$1")
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/\s+/g, " ")
-    .trim();
-  return plain.slice(0, maxLength);
+  return markdownBodyToCardPlainText(raw).slice(0, maxLength);
 }
 
 function getHref(type: TabItemType, slug: string): string {
@@ -150,209 +214,222 @@ function getSharedCardHoverGifUrl(item: TabItem): string | null {
   return typeof raw === "string" && raw.trim() ? raw.trim() : null;
 }
 
-function normalizeTagValue(tag: string): string {
-  return tag.replace(/\[\[|\]\]/g, "").trim();
-}
-
-function isProjectCardTag(tag: string): boolean {
-  const lower = tag.toLowerCase();
-  return (
-    lower.startsWith("skills/") ||
-    lower.startsWith("skill/") ||
-    lower.startsWith("topic/")
-  );
-}
-
-function getProjectCardTagLabel(tag: string): string {
-  const slashIndex = tag.indexOf("/");
-  if (slashIndex < 0) return tag;
-  const label = tag.slice(slashIndex + 1).trim();
-  return label || tag;
-}
-
-function getProjectCardTags(item: TabItem, max = 3): string[] {
-  const all = [...(item.tags ?? []), ...(("categories" in item && Array.isArray(item.categories) ? item.categories : []))];
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const raw of all) {
-    if (typeof raw !== "string") continue;
-    const normalized = normalizeTagValue(raw);
-    if (!normalized) continue;
-    if (!isProjectCardTag(normalized)) continue;
-    const label = getProjectCardTagLabel(normalized);
-    const lower = label.toLowerCase();
-    if (seen.has(lower)) continue;
-    seen.add(lower);
-    out.push(label);
-    if (out.length >= max) break;
-  }
-  return out;
-}
-
 interface LandingItemCardProps {
   item: TabItem;
   type: TabItemType;
+  /** Default card grid tiles; list is a compact horizontal row. */
+  layout?: "grid" | "list";
+  /** Feed only: clicking a tag filters the library by normalized tag path. */
+  onLibraryTagPathSelect?: (normalizedFullPath: string) => void;
 }
 
-/** Project card: full-bleed image, no date; hover overlay shows title + description. */
+/** Project card with lead image (before prose in body; `getProjectCardMediaUrls`). */
 function ProjectCardWithImage({
   item,
   href,
   imageSrc,
   hoverGifSrc,
+  onLibraryTagPathSelect,
 }: {
   item: TabItem;
   href: string;
   imageSrc: string;
   hoverGifSrc?: string | null;
+  onLibraryTagPathSelect?: (path: string) => void;
 }) {
   const description = getExcerpt(item, 160);
-  const tags = getProjectCardTags(item);
-  const imgTone = "object-cover dark:brightness-[0.88] dark:contrast-[1.05]";
+  const tags = getProjectCardRawTagPaths(
+    item.tags,
+    "categories" in item ? item.categories : undefined
+  );
 
   return (
-    <Link
-      href={href}
-      className="group relative block aspect-[4/3] w-full overflow-hidden bg-primary-white dark:bg-zinc-900"
-    >
-      <ImageCornerTypePill type="project" />
-      <div className="absolute inset-0 overflow-hidden">
-        <ProjectCardMedia
-          displaySrc={imageSrc}
-          hoverGifSrc={hoverGifSrc}
-          alt=""
-          sizes="(max-width: 767px) 100vw, 50vw"
-          imgClassName={imgTone}
-        />
+    <Link href={href} className={LANDING_IMAGE_CARD_LINK}>
+      <div className="p-3 pb-0">
+        <div className="relative w-full shrink-0 overflow-hidden rounded-xl bg-primary-gray/60 dark:bg-zinc-800/90">
+          <ImageCornerKindLabel type="project" />
+          <ImageCornerSysId publishedAt={item.publishedAt} slug={item.slug} />
+          <ProjectCardMedia
+            displaySrc={imageSrc}
+            hoverGifSrc={hoverGifSrc ?? null}
+            alt=""
+            sizes="(max-width: 768px) 100vw, 33vw"
+            naturalAspect
+            imgClassName={LANDING_CARD_IMAGE_MEDIA_CLASSES}
+          />
+        </div>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-      <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-        <h3 className="font-semibold text-white text-sm sm:text-base line-clamp-2 drop-shadow-sm">
-          {item.title}
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+        <h3 className="font-semibold text-primary-black dark:text-textDark text-base leading-snug line-clamp-2">
+          {formatCardHeading(item.title)}
         </h3>
+        <time dateTime={item.publishedAt} className="sr-only">
+          {formatDate(item.publishedAt) || item.publishedAt}
+        </time>
         {description ? (
-          <p className="mt-1 text-xs text-white/90 line-clamp-2 drop-shadow-sm">
+          <p className="mt-1.5 text-sm leading-relaxed text-gray-500 line-clamp-2 dark:text-gray-400">
             {description}
           </p>
         ) : null}
-        {tags.length > 0 ? (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded bg-white/15 px-1.5 py-0.5 text-[11px] font-medium text-white/95 backdrop-blur-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : null}
+        <LibraryTagsGrouped
+          tags={tags}
+          className={CARD_TAGS_CLASS}
+          onTagPathSelect={onLibraryTagPathSelect}
+        />
       </div>
     </Link>
   );
 }
 
 /** Project card when no hero image: simple card (title + optional description). */
-function ProjectCardDefault({ item, href }: { item: TabItem; href: string }) {
+function ProjectCardDefault({
+  item,
+  href,
+  onLibraryTagPathSelect,
+}: {
+  item: TabItem;
+  href: string;
+  onLibraryTagPathSelect?: (path: string) => void;
+}) {
   const excerpt = getExcerpt(item);
-  const tags = getProjectCardTags(item);
+  const tags = getProjectCardRawTagPaths(
+    item.tags,
+    "categories" in item ? item.categories : undefined
+  );
 
   return (
-    <Link
-      href={href}
-      className="group flex flex-col overflow-hidden bg-primary-white dark:bg-zinc-900 p-6 min-h-[120px] transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-zinc-800/80"
-    >
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <TypeIconBadge type="project" />
-        <ChevronRight className="size-4 shrink-0 text-gray-300 dark:text-gray-500 transition-colors group-hover:text-gray-500 dark:group-hover:text-gray-400" aria-hidden />
-      </div>
-      <h3 className="font-medium text-primary-black dark:text-textDark text-sm sm:text-base line-clamp-2 leading-snug mb-1">
-        {item.title}
-      </h3>
-      {excerpt ? (
-        <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm line-clamp-2 leading-relaxed flex-1">
-          {excerpt}
-        </p>
-      ) : null}
-      {tags.length > 0 ? (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded border border-gray-200 px-1.5 py-0.5 text-[11px] text-gray-600 dark:border-zinc-700 dark:text-zinc-300"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      ) : null}
-    </Link>
-  );
-}
-
-/** Journal card: hero from front matter or live-generated API, title + date below. */
-function JournalCard({ item, href }: { item: TabItem; href: string }) {
-  const dateStr = formatDate(item.publishedAt);
-  const staticHero = journalHeroUrlForDisplay(
-    (item.metadata as Record<string, unknown> | undefined)?.heroImage
-  );
-  const excerpt = getExcerpt(item, 200);
-  const imageSummary = excerpt.slice(0, 150) || item.title;
-  const tagList = [
-    ...(item.tags ?? []),
-    ...("categories" in item && Array.isArray(item.categories)
-      ? item.categories
-      : []),
-  ].filter((t): t is string => typeof t === "string");
-  const imageSrc =
-    staticHero ??
-    `/api/journals/hero-image?${journalHeroImageApiQuery({
-      summary: imageSummary,
-      title: item.title,
-      tags: tagList.length ? tagList : undefined,
-    })}`;
-  const hasStaticHero = Boolean(staticHero);
-  const imageMotionClass = hasStaticHero
-    ? ""
-    : "transition-transform duration-300 group-hover:scale-[1.02]";
-
-  return (
-    <Link
-      href={href}
-      className="group box-border flex flex-col border-2 border-transparent bg-primary-white transition-[background-color,border-color] duration-200 hover:border-gray-400 hover:bg-gray-50/50 dark:bg-zinc-900 dark:hover:border-zinc-500 dark:hover:bg-zinc-800/80"
-    >
-      <div className="relative w-full aspect-square shrink-0 bg-gray-200 dark:bg-zinc-800 overflow-hidden">
-        <Image
-          src={imageSrc}
-          alt=""
-          fill
-          className={`object-cover dark:brightness-[0.88] dark:contrast-[1.05] ${imageMotionClass}`}
-          sizes="(max-width: 768px) 100vw, 33vw"
-          unoptimized
+    <Link href={href} className={LANDING_IMAGE_CARD_LINK}>
+      <TextCardTopChrome
+        type="project"
+        publishedAt={item.publishedAt}
+        slug={item.slug}
+      />
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+        <h3 className="font-semibold text-primary-black dark:text-textDark text-base leading-snug line-clamp-2">
+          {formatCardHeading(item.title)}
+        </h3>
+        <time dateTime={item.publishedAt} className="sr-only">
+          {formatDate(item.publishedAt) || item.publishedAt}
+        </time>
+        {excerpt ? (
+          <p className="mt-1.5 text-sm leading-relaxed text-gray-500 line-clamp-3 dark:text-gray-400">
+            {excerpt}
+          </p>
+        ) : null}
+        <LibraryTagsGrouped
+          tags={tags}
+          className={CARD_TAGS_CLASS}
+          onTagPathSelect={onLibraryTagPathSelect}
         />
       </div>
-      <div className="flex flex-col flex-1 p-4">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <TypeIconBadge type="journal" />
-          <ChevronRight className="size-4 shrink-0 text-gray-300 dark:text-gray-500 transition-colors group-hover:text-gray-500 dark:group-hover:text-gray-400" aria-hidden />
+    </Link>
+  );
+}
+
+/** Journal with cover from first lead image (`cardImageDisplayUrl` or client fallback). */
+function JournalCardWithImage({
+  item,
+  href,
+  onLibraryTagPathSelect,
+}: {
+  item: TabItem;
+  href: string;
+  onLibraryTagPathSelect?: (path: string) => void;
+}) {
+  const tagPaths = getJournalListingRawTagPaths(
+    item.tags,
+    "categories" in item ? item.categories : undefined
+  );
+  const meta = (item.metadata ?? {}) as Record<string, unknown>;
+  const { displayUrl, hoverGifUrl } = getJournalCardMediaUrls(meta);
+  if (!displayUrl)
+    return (
+      <JournalCardTextOnly
+        item={item}
+        href={href}
+        onLibraryTagPathSelect={onLibraryTagPathSelect}
+      />
+    );
+
+  return (
+    <Link href={href} className={LANDING_IMAGE_CARD_LINK}>
+      <div className="p-3 pb-0">
+        <div className="relative w-full shrink-0 overflow-hidden rounded-xl bg-primary-gray/60 dark:bg-zinc-800/90">
+          <ImageCornerKindLabel type="journal" />
+          <ImageCornerSysId publishedAt={item.publishedAt} slug={item.slug} />
+          <ProjectCardMedia
+            displaySrc={displayUrl}
+            hoverGifSrc={hoverGifUrl}
+            alt=""
+            sizes="(max-width: 768px) 100vw, 33vw"
+            naturalAspect
+            imgClassName={LANDING_CARD_IMAGE_MEDIA_CLASSES}
+          />
         </div>
-        <h3 className="font-medium text-primary-black dark:text-textDark text-sm sm:text-base line-clamp-2 leading-snug">
-          {item.title}
+      </div>
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+        <h3 className="font-semibold text-primary-black dark:text-textDark text-base leading-snug line-clamp-2">
+          {formatCardHeading(item.title)}
         </h3>
-        {dateStr ? (
-          <time
-            dateTime={item.publishedAt}
-            className="text-xs text-gray-400 dark:text-zinc-500 tabular-nums mt-2"
-          >
-            {dateStr}
-          </time>
-        ) : null}
+        <time dateTime={item.publishedAt} className="sr-only">
+          {formatDate(item.publishedAt) || item.publishedAt}
+        </time>
+        <LibraryTagsGrouped
+          tags={tagPaths}
+          className={CARD_TAGS_CLASS}
+          onTagPathSelect={onLibraryTagPathSelect}
+        />
       </div>
     </Link>
   );
 }
 
-/** Log card with hero / first-body image; GIF defers to hover like projects. */
+/** Journal with no lead image: text only. */
+function JournalCardTextOnly({
+  item,
+  href,
+  onLibraryTagPathSelect,
+}: {
+  item: TabItem;
+  href: string;
+  onLibraryTagPathSelect?: (path: string) => void;
+}) {
+  const excerpt = getExcerpt(item, 200);
+  const tagPaths = getJournalListingRawTagPaths(
+    item.tags,
+    "categories" in item ? item.categories : undefined
+  );
+
+  return (
+    <Link href={href} className={LANDING_IMAGE_CARD_LINK}>
+      <TextCardTopChrome
+        type="journal"
+        publishedAt={item.publishedAt}
+        slug={item.slug}
+      />
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+        <h3 className="font-semibold text-primary-black dark:text-textDark text-base leading-snug line-clamp-2">
+          {formatCardHeading(item.title)}
+        </h3>
+        <time dateTime={item.publishedAt} className="sr-only">
+          {formatDate(item.publishedAt) || item.publishedAt}
+        </time>
+        {excerpt ? (
+          <p className="mt-1.5 text-sm leading-relaxed text-gray-500 line-clamp-3 dark:text-gray-400">
+            {excerpt}
+          </p>
+        ) : null}
+        <LibraryTagsGrouped
+          tags={tagPaths}
+          className={CARD_TAGS_CLASS}
+          onTagPathSelect={onLibraryTagPathSelect}
+        />
+      </div>
+    </Link>
+  );
+}
+
+/** Log card with hero / first-body image; same vertical shell as projects/journals. */
 function LogCardWithImage({
   item,
   href,
@@ -364,102 +441,157 @@ function LogCardWithImage({
   imageSrc: string;
   hoverGifSrc?: string | null;
 }) {
-  const dateStr = formatDate(item.publishedAt);
   const description = getExcerpt(item, 160);
-  const imgTone = "object-cover dark:brightness-[0.88] dark:contrast-[1.05]";
+
+  return (
+    <Link href={href} className={LANDING_IMAGE_CARD_LINK}>
+      <div className="p-3 pb-0">
+        <div className="relative w-full shrink-0 overflow-hidden rounded-xl bg-primary-gray/60 dark:bg-zinc-800/90">
+          <ImageCornerKindLabel type="log" />
+          <ImageCornerSysId publishedAt={item.publishedAt} slug={item.slug} />
+          <ProjectCardMedia
+            displaySrc={imageSrc}
+            hoverGifSrc={hoverGifSrc}
+            alt=""
+            sizes="(max-width: 768px) 100vw, 33vw"
+            naturalAspect
+            imgClassName={LANDING_CARD_IMAGE_MEDIA_CLASSES}
+          />
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+        <h3 className="font-semibold text-primary-black dark:text-textDark text-base leading-snug line-clamp-2">
+          {formatCardHeading(item.title)}
+        </h3>
+        {description ? (
+          <p className="mt-1.5 text-sm leading-relaxed text-gray-500 line-clamp-2 dark:text-gray-400">
+            {description}
+          </p>
+        ) : null}
+        <time dateTime={item.publishedAt} className="sr-only">
+          {formatDate(item.publishedAt) || item.publishedAt}
+        </time>
+      </div>
+    </Link>
+  );
+}
+
+function LandingItemListRow({
+  item,
+  type,
+  href,
+}: {
+  item: TabItem;
+  type: TabItemType;
+  href: string;
+}) {
+  const dateStr = formatDate(item.publishedAt);
 
   return (
     <Link
       href={href}
-      className="group relative block aspect-[4/3] w-full overflow-hidden bg-primary-white dark:bg-zinc-900"
+      className={LIST_ROW_LINK_CLASS}
+      aria-label={`${formatCardHeading(item.title)} — ${type}`}
     >
-      <ImageCornerTypePill type="log" />
-      <div className="absolute inset-0 overflow-hidden">
-        <ProjectCardMedia
-          displaySrc={imageSrc}
-          hoverGifSrc={hoverGifSrc}
-          alt=""
-          sizes="(max-width: 767px) 100vw, 50vw"
-          imgClassName={imgTone}
-        />
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-      <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-        <h3 className="font-semibold text-white text-sm sm:text-base line-clamp-2 drop-shadow-sm">
-          {item.title}
-        </h3>
-        {description ? (
-          <p className="mt-1 text-xs text-white/90 line-clamp-2 drop-shadow-sm">
-            {description}
-          </p>
-        ) : null}
+      <span className="flex min-w-0 flex-1 items-center">
+        <span className="min-w-0 truncate text-lg font-normal text-primary-black dark:text-textDark">
+          {formatCardHeading(item.title)}
+        </span>
+      </span>
+      <span className="flex shrink-0 items-center gap-2 text-right">
+        <ListTypeIconOnly type={type} />
         {dateStr ? (
           <time
             dateTime={item.publishedAt}
-            className="mt-2 text-xs text-white/80 tabular-nums drop-shadow-sm"
+            className="text-sm tabular-nums leading-6 text-gray-500 dark:text-gray-400"
           >
             {dateStr}
           </time>
         ) : null}
-      </div>
+        <ChevronRight
+          className="size-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 dark:text-zinc-400"
+          aria-hidden
+        />
+      </span>
     </Link>
   );
 }
 
 /** Log card: text-only when there is no preview image. */
 function LogCard({ item, href }: { item: TabItem; href: string }) {
-  const dateStr = formatDate(item.publishedAt);
   const excerpt = getExcerpt(item);
 
   return (
-    <Link
-      href={href}
-      className="group flex flex-col overflow-hidden bg-primary-white dark:bg-zinc-900 p-6 min-h-[120px] transition-colors duration-200 hover:bg-gray-50/50 dark:hover:bg-zinc-800/80"
-    >
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <TypeIconBadge type="log" />
-        <ChevronRight className="size-4 shrink-0 text-gray-300 dark:text-gray-500 transition-colors group-hover:text-gray-500 dark:group-hover:text-gray-400" aria-hidden />
-      </div>
-      <h3 className="font-medium text-primary-black dark:text-textDark text-sm sm:text-base line-clamp-2 leading-snug mb-1">
-        {item.title}
-      </h3>
-      {excerpt ? (
-        <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm line-clamp-2 leading-relaxed flex-1">
-          {excerpt}
-        </p>
-      ) : null}
-      {dateStr ? (
-        <time
-          dateTime={item.publishedAt}
-          className="text-xs text-gray-400 dark:text-zinc-500 tabular-nums mt-2"
-        >
-          {dateStr}
+    <Link href={href} className={LANDING_IMAGE_CARD_LINK}>
+      <TextCardTopChrome
+        type="log"
+        publishedAt={item.publishedAt}
+        slug={item.slug}
+      />
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+        <h3 className="font-semibold text-primary-black dark:text-textDark text-base leading-snug line-clamp-2">
+          {formatCardHeading(item.title)}
+        </h3>
+        {excerpt ? (
+          <p className="mt-1.5 text-sm leading-relaxed text-gray-500 line-clamp-3 dark:text-gray-400">
+            {excerpt}
+          </p>
+        ) : null}
+        <time dateTime={item.publishedAt} className="sr-only">
+          {formatDate(item.publishedAt) || item.publishedAt}
         </time>
-      ) : null}
+      </div>
     </Link>
   );
 }
 
-export default function LandingItemCard({ item, type }: LandingItemCardProps) {
+export default function LandingItemCard({
+  item,
+  type,
+  layout = "grid",
+  onLibraryTagPathSelect,
+}: LandingItemCardProps) {
   const href = getHref(type, item.slug);
 
+  if (layout === "list") {
+    return <LandingItemListRow item={item} type={type} href={href} />;
+  }
+
   if (type === "project") {
-    const imageUrl = getSharedCardDisplayUrl(item);
-    if (imageUrl) {
+    const meta = (item.metadata ?? {}) as Record<string, unknown>;
+    const filePath =
+      "filePath" in item && typeof item.filePath === "string"
+        ? item.filePath
+        : undefined;
+    const { displayUrl, hoverGifUrl } = getProjectCardMediaUrls(meta, filePath);
+    if (!displayUrl) {
       return (
-        <ProjectCardWithImage
+        <ProjectCardDefault
           item={item}
           href={href}
-          imageSrc={imageUrl}
-          hoverGifSrc={getSharedCardHoverGifUrl(item)}
+          onLibraryTagPathSelect={onLibraryTagPathSelect}
         />
       );
     }
-    return <ProjectCardDefault item={item} href={href} />;
+    return (
+      <ProjectCardWithImage
+        item={item}
+        href={href}
+        imageSrc={displayUrl}
+        hoverGifSrc={hoverGifUrl}
+        onLibraryTagPathSelect={onLibraryTagPathSelect}
+      />
+    );
   }
 
   if (type === "journal") {
-    return <JournalCard item={item} href={href} />;
+    return (
+      <JournalCardWithImage
+        item={item}
+        href={href}
+        onLibraryTagPathSelect={onLibraryTagPathSelect}
+      />
+    );
   }
 
   const logImageUrl = getSharedCardDisplayUrl(item);

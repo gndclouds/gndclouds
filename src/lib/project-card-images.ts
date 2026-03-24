@@ -151,6 +151,136 @@ function collectImageMatches(markdown: string): Match[] {
   return out;
 }
 
+/** True when the line is only whitespace and markdown / wikilink images. */
+function lineIsImageOnly(line: string): boolean {
+  let rest = line.trim();
+  if (!rest) return false;
+  let prev = "";
+  while (rest !== prev) {
+    prev = rest;
+    rest = rest
+      .replace(/!\[\[[^\]]+\]\]/g, "")
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+      .trim();
+  }
+  return rest.length === 0;
+}
+
+/**
+ * Byte index in `markdown` where “body text” starts (prose), skipping leading
+ * blank lines, headings, HRs, and image-only lines. Used for journal covers.
+ */
+function findIndexOfFirstBodyText(markdown: string): number {
+  let lineStart = 0;
+  while (lineStart < markdown.length) {
+    const nl = markdown.indexOf("\n", lineStart);
+    const end = nl === -1 ? markdown.length : nl;
+    const line = markdown.slice(lineStart, end);
+    const t = line.trim();
+    if (!t) {
+      lineStart = end < markdown.length ? end + 1 : markdown.length;
+      continue;
+    }
+    if (/^#{1,6}\s/.test(t)) {
+      lineStart = end < markdown.length ? end + 1 : markdown.length;
+      continue;
+    }
+    if (/^---+(\s*)$/.test(t) || /^\*{3,}(\s*)$/.test(t)) {
+      lineStart = end < markdown.length ? end + 1 : markdown.length;
+      continue;
+    }
+    if (lineIsImageOnly(line)) {
+      lineStart = end < markdown.length ? end + 1 : markdown.length;
+      continue;
+    }
+    const rel = line.search(/\S/);
+    return lineStart + (rel >= 0 ? rel : 0);
+  }
+  return -1;
+}
+
+/**
+ * First non-GIF image in markdown that appears strictly before any body prose
+ * (see {@link findIndexOfFirstBodyText}). For `content` wiki mode (journals, logs in repo).
+ */
+export function extractFirstImageBeforeBodyText(
+  markdown: string,
+  wikiMode: WikiImageResolveMode,
+  projectMarkdownFilePath?: string
+): string | null {
+  const textStart = findIndexOfFirstBodyText(markdown);
+  const matches = collectImageMatches(markdown);
+  const projectPath =
+    wikiMode === "project" ? projectMarkdownFilePath : undefined;
+
+  for (const match of matches) {
+    if (textStart >= 0 && match.index >= textStart) break;
+    if (isGifPath(match.raw)) continue;
+    const url = matchToUrl(match, wikiMode, projectPath);
+    if (url && !isGifPath(url)) return url;
+  }
+  return null;
+}
+
+/**
+ * Lead media before first body line: supports static + GIF pairs (poster + hover) and GIF-only leads
+ * (poster from another image before body, or full-doc fallback for a static frame).
+ */
+function buildLeadSectionCardImages(
+  markdown: string,
+  wikiMode: WikiImageResolveMode,
+  markdownFilePath?: string
+): ProjectCardComputedImages {
+  const textStart = findIndexOfFirstBodyText(markdown);
+  const projectPath = wikiMode === "project" ? markdownFilePath : undefined;
+  const pairs: { match: Match; url: string }[] = [];
+  for (const match of collectImageMatches(markdown)) {
+    if (textStart >= 0 && match.index >= textStart) break;
+    const url = matchToUrl(match, wikiMode, projectPath);
+    if (url) pairs.push({ match, url });
+  }
+  if (pairs.length === 0) {
+    return { cardImageDisplayUrl: null, cardImageHoverGifUrl: null };
+  }
+
+  const urlIsGif = (p: { match: Match; url: string }) =>
+    isGifPath(p.match.raw) || isGifPath(p.url);
+
+  const firstPair = pairs[0];
+  if (!urlIsGif(firstPair)) {
+    const firstGif = pairs.find(urlIsGif);
+    return {
+      cardImageDisplayUrl: firstPair.url,
+      cardImageHoverGifUrl:
+        firstGif && firstGif.url !== firstPair.url ? firstGif.url : null,
+    };
+  }
+
+  const firstStatic = pairs.find((p) => !urlIsGif(p));
+  if (firstStatic) {
+    return {
+      cardImageDisplayUrl: firstStatic.url,
+      cardImageHoverGifUrl: firstPair.url,
+    };
+  }
+
+  const poster = extractFirstNonGifImageUrlFromMarkdown(
+    markdown,
+    wikiMode,
+    projectPath
+  );
+  if (poster) {
+    return {
+      cardImageDisplayUrl: poster,
+      cardImageHoverGifUrl: firstPair.url,
+    };
+  }
+  return {
+    cardImageDisplayUrl: firstPair.url,
+    cardImageHoverGifUrl: null,
+  };
+}
+
 function matchToUrl(
   match: Match,
   wikiMode: WikiImageResolveMode,
@@ -270,13 +400,22 @@ function buildCardImageFieldsWithWikiMode(input: {
   return { cardImageDisplayUrl: primary, cardImageHoverGifUrl: null };
 }
 
+/**
+ * Project / artifact listing previews: first non-GIF image in the body before any prose,
+ * with artifact asset resolution (`markdownFilePath`). No `heroImage` fallback.
+ */
 export function buildProjectCardImageFields(input: {
-  heroImage: unknown;
-  heroImagePoster?: unknown;
   markdownBody: string;
   markdownFilePath?: string;
+  /** @deprecated Ignored; kept for call-site compatibility. */
+  heroImage?: unknown;
+  heroImagePoster?: unknown;
 }): ProjectCardComputedImages {
-  return buildCardImageFieldsWithWikiMode({ ...input, wikiMode: "project" });
+  return buildLeadSectionCardImages(
+    input.markdownBody,
+    "project",
+    input.markdownFilePath
+  );
 }
 
 export function buildLogCardImageFields(input: {
@@ -285,4 +424,134 @@ export function buildLogCardImageFields(input: {
   markdownBody: string;
 }): ProjectCardComputedImages {
   return buildCardImageFieldsWithWikiMode({ ...input, wikiMode: "content" });
+}
+
+/**
+ * Journal listing previews: prefer first non-GIF image before any prose (headings / image-only
+ * lines / blanks skipped). If none, use the first image anywhere in the post (same GIF + poster
+ * behavior as logs). Front matter `heroImage` is not used — only markdown body.
+ */
+export function buildJournalCardImageFields(input: {
+  markdownBody: string;
+  /** @deprecated Ignored; kept for call-site compatibility. */
+  heroImage?: unknown;
+  heroImagePoster?: unknown;
+}): ProjectCardComputedImages {
+  const lead = buildLeadSectionCardImages(
+    input.markdownBody,
+    "content",
+    undefined
+  );
+  if (lead.cardImageDisplayUrl) {
+    return lead;
+  }
+  return buildCardImageFieldsWithWikiMode({
+    heroImage: undefined,
+    heroImagePoster: undefined,
+    markdownBody: input.markdownBody,
+    wikiMode: "content",
+  });
+}
+
+/** Prefer server-computed journal card URLs; otherwise derive from markdown (client-safe). */
+export function getJournalCardMediaUrls(metadata: {
+  heroImage?: unknown;
+  heroImagePoster?: unknown;
+  contentHtml?: unknown;
+  cardImageDisplayUrl?: unknown;
+  cardImageHoverGifUrl?: unknown;
+}): { displayUrl: string | null; hoverGifUrl: string | null } {
+  const m = metadata as Record<string, unknown>;
+  const fromServerDisplay =
+    typeof m.cardImageDisplayUrl === "string"
+      ? m.cardImageDisplayUrl.trim()
+      : "";
+  const fromServerHover =
+    typeof m.cardImageHoverGifUrl === "string"
+      ? m.cardImageHoverGifUrl.trim()
+      : "";
+  if (fromServerDisplay) {
+    return {
+      displayUrl: fromServerDisplay,
+      hoverGifUrl: fromServerHover || null,
+    };
+  }
+  const md = typeof m.contentHtml === "string" ? m.contentHtml : "";
+  const c = buildJournalCardImageFields({ markdownBody: md });
+  return {
+    displayUrl: c.cardImageDisplayUrl,
+    hoverGifUrl: c.cardImageHoverGifUrl,
+  };
+}
+
+/** Prefer server-computed log card URLs; otherwise derive from markdown (client-safe). */
+export function getLogCardMediaUrls(metadata: {
+  heroImage?: unknown;
+  heroImagePoster?: unknown;
+  contentHtml?: unknown;
+  cardImageDisplayUrl?: unknown;
+  cardImageHoverGifUrl?: unknown;
+}): { displayUrl: string | null; hoverGifUrl: string | null } {
+  const m = metadata as Record<string, unknown>;
+  const fromServerDisplay =
+    typeof m.cardImageDisplayUrl === "string"
+      ? m.cardImageDisplayUrl.trim()
+      : "";
+  const fromServerHover =
+    typeof m.cardImageHoverGifUrl === "string"
+      ? m.cardImageHoverGifUrl.trim()
+      : "";
+  if (fromServerDisplay) {
+    return {
+      displayUrl: fromServerDisplay,
+      hoverGifUrl: fromServerHover || null,
+    };
+  }
+  const md = typeof m.contentHtml === "string" ? m.contentHtml : "";
+  const c = buildLogCardImageFields({
+    heroImage: m.heroImage,
+    heroImagePoster: m.heroImagePoster,
+    markdownBody: md,
+  });
+  return {
+    displayUrl: c.cardImageDisplayUrl,
+    hoverGifUrl: c.cardImageHoverGifUrl,
+  };
+}
+
+/** Prefer server-computed project card URLs; otherwise derive from markdown (client-safe). */
+export function getProjectCardMediaUrls(
+  metadata: {
+    heroImage?: unknown;
+    heroImagePoster?: unknown;
+    contentHtml?: unknown;
+    cardImageDisplayUrl?: unknown;
+    cardImageHoverGifUrl?: unknown;
+  },
+  markdownFilePath?: string
+): { displayUrl: string | null; hoverGifUrl: string | null } {
+  const m = metadata as Record<string, unknown>;
+  const fromServerDisplay =
+    typeof m.cardImageDisplayUrl === "string"
+      ? m.cardImageDisplayUrl.trim()
+      : "";
+  const fromServerHover =
+    typeof m.cardImageHoverGifUrl === "string"
+      ? m.cardImageHoverGifUrl.trim()
+      : "";
+  if (fromServerDisplay) {
+    return {
+      displayUrl: fromServerDisplay,
+      hoverGifUrl: fromServerHover || null,
+    };
+  }
+  const md = typeof m.contentHtml === "string" ? m.contentHtml : "";
+  const c = buildProjectCardImageFields({
+    markdownBody: md,
+    markdownFilePath,
+  });
+  return {
+    displayUrl: c.cardImageDisplayUrl,
+    hoverGifUrl: c.cardImageHoverGifUrl,
+  };
 }

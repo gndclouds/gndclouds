@@ -56,11 +56,12 @@ export default async function JournalPage({ params }: Params) {
               (journal.metadata as { footnotes?: Record<string, string> })
                 .footnotes ?? {}
             }
-            innerPaddingClass="px-6 py-8 sm:px-8"
+            innerPaddingClass="w-full max-w-[600px] text-left px-6 py-8 sm:px-8"
+            hideLeadingMediaBeforeText
           />
         </div>
       ) : (
-        <p className="px-6 py-8 text-sm text-gray-500 dark:text-gray-400 sm:px-8">
+        <p className="w-full max-w-[600px] text-left px-6 py-8 text-sm text-gray-500 dark:text-gray-400 sm:px-8">
           No content available
         </p>
       )}

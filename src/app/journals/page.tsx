@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getAllJournals } from "@/queries/journals";
 import JournalGallery from "@/components/journal-gallery";
-import LandingListingShell from "@/components/landing/landing-listing-shell";
 
 export const metadata: Metadata = {
   title: "Journals",
@@ -30,14 +29,5 @@ export default async function JournalsPage() {
       return dateB - dateA;
     });
 
-  return (
-    <LandingListingShell
-      kind="journals"
-      title="Journals"
-      description="Daily reflections, field notes, and personal writing."
-      entryCount={combinedData.length}
-    >
-      <JournalGallery data={combinedData} />
-    </LandingListingShell>
-  );
+  return <JournalGallery data={combinedData} />;
 }

@@ -1,21 +1,18 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Box } from "lucide-react";
+import LibraryTagsGrouped from "@/components/landing/library-tags-grouped";
 
 const KIND_CONFIG = {
   journal: {
-    label: "Journal",
-    Icon: BookOpen,
-    color: "#fadc4b",
     backHref: "/journals",
-    backLabel: "Journals",
+    pathLabel: "/journals",
   },
   project: {
-    label: "Project",
-    Icon: Box,
-    color: "#0068e2",
     backHref: "/projects",
-    backLabel: "Projects",
+    pathLabel: "/projects",
   },
 } as const;
 
@@ -35,18 +32,6 @@ function formatDetailDate(iso: string): string {
   }
 }
 
-function dedupeTags(tags: string[]): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const t of tags) {
-    const s = t.trim();
-    if (!s || seen.has(s)) continue;
-    seen.add(s);
-    out.push(s);
-  }
-  return out;
-}
-
 interface LandingDetailPageProps {
   kind: LandingDetailKind;
   title: string;
@@ -58,7 +43,7 @@ interface LandingDetailPageProps {
 
 /**
  * Article shell aligned with the home landing: primary-gray page background,
- * card panel, type badge (journal / project), back link to the listing.
+ * full-width card panel, fixed header with section path, title + date, tags.
  */
 export default function LandingDetailPage({
   kind,
@@ -70,68 +55,63 @@ export default function LandingDetailPage({
 }: LandingDetailPageProps) {
   const config = KIND_CONFIG[kind];
   const dateStr = formatDetailDate(publishedAt);
-  const tags = dedupeTags(tagList);
+  const headerRef = useRef<HTMLElement>(null);
+  const [spacerHeight, setSpacerHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+
+    const measure = () => setSpacerHeight(el.offsetHeight);
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [title, tagList.length, externalUrl, dateStr]);
 
   return (
     <main className="min-h-screen w-full bg-primary-gray font-inter text-primary-black dark:bg-backgroundDark dark:text-textDark">
-      <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 md:py-10 lg:max-w-4xl">
-        <div className="flex flex-col overflow-hidden bg-primary-white shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:ring-gray-600/50">
-          <header className="border-b border-gray-200/90 px-6 py-8 dark:border-gray-600/50 sm:px-8">
-            <Link
-              href={config.backHref}
-              className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-primary-black dark:text-gray-400 dark:hover:text-textDark"
-              data-umami-event={`landing-detail-back-${kind}`}
-            >
-              <ArrowLeft className="size-4 shrink-0" aria-hidden />
-              {config.backLabel}
-            </Link>
-
-            <div className="mb-4 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200/90 bg-primary-gray/80 px-2.5 py-1 text-xs font-medium text-primary-black dark:border-gray-600 dark:bg-zinc-800/80 dark:text-textDark">
-                <span
-                  className="inline-flex size-6 items-center justify-center rounded-full"
-                  style={{ backgroundColor: `${config.color}24` }}
-                >
-                  <config.Icon
-                    size={14}
-                    style={{ color: config.color }}
-                    aria-hidden
-                  />
-                </span>
-                {config.label}
-              </span>
+      <div className="w-full px-4 pb-6 pt-4 sm:px-6 sm:pb-8 sm:pt-6 md:pb-10">
+        <div className="flex flex-col bg-primary-white shadow-sm ring-1 ring-gray-200/90 dark:bg-[#242424] dark:ring-gray-600/50">
+          <header
+            ref={headerRef}
+            className="fixed left-4 right-4 top-4 z-30 border-b border-gray-200/80 bg-primary-white/95 px-4 py-3 backdrop-blur-md dark:border-gray-600/40 dark:bg-[#242424]/95 sm:left-6 sm:right-6 sm:px-6 sm:py-3.5"
+            role="banner"
+          >
+            <div className="mb-2">
+              <Link
+                href={config.backHref}
+                className="text-xs font-medium text-gray-500 transition-colors hover:text-primary-black dark:text-gray-400 dark:hover:text-textDark"
+                data-umami-event={`landing-detail-path-${kind}`}
+              >
+                {config.pathLabel}
+              </Link>
             </div>
 
-            <h1 className="text-2xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-textDark sm:text-3xl">
-              {title}
-            </h1>
-
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex flex-row items-start justify-between gap-3 sm:gap-4">
+              <h1 className="min-w-0 flex-1 pr-2 text-xl font-semibold leading-snug tracking-tight text-gray-900 dark:text-textDark sm:text-2xl">
+                {title}
+              </h1>
               {dateStr ? (
-                <time dateTime={publishedAt} className="tabular-nums">
+                <time
+                  dateTime={publishedAt}
+                  className="shrink-0 pt-0.5 tabular-nums text-xs text-gray-500 dark:text-gray-400"
+                >
                   {dateStr}
                 </time>
               ) : null}
-              {tags.length > 0 ? (
-                <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-                  {tags.map((t) => (
-                    <li key={t}>
-                      <span className="rounded-full border border-gray-300 bg-transparent px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:border-gray-600 dark:text-gray-300">
-                        {t}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
             </div>
 
+            <LibraryTagsGrouped tags={tagList} />
+
             {externalUrl ? (
-              <p className="mt-6">
+              <p className="mt-3 mb-0">
                 <a
                   href={externalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-medium text-primary-black underline underline-offset-2 hover:text-gray-800 dark:text-textDark dark:hover:text-white"
+                  className="text-xs font-medium text-primary-black underline underline-offset-2 hover:text-gray-800 dark:text-textDark dark:hover:text-white"
                   data-umami-event="landing-detail-external-url"
                 >
                   View live project
@@ -139,6 +119,12 @@ export default function LandingDetailPage({
               </p>
             ) : null}
           </header>
+
+          <div
+            className="shrink-0"
+            style={{ height: spacerHeight }}
+            aria-hidden
+          />
 
           <div className="font-inter text-gray-800 dark:text-textDark">
             {children}

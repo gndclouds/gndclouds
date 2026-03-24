@@ -1,10 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
+import ProjectCardMedia from "@/components/project-card-media";
 import {
-  journalExcerptForHero,
-  journalHeroImageApiQuery,
-  journalHeroUrlForDisplay,
-} from "@/lib/journal-hero-image";
+  formatCardHeading,
+  stripMarkdownMediaEmbeds,
+  stripObsidianWikiLinksForPreview,
+} from "@/lib/markdown-to-card-plain-text";
+import { getJournalCardMediaUrls } from "@/lib/project-card-images";
 import type { Journal } from "@/queries/journals";
 
 interface JournalWithDescription extends Journal {
@@ -16,52 +17,46 @@ interface JournalCardProps {
 }
 
 export default function JournalCard({ journal }: JournalCardProps) {
-  const description =
+  const rawDescription =
     journal.description ??
     (typeof journal.metadata?.description === "string"
       ? journal.metadata.description
       : "No description available");
-  const staticHero = journalHeroUrlForDisplay(
-    journal.metadata?.heroImage as string | undefined
+  const description = stripObsidianWikiLinksForPreview(
+    stripMarkdownMediaEmbeds(rawDescription).replace(/\s+/g, " ").trim()
   );
-  const imageSummary =
-    journalExcerptForHero({
-      description:
-        journal.description ?? journal.metadata?.description,
-      contentHtml: journal.metadata?.contentHtml,
-    }) || description.slice(0, 200);
-  const tagList = [
-    ...(journal.tags ?? []),
-    ...(journal.categories ?? []),
-  ].filter((t): t is string => typeof t === "string");
-  const imageSrc =
-    staticHero ??
-    `/api/journals/hero-image?${journalHeroImageApiQuery({
-      summary: imageSummary,
-      title: journal.title,
-      tags: tagList,
-    })}`;
+
+  const { displayUrl, hoverGifUrl } = getJournalCardMediaUrls(journal.metadata);
+
+  const imgTone = "dark:brightness-[0.88] dark:contrast-[1.05]";
 
   return (
     <Link
       href={`/journal/${journal.slug}`}
-      className="group block rounded-xl overflow-hidden bg-primary-white"
+      className="group block overflow-hidden rounded-sm bg-primary-white"
     >
-      <div className="relative w-full aspect-[4/3] bg-primary-gray overflow-hidden rounded-xl">
-        <Image
-          src={imageSrc}
-          alt=""
-          fill
-          className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
-          sizes="(max-width: 768px) 100vw, 33vw"
-          unoptimized
-        />
+      <div className="relative w-full overflow-hidden rounded-sm bg-primary-gray dark:bg-zinc-800">
+        {displayUrl ? (
+          <ProjectCardMedia
+            displaySrc={displayUrl}
+            hoverGifSrc={hoverGifUrl}
+            alt=""
+            sizes="(max-width: 768px) 100vw, 33vw"
+            imgClassName={imgTone}
+            naturalAspect
+          />
+        ) : (
+          <div
+            className="min-h-32 w-full bg-gray-200 dark:bg-zinc-800"
+            aria-hidden
+          />
+        )}
       </div>
-      <div className="px-0 py-4 sm:py-5 text-left bg-primary-white rounded-b-xl">
-        <h3 className="font-normal text-primary-black text-sm line-clamp-1">
-          {journal.title}
+      <div className="rounded-b-sm bg-primary-white px-0 py-4 text-left sm:py-5 dark:bg-zinc-900">
+        <h3 className="font-normal text-primary-black dark:text-textDark text-sm line-clamp-1">
+          {formatCardHeading(journal.title)}
         </h3>
-        <p className="text-primary-gray text-sm font-normal mt-1.5 line-clamp-3">
+        <p className="text-primary-gray dark:text-gray-400 text-sm font-normal mt-1.5 line-clamp-3">
           {description}
         </p>
       </div>

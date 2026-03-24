@@ -25,6 +25,20 @@ export interface Post {
   };
 }
 
+function toTimestamp(value: unknown): number {
+  if (typeof value !== "string" || !value.trim()) return 0;
+  const ts = new Date(value).getTime();
+  return Number.isNaN(ts) ? 0 : ts;
+}
+
+function projectSortTimestamp(post: Post): number {
+  const created = post.metadata?.created;
+  if (typeof created === "string" && created.trim()) {
+    return toTimestamp(created);
+  }
+  return toTimestamp(post.publishedAt);
+}
+
 export async function getAllProjects(): Promise<Post[]> {
   try {
     const artifactPaths = await getMarkdownFilePaths("artifacts");
@@ -46,8 +60,6 @@ export async function getAllProjects(): Promise<Post[]> {
             metadata.companies ?? metadata.orgs ?? metadata.org
           );
           const cardImages = buildProjectCardImageFields({
-            heroImage: metadata.heroImage,
-            heroImagePoster: metadata.heroImagePoster,
             markdownBody: markdownContent,
             markdownFilePath: relativePath,
           });
@@ -68,7 +80,10 @@ export async function getAllProjects(): Promise<Post[]> {
             facets,
             companies,
             type: metadata.type || ["Project"],
-            publishedAt: metadata.publishedAt || new Date().toISOString(),
+            publishedAt:
+              metadata.created ||
+              metadata.publishedAt ||
+              new Date().toISOString(),
             published: metadata.published !== false, // Default to published unless explicitly false
             metadata: {
               ...metadata,
@@ -89,10 +104,7 @@ export async function getAllProjects(): Promise<Post[]> {
     const validFiles = files.filter(Boolean) as Post[];
 
     // Sort by publish date
-    return validFiles.sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
+    return validFiles.sort((a, b) => projectSortTimestamp(b) - projectSortTimestamp(a));
   } catch (error) {
     console.error(`Unexpected error in getAllProjects (artifacts):`, error);
     return [];

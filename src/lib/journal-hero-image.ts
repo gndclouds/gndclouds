@@ -1,18 +1,18 @@
 /**
  * Shared prompts and image generation for journal hero banners.
- * Primary: OpenAI DALL·E 3 (PNG raster).
- * Fallback: Claude (Anthropic Messages API → SVG) when OpenAI fails or OPENAI_API_KEY is unset.
+ * Uses OpenAI DALL·E 3 only (PNG raster). Anthropic does not offer image generation; we removed the
+ * old Claude→SVG workaround because SVG heroes looked poor compared to DALL·E.
  * Used by /api/journals/hero-image and scripts/generate-journal-hero-images.ts.
  *
- * Tuning the look:
- * - Style (both Claude + DALL·E): edit `HERO_IMAGE_STYLE_PROMPT` below, or set env
- *   `JOURNAL_HERO_STYLE_PROMPT` in `.env.local` to override without code changes (one line, or use \n for breaks).
- * - Claude-only (SVG rules, viewBox, “no script” constraints): edit the `userPrompt` template in
- *   `generateHeroImageWithClaude`.
- * - Only this style string is sent to the models (no article text). Query params on `/api/journals/hero-image`
- *   are for per-card cache URLs only.
+ * Tuning: edit `HERO_IMAGE_STYLE_PROMPT` below, or set `JOURNAL_HERO_STYLE_PROMPT` in `.env.local`.
+ * Query params on `/api/journals/hero-image` are for per-card cache URLs only (not sent to the model).
+ * Set `DISABLE_JOURNAL_HERO_GENERATION=1` to turn off live + script generation (e.g. billing paused).
  */
 
+import {
+  markdownBodyToCardPlainText,
+  stripMarkdownMediaEmbeds,
+} from "@/lib/markdown-to-card-plain-text";
 import {
   normalizeProjectImageUrlForCard,
   resolveWikiInnerPathForContentRepo,
@@ -31,7 +31,13 @@ export function getHeroImageStylePrompt(): string {
   return HERO_IMAGE_STYLE_PROMPT;
 }
 
-/** Front matter path under src/app/db/assets/ (OpenAI → .png default; Claude fallback → .svg). */
+/** When true, skip DALL·E calls (script exits 0; API redirects to placeholder). */
+export function isJournalHeroGenerationDisabled(): boolean {
+  const v = process.env.DISABLE_JOURNAL_HERO_GENERATION?.trim().toLowerCase();
+  return v === "1" || v === "true" || v === "yes";
+}
+
+/** Front matter path under src/app/db/assets/ (PNG from DALL·E). */
 export function journalHeroAssetPath(
   slug: string,
   ext: "svg" | "png" = "png"
@@ -71,93 +77,8 @@ export interface GeneratedHeroImageResult {
   contentType: string;
 }
 
-const DEFAULT_CLAUDE_MODEL = "claude-sonnet-4-20250514";
-
-function extractSvgFromClaudeText(text: string): string {
-  const t = text.trim();
-  const fence = t.match(/```(?:svg)?\s*([\s\S]*?)```/);
-  if (fence) return fence[1].trim();
-  const start = t.indexOf("<svg");
-  const end = t.lastIndexOf("</svg>");
-  if (start >= 0 && end > start) return t.slice(start, end + 6);
-  throw new Error("Claude response did not contain a valid <svg> document");
-}
-
-/** Strip obvious script vectors from generated SVG before serving or saving. */
-export function sanitizeHeroSvg(svg: string): string {
-  return svg
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<\?[\s\S]*?\?>/g, "")
-    .replace(/\s(on\w+)\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "");
-}
-
 /**
- * Claude (Anthropic) has no raster image API; we ask for a single 16:9 SVG banner.
- */
-export async function generateHeroImageWithClaude(
-  apiKey: string
-): Promise<GeneratedHeroImageResult> {
-  const model =
-    process.env.ANTHROPIC_MODEL?.trim() || DEFAULT_CLAUDE_MODEL;
-  const style = getHeroImageStylePrompt();
-  const userPrompt = `Create ONE standalone SVG file for a website hero banner.
-
-Requirements:
-- Root element: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1792 1008" width="1792" height="1008"> (16:9).
-- Visual style (medium and palette only; choose any peaceful landscape composition that fits): ${style}
-- Evoke ink line + watercolor with paths, layered transparency, soft gradients, and optional subtle paper grain (e.g. feTurbulence at low opacity). Avoid flat vector poster fills with no wash or line character.
-- Do not include <script>, animation that loads remote resources, or embedded raster images (no <image href="http...">). Use only vector shapes, paths, gradients, and filters if needed.
-- Output ONLY the raw SVG markup. No markdown fences, no commentary before or after.
-
-`;
-
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model,
-      max_tokens: 8192,
-      messages: [{ role: "user", content: userPrompt }],
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Anthropic Messages API error ${res.status}: ${err}`);
-  }
-
-  const json = (await res.json()) as {
-    content?: { type: string; text?: string }[];
-  };
-  const block = json.content?.find((c) => c.type === "text");
-  const text = block?.text;
-  if (!text) {
-    throw new Error("Anthropic returned no text block");
-  }
-
-  let svg = extractSvgFromClaudeText(text);
-  svg = sanitizeHeroSvg(svg);
-  if (!svg.includes("<svg")) {
-    throw new Error("Sanitized output lost SVG root");
-  }
-
-  const u8 = new TextEncoder().encode(svg);
-  const buffer = u8.buffer.slice(
-    u8.byteOffset,
-    u8.byteOffset + u8.byteLength
-  ) as ArrayBuffer;
-  return {
-    buffer,
-    contentType: "image/svg+xml; charset=utf-8",
-  };
-}
-
-/**
- * OpenAI Images API (DALL·E 3) — primary raster path.
+ * OpenAI Images API (DALL·E 3).
  */
 export async function generateHeroImageWithOpenAI(
   apiKey: string
@@ -181,7 +102,19 @@ export async function generateHeroImageWithOpenAI(
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`OpenAI images API error ${res.status}: ${err}`);
+    let hint = "";
+    try {
+      const j = JSON.parse(err) as {
+        error?: { code?: string; message?: string };
+      };
+      if (j?.error?.code === "billing_hard_limit_reached") {
+        hint =
+          " OpenAI billing hard limit reached — raise your limit at platform.openai.com or add credits.";
+      }
+    } catch {
+      /* use raw err */
+    }
+    throw new Error(`OpenAI images API error ${res.status}: ${err}${hint}`);
   }
 
   const json = (await res.json()) as { data?: { url?: string }[] };
@@ -201,29 +134,21 @@ export async function generateHeroImageWithOpenAI(
 }
 
 /**
- * Prefer OpenAI (DALL·E PNG); fall back to Claude (SVG) if OpenAI fails or key is missing.
+ * DALL·E 3 only. Anthropic has no raster API; SVG fallback was removed.
  */
 export async function generateHeroImage(): Promise<GeneratedHeroImageResult> {
+  if (isJournalHeroGenerationDisabled()) {
+    throw new Error(
+      "Journal hero generation is disabled (DISABLE_JOURNAL_HERO_GENERATION=1)."
+    );
+  }
   const openaiKey = process.env.OPENAI_API_KEY?.trim();
-  const anthropicKey = process.env.ANTHROPIC_API_KEY?.trim();
-
-  if (openaiKey) {
-    try {
-      return await generateHeroImageWithOpenAI(openaiKey);
-    } catch (e) {
-      console.error("OpenAI hero generation failed, trying Claude fallback:", e);
-      if (!anthropicKey) throw e;
-      return generateHeroImageWithClaude(anthropicKey);
-    }
+  if (!openaiKey) {
+    throw new Error(
+      "Set OPENAI_API_KEY for journal hero generation (DALL·E 3). Anthropic cannot output PNG/JPEG; the old SVG path was removed."
+    );
   }
-
-  if (anthropicKey) {
-    return generateHeroImageWithClaude(anthropicKey);
-  }
-
-  throw new Error(
-    "Set OPENAI_API_KEY (DALL·E, preferred) or ANTHROPIC_API_KEY (Claude SVG fallback) in the environment"
-  );
+  return generateHeroImageWithOpenAI(openaiKey);
 }
 
 const IMAGE_EXT = /\.(png|jpe?g|gif|webp|avif|svg)(\?.*)?$/i;
@@ -263,17 +188,12 @@ export function journalExcerptForHero(
 ): string {
   const desc = metadata.description;
   if (typeof desc === "string" && desc.trim()) {
-    return desc.slice(0, maxLength);
+    return stripMarkdownMediaEmbeds(desc)
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, maxLength);
   }
   const raw = metadata.contentHtml;
   if (typeof raw !== "string") return "";
-  return raw
-    .replace(/<[^>]*>/g, "")
-    .replace(/^#+\s*/gm, "")
-    .replace(/\*+([^*]*)\*+/g, "$1")
-    .replace(/_+([^_]*)_+/g, "$1")
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, maxLength);
+  return markdownBodyToCardPlainText(raw).slice(0, maxLength);
 }

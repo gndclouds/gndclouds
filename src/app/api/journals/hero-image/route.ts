@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateHeroImage } from "@/lib/journal-hero-image";
+import {
+  generateHeroImage,
+  isJournalHeroGenerationDisabled,
+} from "@/lib/journal-hero-image";
 
 /**
  * Live hero generation (style-only prompt). Optional query params (summary, title, tags)
  * may be present on image URLs for per-card cache keys; they are not used in the model prompt.
+ * Set DISABLE_JOURNAL_HERO_GENERATION=1 to always redirect to the default background.
  */
 export async function GET(_request: NextRequest) {
-  const hasAnthropic = !!process.env.ANTHROPIC_API_KEY?.trim();
-  const hasOpenAI = !!process.env.OPENAI_API_KEY?.trim();
-  if (!hasAnthropic && !hasOpenAI) {
+  if (
+    isJournalHeroGenerationDisabled() ||
+    !process.env.OPENAI_API_KEY?.trim()
+  ) {
     return NextResponse.redirect(new URL("/background.jpg", _request.url));
   }
 

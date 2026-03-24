@@ -16,12 +16,7 @@ interface Params {
 }
 
 function normalizeTag(tag: string): string {
-  return tag.replace(/\[\[|\]\]/g, "").trim();
-}
-
-function isProjectCardTag(tag: string): boolean {
-  const lower = normalizeTag(tag).toLowerCase();
-  return lower.startsWith("skills/") || lower.startsWith("topic/");
+  return tag.replace(/\[\[|\]\]/g, "").replace(/\\/g, "/").trim();
 }
 
 function resolveAssetPath(cleanPath: string, markdownFilePath: string): string {
@@ -136,7 +131,7 @@ export default async function ProjectPage({ params }: Params) {
   );
   const pageTags = [...(project.categories ?? []), ...(project.tags ?? [])]
     .map(normalizeTag)
-    .filter((tag) => tag.length > 0 && !isProjectCardTag(tag))
+    .filter((tag) => tag.length > 0)
     .filter((tag, index, all) => all.findIndex((t) => t.toLowerCase() === tag.toLowerCase()) === index);
 
   return (
@@ -152,7 +147,8 @@ export default async function ProjectPage({ params }: Params) {
           content={processedContent}
           links={links}
           footnotes={footnotes}
-          innerPaddingClass="px-6 py-8 sm:px-8"
+          innerPaddingClass="w-full max-w-[600px] text-left px-6 py-8 sm:px-8"
+          hideLeadingMediaBeforeText
         />
       </div>
     </LandingDetailPage>

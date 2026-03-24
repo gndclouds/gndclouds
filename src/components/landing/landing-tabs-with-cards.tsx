@@ -1,9 +1,7 @@
 "use client";
 
-import { useMemo, useState, useCallback, useEffect } from "react";
-import { track } from "@/lib/umami";
-import { BookOpen, Box, ScrollText, Search, type LucideIcon } from "lucide-react";
-import HoverTooltip from "@/components/ui/hover-tooltip";
+import { useCallback, useMemo, useState } from "react";
+import { LayoutGrid, List, Search, X } from "lucide-react";
 import type { Journal } from "@/queries/journals";
 import type { Post as LogPost } from "@/queries/logs";
 import type { Post as ProjectPost } from "@/queries/projects";
@@ -11,6 +9,28 @@ import type { TabItemType } from "@/components/landing/hover-preview-card";
 import type { TabItem } from "@/components/landing/hover-preview-card";
 import LandingItemCard from "@/components/landing/landing-item-card";
 import { itemMatchesLibraryFilters } from "@/components/landing/design-skill-filters";
+import {
+  FEED_TYPE_DEFAULT_ENABLED,
+  type FeedTypeFilterKey,
+} from "@/components/landing/landing-feed-type-filters";
+import IconWordSegmentedToggle from "@/components/landing/icon-word-segmented-toggle";
+import {
+  formatCardHeading,
+  markdownBodyToCardPlainText,
+  stripMarkdownMediaEmbeds,
+  stripObsidianWikiLinksForPreview,
+} from "@/lib/markdown-to-card-plain-text";
+import {
+  itemHasLibraryTagPath,
+  normalizeLibraryTagPath,
+} from "@/lib/library-tag-paths";
+
+type FeedViewMode = "grid" | "list";
+
+const VIEW_TOGGLE_OPTIONS = [
+  { id: "grid" as const, label: "Grid", Icon: LayoutGrid },
+  { id: "list" as const, label: "List", Icon: List },
+];
 
 interface JournalWithDescription extends Journal {
   description?: string;
@@ -22,44 +42,27 @@ interface LandingTabsWithCardsProps {
   recentProjects?: ProjectPost[];
   /** When non-empty, only posts whose tags match these design/skill groups are shown. */
   designSkillFilterIds?: string[];
+  /** Which post types appear in the feed. Defaults to journals, logs, and projects enabled. */
+  feedTypesEnabled?: Record<FeedTypeFilterKey, boolean>;
 }
-
-type FilterKey = "journals" | "logs" | "projects";
-
-const FILTER_TOGGLES = [
-  {
-    id: "journals" as const,
-    label: "Journals",
-    dotColor: "#fadc4b",
-    Icon: BookOpen,
-  },
-  {
-    id: "logs" as const,
-    label: "Logs",
-    dotColor: "#ff6622",
-    Icon: ScrollText,
-  },
-  {
-    id: "projects" as const,
-    label: "Projects",
-    dotColor: "#0068e2",
-    Icon: Box,
-  },
-] as const;
 
 interface CardItem {
   item: JournalWithDescription | LogPost | ProjectPost;
   type: TabItemType;
 }
 
-const defaultEnabled: Record<FilterKey, boolean> = {
-  journals: true,
-  logs: true,
-  projects: true,
-};
+function feedItemSortTime(item: TabItem): number {
+  const created = (item.metadata as Record<string, unknown> | undefined)?.created;
+  if (typeof created === "string" && created.trim()) {
+    const t = new Date(created).getTime();
+    if (!Number.isNaN(t)) return t;
+  }
+  const t = new Date(item.publishedAt).getTime();
+  return Number.isNaN(t) ? 0 : t;
+}
 
 function getItemsForFilters(
-  enabled: Record<FilterKey, boolean>,
+  enabled: Record<FeedTypeFilterKey, boolean>,
   journals: JournalWithDescription[],
   logs: LogPost[],
   projects: ProjectPost[]
@@ -75,9 +78,7 @@ function getItemsForFilters(
     projects.forEach((p) => out.push({ item: p, type: "project" }));
   }
   return out.sort(
-    (a, b) =>
-      new Date(b.item.publishedAt).getTime() -
-      new Date(a.item.publishedAt).getTime()
+    (a, b) => feedItemSortTime(b.item) - feedItemSortTime(a.item)
   );
 }
 
@@ -86,17 +87,50 @@ function getSearchableText(item: TabItem): string {
   const fromMeta =
     item.description ?? (typeof desc === "string" ? desc : null);
   const raw = item.metadata?.contentHtml;
-  const content =
-    typeof raw === "string"
-      ? raw.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim()
+  const descPlain =
+    typeof fromMeta === "string"
+      ? stripObsidianWikiLinksForPreview(
+          stripMarkdownMediaEmbeds(fromMeta).replace(/\s+/g, " ").trim()
+        )
       : "";
-  return [item.title, fromMeta, content].filter(Boolean).join(" ").toLowerCase();
+  const content =
+    typeof raw === "string" ? markdownBodyToCardPlainText(raw) : "";
+  return [
+    formatCardHeading(item.title),
+    descPlain,
+    content,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }
 
 function filterBySearchQuery(items: CardItem[], query: string): CardItem[] {
   const q = query.trim().toLowerCase();
   if (!q) return items;
   return items.filter(({ item }) => getSearchableText(item).includes(q));
+}
+
+function tagPathToChipLabel(path: string): string {
+  const n = normalizeLibraryTagPath(path);
+  const i = n.indexOf("/");
+  const rest = i >= 0 ? n.slice(i + 1).trim() : n;
+  return rest.replace(/-/g, " ");
+}
+
+function filterByLibraryTagPath(
+  items: CardItem[],
+  normalizedPath: string | null
+): CardItem[] {
+  if (!normalizedPath) return items;
+  const needle = normalizeLibraryTagPath(normalizedPath).toLowerCase();
+  return items.filter(({ item }) =>
+    itemHasLibraryTagPath(
+      item.tags,
+      "categories" in item ? item.categories : undefined,
+      needle
+    )
+  );
 }
 
 function filterByDesignSkillFilters(
@@ -109,87 +143,33 @@ function filterByDesignSkillFilters(
   );
 }
 
-/** Split into N columns in round-robin order so row-wise reading matches array order (newest → oldest left-to-right, then next row). */
-function splitIntoColumns<T>(items: T[], columnCount: number): T[][] {
-  const cols: T[][] = Array.from({ length: columnCount }, () => []);
-  items.forEach((item, i) => {
-    cols[i % columnCount]!.push(item);
-  });
-  return cols;
-}
-
-/** Matches Tailwind md: 1 col default, 2 from md up. Gated until mount to avoid SSR/client mismatch. */
-function useFeedColumnCount(): 1 | 2 {
-  const [count, setCount] = useState<1 | 2>(1);
-
-  useEffect(() => {
-    const mqMd = window.matchMedia("(min-width: 768px)");
-    const read = (): 1 | 2 => (mqMd.matches ? 2 : 1);
-    setCount(read());
-    const onChange = () => setCount(read());
-    mqMd.addEventListener("change", onChange);
-    return () => {
-      mqMd.removeEventListener("change", onChange);
-    };
-  }, []);
-
-  return count;
-}
-
-function FilterToggleButton({
-  id,
-  label,
-  dotColor,
-  Icon,
-  pressed,
-  onToggle,
-}: {
-  id: FilterKey;
-  label: string;
-  dotColor: string;
-  Icon: LucideIcon;
-  pressed: boolean;
-  onToggle: () => void;
-}) {
-  const tipId = `landing-filter-toggle-${id}`;
-  return (
-    <HoverTooltip label={label} id={tipId}>
-      <button
-        type="button"
-        aria-pressed={pressed}
-        aria-label={`${label}: ${pressed ? "on" : "off"}. Click to toggle.`}
-        aria-describedby={tipId}
-        onClick={onToggle}
-        className={`inline-flex size-9 shrink-0 items-center justify-center rounded-full border-0 outline-none transition-colors focus-visible:ring-2 focus-visible:ring-gray-300 dark:focus-visible:ring-gray-600 ${
-          pressed
-            ? "bg-black/[0.04] dark:bg-white/[0.08]"
-            : "bg-transparent hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
-        }`}
-      >
-        <Icon
-          size={18}
-          aria-hidden
-          className={
-            pressed
-              ? "shrink-0"
-              : "shrink-0 text-gray-400 dark:text-gray-500"
-          }
-          style={pressed ? { color: dotColor } : undefined}
-        />
-      </button>
-    </HoverTooltip>
-  );
-}
-
 export default function LandingTabsWithCards({
   recentJournals = [],
   recentLogs = [],
   recentProjects = [],
   designSkillFilterIds = [],
+  feedTypesEnabled: enabled = FEED_TYPE_DEFAULT_ENABLED,
 }: LandingTabsWithCardsProps) {
-  const [enabled, setEnabled] = useState<Record<FilterKey, boolean>>(defaultEnabled);
+  const hasLogs = recentLogs.length > 0;
   const [searchQuery, setSearchQuery] = useState("");
-  const columnCount = useFeedColumnCount();
+  const [libraryTagPathFilter, setLibraryTagPathFilter] = useState<
+    string | null
+  >(null);
+  const [viewMode, setViewMode] = useState<FeedViewMode>("grid");
+
+  const onLibraryTagPathSelect = useCallback((path: string) => {
+    const next = normalizeLibraryTagPath(path);
+    const lower = next.toLowerCase();
+    setLibraryTagPathFilter((cur) => {
+      if (
+        cur &&
+        normalizeLibraryTagPath(cur).toLowerCase() === lower
+      ) {
+        return null;
+      }
+      return next;
+    });
+  }, []);
 
   const itemsByType = useMemo(
     () =>
@@ -207,38 +187,39 @@ export default function LandingTabsWithCards({
     [itemsByType, designSkillFilterIds]
   );
 
+  const itemsAfterTag = useMemo(
+    () => filterByLibraryTagPath(itemsAfterSkill, libraryTagPathFilter),
+    [itemsAfterSkill, libraryTagPathFilter]
+  );
+
   const items = useMemo(
-    () => filterBySearchQuery(itemsAfterSkill, searchQuery),
-    [itemsAfterSkill, searchQuery]
+    () => filterBySearchQuery(itemsAfterTag, searchQuery),
+    [itemsAfterTag, searchQuery]
   );
 
-  const itemColumns = useMemo(
-    () => splitIntoColumns(items, columnCount),
-    [items, columnCount]
-  );
-
-  const toggleFilter = useCallback((key: FilterKey) => {
-    setEnabled((prev) => {
-      const next = { ...prev, [key]: !prev[key] };
-      track("landing-filter-toggle", {
-        journals: next.journals,
-        logs: next.logs,
-        projects: next.projects,
-      });
-      return next;
+  /** Split feed into two columns (even / odd index) so each column stacks under the card above — no shared row heights. */
+  const gridColumns = useMemo(() => {
+    const left: CardItem[] = [];
+    const right: CardItem[] = [];
+    items.forEach((entry, i) => {
+      (i % 2 === 0 ? left : right).push(entry);
     });
-  }, []);
+    return { left, right };
+  }, [items]);
 
-  const noneEnabled =
-    !enabled.journals && !enabled.logs && !enabled.projects;
+  const noneEnabled = hasLogs
+    ? !enabled.journals && !enabled.logs && !enabled.projects
+    : !enabled.journals && !enabled.projects;
 
   const emptyMessage = noneEnabled
-    ? "Turn on at least one type (icons on the right) to see posts."
+    ? "Turn on at least one content type to see posts."
     : itemsByType.length === 0
       ? "No items yet."
       : itemsAfterSkill.length === 0
         ? "No posts match these topic filters."
-        : "No results match your search.";
+        : libraryTagPathFilter && itemsAfterTag.length === 0
+          ? "No posts match this tag."
+          : "No results match your search.";
 
   return (
     <div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -249,69 +230,129 @@ export default function LandingTabsWithCards({
         <div
           className="sticky top-0 z-20 border-b-0 pb-4 pt-[max(1rem,env(safe-area-inset-top))]"
         >
-          <div
-            role="search"
-            aria-label="Search and filter feed"
-            className="flex min-w-0 items-stretch gap-0 border-0 bg-primary-white/80 px-2 py-2 text-sm text-primary-black backdrop-blur-md dark:bg-zinc-900/55 sm:px-3"
-          >
-            <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-gray-100/85 px-3 py-2 dark:bg-zinc-800/80">
-              <Search
-                className="size-4 shrink-0 text-gray-400 dark:text-white/40"
-                aria-hidden
-              />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search…"
-                className="min-w-0 flex-1 border-0 bg-transparent text-sm text-primary-black placeholder:text-gray-400 outline-none ring-0 dark:text-textDark dark:placeholder:text-gray-500"
-                aria-label="Search journals, logs, and projects"
-              />
-            </div>
-
+          <div className="flex flex-col gap-2 rounded-2xl border-0 bg-primary-white/80 px-2 py-2 text-sm text-primary-black backdrop-blur-md dark:bg-zinc-900/55 sm:flex-row sm:items-center sm:gap-3 sm:px-3">
             <div
-              className="flex shrink-0 items-center gap-0.5 border-l border-gray-200/70 pl-2 dark:border-gray-600/60 sm:gap-1 sm:pl-3"
-              role="group"
-              aria-label="Show or hide content types"
+              role="search"
+              aria-label="Search feed"
+              className="min-w-0 flex-1"
             >
-              {FILTER_TOGGLES.map((t) => (
-                <FilterToggleButton
-                  key={t.id}
-                  id={t.id}
-                  label={t.label}
-                  dotColor={t.dotColor}
-                  Icon={t.Icon}
-                  pressed={enabled[t.id]}
-                  onToggle={() => toggleFilter(t.id)}
+              <div className="flex min-w-0 items-center gap-2 rounded-xl bg-gray-100/85 px-3 py-2 dark:bg-zinc-800/80">
+                {libraryTagPathFilter ? (
+                  <span className="flex min-w-0 shrink items-center gap-1">
+                    <span
+                      id="feed-library-tag-filter"
+                      className="max-w-[min(12rem,40vw)] truncate rounded-md border border-gray-200/20 bg-gray-50/90 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-gray-700 dark:border-white/[0.03] dark:bg-white/[0.04] dark:text-gray-300"
+                      title={tagPathToChipLabel(libraryTagPathFilter)}
+                    >
+                      {tagPathToChipLabel(libraryTagPathFilter)}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setLibraryTagPathFilter(null)}
+                      className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-200/80 hover:text-primary-black dark:text-gray-400 dark:hover:bg-white/[0.08] dark:hover:text-textDark"
+                      aria-label="Clear tag filter"
+                    >
+                      <X className="size-3.5" strokeWidth={2} aria-hidden />
+                    </button>
+                  </span>
+                ) : null}
+                <Search
+                  className="size-4 shrink-0 text-gray-400 dark:text-white/40"
+                  aria-hidden
                 />
-              ))}
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search…"
+                  className="min-w-0 flex-1 border-0 bg-transparent text-sm text-primary-black placeholder:text-gray-400 outline-none ring-0 dark:text-textDark dark:placeholder:text-gray-500"
+                  aria-label={
+                    hasLogs
+                      ? "Search journals, logs, and projects"
+                      : "Search journals and projects"
+                  }
+                  aria-describedby={
+                    libraryTagPathFilter ? "feed-library-tag-filter" : undefined
+                  }
+                />
+              </div>
             </div>
+            <IconWordSegmentedToggle
+              className="w-full shrink-0 sm:w-auto sm:max-w-none"
+              options={VIEW_TOGGLE_OPTIONS}
+              value={viewMode}
+              onChange={(id) => setViewMode(id as FeedViewMode)}
+              ariaLabel="Feed layout"
+              showLabels={false}
+            />
           </div>
         </div>
 
         <section
           aria-label="Filtered posts"
-          className="relative z-0 min-w-0"
+          className="relative z-0 min-w-0 px-0"
         >
           {items.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 text-sm py-8">
               {emptyMessage}
             </p>
-          ) : (
-            <div className="flex flex-row items-start gap-4 px-1 sm:px-1.5">
-              {itemColumns.map((col, colIndex) => (
-                <div
-                  key={colIndex}
-                  className="flex min-w-0 flex-1 flex-col gap-4"
+          ) : viewMode === "list" ? (
+            <ul className="flex flex-col gap-y-2">
+              {items.map(({ item, type }) => (
+                <li
+                  key={`${type}-${item.slug}`}
+                  className="min-h-9 flex min-w-0 items-center"
                 >
-                  {col.map(({ item, type }) => (
-                    <div key={`${type}-${item.slug}`}>
-                      <LandingItemCard item={item} type={type} />
+                  <LandingItemCard
+                    item={item}
+                    type={type}
+                    layout="list"
+                    onLibraryTagPathSelect={onLibraryTagPathSelect}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <>
+              <div className="flex flex-col gap-5 sm:gap-6 md:hidden">
+                {items.map(({ item, type }) => (
+                  <div key={`${type}-${item.slug}`} className="min-w-0">
+                    <LandingItemCard
+                      item={item}
+                      type={type}
+                      layout="grid"
+                      onLibraryTagPathSelect={onLibraryTagPathSelect}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="hidden min-w-0 md:flex md:flex-row md:items-start md:gap-6">
+                <div className="flex min-w-0 flex-1 flex-col gap-5 sm:gap-6">
+                  {gridColumns.left.map(({ item, type }) => (
+                    <div key={`${type}-${item.slug}`} className="min-w-0">
+                      <LandingItemCard
+                        item={item}
+                        type={type}
+                        layout="grid"
+                        onLibraryTagPathSelect={onLibraryTagPathSelect}
+                      />
                     </div>
                   ))}
                 </div>
-              ))}
-            </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-5 sm:gap-6">
+                  {gridColumns.right.map(({ item, type }) => (
+                    <div key={`${type}-${item.slug}`} className="min-w-0">
+                      <LandingItemCard
+                        item={item}
+                        type={type}
+                        layout="grid"
+                        onLibraryTagPathSelect={onLibraryTagPathSelect}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </section>
       </div>

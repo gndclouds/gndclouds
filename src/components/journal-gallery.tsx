@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import MarkdownContent from "@/components/MarkdownContent";
+import LandingListingShell from "@/components/landing/landing-listing-shell";
 import type { Journal } from "@/queries/journals";
 
 interface JournalWithDescription extends Journal {
@@ -64,43 +65,52 @@ export default function JournalGallery({
     });
   }, [data]);
 
-  return (
-    <div className="grid min-h-0 grid-cols-1 gap-6 lg:min-h-[min(70vh,52rem)] lg:grid-cols-[minmax(0,300px)_1fr]">
-      {/* Left: list */}
-      <aside className="flex min-h-0 flex-col overflow-y-auto border-r-0 border-gray-200/90 pr-0 dark:border-gray-600/50 lg:border-r lg:pr-2">
-        <div className="list-none">
-          {byYear.map(([year, items]) => (
-            <section key={year} className="py-0">
-              <div className="border-b border-gray-200/90 py-2 dark:border-gray-600/50">
-                <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  {year}
+  const list = (
+    <aside
+      aria-label="Journal entries by year"
+      className="mt-6 flex min-h-0 flex-col border-t border-gray-200/90 pt-6 dark:border-gray-600/50"
+    >
+      <div className="list-none">
+        {byYear.map(([year, items]) => (
+          <section key={year} className="py-0">
+            <div className="border-b border-gray-200/90 py-2 dark:border-gray-600/50">
+              <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                {year}
+              </span>
+            </div>
+            {items.map((item) => (
+              <button
+                key={item.slug}
+                type="button"
+                onClick={() => handleSelect(item)}
+                className={`flex w-full items-center justify-between gap-2 border-b border-gray-200/90 py-2.5 text-left hover:bg-gray-50 dark:border-gray-600/50 dark:hover:bg-gray-900/40 ${
+                  selectedSlug === item.slug
+                    ? "bg-gray-100 dark:bg-gray-800/60"
+                    : ""
+                }`}
+              >
+                <span className="min-w-0 flex-1 truncate text-gray-900 dark:text-gray-100">
+                  {item.title}
                 </span>
-              </div>
-              {items.map((item) => (
-                <button
-                  key={item.slug}
-                  type="button"
-                  onClick={() => handleSelect(item)}
-                  className={`flex w-full items-center justify-between gap-2 border-b border-gray-200/90 py-2.5 text-left hover:bg-gray-50 dark:border-gray-600/50 dark:hover:bg-gray-900/40 ${
-                    selectedSlug === item.slug
-                      ? "bg-gray-100 dark:bg-gray-800/60"
-                      : ""
-                  }`}
-                >
-                  <span className="min-w-0 flex-1 truncate text-gray-900 dark:text-gray-100">
-                    {item.title}
-                  </span>
-                  <span className="shrink-0 text-gray-900 dark:text-gray-100" aria-hidden>
-                    →
-                  </span>
-                </button>
-              ))}
-            </section>
-          ))}
-        </div>
-      </aside>
+                <span className="shrink-0 text-gray-900 dark:text-gray-100" aria-hidden>
+                  →
+                </span>
+              </button>
+            ))}
+          </section>
+        ))}
+      </div>
+    </aside>
+  );
 
-      {/* Right: selected post */}
+  return (
+    <LandingListingShell
+      kind="journals"
+      title="Journals"
+      description="Daily reflections, field notes, and personal writing."
+      entryCount={data.length}
+      sidebarBelowNav={list}
+    >
       <article className="flex min-h-0 flex-col overflow-hidden">
         {selected ? (
           <>
@@ -155,6 +165,6 @@ export default function JournalGallery({
           </p>
         )}
       </article>
-    </div>
+    </LandingListingShell>
   );
 }

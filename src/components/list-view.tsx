@@ -2,7 +2,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
+import LibraryTagsGrouped from "@/components/landing/library-tags-grouped";
 import ProjectCardMedia from "@/components/project-card-media";
+import {
+  getJournalListingRawTagPaths,
+  getProjectCardRawTagPaths,
+} from "@/lib/library-tag-paths";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   FiArrowRight,
@@ -26,43 +31,6 @@ export default function ListView({
   variant = "default",
   showProjectImages = false,
 }: ListViewProps) {
-  const normalizeTagValue = (tag: string): string =>
-    tag.replace(/\[\[|\]\]/g, "").trim();
-
-  const isProjectCardTag = (tag: string): boolean => {
-    const lower = tag.toLowerCase();
-    return (
-      lower.startsWith("skills/") ||
-      lower.startsWith("skill/") ||
-      lower.startsWith("topic/")
-    );
-  };
-
-  const getProjectCardTagLabel = (tag: string): string => {
-    const slashIndex = tag.indexOf("/");
-    if (slashIndex < 0) return tag;
-    const label = tag.slice(slashIndex + 1).trim();
-    return label || tag;
-  };
-
-  const getProjectCardTags = (item: any, max = 4): string[] => {
-    const all = [...(item.tags || []), ...(item.categories || [])];
-    const seen = new Set<string>();
-    const out: string[] = [];
-    all.forEach((tag: unknown) => {
-      if (typeof tag !== "string") return;
-      const normalized = normalizeTagValue(tag);
-      if (!normalized) return;
-      if (!isProjectCardTag(normalized)) return;
-      const label = getProjectCardTagLabel(normalized);
-      const lower = label.toLowerCase();
-      if (seen.has(lower)) return;
-      seen.add(lower);
-      out.push(label);
-    });
-    return out.slice(0, max);
-  };
-
   const toProcessedAssetUrl = (candidate: string): string => {
     let out = candidate;
     const isProduction = process.env.NODE_ENV === "production";
@@ -552,12 +520,14 @@ export default function ListView({
           ? item.metadata.cardImageDisplayUrl.trim()
           : "";
       const previewImageCandidate =
-        fromCardDisplay ||
-        (typeof item.metadata?.heroImage === "string"
-          ? item.metadata.heroImage.trim()
-          : typeof item.heroImage === "string"
-            ? item.heroImage.trim()
-            : "");
+        itemType === "journal" || itemType === "project"
+          ? fromCardDisplay
+          : fromCardDisplay ||
+            (typeof item.metadata?.heroImage === "string"
+              ? item.metadata.heroImage.trim()
+              : typeof item.heroImage === "string"
+                ? item.heroImage.trim()
+                : "");
       const isValidImagePath =
         /(\.(png|jpe?g|gif|webp|avif|svg))$/i.test(previewImageCandidate) ||
         previewImageCandidate.startsWith("http") ||
@@ -590,7 +560,9 @@ export default function ListView({
       const previewImage =
         isValidImagePath && previewImageCandidate.length > 0
           ? processedImagePath
-          : supportsPreviewImage
+          : supportsPreviewImage &&
+              itemType !== "journal" &&
+              itemType !== "project"
             ? "/background.jpg"
             : "";
       const hasPreviewImage = supportsPreviewImage && previewImage.length > 0;
@@ -607,7 +579,13 @@ export default function ListView({
           <Link href={linkPath} className="block h-full">
             <div className="flex flex-col h-full">
               {hasPreviewImage && (
-                <div className="relative w-full aspect-[16/9] overflow-hidden mb-3">
+                <div
+                  className={
+                    itemType === "journal"
+                      ? "relative mb-3 w-full overflow-hidden"
+                      : "relative mb-3 aspect-[16/9] w-full overflow-hidden"
+                  }
+                >
                   <ProjectCardMedia
                     displaySrc={previewImage}
                     hoverGifSrc={
@@ -617,7 +595,10 @@ export default function ListView({
                     }
                     alt={`${item.title} preview`}
                     sizes="(min-width: 1024px) 50vw, 100vw"
-                    imgClassName="object-cover"
+                    imgClassName={
+                      itemType === "journal" ? "" : "object-cover"
+                    }
+                    naturalAspect={itemType === "journal"}
                   />
                 </div>
               )}
@@ -632,25 +613,18 @@ export default function ListView({
                   {item.description}
                 </div>
               )}
-              {(() => {
-                const filteredTags =
-                  itemType === "project" ? getProjectCardTags(item) : [...(item.tags || []), ...(item.categories || [])];
-
-                if (filteredTags.length === 0) return null;
-
-                return (
-                  <div className="flex flex-wrap gap-2 mt-auto pt-2">
-                    {filteredTags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="border-2 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 text-xs uppercase hover:bg-gray-200 dark:hover:bg-gray-700/40 hover:text-gray-900 dark:hover:text-gray-100"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                );
-              })()}
+              <LibraryTagsGrouped
+                tags={
+                  itemType === "project"
+                    ? getProjectCardRawTagPaths(item.tags, item.categories, 6)
+                    : getJournalListingRawTagPaths(
+                        item.tags,
+                        item.categories,
+                        8
+                      )
+                }
+                className="mt-auto flex flex-wrap items-start gap-x-4 gap-y-2 pt-2 text-gray-600 dark:text-gray-400"
+              />
             </div>
           </Link>
         </div>

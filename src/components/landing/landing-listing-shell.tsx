@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Box } from "lucide-react";
@@ -31,6 +33,8 @@ interface LandingListingShellProps {
   children: ReactNode;
   /** e.g. /api/projects/rss.xml */
   rssHref?: string;
+  /** Renders below the Journals / Projects / Logs nav in the left column. */
+  sidebarBelowNav?: ReactNode;
 }
 
 /**
@@ -44,6 +48,7 @@ export default function LandingListingShell({
   entryCount,
   children,
   rssHref,
+  sidebarBelowNav,
 }: LandingListingShellProps) {
   const config = KIND_CONFIG[kind];
 
@@ -120,6 +125,8 @@ export default function LandingListingShell({
                 ))}
               </ul>
             </nav>
+
+            {sidebarBelowNav}
           </div>
         </div>
 

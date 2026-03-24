@@ -1,8 +1,6 @@
 /**
- * Generate static journal hero art: OpenAI DALL·E 3 (PNG) is used when OPENAI_API_KEY is set;
- * otherwise Claude (Anthropic → SVG). Prompt is style-only (HERO_IMAGE_STYLE_PROMPT).
- *
- * Requires OPENAI_API_KEY (preferred) and/or ANTHROPIC_API_KEY in .env.local.
+ * Generate static journal hero art via OpenAI DALL·E 3 (PNG). Prompt is style-only (HERO_IMAGE_STYLE_PROMPT).
+ * Requires OPENAI_API_KEY in .env.local unless DISABLE_JOURNAL_HERO_GENERATION=1 (script no-ops).
  *
  * Usage:
  *   npm run generate-journal-heroes                           # only if no heroImage + no hero file
@@ -24,6 +22,7 @@ import matter from "gray-matter";
 import { glob } from "glob";
 import {
   generateHeroImage,
+  isJournalHeroGenerationDisabled,
   journalHeroAssetPath,
 } from "@/lib/journal-hero-image";
 
@@ -58,14 +57,18 @@ async function fileExists(p: string): Promise<boolean> {
 
 async function main() {
   const { force, slug: slugFilter } = parseArgs();
+  if (isJournalHeroGenerationDisabled()) {
+    console.log(
+      "Journal hero generation is disabled (DISABLE_JOURNAL_HERO_GENERATION=1). Skipping."
+    );
+    process.exit(0);
+  }
   if (force) {
     console.log("Force mode: regenerating heroes (overrides heroImage + existing files).\n");
   }
-  const hasAnthropic = !!process.env.ANTHROPIC_API_KEY?.trim();
-  const hasOpenAI = !!process.env.OPENAI_API_KEY?.trim();
-  if (!hasAnthropic && !hasOpenAI) {
+  if (!process.env.OPENAI_API_KEY?.trim()) {
     console.error(
-      "Set OPENAI_API_KEY (DALL·E, preferred) and/or ANTHROPIC_API_KEY (Claude SVG fallback) in .env.local."
+      "Set OPENAI_API_KEY in .env.local for DALL·E hero generation (Anthropic cannot output raster images)."
     );
     process.exit(1);
   }

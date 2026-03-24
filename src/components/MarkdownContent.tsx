@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import styles from "./MarkdownContent.module.css"; // Import the CSS module
+import { stripLeadingMediaBeforeTextBlocks } from "@/lib/markdown-strip-leading-media";
 import { Components } from "react-markdown";
 import LinkPreview from "./LinkPreview"; // Import the LinkPreview component
 
@@ -327,8 +328,10 @@ const MarkdownContent = ({
   footnotes,
   showReferences = true,
   filePath,
-  /** Use "p-0" with landing detail pages so the parent card controls padding. */
+  /** Landing detail pages use e.g. `max-w-[600px] text-left px-6 …` for readable measure. */
   innerPaddingClass = "p-4",
+  /** Omit leading images / embedded videos when they appear before any prose (journal & project detail). */
+  hideLeadingMediaBeforeText = false,
 }: {
   content: string;
   links: string[];
@@ -336,6 +339,7 @@ const MarkdownContent = ({
   showReferences?: boolean;
   filePath?: string;
   innerPaddingClass?: string;
+  hideLeadingMediaBeforeText?: boolean;
 }) => {
   // Check if we're in production mode
   // In client components, we can't access server-side env vars
@@ -484,7 +488,10 @@ const MarkdownContent = ({
   const contentWithoutInternalLinks = convertInternalLinks(contentWithoutFootnotes);
 
   // Convert Obsidian-style image syntax ![[image]] to standard markdown
-  const updatedContent = convertImageSyntax(contentWithoutInternalLinks);
+  const convertedBody = convertImageSyntax(contentWithoutInternalLinks);
+  const updatedContent = hideLeadingMediaBeforeText
+    ? stripLeadingMediaBeforeTextBlocks(convertedBody)
+    : convertedBody;
 
   // Client-side effect to convert /db-assets/ paths in video tags to asset proxy
   // This handles cases where videos are rendered as HTML and need path conversion
