@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
 import { getAllProjects } from "@/queries/projects";
-
-import ListViewWithSearch from "@/components/list-view-with-search";
-import LandingListingShell from "@/components/landing/landing-listing-shell";
-
-type Post = {
-  description?: string;
-};
+import HomeLanding from "@/components/landing/home-landing";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -37,19 +31,16 @@ export default async function ProjectsPage() {
     });
 
   return (
-    <LandingListingShell
-      kind="projects"
-      title="Projects"
-      description="Selected work, experiments, and ongoing builds."
-      entryCount={combinedData.length}
-      rssHref="/api/projects/rss.xml"
-    >
-      <ListViewWithSearch
-        data={combinedData}
-        placeholder="Search projects..."
-        showFilters
-        landingCardType="project"
-      />
-    </LandingListingShell>
+    <HomeLanding
+      variant="projects"
+      journals={[]}
+      projects={combinedData}
+      projectsListing={{
+        title: "Projects",
+        description: "Selected work, experiments, and ongoing builds.",
+        entryCount: combinedData.length,
+        rssHref: "/api/projects/rss.xml",
+      }}
+    />
   );
 }

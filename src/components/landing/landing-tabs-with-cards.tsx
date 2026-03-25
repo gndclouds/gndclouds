@@ -45,6 +45,8 @@ interface LandingTabsWithCardsProps {
   designSkillFilterIds?: string[];
   /** Which post types appear in the feed. Defaults to journals, logs, and projects enabled. */
   feedTypesEnabled?: Record<FeedTypeFilterKey, boolean>;
+  /** Overrides default "Search…" placeholder. */
+  searchPlaceholder?: string;
 }
 
 interface CardItem {
@@ -150,6 +152,7 @@ export default function LandingTabsWithCards({
   recentProjects = [],
   designSkillFilterIds = [],
   feedTypesEnabled: enabled = FEED_TYPE_DEFAULT_ENABLED,
+  searchPlaceholder = "Search…",
 }: LandingTabsWithCardsProps) {
   const hasLogs = recentLogs.length > 0;
   const [searchQuery, setSearchQuery] = useState("");
@@ -218,6 +221,8 @@ export default function LandingTabsWithCards({
       <div
         className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain max-md:grow-0 max-md:flex-none max-md:overflow-visible max-md:min-h-0"
       >
+        {/* Right padding lives inside scrollport so the scrollbar sits at the pane edge (md+). */}
+        <div className="max-md:pr-0 md:pr-[max(1rem,env(safe-area-inset-right))]">
         <div
           className="sticky top-0 z-20 border-b-0 pb-4 pt-[max(1rem,env(safe-area-inset-top))]"
         >
@@ -255,7 +260,7 @@ export default function LandingTabsWithCards({
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search…"
+                  placeholder={searchPlaceholder}
                   className="min-w-0 flex-1 border-0 bg-transparent text-sm text-primary-black placeholder:text-gray-400 outline-none ring-0 dark:text-textDark dark:placeholder:text-gray-500"
                   aria-label={
                     hasLogs
@@ -310,6 +315,7 @@ export default function LandingTabsWithCards({
             />
           )}
         </section>
+        </div>
       </div>
     </div>
   );
