@@ -32,10 +32,10 @@ import type { TabItem } from "@/components/landing/hover-preview-card";
 const LANDING_IMAGE_CARD_LINK =
   "group box-border flex min-h-0 flex-col overflow-hidden rounded-2xl border border-primary-black/[0.08] bg-primary-white dark:border-white/[0.08] dark:bg-zinc-900";
 
-/** Short mono tags: artifact (project), journal, log — right corner uses date, not type prefix. */
+/** Mono type tags: project, journal, log — right corner uses date, not type prefix. */
 const TYPE_CONFIG: Record<TabItemType, { shortLabel: string }> = {
-  project: { shortLabel: "A" },
-  journal: { shortLabel: "K" },
+  project: { shortLabel: "PRJCT" },
+  journal: { shortLabel: "JRNL" },
   log: { shortLabel: "LOG" },
 };
 
@@ -93,7 +93,7 @@ function ListTypeIconOnly({ type }: { type: TabItemType }) {
   );
 }
 
-/** Upper-left on image: short kind tag (A / K / LOG). */
+/** Upper-left on image: kind tag (PRJCT / JRNL / LOG). */
 function ImageCornerKindLabel({ type }: { type: TabItemType }) {
   const config = TYPE_CONFIG[type];
   return (
@@ -121,7 +121,7 @@ function ImageCornerSysId({
   );
 }
 
-/** Same top bar as image cards (A/K/LOG + date), without media — text-only grid cards. */
+/** Same top bar as image cards (PRJCT/JRNL/LOG + date), without media — text-only grid cards. */
 function TextCardTopChrome({
   type,
   publishedAt,

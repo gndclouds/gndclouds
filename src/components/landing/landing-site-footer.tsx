@@ -27,43 +27,46 @@ export default function LandingSiteFooter({
   className = "",
 }: LandingSiteFooterProps) {
   const shell = embedded
-    ? "border-t border-gray-200/90 pt-3 dark:border-gray-600/50 bg-transparent dark:bg-transparent rounded-none px-0 py-0 text-xs gap-x-0 gap-y-0"
-    : "rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark px-6 py-4 text-sm gap-x-4 gap-y-1";
+    ? "border-t border-gray-200/90 pt-3 dark:border-gray-600/50 bg-transparent dark:bg-transparent rounded-none px-0 py-0 text-xs"
+    : "rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark px-6 py-4 text-sm";
 
   const linkCn = embedded ? linkClassEmbedded : linkClass;
 
+  const navGap = embedded ? "gap-x-1 gap-y-1" : "gap-x-2 gap-y-2";
+  const rowGap = embedded ? "gap-y-1.5" : "gap-y-2";
+
   return (
     <footer
-      className={`shrink-0 flex flex-wrap items-center justify-start text-primary-black dark:text-textDark ${shell} ${className}`.trim()}
+      className={`shrink-0 flex flex-col items-start justify-start text-primary-black dark:text-textDark ${rowGap} ${shell} ${className}`.trim()}
     >
       <nav
-        className={`flex flex-wrap items-center justify-start ${
-          embedded ? "gap-x-1 gap-y-1" : "gap-x-2 gap-y-2"
-        }`}
-        aria-label="Site footer"
+        className={`flex flex-wrap items-center justify-start ${navGap}`}
+        aria-label="Site pages"
       >
-        {variant !== "home" ? (
-          <>
-            <Link href="/" className={linkCn} data-umami-event="nav-home">
-              home
-            </Link>
-            <Link href="/feed" className={linkCn} data-umami-event="nav-feed">
-              feed
-            </Link>
-          </>
-        ) : null}
-        <Link
-          href="https://webring.xxiivv.com/#xxiivv"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={linkCn}
-          data-umami-event="outbound-webring"
-        >
-          webring <span className="font-mono">↗</span>
+        <Link href="/library" className={linkCn} data-umami-event="nav-bookshelf">
+          bookshelf
         </Link>
         <Link href="/cv" className={linkCn} data-umami-event="nav-cv">
           cv
         </Link>
+        {variant !== "home" ? (
+          <>
+            <Link href="/feed" className={linkCn} data-umami-event="nav-feed">
+              feed
+            </Link>
+            <Link href="/" className={linkCn} data-umami-event="nav-home">
+              home
+            </Link>
+          </>
+        ) : null}
+        <Link href="/newsletters" className={linkCn} data-umami-event="nav-newsletter">
+          newsletter
+        </Link>
+      </nav>
+      <nav
+        className={`flex flex-wrap items-center justify-start ${navGap}`}
+        aria-label="External links"
+      >
         <Link
           href="https://are.na/gndclouds"
           target="_blank"
@@ -91,8 +94,14 @@ export default function LandingSiteFooter({
         >
           github <span className="font-mono">↗</span>
         </Link>
-        <Link href="/newsletters" className={linkCn} data-umami-event="nav-newsletter">
-          newsletter
+        <Link
+          href="https://webring.xxiivv.com/#xxiivv"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkCn}
+          data-umami-event="outbound-webring"
+        >
+          webring <span className="font-mono">↗</span>
         </Link>
       </nav>
     </footer>
