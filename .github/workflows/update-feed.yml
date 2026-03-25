@@ -10,15 +10,34 @@ on:
 jobs:
   update-feed:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       # Submodule src/app/db holds journals, projects, notes, fragments, logs, etc.
       # npm run update-feed delegates to the same script as generate-feed (full content types).
-      # Token must be a PAT with repo access to gndclouds/db if the submodule is private.
+      # Checkout + push use the job GITHUB_TOKEN (this repo). For a private db submodule, set
+      # DB_REPO_TOKEN to a PAT with Contents: read on gndclouds/db only. If unset, GITHUB_ACCESS_TOKEN
+      # is used to clone the submodule (must have read access to gndclouds/db).
       - uses: actions/checkout@v4
         with:
-          submodules: recursive
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          submodules: false
+
+      - name: Initialize private db submodule
+        env:
+          DB_REPO_TOKEN: ${{ secrets.DB_REPO_TOKEN }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        ## Avoid echoing tokens; git config url.*.insteadOf rewrites only the db remote.
+        run: |
+          PAT="${DB_REPO_TOKEN}"
+          if [ -z "$PAT" ]; then PAT="${GITHUB_ACCESS_TOKEN}"; fi
+          if [ -z "$PAT" ]; then
+            echo "::error::Configure DB_REPO_TOKEN (read on gndclouds/db) or GITHUB_ACCESS_TOKEN (read on gndclouds/db) for submodule clone."
+            exit 1
+          fi
+          git config --global url."https://x-access-token:${PAT}@github.com/gndclouds/db.git".insteadOf "https://github.com/gndclouds/db.git"
+          git submodule sync --recursive
+          git submodule update --init --recursive
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -34,8 +53,8 @@ jobs:
           ARENA_ACCESS_KEY: ${{ secrets.ARENA_ACCESS_KEY }}
           BLUESKY_USERNAME: ${{ secrets.BLUESKY_USERNAME }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          FULL_IMPORT: "true"
+          # getAllGitHubActivity (used by generate-feed) reads GITHUB_TOKEN only
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Commit and push if changed
         run: |
