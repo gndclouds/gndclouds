@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+# Yarn is canonical (Vercel uses yarn); avoid mixed lockfiles
+package-lock.json
 /.pnp
 .pnp.js
 

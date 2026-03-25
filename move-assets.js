@@ -34,9 +34,18 @@ const allowedExtensions = [
   ".mov", // Include video formats
 ];
 
-// Maximum size in bytes for files to copy (5MB for images, 50MB for videos)
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB for video files
+// Size limits (override on Vercel / CI via env)
+function mbToBytes(mb) {
+  const n = Number(mb);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n * 1024 * 1024) : null;
+}
+
+// Images / non-video media (large PNG/JPEG scans, GIFs)
+const MAX_IMAGE_BYTES =
+  mbToBytes(process.env.MOVE_ASSETS_MAX_IMAGE_MB) ?? 25 * 1024 * 1024;
+// Video
+const MAX_VIDEO_BYTES =
+  mbToBytes(process.env.MOVE_ASSETS_MAX_VIDEO_MB) ?? 50 * 1024 * 1024;
 
 // Set to true to normalize filenames (removes spaces, special chars)
 // NOTE: If enabled, you'll need to update markdown references to use normalized names
@@ -131,7 +140,7 @@ function shouldCopyFile(filePath) {
     const stats = fs.statSync(filePath);
     const videoExtensions = [".mp4", ".webm", ".mov", ".avi", ".mkv"];
     const isVideo = videoExtensions.includes(ext);
-    const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_FILE_SIZE;
+    const maxSize = isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
     
     if (stats.size > maxSize) {
       console.log(
@@ -249,7 +258,9 @@ console.log(`Source directories: ${existingSourceDirs.join(", ")}`);
 console.log(
   `Only copying files with these extensions: ${allowedExtensions.join(", ")}`
 );
-console.log(`Maximum file size: ${MAX_FILE_SIZE / (1024 * 1024)} MB`);
+console.log(
+  `Max image/other media: ${MAX_IMAGE_BYTES / (1024 * 1024)} MB (set MOVE_ASSETS_MAX_IMAGE_MB); max video: ${MAX_VIDEO_BYTES / (1024 * 1024)} MB (MOVE_ASSETS_MAX_VIDEO_MB)`
+);
 
 /** Old root-db pass mirrored all of `db/assets/` → `public/db-assets/assets/`. That duplicated the flat layout from the dedicated `db/assets/` pass. Remove only those top-level dirs so stale copies do not linger. */
 function removeLegacyDuplicateTopLevelDirs() {
