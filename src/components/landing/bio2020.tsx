@@ -1,9 +1,13 @@
 import Link from "next/link";
+import { bioLinkClassTight } from "@/components/landing/bio-shared";
 
 const Bio2020 = () => (
-  <div>
+  <div className="text-gray-800 dark:text-textDark">
     I create projects as part of{" "}
-    <Link href="https://tinyfactories.space">Tiny Factories</Link>, while
+    <Link href="https://tinyfactories.space" className={bioLinkClassTight}>
+      Tiny Factories
+    </Link>
+    , while
     thinking about strategies for climate mitigation.
     <div className="mt-4">
       Recent explorations:

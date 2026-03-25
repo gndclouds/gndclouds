@@ -23,10 +23,20 @@ function getSystemDark(): boolean {
 
 function applyMode(mode: ThemeMode) {
   if (typeof document === "undefined") return;
-  const isDark =
-    mode === "dark" || (mode === "system" && getSystemDark());
-  if (isDark) document.documentElement.classList.add("dark");
-  else document.documentElement.classList.remove("dark");
+  const root = document.documentElement;
+  if (mode === "light") {
+    root.classList.add("light");
+    root.classList.remove("dark");
+    return;
+  }
+  root.classList.remove("light");
+  if (mode === "dark") {
+    root.classList.add("dark");
+    return;
+  }
+  const isDark = getSystemDark();
+  if (isDark) root.classList.add("dark");
+  else root.classList.remove("dark");
 }
 
 function applyStyle(style: ThemeStyle) {
@@ -44,10 +54,19 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+function initialEffectiveDarkForMode(m: ThemeMode): boolean {
+  if (typeof window === "undefined") return false;
+  if (m === "dark") return true;
+  if (m === "light") return false;
+  return getSystemDark();
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>("system");
   const [style, setStyleState] = useState<ThemeStyle>("minimal");
-  const [effectiveDark, setEffectiveDark] = useState(false);
+  const [effectiveDark, setEffectiveDark] = useState(() =>
+    initialEffectiveDarkForMode("system")
+  );
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -75,13 +94,28 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (mode !== "system") return;
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const handle = () => {
+    const syncFromSystem = () => {
       applyMode("system");
       setEffectiveDark(getSystemDark());
     };
-    mq.addEventListener("change", handle);
-    return () => mq.removeEventListener("change", handle);
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", syncFromSystem);
+    } else {
+      mq.addListener(syncFromSystem);
+    }
+    const onVisible = () => {
+      if (document.visibilityState === "visible") syncFromSystem();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      if (typeof mq.removeEventListener === "function") {
+        mq.removeEventListener("change", syncFromSystem);
+      } else {
+        mq.removeListener(syncFromSystem);
+      }
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [mode]);
 
   const setMode = useCallback((next: ThemeMode) => {

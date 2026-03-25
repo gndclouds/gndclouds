@@ -161,7 +161,8 @@ function copyFiles(src, dest, isRootDbDir = false) {
             const dirName = path.basename(srcFile);
             const skipContentDirs = ['node_modules', '.git'];
             if (!skipContentDirs.includes(dirName)) {
-              copyFiles(srcFile, dest, true); // Pass dest (not destFile) to flatten structure
+              // Preserve journals/, 3-artifacts/, etc. under db-assets to avoid basename collisions
+              copyFiles(srcFile, path.join(dest, dirName), false);
             } else {
               console.log(`Skipping content directory: ${srcFile}`);
               totalFilesSkipped++;
@@ -184,13 +185,12 @@ function copyFiles(src, dest, isRootDbDir = false) {
               }
             }
             
-            // For root db dir subdirectories, copy to flat dest structure (just filename)
-            // For assets/ and public/, preserve directory structure
+            // Root db: only loose files in db/ go directly under db-assets/; subtrees use destFile layout
+            // assets/ and public/: preserve directory structure
             let finalDestFile;
             if (isRootDbDir) {
               finalDestFile = path.join(dest, finalFilename);
             } else {
-              // For nested directories, use normalized filename but preserve directory structure
               const dir = path.dirname(destFile);
               finalDestFile = path.join(dir, finalFilename);
             }

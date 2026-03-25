@@ -1,43 +1,40 @@
 import Link from "next/link";
+import {
+  bioLinkClassTight,
+  bioProseGridClass,
+} from "@/components/landing/bio-shared";
 
 const Bio2026 = () => {
-  const linkClass =
-    "underline text-gray-800 decoration-gray-300 hover:text-forest-green hover:decoration-forest-green transition-colors";
+  const linkClass = bioLinkClassTight;
 
   const paragraphs = [
     <div key="intro">
-      Hello, my name is Will(iam). Welcome to my corner of the internet.
+      Hello, {"I'm"} Will. Welcome to my corner of the internet.
     </div>,
     <div key="focus">
       <span className="font-bold">My focus</span> for the next decade is
       contributing to work that makes critical elements of natural systems
-      visible. This means changing how we see ourselves as part of nature rather
-      than adjacent to it.
+      visible, I refer to this as making the unseen-seen. This means changing
+      how we see ourselves as part of nature rather than adjacent to it.
     </div>,
     <div key="role">
-      These days, I tend to be classified as a{" "}
-      <Link
-        href="/journal/design-engineer-is-the-new-interaction-designer"
-        className={linkClass}
-      >
-        design engineer or creative technologist
-      </Link>{" "}
-      depending on the context though I&apos;m still aspiring to become a{" "}
-      <Link
-        href="/note/becoming-a-biodesign-technologist"
-        className={linkClass}
-      >
-        biodesign technologist
-      </Link>
-      .
-    </div>,
-    <div key="interstitial">
-      I&apos;m exploring this vision at scale through{" "}
+      These days, I do this to grow my understanding of biology and the build
+      environments through my personal practice at{" "}
       <Link href="https://interstitial.systems" className={linkClass}>
         Interstitial
       </Link>
-      , building infrastructure that connects physical world sensor data to AI
-      systems.
+      .
+      {/* <div key="role">
+      These days, I do this as a Design Engineer at{" "}
+      <Link href="https://www.archetypeai.io/" className={linkClass}>
+        Archetype
+      </Link>
+      . While continuing to grow my understanding of biology and the build
+      environments through my personal practice at{" "}
+      <Link href="https://interstitial.systems" className={linkClass}>
+        Interstitial
+      </Link>
+      . */}
     </div>,
     <div key="previously">
       <span className="font-bold">Previously</span>, I&apos;ve worked at the
@@ -139,11 +136,7 @@ const Bio2026 = () => {
     </div>,
   ];
 
-  return (
-    <div className="grid grid-cols-1 gap-6 text-left max-w-[65ch] leading-[1.7] text-[17px] text-gray-800 antialiased [hyphens:auto] [text-wrap:pretty]">
-      {paragraphs}
-    </div>
-  );
+  return <div className={bioProseGridClass}>{paragraphs}</div>;
 };
 
 export default Bio2026;

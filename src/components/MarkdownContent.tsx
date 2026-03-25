@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import styles from "./MarkdownContent.module.css"; // Import the CSS module
+import { stripLeadingMediaBeforeTextBlocks } from "@/lib/markdown-strip-leading-media";
 import { Components } from "react-markdown";
 import LinkPreview from "./LinkPreview"; // Import the LinkPreview component
 
@@ -327,12 +328,18 @@ const MarkdownContent = ({
   footnotes,
   showReferences = true,
   filePath,
+  /** Landing detail pages use e.g. `max-w-[600px] text-left px-6 …` for readable measure. */
+  innerPaddingClass = "p-4",
+  /** Omit leading images / embedded videos when they appear before any prose (journal & project detail). */
+  hideLeadingMediaBeforeText = false,
 }: {
   content: string;
   links: string[];
   footnotes: { [key: string]: string };
   showReferences?: boolean;
   filePath?: string;
+  innerPaddingClass?: string;
+  hideLeadingMediaBeforeText?: boolean;
 }) => {
   // Check if we're in production mode
   // In client components, we can't access server-side env vars
@@ -367,7 +374,7 @@ const MarkdownContent = ({
   };
 
   // Function to resolve image path for the GitHub db repo structure
-  // Images and videos live in assets/ at repo root; markdown is in journals/, logs/, projects/
+  // Images and videos live in assets/ at repo root; markdown is in journals/, logs/, 3-artifacts/, etc.
   const resolveImagePath = (imageName: string): string => {
     // If path already starts with assets/, use as-is (full path from repo root)
     if (imageName.startsWith("assets/")) {
@@ -481,7 +488,10 @@ const MarkdownContent = ({
   const contentWithoutInternalLinks = convertInternalLinks(contentWithoutFootnotes);
 
   // Convert Obsidian-style image syntax ![[image]] to standard markdown
-  const updatedContent = convertImageSyntax(contentWithoutInternalLinks);
+  const convertedBody = convertImageSyntax(contentWithoutInternalLinks);
+  const updatedContent = hideLeadingMediaBeforeText
+    ? stripLeadingMediaBeforeTextBlocks(convertedBody)
+    : convertedBody;
 
   // Client-side effect to convert /db-assets/ paths in video tags to asset proxy
   // This handles cases where videos are rendered as HTML and need path conversion
@@ -645,7 +655,7 @@ const MarkdownContent = ({
         hasReferences ? "flex w-full flex-col md:flex-row" : "w-full"
       }
     >
-      <div className="flex-1 min-w-0 p-4">
+      <div className={`flex-1 min-w-0 ${innerPaddingClass}`}>
         <div className={styles.reactMarkDown}>
           <ReactMarkdown
             className="markdown"
@@ -658,7 +668,7 @@ const MarkdownContent = ({
         </div>
       </div>
       {hasReferences && (
-        <div className="w-full md:w-80 shrink-0 p-4 md:ml-auto">
+        <div className="w-full shrink-0 p-4 md:ml-auto md:w-80">
           <h3 className="uppercase text-sm opacity-50">References</h3>
           {extractedLinks.length > 0 && (
             <>

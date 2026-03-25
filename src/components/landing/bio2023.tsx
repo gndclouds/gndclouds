@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { bioLinkClass } from "@/components/landing/bio-shared";
 
 const Bio2023 = () => (
-  <div>
+  <div className="text-gray-800 dark:text-textDark">
     <div className="text-2xl font-bold">Hey I&apos;m Will,</div>
     <div className="mt-4">
       My day-to-day focuses are on implementing web technologies to help monitor
@@ -11,10 +12,7 @@ const Bio2023 = () => (
       </Link>
       , a data management and visualization tool for bioregions, built-in
       collaboration with{" "}
-      <Link
-        href="https://Anthropogenic.com"
-        className="underline underline-offset-4"
-      >
+      <Link href="https://Anthropogenic.com" className={bioLinkClass}>
         Anthropogenic
       </Link>
       . I also{" "}
@@ -35,7 +33,7 @@ const Bio2023 = () => (
       across all types of companies. In these roles, I translated emerging
       technologies into prototypes in which the core tech was abstracted away so
       that we could focus on the intended function. Before that was at{" "}
-      <Link href="https://cca.edu" className="underline underline-offset-4">
+      <Link href="https://cca.edu" className={bioLinkClass}>
         California College of the Arts
       </Link>{" "}
       pursuing a bfa in Interaction Design.

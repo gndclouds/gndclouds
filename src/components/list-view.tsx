@@ -2,6 +2,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
+import LibraryTagsGrouped from "@/components/landing/library-tags-grouped";
+import ProjectCardMedia from "@/components/project-card-media";
+import {
+  getJournalListingRawTagPaths,
+  getProjectCardRawTagPaths,
+} from "@/lib/library-tag-paths";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   FiArrowRight,
@@ -25,6 +31,27 @@ export default function ListView({
   variant = "default",
   showProjectImages = false,
 }: ListViewProps) {
+  const toProcessedAssetUrl = (candidate: string): string => {
+    let out = candidate;
+    const isProduction = process.env.NODE_ENV === "production";
+    if (
+      candidate.length > 0 &&
+      candidate.startsWith("/") &&
+      !candidate.startsWith("http") &&
+      !candidate.startsWith("/api/asset-proxy") &&
+      !candidate.startsWith("/db-assets/") &&
+      !candidate.startsWith("/background") &&
+      isProduction
+    ) {
+      const pathWithoutSlash = candidate.substring(1);
+      const assetPath = pathWithoutSlash.startsWith("assets/")
+        ? pathWithoutSlash
+        : `assets/${pathWithoutSlash}`;
+      out = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+    }
+    return out;
+  };
+
   const formatDateDisplay = (value: string | Date) => {
     const date = value instanceof Date ? value : new Date(value);
     if (Number.isNaN(date.getTime())) {
@@ -485,49 +512,57 @@ export default function ListView({
       itemType === "journal" ||
       itemType === "note" ||
       itemType === "research" ||
-      itemType === "project"
+      itemType === "project" ||
+      itemType === "log"
     ) {
+      const fromCardDisplay =
+        typeof item.metadata?.cardImageDisplayUrl === "string"
+          ? item.metadata.cardImageDisplayUrl.trim()
+          : "";
       const previewImageCandidate =
-        typeof item.metadata?.heroImage === "string"
-          ? item.metadata.heroImage.trim()
-          : typeof item.heroImage === "string"
-            ? item.heroImage.trim()
-            : "";
+        itemType === "journal" || itemType === "project"
+          ? fromCardDisplay
+          : fromCardDisplay ||
+            (typeof item.metadata?.heroImage === "string"
+              ? item.metadata.heroImage.trim()
+              : typeof item.heroImage === "string"
+                ? item.heroImage.trim()
+                : "");
       const isValidImagePath =
         /(\.(png|jpe?g|gif|webp|avif|svg))$/i.test(previewImageCandidate) ||
         previewImageCandidate.startsWith("http") ||
         previewImageCandidate.startsWith("/");
       const supportsPreviewImage =
-        showProjectImages && (itemType === "project" || itemType === "journal");
+        showProjectImages &&
+        (itemType === "project" ||
+          itemType === "journal" ||
+          itemType === "log");
 
-      // Convert hero image paths to use asset proxy in production
-      // Paths like /projects/hero-*.ext should become assets/projects/hero-*.ext for GitHub
-      // Note: In development, these should be in public folder. In production, use asset proxy.
-      let processedImagePath = previewImageCandidate;
-      const isProduction = process.env.NODE_ENV === "production";
-      if (
-        isValidImagePath &&
-        previewImageCandidate.length > 0 &&
-        previewImageCandidate.startsWith("/") &&
-        !previewImageCandidate.startsWith("http") &&
-        !previewImageCandidate.startsWith("/api/asset-proxy") &&
-        !previewImageCandidate.startsWith("/db-assets/") &&
-        !previewImageCandidate.startsWith("/background") &&
-        isProduction
-      ) {
-        // Remove leading slash and convert to assets path for GitHub repo
-        const pathWithoutSlash = previewImageCandidate.substring(1);
-        // Ensure it starts with assets/ for the GitHub repo structure
-        const assetPath = pathWithoutSlash.startsWith("assets/")
-          ? pathWithoutSlash
-          : `assets/${pathWithoutSlash}`;
-        processedImagePath = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
-      }
+      const processedImagePath =
+        isValidImagePath && previewImageCandidate.length > 0
+          ? toProcessedAssetUrl(previewImageCandidate)
+          : "";
+
+      const hoverGifRaw =
+        (itemType === "project" || itemType === "log") &&
+        typeof item.metadata?.cardImageHoverGifUrl === "string"
+          ? item.metadata.cardImageHoverGifUrl.trim()
+          : "";
+      const hoverGifValid =
+        hoverGifRaw.length > 0 &&
+        (/(\.(png|jpe?g|gif|webp|avif|svg))$/i.test(hoverGifRaw) ||
+          hoverGifRaw.startsWith("http") ||
+          hoverGifRaw.startsWith("/"));
+      const processedHoverGif = hoverGifValid
+        ? toProcessedAssetUrl(hoverGifRaw)
+        : null;
 
       const previewImage =
         isValidImagePath && previewImageCandidate.length > 0
           ? processedImagePath
-          : supportsPreviewImage
+          : supportsPreviewImage &&
+              itemType !== "journal" &&
+              itemType !== "project"
             ? "/background.jpg"
             : "";
       const hasPreviewImage = supportsPreviewImage && previewImage.length > 0;
@@ -544,13 +579,26 @@ export default function ListView({
           <Link href={linkPath} className="block h-full">
             <div className="flex flex-col h-full">
               {hasPreviewImage && (
-                <div className="relative w-full aspect-[16/9] overflow-hidden mb-3">
-                  <Image
-                    src={previewImage}
+                <div
+                  className={
+                    itemType === "journal"
+                      ? "relative mb-3 w-full overflow-hidden"
+                      : "relative mb-3 aspect-[16/9] w-full overflow-hidden"
+                  }
+                >
+                  <ProjectCardMedia
+                    displaySrc={previewImage}
+                    hoverGifSrc={
+                      itemType === "project" || itemType === "log"
+                        ? processedHoverGif
+                        : null
+                    }
                     alt={`${item.title} preview`}
-                    fill
                     sizes="(min-width: 1024px) 50vw, 100vw"
-                    className="object-cover"
+                    imgClassName={
+                      itemType === "journal" ? "" : "object-cover"
+                    }
+                    naturalAspect={itemType === "journal"}
                   />
                 </div>
               )}
@@ -565,36 +613,18 @@ export default function ListView({
                   {item.description}
                 </div>
               )}
-              {(() => {
-                const rawTags = [
-                  ...(item.tags || []),
-                  ...(item.categories || []),
-                ];
-                const normalizeTag = (tag: string) =>
-                  tag
-                    .replace(/\[\[|\]\]/g, "")
-                    .trim()
-                    .toLowerCase();
-                const filteredTags =
-                  itemType === "project" && showProjectImages
-                    ? rawTags.filter((tag) => normalizeTag(tag) !== "projects")
-                    : rawTags;
-
-                if (filteredTags.length === 0) return null;
-
-                return (
-                  <div className="flex flex-wrap gap-2 mt-auto pt-2">
-                    {filteredTags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="border-2 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 text-xs uppercase hover:bg-gray-200 dark:hover:bg-gray-700/40 hover:text-gray-900 dark:hover:text-gray-100"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                );
-              })()}
+              <LibraryTagsGrouped
+                tags={
+                  itemType === "project"
+                    ? getProjectCardRawTagPaths(item.tags, item.categories, 6)
+                    : getJournalListingRawTagPaths(
+                        item.tags,
+                        item.categories,
+                        8
+                      )
+                }
+                className="mt-auto flex flex-wrap items-start gap-x-4 gap-y-2 pt-2 text-gray-600 dark:text-gray-400"
+              />
             </div>
           </Link>
         </div>

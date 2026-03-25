@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { bioLinkClass } from "@/components/landing/bio-shared";
 
 const Bio2014 = () => (
-  <div>
+  <div className="text-gray-800 dark:text-textDark">
     <div className="text-2xl font-bold">
       Interaction Designer and Technology Whisperer
     </div>
@@ -10,7 +11,7 @@ const Bio2014 = () => (
       , pondering how to innovate the smallest details to improve the user
       experience. This questioning and curiosity is what drove to me the
       Interaction Design program at{" "}
-      <Link href="https://cca.edu" className="underline underline-offset-4">
+      <Link href="https://cca.edu" className={bioLinkClass}>
         California College of the Arts
       </Link>
       .

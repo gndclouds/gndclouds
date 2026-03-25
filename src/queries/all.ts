@@ -102,7 +102,7 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
       fragmentPaths,
       researchPaths,
     ] = await Promise.all([
-      getMarkdownFilePaths("projects"),
+      getMarkdownFilePaths("artifacts"),
       getMarkdownFilePaths("notes"),
       getMarkdownFilePaths("newsletters"),
       getMarkdownFilePaths("logs"),

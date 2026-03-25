@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getAllJournals } from "@/queries/journals";
-import JournalsView from "./JournalsView";
+import JournalGallery from "@/components/journal-gallery";
 
 export const metadata: Metadata = {
   title: "Journals",
@@ -29,9 +29,5 @@ export default async function JournalsPage() {
       return dateB - dateA;
     });
 
-  return (
-    <main>
-      <JournalsView initialData={combinedData} />
-    </main>
-  );
+  return <JournalGallery data={combinedData} />;
 }

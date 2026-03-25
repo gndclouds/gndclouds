@@ -6,6 +6,7 @@ import { parseISO, format } from "date-fns";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { useEffect, useState, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
+import { journalHeroImageApiQuery } from "@/lib/journal-hero-image";
 
 interface CollectionHeroProps {
   name: string;
@@ -15,6 +16,11 @@ interface CollectionHeroProps {
   showRssLink?: boolean;
   /** When set, hero image is generated from this topic (e.g. journal post summary). */
   topicSummary?: string | null;
+  /** Optional title + tags for richer on-the-fly hero generation (with topicSummary). */
+  topicTitle?: string | null;
+  topicTags?: string[] | null;
+  /** When set, use this checked-in image instead of live generation (e.g. journal heroImage). */
+  staticHeroImageUrl?: string | null;
 }
 
 const CollectionHero = ({
@@ -24,6 +30,9 @@ const CollectionHero = ({
   showEntriesCount = true,
   showRssLink = true,
   topicSummary,
+  topicTitle,
+  topicTags,
+  staticHeroImageUrl,
 }: CollectionHeroProps) => {
   const router = useRouter();
   const [backgroundImage, setBackgroundImage] = useState("/background.jpg");
@@ -33,8 +42,19 @@ const CollectionHero = ({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (topicSummary != null && topicSummary.trim() !== "") {
-      const topicUrl = `/api/journals/hero-image?summary=${encodeURIComponent(topicSummary.trim())}`;
+    if (staticHeroImageUrl != null && staticHeroImageUrl.trim() !== "") {
+      setBackgroundImage(staticHeroImageUrl.trim());
+      setImageError(false);
+      return;
+    }
+    const summaryTrim = topicSummary?.trim() ?? "";
+    const titleTrim = topicTitle?.trim() ?? "";
+    if (summaryTrim !== "" || titleTrim !== "") {
+      const topicUrl = `/api/journals/hero-image?${journalHeroImageApiQuery({
+        summary: summaryTrim,
+        title: titleTrim || undefined,
+        tags: topicTags?.length ? topicTags : undefined,
+      })}`;
       setBackgroundImage(topicUrl);
       setImageError(false);
       return;
@@ -43,7 +63,7 @@ const CollectionHero = ({
     const hourlyImagePath = `/backgrounds/hour-${currentHour}.jpg`;
     setBackgroundImage(hourlyImagePath);
     setImageError(false);
-  }, [topicSummary]);
+  }, [topicSummary, topicTitle, topicTags, staticHeroImageUrl]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputValue.trim()) {

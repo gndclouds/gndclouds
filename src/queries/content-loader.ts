@@ -3,6 +3,7 @@ import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
 import fs from "fs/promises";
+import { ARTIFACTS_DB_DIRECTORY } from "@/lib/artifacts-paths";
 
 // Support both local development and production deployments
 export const contentMode = process.env.NEXT_PUBLIC_CONTENT_MODE || "local";
@@ -23,23 +24,35 @@ export const contentBaseUrl = isProduction
       `https://raw.githubusercontent.com/${githubOwner}/${githubRepo}/${githubBranch}`
   : join(process.cwd(), "src/app/db");
 
+/** Logical name for markdown loaded from {@link ARTIFACTS_DB_DIRECTORY} (user-facing: projects). */
+export type MarkdownContentType =
+  | "artifacts"
+  | "notes"
+  | "newsletters"
+  | "logs"
+  | "research"
+  | "journals"
+  | "cv"
+  | "fragments"
+  | "studies"
+  | "systems";
+
+function repoPathForContentType(contentType: MarkdownContentType): string {
+  return contentType === "artifacts" ? ARTIFACTS_DB_DIRECTORY : contentType;
+}
+
 // Get file paths either from filesystem or GitHub API
 export async function getMarkdownFilePaths(
-  contentType:
-    | "projects"
-    | "notes"
-    | "newsletters"
-    | "logs"
-    | "research"
-    | "journals"
-    | "cv"
-    | "fragments"
-    | "studies"
-    | "systems"
+  contentType: MarkdownContentType
 ): Promise<string[]> {
+  const repoContentDir = repoPathForContentType(contentType);
+
   if (!isProduction) {
     // In development, use filesystem
-    const contentDir = join(contentBaseUrl, contentType);
+    const contentDir = join(contentBaseUrl, repoContentDir);
+    if (!existsSync(contentDir)) {
+      return [];
+    }
     try {
       const files = await getMarkdownFilesRecursively(contentDir);
       // Convert absolute paths to relative paths and remove any 'default/' prefix
@@ -61,7 +74,7 @@ export async function getMarkdownFilePaths(
 
   // Prefer Contents API for directory listing - more reliable than git tree
   // (tree can truncate on large repos, and Contents API returns exact dir contents)
-  const contentsPaths = await getMarkdownPathsFromContentsAPI(contentType);
+  const contentsPaths = await getMarkdownPathsFromContentsAPI(repoContentDir);
   if (contentsPaths.length > 0) {
     if (process.env.NODE_ENV === "production") {
       console.log(
@@ -72,7 +85,7 @@ export async function getMarkdownFilePaths(
   }
 
   // Fallback to git tree if Contents API failed (e.g. 404 for directory)
-  const treePaths = await getMarkdownPathsFromGitTree(contentType);
+  const treePaths = await getMarkdownPathsFromGitTree(repoContentDir);
   if (treePaths.length > 0) {
     if (process.env.NODE_ENV === "production") {
       console.log(`Found ${treePaths.length} ${contentType} files via git tree`);
@@ -223,7 +236,10 @@ async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
       }
     }
   } catch (error) {
-    console.error(`Error reading directory ${dir}:`, error);
+    const code = error && typeof error === "object" && "code" in error ? (error as NodeJS.ErrnoException).code : undefined;
+    if (code !== "ENOENT") {
+      console.error(`Error reading directory ${dir}:`, error);
+    }
   }
   return files;
 }

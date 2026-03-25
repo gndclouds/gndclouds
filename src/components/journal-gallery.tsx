@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import MarkdownContent from "@/components/MarkdownContent";
+import LandingListingShell from "@/components/landing/landing-listing-shell";
 import type { Journal } from "@/queries/journals";
 
 interface JournalWithDescription extends Journal {
@@ -64,48 +65,57 @@ export default function JournalGallery({
     });
   }, [data]);
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,300px)_1fr] gap-6 min-h-0">
-      {/* Left: list styled like reference – section headers + items with → */}
-      <aside className="flex flex-col min-h-0 border-r-0 lg:border-r border-backgroundDark dark:border-backgroundLight pr-0 lg:pr-6 overflow-y-auto">
-        <div className="list-none">
-          {byYear.map(([year, items]) => (
-            <section key={year} className="py-0">
-              <div className="border-b border-backgroundDark dark:border-backgroundLight py-2">
-                <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                  {year}
+  const list = (
+    <aside
+      aria-label="Journal entries by year"
+      className="mt-6 flex min-h-0 flex-col border-t border-gray-200/90 pt-6 dark:border-gray-600/50"
+    >
+      <div className="list-none">
+        {byYear.map(([year, items]) => (
+          <section key={year} className="py-0">
+            <div className="border-b border-gray-200/90 py-2 dark:border-gray-600/50">
+              <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                {year}
+              </span>
+            </div>
+            {items.map((item) => (
+              <button
+                key={item.slug}
+                type="button"
+                onClick={() => handleSelect(item)}
+                className={`flex w-full items-center justify-between gap-2 border-b border-gray-200/90 py-2.5 text-left hover:bg-gray-50 dark:border-gray-600/50 dark:hover:bg-gray-900/40 ${
+                  selectedSlug === item.slug
+                    ? "bg-gray-100 dark:bg-gray-800/60"
+                    : ""
+                }`}
+              >
+                <span className="min-w-0 flex-1 truncate text-gray-900 dark:text-gray-100">
+                  {item.title}
                 </span>
-              </div>
-              {items.map((item) => (
-                <button
-                  key={item.slug}
-                  type="button"
-                  onClick={() => handleSelect(item)}
-                  className={`w-full text-left flex items-center justify-between gap-2 py-2.5 border-b border-backgroundDark dark:border-backgroundLight hover:bg-gray-50 dark:hover:bg-gray-900/40 ${
-                    selectedSlug === item.slug
-                      ? "bg-gray-100 dark:bg-gray-800/60"
-                      : ""
-                  }`}
-                >
-                  <span className="flex-1 min-w-0 truncate text-gray-900 dark:text-gray-100">
-                    {item.title}
-                  </span>
-                  <span className="flex-shrink-0 text-gray-900 dark:text-gray-100" aria-hidden>
-                    →
-                  </span>
-                </button>
-              ))}
-            </section>
-          ))}
-        </div>
-      </aside>
+                <span className="shrink-0 text-gray-900 dark:text-gray-100" aria-hidden>
+                  →
+                </span>
+              </button>
+            ))}
+          </section>
+        ))}
+      </div>
+    </aside>
+  );
 
-      {/* Right: selected post */}
-      <article className="min-h-0 flex flex-col overflow-hidden">
+  return (
+    <LandingListingShell
+      kind="journals"
+      title="Journals"
+      description="Daily reflections, field notes, and personal writing."
+      entryCount={data.length}
+      sidebarBelowNav={list}
+    >
+      <article className="flex min-h-0 flex-col overflow-hidden">
         {selected ? (
           <>
-            <header className="flex-shrink-0 pb-4 border-b border-backgroundDark dark:border-backgroundLight">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <header className="shrink-0 border-b border-gray-200/90 pb-4 dark:border-gray-600/50">
+              <h2 className="text-xl font-semibold leading-tight tracking-tight text-gray-900 dark:text-textDark sm:text-2xl">
                 {selected.title}
               </h2>
               <time
@@ -119,7 +129,7 @@ export default function JournalGallery({
                   {displayTags(selected).map((tag) => (
                     <span
                       key={tag}
-                      className="px-1.5 py-0.5 border border-backgroundDark dark:border-backgroundLight"
+                      className="rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:border-gray-600 dark:text-gray-300"
                     >
                       {tag}
                     </span>
@@ -155,6 +165,6 @@ export default function JournalGallery({
           </p>
         )}
       </article>
-    </div>
+    </LandingListingShell>
   );
 }

@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { getJournalBySlug, getAllJournals } from "@/queries/journals";
-import PageHero from "@/components/page-hero";
-import ReactMarkdown from "react-markdown";
+import LandingDetailPage from "@/components/landing/landing-detail-page";
 import MarkdownContent from "@/components/MarkdownContent";
+import styles from "@/components/MarkdownContent.module.css";
 
 interface Params {
   params: {
@@ -33,26 +33,38 @@ export default async function JournalPage({ params }: Params) {
     ? journal.publishedAt
     : "";
 
+  const tagList = [
+    ...new Set([
+      ...(journal.categories ?? []),
+      ...(journal.tags ?? []),
+    ]),
+  ];
+
   return (
-    <div>
-      <PageHero
-        data={{
-          ...journal,
-          tags: [...(journal.categories || []), ...(journal.tags || [])].join(
-            ", "
-          ),
-          publishedAt: validPublishedAt,
-        }}
-      />
+    <LandingDetailPage
+      kind="journal"
+      title={journal.title}
+      publishedAt={validPublishedAt}
+      tagList={tagList}
+    >
       {journal.metadata?.contentHtml ? (
-        <MarkdownContent
-          content={journal.metadata.contentHtml}
-          links={(journal.metadata as any).links ?? []}
-          footnotes={(journal.metadata as any).footnotes ?? {}}
-        />
+        <div className={styles.markdown}>
+          <MarkdownContent
+            content={journal.metadata.contentHtml}
+            links={(journal.metadata as { links?: string[] }).links ?? []}
+            footnotes={
+              (journal.metadata as { footnotes?: Record<string, string> })
+                .footnotes ?? {}
+            }
+            innerPaddingClass="w-full max-w-[600px] text-left px-6 py-8 sm:px-8"
+            hideLeadingMediaBeforeText
+          />
+        </div>
       ) : (
-        <p>No content available</p>
+        <p className="w-full max-w-[600px] text-left px-6 py-8 text-sm text-gray-500 dark:text-gray-400 sm:px-8">
+          No content available
+        </p>
       )}
-    </div>
+    </LandingDetailPage>
   );
 }

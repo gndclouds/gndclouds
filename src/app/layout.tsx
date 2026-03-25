@@ -52,10 +52,19 @@ export default function RootLayout({
   var stored = localStorage.getItem('theme');
   var mode = stored || 'system';
   var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (mode === 'dark' || (mode === 'system' && systemDark)) document.documentElement.classList.add('dark');
-  else document.documentElement.classList.remove('dark');
+  var root = document.documentElement;
+  root.classList.remove('light');
+  if (mode === 'light') {
+    root.classList.add('light');
+    root.classList.remove('dark');
+  } else if (mode === 'dark') {
+    root.classList.add('dark');
+  } else {
+    if (systemDark) root.classList.add('dark');
+    else root.classList.remove('dark');
+  }
   var style = localStorage.getItem('theme-style');
-  if (style && ['minimal','glass','retro'].indexOf(style) >= 0) document.documentElement.setAttribute('data-theme', style);
+  if (style && ['minimal','glass','retro'].indexOf(style) >= 0) root.setAttribute('data-theme', style);
 })();
 `;
 

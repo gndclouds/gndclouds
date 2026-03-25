@@ -187,6 +187,7 @@ export default function ColourPaletteLanding({
                     : `linear-gradient(to bottom, transparent 0%, black 1.5rem, black calc(100% - 1.5rem), transparent 100%)`,
               }}
             >
+              {/* Hover preview over copy — commented out for now
               {hoveredPreview ? (
                 <HoverPreviewCard
                   variant="full"
@@ -200,11 +201,22 @@ export default function ColourPaletteLanding({
                   <LatestBio />
                 </section>
               )}
+              */}
+              <section className="group animate-fade-in flex flex-col gap-4">
+                <LatestBio />
+              </section>
             </div>
           </div>
 
           <footer className="max-lg:hidden shrink-0 rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark flex flex-wrap justify-between items-center gap-x-4 gap-y-1 px-6 py-4 text-sm text-primary-black dark:text-textDark">
             <nav className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1">
+              <Link
+                href="/"
+                className="transition-opacity hover:opacity-70"
+                data-umami-event="nav-home"
+              >
+                home
+              </Link>
               <Link
                 href="/feed"
                 className="transition-opacity hover:opacity-70"
@@ -270,12 +282,11 @@ export default function ColourPaletteLanding({
         {/* Right: tabs — Journals, Projects, Logs */}
         <div className="w-full max-w-full lg:w-1/3 xl:w-1/2 lg:min-w-0 max-lg:min-h-screen lg:min-h-0 px-4 py-4 sm:p-6 lg:py-8 lg:pr-8 lg:pl-4 flex flex-col">
           <div className="flex-1 max-lg:min-h-screen max-lg:flex-none lg:min-h-0 rounded-2xl overflow-hidden bg-primary-white flex flex-col px-6 py-6">
+            {/* Hover preview disabled: onHoverItem, onHoverEnd */}
             <LandingTabs
               recentJournals={recentJournals}
               recentLogs={recentLogs}
               recentProjects={recentProjects}
-              onHoverItem={handleHoverItem}
-              onHoverEnd={scheduleHide}
             />
           </div>
         </div>
@@ -283,6 +294,13 @@ export default function ColourPaletteLanding({
         {/* Footer at bottom on small screens (after intro + tabs) */}
         <footer className="lg:hidden shrink-0 rounded-2xl overflow-hidden bg-primary-white dark:bg-backgroundDark flex flex-wrap justify-between items-center gap-x-4 gap-y-1 px-6 py-4 text-sm text-primary-black dark:text-textDark mx-4 mb-4 sm:mx-6 sm:mb-6">
           <nav className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1">
+            <Link
+              href="/"
+              className="transition-opacity hover:opacity-70"
+              data-umami-event="nav-home"
+            >
+              home
+            </Link>
             <Link
               href="/feed"
               className="transition-opacity hover:opacity-70"

@@ -31,6 +31,10 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
+  async redirects() {
+    return [{ source: "/journls", destination: "/journals", permanent: true }];
+  },
+
   // Significantly reduce bundle size by having certain pages static prerendered
   experimental: {
     // External packages are those that won't be bundled with your app

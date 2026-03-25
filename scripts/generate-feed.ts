@@ -37,7 +37,7 @@ const DAYS_BACK = process.env.DAYS_BACK
   : 365; // Default to 1 year instead of 30 days
 const startDate = getDateNDaysAgo(DAYS_BACK);
 
-async function generateFeedData() {
+export async function generateFeedData() {
   console.log("Starting monthly feed data generation...");
   console.log("Fetching content since:", formatDateYYYYMMDD(startDate));
 
@@ -303,7 +303,15 @@ async function generateFeedData() {
   );
   console.log("Content type distribution:", feedData.stats.byType);
   console.log("Source stats:", feedData.stats.sourceStats);
+
+  return feedData;
 }
 
-// Run the script
-generateFeedData().catch(console.error);
+const runAsCli =
+  typeof require !== "undefined" && require.main === module;
+if (runAsCli) {
+  generateFeedData().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

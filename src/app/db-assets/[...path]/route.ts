@@ -107,11 +107,11 @@ export async function GET(
       }
     }
 
-    // If the path includes subdirectories, try filename-only (move-assets flattens to public/db-assets/)
-    // e.g. projects/assets/CleanShot.png -> public/db-assets/CleanShot.png
+    // If the path includes subdirectories, try filename-only (legacy: older flat db-assets copies)
+    // move-assets preserves paths like journals/... and 3-artifacts/... under public/db-assets/
     if (decodedPath.includes("/")) {
       const filenameOnly = decodedPath.split("/").pop() || decodedPath;
-      // Try public/db-assets first (Vercel deploy - move-assets copies flattened files here)
+      // Try public/db-assets root (flat legacy layout)
       const publicPathFilenameOnly = join(process.cwd(), "public", "db-assets", filenameOnly);
       if (existsSync(publicPathFilenameOnly)) {
         try {
@@ -128,7 +128,7 @@ export async function GET(
           console.error(`Error reading ${publicPathFilenameOnly}:`, error);
         }
       }
-      // Try src/app/db/assets/ (development - projects/assets/ or assets/)
+      // Try src/app/db/assets/ (development - shared assets/)
       const srcAssetsPathFilenameOnly = join(process.cwd(), "src", "app", "db", "assets", filenameOnly);
       if (existsSync(srcAssetsPathFilenameOnly)) {
         try {
@@ -145,12 +145,20 @@ export async function GET(
           console.error(`Error reading local file ${srcAssetsPathFilenameOnly}:`, error);
         }
       }
-      // Also try projects/assets/ for project-specific assets
-      const projectsAssetsPath = join(process.cwd(), "src", "app", "db", "projects", "assets", filenameOnly);
-      if (existsSync(projectsAssetsPath)) {
+      // Legacy flat layout: projects/assets/ (old db repo)
+      const legacyProjectsAssetsPath = join(
+        process.cwd(),
+        "src",
+        "app",
+        "db",
+        "projects",
+        "assets",
+        filenameOnly
+      );
+      if (existsSync(legacyProjectsAssetsPath)) {
         try {
-          const fileBuffer = await readFile(projectsAssetsPath);
-          const contentType = getContentType(projectsAssetsPath);
+          const fileBuffer = await readFile(legacyProjectsAssetsPath);
+          const contentType = getContentType(legacyProjectsAssetsPath);
           return new NextResponse(fileBuffer, {
             status: 200,
             headers: {
@@ -159,7 +167,32 @@ export async function GET(
             },
           });
         } catch (error) {
-          console.error(`Error reading ${projectsAssetsPath}:`, error);
+          console.error(`Error reading ${legacyProjectsAssetsPath}:`, error);
+        }
+      }
+      // Flat assets under 3-artifacts (e.g. 3-artifacts/assets/foo.png)
+      const artifactsAssetsPath = join(
+        process.cwd(),
+        "src",
+        "app",
+        "db",
+        "3-artifacts",
+        "assets",
+        filenameOnly
+      );
+      if (existsSync(artifactsAssetsPath)) {
+        try {
+          const fileBuffer = await readFile(artifactsAssetsPath);
+          const contentType = getContentType(artifactsAssetsPath);
+          return new NextResponse(fileBuffer, {
+            status: 200,
+            headers: {
+              "Content-Type": contentType,
+              "Cache-Control": "public, max-age=3600",
+            },
+          });
+        } catch (error) {
+          console.error(`Error reading ${artifactsAssetsPath}:`, error);
         }
       }
     }

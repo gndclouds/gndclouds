@@ -21,6 +21,9 @@ src/app/db/public/
 **/*.mp4
 **/*.mov
 **/*.webm
+!public/db-assets/**/*.mp4
+!public/db-assets/**/*.webm
+!public/db-assets/**/*.mov
 **/*.pdf
 **/*.psd
 **/*.ai

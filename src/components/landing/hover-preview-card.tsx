@@ -1,6 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import {
+  formatCardHeading,
+  markdownBodyToCardPlainText,
+  stripMarkdownMediaEmbeds,
+  stripObsidianWikiLinksForPreview,
+} from "@/lib/markdown-to-card-plain-text";
+import {
+  getJournalCardMediaUrls,
+  getLogCardMediaUrls,
+  getProjectCardMediaUrls,
+} from "@/lib/project-card-images";
 import type { Journal } from "@/queries/journals";
 import type { Post as LogPost } from "@/queries/logs";
 import type { Post as ProjectPost } from "@/queries/projects";
@@ -11,32 +22,18 @@ export type TabItem = (Journal | LogPost | ProjectPost) & {
   description?: string;
 };
 
-/** Strip HTML tags or reduce markdown to plain text for excerpt. */
-function toPlainExcerpt(raw: string): string {
-  if (typeof document !== "undefined") {
-    const div = document.createElement("div");
-    div.innerHTML = raw;
-    const text = div.textContent ?? div.innerText ?? "";
-    if (text.trim()) return text;
-  }
-  return raw
-    .replace(/<[^>]*>/g, "")
-    .replace(/^#+\s*/gm, "")
-    .replace(/\*+([^*]*)\*+/g, "$1")
-    .replace(/_+([^_]*)_+/g, "$1")
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 function getExcerpt(item: TabItem, maxLength = 200): string {
   const desc = (item.metadata as Record<string, unknown> | undefined)?.description;
   const fromMeta =
     item.description ?? (typeof desc === "string" ? desc : null);
-  if (fromMeta) return fromMeta.slice(0, maxLength);
+  if (fromMeta) {
+    return stripObsidianWikiLinksForPreview(
+      stripMarkdownMediaEmbeds(fromMeta).replace(/\s+/g, " ").trim()
+    ).slice(0, maxLength);
+  }
   const raw = item.metadata?.contentHtml;
   if (typeof raw !== "string") return "";
-  return toPlainExcerpt(raw).slice(0, maxLength);
+  return markdownBodyToCardPlainText(raw).slice(0, maxLength);
 }
 
 function formatDate(iso: string): string {
@@ -74,8 +71,20 @@ export default function HoverPreviewCard({
   onMouseLeave,
 }: HoverPreviewCardProps) {
   const excerpt = getExcerpt(item);
-  const imageSummary = excerpt.slice(0, 150) || item.title;
-  const imageSrc = `/api/journals/hero-image?summary=${encodeURIComponent(imageSummary)}`;
+  const meta = (item.metadata ?? {}) as Record<string, unknown>;
+  const imageSrc = (() => {
+    if (type === "journal") {
+      return getJournalCardMediaUrls(meta).displayUrl;
+    }
+    if (type === "log") {
+      return getLogCardMediaUrls(meta).displayUrl;
+    }
+    const filePath =
+      "filePath" in item && typeof item.filePath === "string"
+        ? item.filePath
+        : undefined;
+    return getProjectCardMediaUrls(meta, filePath).displayUrl;
+  })();
   const tags = item.tags?.slice(0, 4) ?? [];
   const publishedLabel = formatDate(item.publishedAt);
 
@@ -86,34 +95,56 @@ export default function HoverPreviewCard({
       className={
         isFull
           ? "flex flex-col min-h-0 flex-1 animate-fade-in"
-          : "rounded-2xl overflow-hidden bg-primary-white border border-[#eeeeee] shadow-sm flex flex-col min-h-0 animate-fade-in"
+          : "rounded-sm overflow-hidden bg-primary-white dark:bg-zinc-900 border border-[#eeeeee] dark:border-zinc-700 shadow-sm flex flex-col min-h-0 animate-fade-in"
       }
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div
-        className={
-          isFull
-            ? "relative w-full min-h-[55vh] bg-primary-gray shrink-0"
-            : "relative w-full aspect-[4/3] bg-primary-gray shrink-0"
-        }
-      >
-        <Image
-          src={imageSrc}
-          alt=""
-          fill
-          className="object-cover"
-          sizes={
+      {imageSrc ? (
+        <div
+          className={
             isFull
-              ? "(max-width: 1024px) 100vw, 50vw"
-              : "(max-width: 1024px) 100vw, 33vw"
+              ? "relative w-full min-h-[55vh] bg-primary-gray dark:bg-zinc-800 shrink-0"
+              : type === "journal"
+                ? "relative w-full shrink-0 bg-primary-gray dark:bg-zinc-800"
+                : "relative w-full aspect-[4/3] bg-primary-gray dark:bg-zinc-800 shrink-0"
           }
-          unoptimized
-        />
-        <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium bg-primary-white/90 text-primary-black">
-          {TYPE_LABELS[type]}
-        </span>
-      </div>
+        >
+          {type === "journal" && !isFull ? (
+            <Image
+              src={imageSrc}
+              alt=""
+              width={1600}
+              height={1067}
+              className="h-auto w-full dark:brightness-[0.88] dark:contrast-[1.05]"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              unoptimized
+            />
+          ) : (
+            <Image
+              src={imageSrc}
+              alt=""
+              fill
+              className="object-cover dark:brightness-[0.88] dark:contrast-[1.05]"
+              sizes={
+                isFull
+                  ? "(max-width: 768px) 100vw, 50vw"
+                  : "(max-width: 768px) 100vw, 33vw"
+              }
+              unoptimized
+            />
+          )}
+          <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-xs font-medium bg-primary-white/90 dark:bg-zinc-900/90 text-primary-black dark:text-textDark">
+            {TYPE_LABELS[type]}
+          </span>
+        </div>
+      ) : (
+        <div className="shrink-0 border-b border-gray-200/90 px-4 py-3 dark:border-gray-600/50">
+          <span className="inline-block rounded px-2 py-0.5 text-xs font-medium bg-gray-100 dark:bg-zinc-800 text-primary-black dark:text-textDark">
+            {TYPE_LABELS[type]}
+          </span>
+        </div>
+      )}
       <div
         className={
           isFull
@@ -124,31 +155,31 @@ export default function HoverPreviewCard({
         <h3
           className={
             isFull
-              ? "font-medium text-primary-black text-base line-clamp-1"
-              : "font-medium text-primary-black text-sm line-clamp-1"
+              ? "font-medium text-primary-black dark:text-textDark text-base line-clamp-1"
+              : "font-medium text-primary-black dark:text-textDark text-sm line-clamp-1"
           }
         >
-          {item.title}
+          {formatCardHeading(item.title)}
         </h3>
         {excerpt ? (
           <p
             className={
               isFull
-                ? "text-gray-600 text-sm line-clamp-2 leading-relaxed"
-                : "text-gray-600 text-xs line-clamp-3 leading-relaxed"
+                ? "text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed"
+                : "text-gray-600 dark:text-gray-400 text-xs line-clamp-3 leading-relaxed"
             }
           >
             {excerpt}
           </p>
         ) : null}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
           {publishedLabel ? (
             <time dateTime={item.publishedAt}>{publishedLabel}</time>
           ) : null}
           {tags.length > 0 ? (
             <span className="flex flex-wrap gap-1">
               {tags.map((tag) => (
-                <span key={tag} className="rounded bg-gray-100 px-1.5 py-0.5">
+                <span key={tag} className="rounded bg-gray-100 dark:bg-zinc-800 px-1.5 py-0.5">
                   {tag}
                 </span>
               ))}

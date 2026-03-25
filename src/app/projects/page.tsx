@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
 import { getAllProjects } from "@/queries/projects";
-
-import ListViewWithSearch from "@/components/list-view-with-search";
-import CollectionHero from "@/components/collection-hero";
-
-type Post = {
-  description?: string;
-};
+import HomeLanding from "@/components/landing/home-landing";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -37,20 +31,16 @@ export default async function ProjectsPage() {
     });
 
   return (
-    <main>
-      <CollectionHero
-        name="Projects"
-        projects={combinedData}
-        allProjects={combinedData}
-      />
-      <section className="flex flex-col gap-4 p-4 ">
-        <ListViewWithSearch
-          data={combinedData}
-          placeholder="Search projects..."
-          showProjectImages
-          showFilters
-        />
-      </section>
-    </main>
+    <HomeLanding
+      variant="projects"
+      journals={[]}
+      projects={combinedData}
+      projectsListing={{
+        title: "Projects",
+        description: "Selected work, experiments, and ongoing builds.",
+        entryCount: combinedData.length,
+        rssHref: "/api/projects/rss.xml",
+      }}
+    />
   );
 }

@@ -56,9 +56,9 @@ public/data/
 
 ### How It Works
 
-1. **Background Jobs** (`scripts/background-jobs/update-feed.ts`)
+1. **Background Jobs** (`scripts/generate-feed.ts`, also invoked via `npm run update-feed`)
 
-   - Fetches data from all sources (Unsplash, Bluesky, Arena, GitHub, local files)
+   - Fetches data from all sources (Unsplash, Bluesky, Arena, GitHub, local files including fragments, logs, studies, systems)
    - Combines and processes all data
    - Writes to `public/data/feed.json`
 
@@ -66,7 +66,7 @@ public/data/
 
    - **GitHub Actions**: Monthly updates (`.github/workflows/update-feed.yml`)
    - **Vercel Cron**: Every 15 minutes (`vercel.json`)
-   - **Manual**: `npm run update-feed`
+   - **Manual**: `npm run generate-feed` or `npm run update-feed` (equivalent)
 
 3. **Feed Page** (`src/app/feed/page.tsx`)
    - Always reads from `public/data/feed.json`
@@ -85,7 +85,7 @@ public/data/
 ```
 External APIs (Unsplash, Bluesky, etc.)
     ↓
-Background Job Script (update-feed.ts)
+Background Job Script (generate-feed.ts / update-feed entry)
     ↓
 public/data/feed.json (JSON file)
     ↓

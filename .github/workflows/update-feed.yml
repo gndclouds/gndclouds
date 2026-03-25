@@ -12,10 +12,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      # Submodule src/app/db holds journals, projects, notes, fragments, logs, etc.
+      # npm run update-feed delegates to the same script as generate-feed (full content types).
+      # Token must be a PAT with repo access to gndclouds/db if the submodule is private.
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18"
 

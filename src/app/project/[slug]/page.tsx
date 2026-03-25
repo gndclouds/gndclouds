@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
+import { resolveArtifactWikiAssetRepoPath } from "@/lib/artifacts-paths";
 import { getProjectBySlug } from "@/queries/project";
-import PageHero from "@/components/page-hero";
+import LandingDetailPage from "@/components/landing/landing-detail-page";
 import MarkdownContent from "@/components/MarkdownContent";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
@@ -14,25 +15,22 @@ interface Params {
   };
 }
 
-// Resolve asset path for db repo
-// Project markdown uses ![[assets/foo.png]] - files live in projects/assets/, not root assets/
-function resolveAssetPath(cleanPath: string): string {
-  if (cleanPath.startsWith("assets/")) {
-    return `projects/${cleanPath}`; // projects/assets/foo.png
-  }
-  if (cleanPath.includes("/")) return `assets/${cleanPath}`;
-  return `assets/${cleanPath}`;
+function normalizeTag(tag: string): string {
+  return tag.replace(/\[\[|\]\]/g, "").replace(/\\/g, "/").trim();
 }
 
-// Define the processMarkdown function
-async function processMarkdown(content: string) {
+function resolveAssetPath(cleanPath: string, markdownFilePath: string): string {
+  return resolveArtifactWikiAssetRepoPath(cleanPath, markdownFilePath);
+}
+
+async function processMarkdown(content: string, markdownFilePath: string) {
   const videoExtensions = [".mp4", ".webm", ".mov", ".avi", ".mkv"];
 
   // Convert Obsidian-style image/video syntax to markdown or HTML
   const convertedContent = content
     .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
       const cleanPath = p1.trim();
-      const resolvedPath = resolveAssetPath(cleanPath);
+      const resolvedPath = resolveAssetPath(cleanPath, markdownFilePath);
       const encodedPath = resolvedPath
         .split("/")
         .map((part) => encodeURIComponent(part))
@@ -73,12 +71,11 @@ async function processMarkdown(content: string) {
   return processedContent.toString();
 }
 
-// Extract links and footnotes for MarkdownContent component
-function extractLinksAndFootnotes(content: string) {
+function extractLinksAndFootnotes(content: string, markdownFilePath: string) {
   const convertedContent = content
     .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
       const cleanPath = p1.trim();
-      const resolvedPath = resolveAssetPath(cleanPath);
+      const resolvedPath = resolveAssetPath(cleanPath, markdownFilePath);
       const encodedPath = resolvedPath
         .split("/")
         .map((part) => encodeURIComponent(part))
@@ -124,28 +121,35 @@ export default async function ProjectPage({ params }: Params) {
     notFound();
   }
 
-  const processedContent = await processMarkdown(project.metadata.contentHtml);
-  const { links, footnotes } = extractLinksAndFootnotes(
-    project.metadata.contentHtml
+  const processedContent = await processMarkdown(
+    project.metadata.contentHtml,
+    project.filePath
   );
+  const { links, footnotes } = extractLinksAndFootnotes(
+    project.metadata.contentHtml,
+    project.filePath
+  );
+  const pageTags = [...(project.categories ?? []), ...(project.tags ?? [])]
+    .map(normalizeTag)
+    .filter((tag) => tag.length > 0)
+    .filter((tag, index, all) => all.findIndex((t) => t.toLowerCase() === tag.toLowerCase()) === index);
 
   return (
-    <div className="">
-      <PageHero
-        data={{
-          title: project.title,
-          publishedAt: project.publishedAt || "",
-          tags: project.categories?.join(", ") || "",
-          url: project.url || "",
-        }}
-      />
+    <LandingDetailPage
+      kind="project"
+      title={project.title}
+      publishedAt={project.publishedAt || ""}
+      tagList={pageTags}
+    >
       <div className={styles.markdown}>
         <MarkdownContent
           content={processedContent}
           links={links}
           footnotes={footnotes}
+          innerPaddingClass="w-full max-w-[600px] text-left px-6 py-8 sm:px-8"
+          hideLeadingMediaBeforeText
         />
       </div>
-    </div>
+    </LandingDetailPage>
   );
 }

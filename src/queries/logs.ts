@@ -1,21 +1,25 @@
-import { join } from "path";
 import matter from "gray-matter";
+import { buildLogCardImageFields } from "@/lib/project-card-images";
 import {
-  getContent,
-  getMarkdownFilePaths,
-  isProduction,
-} from "./content-loader";
+  normalizeCompanyStrings,
+  normalizeLibraryFacets,
+} from "@/lib/content-frontmatter-schema";
+import { getContent, getMarkdownFilePaths } from "./content-loader";
 
 export interface Post {
   slug: string;
   title: string;
   categories: string[];
   tags: string[];
+  facets: string[];
+  companies: string[];
   type: string[];
   publishedAt: string;
   published: boolean;
   metadata: {
     contentHtml: string;
+    cardImageDisplayUrl?: string | null;
+    cardImageHoverGifUrl?: string | null;
     [key: string]: any;
   };
 }
@@ -37,6 +41,15 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
           }
 
           const { data: metadata, content: markdownContent } = matter(content);
+          const facets = normalizeLibraryFacets(metadata.facets);
+          const companies = normalizeCompanyStrings(
+            metadata.companies ?? metadata.orgs ?? metadata.org
+          );
+          const cardImages = buildLogCardImageFields({
+            heroImage: metadata.heroImage,
+            heroImagePoster: metadata.heroImagePoster,
+            markdownBody: markdownContent,
+          });
 
           // Generate slug from filename (without extension)
           const slug =
@@ -50,6 +63,8 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             title: metadata.title || "Untitled",
             categories: metadata.categories || [],
             tags: metadata.tags || [],
+            facets,
+            companies,
             type: metadata.type || ["Log"],
             publishedAt: metadata.publishedAt || new Date().toISOString(),
             published: metadata.published !== false, // Default to published unless explicitly false
@@ -57,6 +72,8 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
               ...metadata,
               contentHtml: markdownContent,
               filePath: relativePath, // Store the file path for resolving relative images
+              cardImageDisplayUrl: cardImages.cardImageDisplayUrl,
+              cardImageHoverGifUrl: cardImages.cardImageHoverGifUrl,
             },
           } as Post;
         } catch (error) {
