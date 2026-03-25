@@ -59,11 +59,10 @@ async function processMarkdown(content: string, markdownFilePath: string) {
 
       return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
     })
-    .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
-      return `\n\n![${alt}](/db-assets/media/${src.replace(
-        "assets/media/",
-        ""
-      )})\n\n`;
+    .replace(/!\[(.*?)\]\((assets\/[^)]+)\)/g, (match, alt, src) => {
+      const resolvedPath = src.trim();
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
+      return `\n\n![${alt}](/db-assets/${encodedPath})\n\n`;
     });
 
   const processor = remark().use(remarkGfm);
@@ -79,14 +78,10 @@ function extractLinksAndFootnotes(content: string, markdownFilePath: string) {
       const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
       return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
     })
-    // Also handle standard markdown image syntax with relative paths
-    .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
-      // Ensure the path starts with a slash
-      // Add a line break before and after the image to ensure it's not inside a paragraph
-      return `\n\n![${alt}](/db-assets/media/${src.replace(
-        "assets/media/",
-        ""
-      )})\n\n`;
+    .replace(/!\[(.*?)\]\((assets\/[^)]+)\)/g, (match, alt, src) => {
+      const resolvedPath = src.trim();
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
+      return `\n\n![${alt}](/db-assets/${encodedPath})\n\n`;
     });
 
   const links: string[] = [];

@@ -87,7 +87,7 @@ export default function ProjectCardMedia({
           height={NATURAL_PLACEHOLDER_H}
           sizes={sizes}
           className={`relative z-[2] h-auto w-full ${imgClassName}`}
-          onLoadingComplete={markPosterLoaded}
+          onLoad={markPosterLoaded}
           onError={markPosterLoaded}
         />
       </div>
@@ -114,7 +114,7 @@ export default function ProjectCardMedia({
           className={`relative z-[2] h-auto w-full transition-opacity duration-200 ${
             gifActive ? "opacity-0" : "opacity-100"
           } ${imgClassName}`}
-          onLoadingComplete={markPosterLoaded}
+          onLoad={markPosterLoaded}
           onError={markPosterLoaded}
         />
         {gifActive ? (
@@ -142,7 +142,7 @@ export default function ProjectCardMedia({
           sizes={sizes}
           unoptimized={isGifSrc(displaySrc)}
           className={`z-[2] ${imgClassName}`}
-          onLoadingComplete={markPosterLoaded}
+          onLoad={markPosterLoaded}
           onError={markPosterLoaded}
         />
       </div>
@@ -167,7 +167,7 @@ export default function ProjectCardMedia({
         className={`z-[2] ${imgClassName} transition-opacity duration-200 ${
           gifActive ? "opacity-0" : "opacity-100"
         }`}
-        onLoadingComplete={markPosterLoaded}
+        onLoad={markPosterLoaded}
         onError={markPosterLoaded}
       />
       {gifActive ? (

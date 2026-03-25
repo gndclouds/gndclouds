@@ -429,17 +429,13 @@ const MarkdownContent = ({
           // For local development, use the db-assets path with properly encoded filename
           return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
         })
-        // Also handle standard markdown image syntax with relative paths
-        .replace(/!\[(.*?)\]\((assets\/media\/.*?)\)/g, (match, alt, src) => {
-          const assetPath = src.replace("assets/media/", "");
-
-          // In production with GitHub token, use the asset proxy
+        .replace(/!\[(.*?)\]\((assets\/[^)]+)\)/g, (match, alt, src) => {
+          const resolvedPath = src.trim();
+          const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
           if (useAssetProxy) {
-            return `\n\n![${alt}](/api/asset-proxy?path=${src})\n\n`;
+            return `\n\n![${alt}](/api/asset-proxy?path=${encodeURIComponent(resolvedPath)})\n\n`;
           }
-
-          // Otherwise use the local path
-          return `\n\n![${alt}](/db-assets/media/${assetPath})\n\n`;
+          return `\n\n![${alt}](/db-assets/${encodedPath})\n\n`;
         })
     );
   };
