@@ -1,11 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-import {
-  Briefcase,
-  Building2,
-  Hash,
-  Sparkles,
-  Tag,
-} from "lucide-react";
 import { normalizeLibraryTagPath } from "@/lib/library-tag-paths";
 
 export { normalizeLibraryTagPath } from "@/lib/library-tag-paths";
@@ -30,18 +22,7 @@ function normalizeTagGroup(prefix: string): string {
   return p;
 }
 
-const TAG_GROUP_ICONS: Record<string, LucideIcon> = {
-  topic: Hash,
-  skill: Sparkles,
-  portfolio: Briefcase,
-  org: Building2,
-};
-
 const TAG_GROUP_ORDER = ["portfolio", "topic", "skill", "org"] as const;
-
-function iconForTagGroup(group: string): LucideIcon {
-  return TAG_GROUP_ICONS[group] ?? Tag;
-}
 
 /** Split `prefix/suffix`; suffix is what we show (uppercase). */
 function parseTagForDisplay(tag: string): {
@@ -85,7 +66,7 @@ export interface LibraryTagsGroupedProps {
 }
 
 /**
- * Grouped library tags with icon per namespace — shared by article header and feed cards.
+ * Grouped library tags by namespace — shared by article header and feed cards.
  */
 type TagPillEntry = { displaySuffix: string; fullPath: string };
 
@@ -116,45 +97,36 @@ export default function LibraryTagsGrouped({
       {sortedGroups.map((group) => {
         const entries = tagsByGroup.get(group);
         if (!entries?.length) return null;
-        const Icon = iconForTagGroup(group);
         return (
-          <div
+          <ul
             key={group}
-            className="flex min-w-0 max-w-full items-center gap-2"
+            className="m-0 flex min-w-0 max-w-full list-none flex-wrap gap-x-1.5 gap-y-1.5 p-0"
           >
-            <span
-              className="inline-flex shrink-0 text-gray-500 dark:text-gray-500"
-              aria-hidden
-            >
-              <Icon className="size-3 stroke-[1.5]" />
-            </span>
-            <ul className="m-0 flex list-none flex-wrap gap-x-1.5 gap-y-1.5 p-0">
-              {entries.map(({ displaySuffix, fullPath }) => {
-                const label = displaySuffix.replace(/-/g, " ");
-                const pillKey = `${group}-${displaySuffix}`;
-                return (
-                  <li key={pillKey}>
-                    {onTagPathSelect ? (
-                      <button
-                        type="button"
-                        className={`${TAG_PILL_CLASS} cursor-pointer transition hover:bg-gray-200/90 dark:hover:bg-white/[0.08]`}
-                        aria-label={`Filter feed by tag ${label}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          onTagPathSelect(fullPath);
-                        }}
-                      >
-                        {label}
-                      </button>
-                    ) : (
-                      <span className={TAG_PILL_CLASS}>{label}</span>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+            {entries.map(({ displaySuffix, fullPath }) => {
+              const label = displaySuffix.replace(/-/g, " ");
+              const pillKey = `${group}-${displaySuffix}`;
+              return (
+                <li key={pillKey}>
+                  {onTagPathSelect ? (
+                    <button
+                      type="button"
+                      className={`${TAG_PILL_CLASS} cursor-pointer transition hover:bg-gray-200/90 dark:hover:bg-white/[0.08]`}
+                      aria-label={`Filter feed by tag ${label}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onTagPathSelect(fullPath);
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ) : (
+                    <span className={TAG_PILL_CLASS}>{label}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         );
       })}
     </div>

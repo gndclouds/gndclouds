@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ProjectCardMediaProps {
   displaySrc: string;
@@ -26,6 +26,9 @@ interface ProjectCardMediaProps {
 const NATURAL_PLACEHOLDER_W = 1600;
 const NATURAL_PLACEHOLDER_H = 1067;
 
+const POSTER_SKELETON_CLASS =
+  "pointer-events-none absolute inset-0 z-[1] animate-pulse bg-gray-200 dark:bg-zinc-800";
+
 function isGifSrc(src: string): boolean {
   return /\.gif(\?|#|$)/i.test(src.trim());
 }
@@ -40,31 +43,52 @@ export default function ProjectCardMedia({
   naturalAspect = false,
 }: ProjectCardMediaProps) {
   const [gifActive, setGifActive] = useState(false);
+  const [posterLoaded, setPosterLoaded] = useState(false);
+
+  useEffect(() => {
+    setPosterLoaded(false);
+  }, [displaySrc]);
+
+  const markPosterLoaded = () => setPosterLoaded(true);
 
   const wrap = `absolute inset-0 min-h-0 ${className}`;
 
   if (naturalAspect && !hoverGifSrc) {
     if (isGifSrc(displaySrc)) {
       return (
-        <div className={`relative w-full overflow-hidden ${className}`}>
+        <div
+          className={`relative w-full overflow-hidden ${!posterLoaded ? "min-h-48" : ""} ${className}`}
+        >
+          {!posterLoaded ? (
+            <div className={POSTER_SKELETON_CLASS} aria-hidden />
+          ) : null}
           {/* eslint-disable-next-line @next/next/no-img-element -- animated GIF; optimizer drops frames */}
           <img
             src={displaySrc}
             alt={alt}
-            className={`h-auto w-full ${imgClassName}`}
+            className={`relative z-[2] h-auto w-full ${imgClassName}`}
+            onLoad={markPosterLoaded}
+            onError={markPosterLoaded}
           />
         </div>
       );
     }
     return (
-      <div className={`relative w-full overflow-hidden ${className}`}>
+      <div
+        className={`relative w-full overflow-hidden ${!posterLoaded ? "min-h-48" : ""} ${className}`}
+      >
+        {!posterLoaded ? (
+          <div className={POSTER_SKELETON_CLASS} aria-hidden />
+        ) : null}
         <Image
           src={displaySrc}
           alt={alt}
           width={NATURAL_PLACEHOLDER_W}
           height={NATURAL_PLACEHOLDER_H}
           sizes={sizes}
-          className={`h-auto w-full ${imgClassName}`}
+          className={`relative z-[2] h-auto w-full ${imgClassName}`}
+          onLoadingComplete={markPosterLoaded}
+          onError={markPosterLoaded}
         />
       </div>
     );
@@ -73,10 +97,13 @@ export default function ProjectCardMedia({
   if (naturalAspect && hoverGifSrc) {
     return (
       <div
-        className={`relative w-full overflow-hidden ${className}`}
+        className={`relative w-full overflow-hidden ${!posterLoaded ? "min-h-48" : ""} ${className}`}
         onMouseEnter={() => setGifActive(true)}
         onMouseLeave={() => setGifActive(false)}
       >
+        {!posterLoaded ? (
+          <div className={POSTER_SKELETON_CLASS} aria-hidden />
+        ) : null}
         <Image
           src={displaySrc}
           alt={alt}
@@ -84,16 +111,18 @@ export default function ProjectCardMedia({
           height={NATURAL_PLACEHOLDER_H}
           sizes={sizes}
           unoptimized={isGifSrc(displaySrc)}
-          className={`h-auto w-full transition-opacity duration-200 ${
+          className={`relative z-[2] h-auto w-full transition-opacity duration-200 ${
             gifActive ? "opacity-0" : "opacity-100"
           } ${imgClassName}`}
+          onLoadingComplete={markPosterLoaded}
+          onError={markPosterLoaded}
         />
         {gifActive ? (
           // eslint-disable-next-line @next/next/no-img-element -- animated GIF; avoid optimizer
           <img
             src={hoverGifSrc}
             alt=""
-            className={`absolute inset-0 size-full object-contain ${imgClassName}`}
+            className={`absolute inset-0 z-[3] size-full object-contain ${imgClassName}`}
           />
         ) : null}
       </div>
@@ -103,13 +132,18 @@ export default function ProjectCardMedia({
   if (!hoverGifSrc) {
     return (
       <div className={wrap}>
+        {!posterLoaded ? (
+          <div className={POSTER_SKELETON_CLASS} aria-hidden />
+        ) : null}
         <Image
           src={displaySrc}
           alt={alt}
           fill
           sizes={sizes}
           unoptimized={isGifSrc(displaySrc)}
-          className={imgClassName}
+          className={`z-[2] ${imgClassName}`}
+          onLoadingComplete={markPosterLoaded}
+          onError={markPosterLoaded}
         />
       </div>
     );
@@ -121,22 +155,27 @@ export default function ProjectCardMedia({
       onMouseEnter={() => setGifActive(true)}
       onMouseLeave={() => setGifActive(false)}
     >
+      {!posterLoaded ? (
+        <div className={POSTER_SKELETON_CLASS} aria-hidden />
+      ) : null}
       <Image
         src={displaySrc}
         alt={alt}
         fill
         sizes={sizes}
         unoptimized={isGifSrc(displaySrc)}
-        className={`${imgClassName} transition-opacity duration-200 ${
+        className={`z-[2] ${imgClassName} transition-opacity duration-200 ${
           gifActive ? "opacity-0" : "opacity-100"
         }`}
+        onLoadingComplete={markPosterLoaded}
+        onError={markPosterLoaded}
       />
       {gifActive ? (
         // eslint-disable-next-line @next/next/no-img-element -- animated GIF; avoid optimizer
         <img
           src={hoverGifSrc}
           alt=""
-          className={`absolute inset-0 size-full ${imgClassName}`}
+          className={`absolute inset-0 z-[3] size-full ${imgClassName}`}
         />
       ) : null}
     </div>

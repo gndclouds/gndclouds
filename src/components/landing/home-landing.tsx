@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ArrowLeft, Box } from "lucide-react";
 import type { Journal } from "@/queries/journals";
 import type { Post as ProjectPost } from "@/queries/projects";
@@ -25,12 +26,68 @@ const SECTION_NAV = [
 ] as const;
 
 const PROJECT_BADGE_COLOR = "#0068e2";
+const COMPANY_LINKS = [
+  { name: "Intel Labs", href: "https://www.intel.com", domain: "intel.com" },
+  { name: "IDEO", href: "https://www.ideo.com", domain: "ideo.com" },
+  { name: "CoLab", href: "https://ideocolab.com", domain: "ideocolab.com" },
+  {
+    name: "Protocol Labs",
+    href: "https://www.protocol.ai",
+    domain: "protocol.ai",
+  },
+  {
+    name: "Dark Matter Labs",
+    href: "https://www.darkmatterlabs.org",
+    domain: "darkmatterlabs.org",
+  },
+  {
+    name: "Xerox PARC",
+    href: "https://www.parc.com",
+    domain: "parc.com",
+  },
+  { name: "Fjord", href: "https://www.fjordnet.com", domain: "fjordnet.com" },
+  { name: "Ezra", href: "https://ezra.fi", domain: "ezra.fi" },
+  {
+    name: "Maker Media",
+    href: "https://makezine.com",
+    domain: "makezine.com",
+  },
+  { name: "IFTTT", href: "https://ifttt.com", domain: "ifttt.com" },
+] as const;
 
 interface ProjectsListingMeta {
   title: string;
   description: string;
   entryCount: number;
   rssHref?: string;
+}
+
+function CompanyInlineLink({
+  href,
+  domain,
+  children,
+}: {
+  href: string;
+  domain: string;
+  children: ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-1 text-gray-900 underline decoration-gray-300 underline-offset-2 transition-colors hover:text-primary-black hover:decoration-gray-500 dark:text-textDark dark:decoration-gray-500 dark:hover:text-white dark:hover:decoration-gray-300"
+    >
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+        alt=""
+        aria-hidden
+        className="size-4 shrink-0 rounded-sm"
+        loading="lazy"
+      />
+      <span>{children}</span>
+    </a>
+  );
 }
 
 interface HomeLandingProps {
@@ -56,8 +113,9 @@ export default function HomeLanding({
       <div className="flex min-h-0 flex-1 flex-col max-md:flex-none md:flex-row">
         {/* Left: intro — scrolls inside a viewport-tall column on md+ */}
         <div className="flex w-full max-w-full flex-col bg-primary-gray md:min-h-0 md:w-1/3 md:min-w-0 md:overflow-hidden px-4 py-4 sm:p-6 max-md:pb-0 md:pt-4 md:pb-4 md:pl-2 md:pr-2 dark:bg-backgroundDark">
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto rounded-2xl bg-primary-white max-md:flex-none dark:bg-[#242424] px-6 py-8 sm:px-7 sm:py-9 text-gray-800 dark:text-textDark">
-            {isProjects && listing ? (
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-primary-white max-md:flex-none dark:bg-[#242424] px-6 py-8 sm:px-7 sm:py-9 text-gray-800 dark:text-textDark">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain [scrollbar-gutter:stable]">
+              {isProjects && listing ? (
               <>
                 <Link
                   href="/"
@@ -128,44 +186,73 @@ export default function HomeLanding({
                   </ul>
                 </nav>
               </>
-            ) : (
-              <section className="animate-fade-in flex min-h-0 flex-1 flex-col pb-2 max-md:flex-none space-y-7 sm:space-y-8">
-                <p className="text-lg sm:text-xl md:text-[1.35rem] leading-relaxed text-gray-800 dark:text-textDark">
+              ) : (
+              <section className="animate-fade-in space-y-5 sm:space-y-6 pb-2">
+                <p className="text-base sm:text-lg md:text-[1.0625rem] leading-relaxed text-gray-800 dark:text-textDark">
                   Will focuses on the layer where humans, AI, and the physical
                   environment meet, working to make natural systems more
                   legible so we can live with nature, not adjacent to it.
                 </p>
-                <p className="text-base sm:text-lg md:text-[1rem] leading-relaxed text-gray-800 dark:text-textDark">
+                <p className="text-sm sm:text-base md:text-[0.9375rem] leading-relaxed text-gray-800 dark:text-textDark [&_a_img]:size-3.5">
                   Previously, I&apos;ve worked at the intersection of design and
-                  development at Intel Labs, IDEO, CoLab, Protocol Labs, Dark
-                  Matter Labs, Xerox PARC, Fjord, Ezra, Maker Media, and IFTTT.
+                  development at{" "}
+                  {COMPANY_LINKS.map((company, index) => {
+                    const isLast = index === COMPANY_LINKS.length - 1;
+                    const isSecondToLast = index === COMPANY_LINKS.length - 2;
+
+                    return (
+                      <span key={company.name}>
+                        <CompanyInlineLink
+                          href={company.href}
+                          domain={company.domain}
+                        >
+                          {company.name}
+                        </CompanyInlineLink>
+                        {isLast ? "." : isSecondToLast ? ", and " : ", "}
+                      </span>
+                    );
+                  })}{" "}
                   Across these roles, I specialized in translating emerging
-                  technologies into working prototypes—simplifying complexity
+                  technologies into working prototypes, simplifying complexity
                   to focus on core function. Along the way, I&apos;ve managed
                   teams, led products from prototype to v0, and shipped work
                   that brought new technologies to market.
                 </p>
-                <p className="text-base sm:text-lg md:text-[0.95rem] leading-relaxed text-gray-800 dark:text-textDark">
+                <p className="text-sm sm:text-base md:text-[0.9375rem] leading-relaxed text-gray-800 dark:text-textDark">
                   Alongside this work, I cofounded Tiny Factories, a tribe of
                   makers supporting each other to establish creative footing,
                   where I deepened my practice through personal projects and
                   climate-focused tinkering.
                 </p>
-                <p className="text-base sm:text-lg md:text-[0.95rem] leading-relaxed text-gray-800 dark:text-textDark">
-                  My academic journey began at California College of the Arts,
-                  where I studied Interaction Design. Around that time, I
+                <p className="text-sm sm:text-base md:text-[0.9375rem] leading-relaxed text-gray-800 dark:text-textDark [&_a_img]:size-3.5">
+                  My academic journey began at{" "}
+                  <CompanyInlineLink
+                    href="https://www.cca.edu"
+                    domain="cca.edu"
+                  >
+                    California College of the Arts
+                  </CompanyInlineLink>
+                  , where I studied Interaction Design. Around that time, I
                   participated in John Bielenberg&apos;s experimental education
-                  program focused on &quot;thinking wrong&quot;, which shaped how
-                  I approach applying my capabilities to the world.
+                  program focused on{" "}
+                  <span className="inline-flex items-center gap-1 align-baseline font-semibold tracking-[0.08em]">
+                    <span>THINK</span>
+                    <span className="inline-block rotate-180">WRONG</span>
+                  </span>
+                  , which shaped how I approach applying my capabilities to the
+                  world.
                 </p>
               </section>
-            )}
+              )}
+            </div>
 
-            <LandingSiteFooter
-              variant={isProjects ? "default" : "home"}
-              embedded
-              className="mt-8 shrink-0 sm:mt-10"
-            />
+            <div className="relative z-10 shrink-0 bg-primary-white pt-2 dark:bg-[#242424] sm:pt-3">
+              <LandingSiteFooter
+                variant={isProjects ? "default" : "home"}
+                embedded
+                className="mt-0"
+              />
+            </div>
           </div>
         </div>
 
