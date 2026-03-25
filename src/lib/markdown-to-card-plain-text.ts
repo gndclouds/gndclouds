@@ -15,6 +15,7 @@ export function stripMarkdownMediaEmbeds(input: string): string {
 export function stripObsidianWikiLinksForPreview(input: unknown): string {
   if (typeof input !== "string") return "";
   return input
+    .replace(/(?<!!)\[\[\s*\]\]/g, "")
     .replace(/(?<!!)\[\[([^\]]+)\|([^\]]+)\]\]/g, (_m, _link, displayText: string) =>
       displayText.trim()
     )
