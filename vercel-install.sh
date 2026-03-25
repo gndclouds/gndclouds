@@ -86,6 +86,12 @@ else
   if [ -d "src/app/db" ]; then
     echo "Content directory exists: src/app/db"
     ls -la src/app/db
+    asset_n="$(find src/app/db/assets -type f 2>/dev/null | wc -l | tr -d ' ')"
+    md_n="$(find src/app/db -name '*.md' -type f 2>/dev/null | wc -l | tr -d ' ')"
+    echo "vercel-install: db asset files (under assets/): ${asset_n}; markdown files: ${md_n}"
+    if [ "${asset_n}" -lt 5 ] || [ "${md_n}" -lt 5 ]; then
+      echo "WARNING: db checkout looks sparse. Set GIT_USERNAME + GIT_ACCESS_TOKEN for private gndclouds/db clone, or enable submodule fetch."
+    fi
     echo "Repository setup completed successfully"
   else
     echo "WARNING: Content directory does not exist after clone attempts"

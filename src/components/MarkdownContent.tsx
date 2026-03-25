@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import styles from "./MarkdownContent.module.css"; // Import the CSS module
 import { stripLeadingMediaBeforeTextBlocks } from "@/lib/markdown-strip-leading-media";
+import { encodedDbAssetsUrlSuffixFromRepoPath } from "@/lib/artifacts-paths";
 import { Components } from "react-markdown";
 import LinkPreview from "./LinkPreview"; // Import the LinkPreview component
 
@@ -67,11 +68,7 @@ const components: Partial<ExtendedComponents> = {
           
           // If asset proxy is enabled, use it; otherwise use local path
           if (useAssetProxy) {
-            // Ensure it starts with assets/ for the GitHub repo structure
-            const assetPath = pathAfterDbAssets.startsWith("assets/")
-              ? pathAfterDbAssets
-              : `assets/${pathAfterDbAssets}`;
-            imgSrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+            imgSrc = `/api/asset-proxy?path=${encodeURIComponent(pathAfterDbAssets)}`;
           } else {
             imgSrc = fallbackSrc;
             fallbackSrc = null; // No fallback needed if we're already using local
@@ -119,16 +116,13 @@ const components: Partial<ExtendedComponents> = {
       // If we have a path, create a fallback to local db-assets
       if (assetPath) {
         try {
-          // Remove "assets/" prefix if present to get the relative path
-          const relativePath = assetPath.startsWith("assets/") 
-            ? assetPath.substring(7) 
-            : assetPath;
-          // Encode each part of the path
-          const encodedPath = relativePath
-            .split("/")
-            .map(part => encodeURIComponent(part))
-            .join("/");
-          fallbackSrc = `/db-assets/${encodedPath}`;
+          let decodedParam = assetPath;
+          try {
+            decodedParam = decodeURIComponent(assetPath);
+          } catch {
+            /* keep raw */
+          }
+          fallbackSrc = `/db-assets/${encodedDbAssetsUrlSuffixFromRepoPath(decodedParam)}`;
         } catch (e) {
           // If path extraction fails, no fallback
         }
@@ -181,15 +175,7 @@ const components: Partial<ExtendedComponents> = {
       
       // If asset proxy is enabled, use it; otherwise use local path
       if (useAssetProxy) {
-        // The path after /db-assets/ should be used as-is for GitHub
-        // It might already be assets/child/image.png or just child/image.png
-        // We need to ensure it starts with assets/ for the GitHub repo structure
-        let assetPath = pathAfterDbAssets;
-        if (!assetPath.startsWith("assets/")) {
-          assetPath = `assets/${assetPath}`;
-        }
-
-        const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+        const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(pathAfterDbAssets)}`;
 
         return (
           <Image
@@ -407,13 +393,7 @@ const MarkdownContent = ({
             cleanPath.toLowerCase().endsWith(ext)
           );
 
-          // For local development, use the path as-is (spaces and special chars need to be URL encoded in the href)
-          // But we need to properly encode it for the URL
-          const pathParts = resolvedPath.split("/");
-          const encodedParts = pathParts.map((part: string) =>
-            encodeURIComponent(part)
-          );
-          const encodedPath = encodedParts.join("/");
+          const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
 
           if (isVideo) {
             // For videos, generate HTML video tag
@@ -430,9 +410,9 @@ const MarkdownContent = ({
             // Generate video with clickable link
             // Wrap video in a link so users can click to open/download the video
             // Video controls will still function normally
-            return `\n\n<div style="margin: 1rem 0;">
-  <a href="${videoSrc}" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none;">
-    <video controls style="max-width: 100%; height: auto; display: block;">
+            return `\n\n<div class="video-embed-shell">
+  <a href="${videoSrc}" target="_blank" rel="noopener noreferrer" class="video-embed-shell__link">
+    <video controls class="video-embed-shell__video">
       <source src="${videoSrc}" type="${videoType}">
       Your browser does not support the video tag.
     </video>
@@ -501,18 +481,9 @@ const MarkdownContent = ({
     const proxyToLocalPath = (proxyUrl: string): string | null => {
       try {
         const url = new URL(proxyUrl, window.location.origin);
-        const pathParam = url.searchParams.get('path');
+        const pathParam = url.searchParams.get("path");
         if (pathParam) {
-          // Remove "assets/" prefix if present
-          const relativePath = pathParam.startsWith('assets/') 
-            ? pathParam.substring(7) 
-            : pathParam;
-          // Encode each part of the path
-          const encodedPath = relativePath
-            .split('/')
-            .map(part => encodeURIComponent(part))
-            .join('/');
-          return `/db-assets/${encodedPath}`;
+          return `/db-assets/${encodedDbAssetsUrlSuffixFromRepoPath(pathParam)}`;
         }
       } catch (e) {
         // If URL parsing fails, return null
@@ -556,8 +527,7 @@ const MarkdownContent = ({
           if (pathAfterDbAssets) {
             try {
               const decodedPath = decodeURIComponent(pathAfterDbAssets);
-              const assetPath = decodedPath.startsWith('assets/') ? decodedPath : `assets/${decodedPath}`;
-              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(decodedPath)}`;
               videoElement.setAttribute('src', proxySrc);
               // Store original path as data attribute for fallback
               videoElement.setAttribute('data-fallback-src', src);
@@ -583,8 +553,7 @@ const MarkdownContent = ({
           if (pathAfterDbAssets) {
             try {
               const decodedPath = decodeURIComponent(pathAfterDbAssets);
-              const assetPath = decodedPath.startsWith('assets/') ? decodedPath : `assets/${decodedPath}`;
-              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(decodedPath)}`;
               imgElement.setAttribute('src', proxySrc);
               // Store original path as data attribute for fallback
               imgElement.setAttribute('data-fallback-src', src);
@@ -604,8 +573,7 @@ const MarkdownContent = ({
           if (pathAfterDbAssets) {
             try {
               const decodedPath = decodeURIComponent(pathAfterDbAssets);
-              const assetPath = decodedPath.startsWith('assets/') ? decodedPath : `assets/${decodedPath}`;
-              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+              const proxySrc = `/api/asset-proxy?path=${encodeURIComponent(decodedPath)}`;
               link.setAttribute('href', proxySrc);
               // Store original path as data attribute for fallback
               link.setAttribute('data-fallback-href', href);

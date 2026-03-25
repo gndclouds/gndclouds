@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useDeferredValue } from "react";
 import ListView from "./list-view";
 import LandingCardMasonryGrid from "@/components/landing/landing-card-masonry-grid";
 import type { TabItem, TabItemType } from "@/components/landing/hover-preview-card";
@@ -26,7 +26,8 @@ export default function ListViewWithSearch({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedYear, setSelectedYear] = useState("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [filteredData, setFilteredData] = useState(data);
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const isSearchRefreshing = searchTerm !== deferredSearchTerm;
 
   const normalizeTag = useCallback(
     (tag: string) => tag.replace(/\[\[|\]\]/g, "").trim().toLowerCase(),
@@ -110,9 +111,8 @@ export default function ListViewWithSearch({
     return Array.from(years).sort((a, b) => Number(b) - Number(a));
   }, [data, getItemYears]);
 
-  // Apply search filter whenever search term or data changes
-  useEffect(() => {
-    const filtered = data.filter((item) => {
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
       const itemTagValues = getItemTagValues(item);
       const itemYears = getItemYears(item);
 
@@ -127,16 +127,14 @@ export default function ListViewWithSearch({
         return false;
       }
 
-      if (searchTerm === "") return true;
+      if (deferredSearchTerm === "") return true;
 
-      const searchLower = searchTerm.toLowerCase();
+      const searchLower = deferredSearchTerm.toLowerCase();
 
-      // Search in title
       if (item.title && item.title.toLowerCase().includes(searchLower)) {
         return true;
       }
 
-      // Search in description
       if (
         item.description &&
         item.description.toLowerCase().includes(searchLower)
@@ -144,12 +142,10 @@ export default function ListViewWithSearch({
         return true;
       }
 
-      // Search in text content
       if (item.text && item.text.toLowerCase().includes(searchLower)) {
         return true;
       }
 
-      // Search in tags
       if (item.tags && Array.isArray(item.tags)) {
         if (
           item.tags.some((tag: string) =>
@@ -160,7 +156,6 @@ export default function ListViewWithSearch({
         }
       }
 
-      // Search in categories
       if (item.categories && Array.isArray(item.categories)) {
         if (
           item.categories.some((cat: string) =>
@@ -171,7 +166,6 @@ export default function ListViewWithSearch({
         }
       }
 
-      // Search in metadata description
       if (
         item.metadata?.description &&
         item.metadata.description.toLowerCase().includes(searchLower)
@@ -181,9 +175,14 @@ export default function ListViewWithSearch({
 
       return false;
     });
-
-    setFilteredData(filtered);
-  }, [searchTerm, data, selectedYear, selectedTags, getItemTagValues, getItemYears]);
+  }, [
+    data,
+    deferredSearchTerm,
+    selectedYear,
+    selectedTags,
+    getItemTagValues,
+    getItemYears,
+  ]);
 
   const hasActiveFilters =
     searchTerm !== "" || selectedYear !== "all" || selectedTags.length > 0;
@@ -202,7 +201,13 @@ export default function ListViewWithSearch({
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <FiSearch className="text-gray-400" />
+            <FiSearch
+              className={
+                isSearchRefreshing
+                  ? "text-gray-400 animate-pulse opacity-70"
+                  : "text-gray-400"
+              }
+            />
           </div>
           <input
             type="text"
@@ -288,6 +293,15 @@ export default function ListViewWithSearch({
         </div>
       )}
 
+      {/* Results list: brief dim while deferred search catches up */}
+      <div
+        aria-busy={isSearchRefreshing}
+        className={
+          isSearchRefreshing
+            ? "transition-opacity duration-200 ease-out opacity-60 pointer-events-none"
+            : "transition-opacity duration-200 ease-out opacity-100"
+        }
+      >
       {/* No results message */}
       {hasActiveFilters && filteredData.length === 0 ? (
         <div className="border border-gray-200/90 py-12 text-center dark:border-gray-600/50">
@@ -307,6 +321,7 @@ export default function ListViewWithSearch({
           showProjectImages={showProjectImages}
         />
       )}
+      </div>
     </div>
   );
 }

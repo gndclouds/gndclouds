@@ -16,6 +16,17 @@ export const githubRepo = process.env.GITHUB_REPO || "db";
 export const githubBranch = process.env.GITHUB_BRANCH || "main";
 const hasGitHubToken = !!process.env.GITHUB_ACCESS_TOKEN;
 
+/**
+ * Next.js rejects `cache: "no-store"` during static generation (e.g. `/sitemap.xml`)
+ * with DYNAMIC_SERVER_USAGE. Use ISR-style revalidation instead.
+ * Override with `GITHUB_CONTENT_REVALIDATE_SECONDS` (minimum 60).
+ */
+const githubFetchRevalidate = Math.max(
+  60,
+  Number(process.env.GITHUB_CONTENT_REVALIDATE_SECONDS ?? "300")
+);
+const githubFetchInit = { next: { revalidate: githubFetchRevalidate } } as const;
+
 // This URL is used to fetch content
 export const contentBaseUrl = isProduction
   ? useGitHubAPI
@@ -108,7 +119,7 @@ async function getMarkdownPathsFromContentsAPI(
         Accept: "application/vnd.github+json",
         "User-Agent": "gndclouds-website",
       },
-      cache: "no-store", // Always fetch fresh - prevents stale content from Next.js/Vercel build cache
+      ...githubFetchInit,
     });
 
     if (!response.ok) {
@@ -158,7 +169,7 @@ async function getMarkdownPathsFromGitTree(
         Accept: "application/vnd.github+json",
         "User-Agent": "gndclouds-website",
       },
-      cache: "no-store",
+      ...githubFetchInit,
     });
 
     if (!refResponse.ok) {
@@ -185,7 +196,7 @@ async function getMarkdownPathsFromGitTree(
         Accept: "application/vnd.github+json",
         "User-Agent": "gndclouds-website",
       },
-      cache: "no-store",
+      ...githubFetchInit,
     });
 
     if (!treeResponse.ok) {
@@ -262,7 +273,7 @@ export async function getContent(filePath: string): Promise<string | null> {
           Accept: "application/vnd.github.v3.raw",
           "User-Agent": "gndclouds-website",
         },
-        cache: "no-store", // Always fetch fresh content from GitHub
+        ...githubFetchInit,
       });
 
       if (!response.ok) {

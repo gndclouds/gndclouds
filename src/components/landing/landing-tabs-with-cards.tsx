@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useMemo, useState } from "react";
 import { LayoutGrid, List, Search, X } from "lucide-react";
 import type { Journal } from "@/queries/journals";
 import type { Post as LogPost } from "@/queries/logs";
@@ -156,6 +156,8 @@ export default function LandingTabsWithCards({
 }: LandingTabsWithCardsProps) {
   const hasLogs = recentLogs.length > 0;
   const [searchQuery, setSearchQuery] = useState("");
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const isSearchRefreshing = searchQuery !== deferredSearchQuery;
   const [libraryTagPathFilter, setLibraryTagPathFilter] = useState<
     string | null
   >(null);
@@ -197,8 +199,8 @@ export default function LandingTabsWithCards({
   );
 
   const items = useMemo(
-    () => filterBySearchQuery(itemsAfterTag, searchQuery),
-    [itemsAfterTag, searchQuery]
+    () => filterBySearchQuery(itemsAfterTag, deferredSearchQuery),
+    [itemsAfterTag, deferredSearchQuery]
   );
 
   const noneEnabled = hasLogs
@@ -253,7 +255,11 @@ export default function LandingTabsWithCards({
                   </span>
                 ) : null}
                 <Search
-                  className="size-4 shrink-0 text-gray-400 dark:text-white/40"
+                  className={
+                    isSearchRefreshing
+                      ? "size-4 shrink-0 animate-pulse text-gray-400 opacity-70 dark:text-white/40"
+                      : "size-4 shrink-0 text-gray-400 dark:text-white/40"
+                  }
                   aria-hidden
                 />
                 <input
@@ -286,7 +292,12 @@ export default function LandingTabsWithCards({
 
         <section
           aria-label="Filtered posts"
-          className="relative z-0 min-w-0 px-0"
+          aria-busy={isSearchRefreshing}
+          className={
+            isSearchRefreshing
+              ? "relative z-0 min-w-0 px-0 transition-opacity duration-200 ease-out opacity-60 pointer-events-none"
+              : "relative z-0 min-w-0 px-0 transition-opacity duration-200 ease-out opacity-100"
+          }
         >
           {items.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 text-sm py-8">

@@ -9,6 +9,16 @@ const sourceDirs = [
   path.join(__dirname, "src/app/db/"), // Root db directory for images
 ];
 const destDir = path.join(__dirname, "public/db-assets/");
+const dbRoot = path.join(__dirname, "src/app/db/");
+const dbAssetsRoot = path.join(dbRoot, "assets");
+const dbPublicRoot = path.join(dbRoot, "public");
+
+// `sourceDirs` copies `db/assets/` and `db/public/` first (flat / preserved layout).
+// When we later walk `db/`, skipping these dirs avoids duplicating every file under
+// `public/db-assets/assets/…` and `public/db-assets/public/…`.
+const skipDuplicateRootDirs = new Set();
+if (fs.existsSync(dbAssetsRoot)) skipDuplicateRootDirs.add("assets");
+if (fs.existsSync(dbPublicRoot)) skipDuplicateRootDirs.add("public");
 
 // These extensions will be copied; all others will be skipped
 const allowedExtensions = [
@@ -157,11 +167,20 @@ function copyFiles(src, dest, isRootDbDir = false) {
             copyFiles(srcFile, destFile, false);
           } else {
             // For root db dir, recurse into subdirectories to find media files
-            // Skip known content directories that don't contain assets
             const dirName = path.basename(srcFile);
-            const skipContentDirs = ['node_modules', '.git'];
-            if (!skipContentDirs.includes(dirName)) {
-              // Preserve journals/, 3-artifacts/, etc. under db-assets to avoid basename collisions
+            const skipContentDirs = [
+              "node_modules",
+              ".git",
+              ".github",
+              ".nova",
+            ];
+            if (skipDuplicateRootDirs.has(dirName)) {
+              console.log(
+                `Skipping ${dirName}/ (already copied from dedicated src/app/db/${dirName}/ pass)`
+              );
+              totalFilesSkipped++;
+            } else if (!skipContentDirs.includes(dirName)) {
+              // Preserve journals/, 3-artifacts/, projects/, etc. under db-assets
               copyFiles(srcFile, path.join(dest, dirName), false);
             } else {
               console.log(`Skipping content directory: ${srcFile}`);
@@ -232,12 +251,36 @@ console.log(
 );
 console.log(`Maximum file size: ${MAX_FILE_SIZE / (1024 * 1024)} MB`);
 
+/** Old root-db pass mirrored all of `db/assets/` → `public/db-assets/assets/`. That duplicated the flat layout from the dedicated `db/assets/` pass. Remove only those top-level dirs so stale copies do not linger. */
+function removeLegacyDuplicateTopLevelDirs() {
+  if (skipDuplicateRootDirs.has("assets")) {
+    const legacy = path.join(destDir, "assets");
+    if (fs.existsSync(legacy)) {
+      fs.rmSync(legacy, { recursive: true, force: true });
+      console.log(
+        "Removed stale public/db-assets/assets/ (legacy mirror of db/assets/)"
+      );
+    }
+  }
+  if (skipDuplicateRootDirs.has("public")) {
+    const legacy = path.join(destDir, "public");
+    if (fs.existsSync(legacy)) {
+      fs.rmSync(legacy, { recursive: true, force: true });
+      console.log(
+        "Removed stale public/db-assets/public/ (legacy mirror of db/public/)"
+      );
+    }
+  }
+}
+
+removeLegacyDuplicateTopLevelDirs();
+
 const startTime = Date.now();
 // Copy from each source directory
 existingSourceDirs.forEach((sourceDir) => {
   console.log(`\nCopying from: ${sourceDir}`);
   // Check if this is the root db directory (not assets/ or public/)
-  const isRootDbDir = sourceDir === path.join(__dirname, "src/app/db/");
+  const isRootDbDir = sourceDir === dbRoot;
   copyFiles(sourceDir, destDir, isRootDbDir);
 });
 const endTime = Date.now();

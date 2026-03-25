@@ -13,19 +13,33 @@ export function artifactMarkdownDir(markdownFilePath: string): string {
 
 /**
  * Resolve Obsidian-style `![[assets/...]]` paths for artifact markdown.
- * Relative to the folder that contains the `.md` file when possible.
+ * A leading `assets/` refers to the shared vault folder at repo root (`db/assets/` on disk),
+ * not a nested `…/assets/` next to every note — prefixing with the note folder broke GitHub paths.
  */
 export function resolveArtifactWikiAssetRepoPath(
   cleanPath: string,
-  markdownFilePath: string
+  _markdownFilePath: string
 ): string {
   const trimmed = cleanPath.trim();
-  const base = artifactMarkdownDir(markdownFilePath);
   if (trimmed.startsWith("assets/")) {
-    return `${base}/${trimmed}`;
+    return trimmed;
   }
   if (trimmed.includes("/")) {
     return `assets/${trimmed}`;
   }
   return `assets/${trimmed}`;
+}
+
+/**
+ * Map a db repo-relative path (as used by `getContent`) to encoded `/db-assets/…` segments.
+ * Strips a leading `assets/` or `public/` so files copied from `db/assets/` into `public/db-assets/` resolve.
+ */
+export function encodedDbAssetsUrlSuffixFromRepoPath(repoPath: string): string {
+  const trimmed = repoPath.trim().replace(/^\/+/, "");
+  const relative = trimmed.replace(/^(assets|public)\//, "");
+  return relative
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
 }

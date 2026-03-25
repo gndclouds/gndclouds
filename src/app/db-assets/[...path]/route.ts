@@ -221,13 +221,8 @@ export async function GET(
     // If file doesn't exist locally, proxy to asset proxy API
     // The asset proxy will handle GitHub fetching or return appropriate errors
     const assetProxyUrl = new URL("/api/asset-proxy", request.url);
-    
-    // Ensure the path starts with "assets/" for GitHub repo structure
-    const githubPath = decodedPath.startsWith("assets/")
-      ? decodedPath
-      : `assets/${decodedPath}`;
-    
-    assetProxyUrl.searchParams.set("path", githubPath);
+    // Pass repo-relative path as in getContent(); proxy tries `path` then `assets/${path}` on 404
+    assetProxyUrl.searchParams.set("path", decodedPath);
 
     // Fetch from asset proxy
     const proxyResponse = await fetch(assetProxyUrl.toString(), {
@@ -255,7 +250,9 @@ export async function GET(
       // For 404s (file not found), log but don't break the page
       // Return a transparent 1x1 pixel for images/videos to prevent broken image icons
       if (proxyResponse.status === 404) {
-        console.warn(`Asset not found: ${decodedPath} (tried GitHub path: ${githubPath})`);
+        console.warn(
+          `Asset not found: ${decodedPath} (proxy tries repo path plus assets/ fallback)`
+        );
         
         // Determine content type from file extension
         const ext = decodedPath.split('.').pop()?.toLowerCase();

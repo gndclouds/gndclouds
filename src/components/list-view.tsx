@@ -44,10 +44,7 @@ export default function ListView({
       isProduction
     ) {
       const pathWithoutSlash = candidate.substring(1);
-      const assetPath = pathWithoutSlash.startsWith("assets/")
-        ? pathWithoutSlash
-        : `assets/${pathWithoutSlash}`;
-      out = `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+      out = `/api/asset-proxy?path=${encodeURIComponent(pathWithoutSlash)}`;
     }
     return out;
   };

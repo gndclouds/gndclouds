@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Embedded markdown video: neutral backdrop (avoids green decoder placeholders showing through). */
+.video-embed-shell {
+  margin: 1rem 0;
+  background-color: rgb(229 231 235);
+}
+.dark .video-embed-shell {
+  background-color: rgb(39 39 42);
+}
+.video-embed-shell__link {
+  display: block;
+  text-decoration: none;
+}
+.video-embed-shell__video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  vertical-align: middle;
+}
+
 /* Color palette – use with var(--color-*) or Tailwind (e.g. bg-primary-black) */
 :root {
   /* Primary */

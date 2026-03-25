@@ -48,13 +48,16 @@ const nextConfig = {
         // Entire sqlite database files
         "**/*.sqlite",
         "**/*.sqlite3",
-        // Media files that should be served as static assets
-        // Don't exclude image files as they need to be served
+        // Media: do not copy into serverless bundles (see public/db-assets below)
         "**/*.mp4",
         "**/*.webm",
-        // Entire content directories
+        "**/*.mov",
+        // Entire content directories (source markdown / dev copies)
         "**/src/app/db/**",
-        // Don't exclude public/db-assets to ensure assets are deployed
+        // CRITICAL: bundling all of public/db-assets into the db-assets Lambda blows past
+        // Vercel's ~300MB function limit (~1GB+ media). Files still deploy as static assets;
+        // the route falls back to /api/asset-proxy when readFile misses (e.g. on Vercel).
+        "**/public/db-assets/**",
         "**/public/backgrounds/**",
         "**/public/me/**",
       ],

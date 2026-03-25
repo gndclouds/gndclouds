@@ -1,8 +1,11 @@
-import { ARTIFACTS_DB_DIRECTORY, resolveArtifactWikiAssetRepoPath } from "@/lib/artifacts-paths";
+import {
+  encodedDbAssetsUrlSuffixFromRepoPath,
+  resolveArtifactWikiAssetRepoPath,
+} from "@/lib/artifacts-paths";
 
 /**
  * Resolve preview/hero URLs for cards and extract the first image from markdown.
- * - `project` wiki mode: same as `project/[slug]/page.tsx` (artifact `assets/` → `3-artifacts/…/assets/…`).
+ * - `project` wiki mode: same as `project/[slug]/page.tsx` (shared `assets/` at repo root).
  * - `content` wiki mode: same as `MarkdownContent` resolveImagePath (logs, journals, etc.).
  */
 
@@ -30,19 +33,16 @@ export function resolveWikiInnerPathToDbAssetsUrl(
   const trimmed = cleanPath.trim();
   let resolvedPath: string;
   if (trimmed.startsWith("assets/")) {
-    resolvedPath = markdownFilePath
-      ? resolveArtifactWikiAssetRepoPath(trimmed, markdownFilePath)
-      : `${ARTIFACTS_DB_DIRECTORY}/${trimmed}`;
+    resolvedPath = resolveArtifactWikiAssetRepoPath(
+      trimmed,
+      markdownFilePath ?? ""
+    );
   } else if (trimmed.includes("/")) {
     resolvedPath = `assets/${trimmed}`;
   } else {
     resolvedPath = `assets/${trimmed}`;
   }
-  const encodedPath = resolvedPath
-    .split("/")
-    .map((part) => encodeURIComponent(part))
-    .join("/");
-  return `/db-assets/${encodedPath}`;
+  return `/db-assets/${encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath)}`;
 }
 
 /** Same rules as `MarkdownContent` resolveImagePath (no artifact prefix). */
@@ -56,11 +56,7 @@ export function resolveWikiInnerPathForContentRepo(cleanPath: string): string {
   } else {
     resolvedPath = `assets/${trimmed}`;
   }
-  const encodedPath = resolvedPath
-    .split("/")
-    .map((part) => encodeURIComponent(part))
-    .join("/");
-  return `/db-assets/${encodedPath}`;
+  return `/db-assets/${encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath)}`;
 }
 
 export type WikiImageResolveMode = "project" | "content";
@@ -90,10 +86,7 @@ export function normalizeProjectImageUrlForCard(candidate: string): string | nul
     isProduction
   ) {
     const pathWithoutSlash = trimmed.substring(1);
-    const assetPath = pathWithoutSlash.startsWith("assets/")
-      ? pathWithoutSlash
-      : `assets/${pathWithoutSlash}`;
-    return `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+    return `/api/asset-proxy?path=${encodeURIComponent(pathWithoutSlash)}`;
   }
   return trimmed;
 }

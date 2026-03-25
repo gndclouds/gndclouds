@@ -69,32 +69,41 @@ export async function GET(request: NextRequest) {
       cache: "no-store",
     });
 
-    // If the path doesn't start with assets/ and the request failed, try with assets/ prefix
-    // This handles cases where paths like "child/image.png" need to become "assets/child/image.png"
-    if (!response.ok && response.status === 404 && !formattedPath.startsWith("assets/")) {
-      const fallbackPath = `assets/${formattedPath}`;
-      const fallbackEncodedPath = fallbackPath
-        .split("/")
-        .map((segment) => encodeURIComponent(segment))
-        .join("/");
-      const fallbackUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fallbackEncodedPath}?ref=${GITHUB_BRANCH}`;
-      
-      if (process.env.NODE_ENV === "production") {
-        console.log(`Asset proxy: trying fallback path="${fallbackPath}"`);
+    // If 404, try alternate paths (move-assets flattens db/assets/* → db-assets/<basename>; repo has 3-artifacts/ at root)
+    if (!response.ok && response.status === 404) {
+      const candidates: string[] = [];
+      if (!formattedPath.startsWith("assets/")) {
+        candidates.push(`assets/${formattedPath}`);
+      } else {
+        const stripped = formattedPath.slice("assets/".length);
+        if (stripped) candidates.push(stripped);
       }
-      
-      response = await fetch(fallbackUrl, {
-        headers: {
-          Authorization: `Bearer ${GITHUB_TOKEN}`,
-          Accept: "application/vnd.github.v3.raw",
-          "User-Agent": "gndclouds-website",
-        },
-        cache: "no-store",
-      });
-      
-      if (response.ok) {
-        formattedPath = fallbackPath;
-        apiUrl = fallbackUrl;
+
+      for (const fallbackPath of candidates) {
+        const fallbackEncodedPath = fallbackPath
+          .split("/")
+          .map((segment) => encodeURIComponent(segment))
+          .join("/");
+        const fallbackUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fallbackEncodedPath}?ref=${GITHUB_BRANCH}`;
+
+        if (process.env.NODE_ENV === "production") {
+          console.log(`Asset proxy: trying fallback path="${fallbackPath}"`);
+        }
+
+        response = await fetch(fallbackUrl, {
+          headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3.raw",
+            "User-Agent": "gndclouds-website",
+          },
+          cache: "no-store",
+        });
+
+        if (response.ok) {
+          formattedPath = fallbackPath;
+          apiUrl = fallbackUrl;
+          break;
+        }
       }
     }
 

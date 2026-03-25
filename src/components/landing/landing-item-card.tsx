@@ -189,10 +189,7 @@ function getHeroImageFromFrontmatter(item: TabItem): string | null {
     process.env.NODE_ENV === "production"
   ) {
     const pathWithoutSlash = candidate.substring(1);
-    const assetPath = pathWithoutSlash.startsWith("assets/")
-      ? pathWithoutSlash
-      : `assets/${pathWithoutSlash}`;
-    return `/api/asset-proxy?path=${encodeURIComponent(assetPath)}`;
+    return `/api/asset-proxy?path=${encodeURIComponent(pathWithoutSlash)}`;
   }
   return candidate;
 }

@@ -2,6 +2,12 @@ import type { MetadataRoute } from "next";
 import { getAllMarkdownFiles } from "@/queries/all";
 import { getAllTagsWithCount } from "@/queries/tags";
 
+/** Align with GitHub content fetches in `content-loader` (ISR, not fully dynamic). */
+export const revalidate = Math.max(
+  60,
+  Number(process.env.GITHUB_CONTENT_REVALIDATE_SECONDS ?? "300")
+);
+
 const staticPaths = [
   "/",
   "/feed",

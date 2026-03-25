@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
-import { resolveArtifactWikiAssetRepoPath } from "@/lib/artifacts-paths";
+import {
+  encodedDbAssetsUrlSuffixFromRepoPath,
+  resolveArtifactWikiAssetRepoPath,
+} from "@/lib/artifacts-paths";
 import { getProjectBySlug } from "@/queries/project";
 import LandingDetailPage from "@/components/landing/landing-detail-page";
 import MarkdownContent from "@/components/MarkdownContent";
@@ -31,10 +34,7 @@ async function processMarkdown(content: string, markdownFilePath: string) {
     .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
       const cleanPath = p1.trim();
       const resolvedPath = resolveAssetPath(cleanPath, markdownFilePath);
-      const encodedPath = resolvedPath
-        .split("/")
-        .map((part) => encodeURIComponent(part))
-        .join("/");
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
 
       const isVideo = videoExtensions.some((ext) =>
         cleanPath.toLowerCase().endsWith(ext)
@@ -47,9 +47,9 @@ async function processMarkdown(content: string, markdownFilePath: string) {
             ? "video/quicktime"
             : "video/mp4";
         const videoSrc = `/db-assets/${encodedPath}`;
-        return `\n\n<div style="margin: 1rem 0;">
-  <a href="${videoSrc}" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none;">
-    <video controls style="max-width: 100%; height: auto; display: block;">
+        return `\n\n<div class="video-embed-shell">
+  <a href="${videoSrc}" target="_blank" rel="noopener noreferrer" class="video-embed-shell__link">
+    <video controls class="video-embed-shell__video">
       <source src="${videoSrc}" type="${videoType}">
       Your browser does not support the video tag.
     </video>
@@ -76,10 +76,7 @@ function extractLinksAndFootnotes(content: string, markdownFilePath: string) {
     .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
       const cleanPath = p1.trim();
       const resolvedPath = resolveAssetPath(cleanPath, markdownFilePath);
-      const encodedPath = resolvedPath
-        .split("/")
-        .map((part) => encodeURIComponent(part))
-        .join("/");
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
       return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
     })
     // Also handle standard markdown image syntax with relative paths
