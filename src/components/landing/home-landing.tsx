@@ -218,8 +218,15 @@ export default function HomeLanding({
                   teams, led products from prototype to v0, and shipped work
                   that brought new technologies to market.
                 </p>
-                <p className="text-sm sm:text-base md:text-[0.9375rem] leading-relaxed text-gray-800 dark:text-textDark">
-                  Alongside this work, I cofounded Tiny Factories, a tribe of
+                <p className="text-sm sm:text-base md:text-[0.9375rem] leading-relaxed text-gray-800 dark:text-textDark [&_a_img]:size-3.5">
+                  Alongside this work, I cofounded{" "}
+                  <CompanyInlineLink
+                    href="https://tinyfactories.space/"
+                    domain="tinyfactories.space"
+                  >
+                    Tiny Factories
+                  </CompanyInlineLink>
+                  , a tribe of
                   makers supporting each other to establish creative footing,
                   where I deepened my practice through personal projects and
                   climate-focused tinkering.
@@ -233,8 +240,14 @@ export default function HomeLanding({
                     California College of the Arts
                   </CompanyInlineLink>
                   , where I studied Interaction Design. Around that time, I
-                  participated in John Bielenberg&apos;s experimental education
-                  program focused on{" "}
+                  participated in{" "}
+                  <CompanyInlineLink
+                    href="https://www.youtube.com/watch?v=PZJoJ-b2MIY"
+                    domain="youtube.com"
+                  >
+                    John Bielenberg
+                  </CompanyInlineLink>
+                  &apos;s experimental education program focused on{" "}
                   <span className="inline-flex items-center gap-1 align-baseline font-semibold tracking-[0.08em]">
                     <span>THINK</span>
                     <span className="inline-block rotate-180">WRONG</span>
