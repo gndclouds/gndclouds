@@ -5,6 +5,13 @@ import JournalGallery from "@/components/journal-gallery";
 export const metadata: Metadata = {
   title: "Journals",
   description: "Daily reflections, field notes, and personal writing.",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/journals/feed.xml", title: "gndclouds — journal" },
+      ],
+    },
+  },
   openGraph: {
     title: "Journals",
     description: "Daily reflections, field notes, and personal writing.",

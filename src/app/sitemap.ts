@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAllMarkdownFiles } from "@/queries/all";
 import { getAllTagsWithCount } from "@/queries/tags";
+import { contentUrlPath } from "@/lib/content-routes";
+import { getBaseUrl } from "@/lib/site";
 
 /** Align with GitHub content fetches in `content-loader` (ISR, not fully dynamic). */
 export const revalidate = Math.max(
@@ -31,46 +33,6 @@ const staticPaths = [
   "/watch-list",
 ];
 
-const typeToRoute: Record<string, string> = {
-  project: "project",
-  projects: "project",
-  note: "note",
-  notes: "note",
-  log: "log",
-  logs: "log",
-  journal: "journal",
-  journals: "journal",
-  fragment: "fragment",
-  fragments: "fragment",
-  study: "study",
-  studies: "study",
-  system: "system",
-  systems: "system",
-  research: "research",
-  researches: "research",
-  newsletter: "newsletter",
-  newsletters: "newsletter",
-};
-
-function normalizeType(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/\[\[/g, "")
-    .replace(/\]\]/g, "")
-    .trim();
-}
-
-function getBaseUrl() {
-  const envUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.SITE_URL ||
-    process.env.NEXT_PUBLIC_VERCEL_URL ||
-    process.env.VERCEL_URL;
-
-  if (!envUrl) return "http://localhost:3000";
-  return envUrl.startsWith("http") ? envUrl : `https://${envUrl}`;
-}
-
 function toDate(value?: string) {
   if (!value) return undefined;
   const date = new Date(value);
@@ -92,15 +54,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   content.forEach((item) => {
-    const match = (item.type || []).find((type) => {
-      const normalized = normalizeType(type);
-      return Boolean(typeToRoute[normalized]);
-    });
-    if (!match) return;
+    const path = contentUrlPath(item.type, item.slug);
+    if (!path) return;
 
-    const route = typeToRoute[normalizeType(match)];
-    const slug = encodeURIComponent(item.slug);
-    const url = `${baseUrl}/${route}/${slug}`;
+    const url = `${baseUrl}${path}`;
     entries.set(url, { url, lastModified: toDate(item.publishedAt) });
   });
 

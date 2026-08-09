@@ -14,6 +14,8 @@ interface CollectionHeroProps {
   allProjects: any[]; // Specify more detailed type if possible
   showEntriesCount?: boolean;
   showRssLink?: boolean;
+  /** Feed the RSS link points at; defaults to the everything feed. */
+  rssHref?: string;
   /** When set, hero image is generated from this topic (e.g. journal post summary). */
   topicSummary?: string | null;
   /** Optional title + tags for richer on-the-fly hero generation (with topicSummary). */
@@ -29,6 +31,7 @@ const CollectionHero = ({
   allProjects,
   showEntriesCount = true,
   showRssLink = true,
+  rssHref = "/feed.xml",
   topicSummary,
   topicTitle,
   topicTags,
@@ -130,7 +133,7 @@ const CollectionHero = ({
             )}
             {showRssLink && (
               <div className="flex justify-end items-center">
-                <Link href="/api/projects/rss.xml">
+                <Link href={rssHref}>
                   <div>RSS</div>
                 </Link>
               </div>

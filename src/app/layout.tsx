@@ -20,6 +20,15 @@ export const metadata: Metadata = {
     template: "%s · gndclouds",
   },
   description: "Will's corner of the internet",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/feed.xml", title: "gndclouds — everything" },
+        { url: "/journals/feed.xml", title: "gndclouds — journal" },
+        { url: "/projects/feed.xml", title: "gndclouds — projects" },
+      ],
+    },
+  },
   openGraph: {
     type: "website",
     siteName: "gndclouds",

@@ -32,7 +32,27 @@ const nextConfig = {
   compress: true,
 
   async redirects() {
-    return [{ source: "/journls", destination: "/journals", permanent: true }];
+    return [
+      { source: "/journls", destination: "/journals", permanent: true },
+      // Legacy RSS locations → canonical feed routes
+      {
+        source: "/api/projects/rss.xml",
+        destination: "/projects/feed.xml",
+        permanent: true,
+      },
+      { source: "/rss.xml", destination: "/feed.xml", permanent: true },
+      { source: "/rss", destination: "/feed.xml", permanent: true },
+      {
+        source: "/journal/feed.xml",
+        destination: "/journals/feed.xml",
+        permanent: true,
+      },
+      {
+        source: "/project/feed.xml",
+        destination: "/projects/feed.xml",
+        permanent: true,
+      },
+    ];
   },
 
   // Significantly reduce bundle size by having certain pages static prerendered

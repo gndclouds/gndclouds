@@ -5,6 +5,13 @@ import HomeLanding from "@/components/landing/home-landing";
 export const metadata: Metadata = {
   title: "Projects",
   description: "Selected work, experiments, and ongoing builds.",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/projects/feed.xml", title: "gndclouds — projects" },
+      ],
+    },
+  },
   openGraph: {
     title: "Projects",
     description: "Selected work, experiments, and ongoing builds.",
@@ -39,7 +46,7 @@ export default async function ProjectsPage() {
         title: "Projects",
         description: "Selected work, experiments, and ongoing builds.",
         entryCount: combinedData.length,
-        rssHref: "/api/projects/rss.xml",
+        rssHref: "/projects/feed.xml",
       }}
     />
   );
