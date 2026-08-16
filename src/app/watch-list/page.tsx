@@ -23,7 +23,7 @@ export default async function WatchListPage() {
       {/* <CollectionHero name="Watch List" projects={data} allProjects={data} /> */}
       <section className="grid grid-cols-1 gap-4">
         {items.map((item: any) => (
-          <div key={item.guid[0]._} className="bg-white p-4 shadow rounded-lg">
+          <div key={item.guid[0]._} className=" p-4 shadow rounded-lg">
             <h2 className="text-lg font-bold">{item.title[0]}</h2>
             <p className="text-gray-600">{item.description[0]}</p>
           </div>

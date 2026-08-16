@@ -27,7 +27,7 @@ export default async function Home() {
           {allArenaData.map((block: any) => (
             <li
               key={block.id}
-              className="flex bg-white rounded-lg shadow overflow-hidden"
+              className="flex rounded-lg shadow overflow-hidden"
             >
               <div className="w-24 h-24 relative">
                 <Image

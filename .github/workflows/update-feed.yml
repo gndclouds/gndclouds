@@ -1,0 +1,64 @@
+name: Update Feed Data
+
+on:
+  schedule:
+    # Run on the 1st of every month at 00:00 UTC
+    - cron: "0 0 1 * *"
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  update-feed:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # Submodule src/app/db holds journals, projects, notes, fragments, logs, etc.
+      # npm run update-feed delegates to the same script as generate-feed (full content types).
+      # Checkout + push use the job GITHUB_TOKEN (this repo). For a private db submodule, set
+      # DB_REPO_TOKEN to a PAT with Contents: read on gndclouds/db only. If unset, GITHUB_ACCESS_TOKEN
+      # is used to clone the submodule (must have read access to gndclouds/db).
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Initialize private db submodule
+        env:
+          DB_REPO_TOKEN: ${{ secrets.DB_REPO_TOKEN }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        ## Avoid echoing tokens; git config url.*.insteadOf rewrites only the db remote.
+        run: |
+          PAT="${DB_REPO_TOKEN}"
+          if [ -z "$PAT" ]; then PAT="${GITHUB_ACCESS_TOKEN}"; fi
+          if [ -z "$PAT" ]; then
+            echo "::error::Configure DB_REPO_TOKEN (read on gndclouds/db) or GITHUB_ACCESS_TOKEN (read on gndclouds/db) for submodule clone."
+            exit 1
+          fi
+          git config --global url."https://x-access-token:${PAT}@github.com/gndclouds/db.git".insteadOf "https://github.com/gndclouds/db.git"
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update feed data (background job)
+        run: npm run update-feed
+        env:
+          ARENA_ACCESS_KEY: ${{ secrets.ARENA_ACCESS_KEY }}
+          BLUESKY_USERNAME: ${{ secrets.BLUESKY_USERNAME }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+          # getAllGitHubActivity (used by generate-feed) reads GITHUB_TOKEN only
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add public/data/feed.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Monthly feed data update [skip ci]" && git push)

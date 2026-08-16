@@ -1,32 +1,53 @@
-import { getAllMarkdownFiles, getAllUnsplashImages } from "@/queries/all";
+import type { Metadata } from "next";
+import { getAllProjects } from "@/queries/projects";
+import HomeLanding from "@/components/landing/home-landing";
 
-import ListView from "@/components/list-view";
-import CollectionHero from "@/components/collection-hero";
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "Selected work, experiments, and ongoing builds.",
+  alternates: {
+    types: {
+      "application/rss+xml": [
+        { url: "/projects/feed.xml", title: "gndclouds — projects" },
+      ],
+    },
+  },
+  openGraph: {
+    title: "Projects",
+    description: "Selected work, experiments, and ongoing builds.",
+    url: "/projects",
+  },
+  twitter: {
+    title: "Projects",
+    description: "Selected work, experiments, and ongoing builds.",
+  },
+};
 
-export default async function NotesPage() {
-  const [data, images] = await Promise.all([
-    getAllMarkdownFiles(),
-    getAllUnsplashImages("gndclouds"),
-  ]);
-
-  const combinedData = [...data, ...images].sort((a, b) => {
-    const dateA =
-      "created_at" in a
-        ? new Date(a.created_at).getTime()
-        : new Date(a.publishedAt).getTime();
-    const dateB =
-      "created_at" in b
-        ? new Date(b.created_at).getTime()
-        : new Date(b.publishedAt).getTime();
-    return dateB - dateA;
-  });
+export default async function ProjectsPage() {
+  const data = await getAllProjects();
+  const combinedData = data
+    .map((item) => ({
+      ...item,
+      description:
+        "description" in item ? item.description : "No description available",
+    }))
+    .sort((a, b) => {
+      const dateA = new Date(a.publishedAt).getTime();
+      const dateB = new Date(b.publishedAt).getTime();
+      return dateB - dateA;
+    });
 
   return (
-    <main>
-      <CollectionHero name="Projects" projects={data} allProjects={data} />
-      <section>
-        <ListView data={data} />
-      </section>
-    </main>
+    <HomeLanding
+      variant="projects"
+      journals={[]}
+      projects={combinedData}
+      projectsListing={{
+        title: "Projects",
+        description: "Selected work, experiments, and ongoing builds.",
+        entryCount: combinedData.length,
+        rssHref: "/projects/feed.xml",
+      }}
+    />
   );
 }

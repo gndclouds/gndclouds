@@ -1,0 +1,327 @@
+"use client";
+import React, { useState, useMemo, useCallback, useDeferredValue } from "react";
+import ListView from "./list-view";
+import LandingCardMasonryGrid from "@/components/landing/landing-card-masonry-grid";
+import type { TabItem, TabItemType } from "@/components/landing/hover-preview-card";
+import { FiSearch, FiX } from "react-icons/fi";
+
+interface ListViewWithSearchProps {
+  data: any[];
+  variant?: "feed" | "default";
+  placeholder?: string;
+  showProjectImages?: boolean;
+  showFilters?: boolean;
+  /** Same `LandingItemCard` grid as the home feed (e.g. `project` on /projects). */
+  landingCardType?: TabItemType;
+}
+
+export default function ListViewWithSearch({
+  data,
+  variant = "default",
+  placeholder = "Search...",
+  showProjectImages = false,
+  showFilters = false,
+  landingCardType,
+}: ListViewWithSearchProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedYear, setSelectedYear] = useState("all");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const isSearchRefreshing = searchTerm !== deferredSearchTerm;
+
+  const normalizeTag = useCallback(
+    (tag: string) => tag.replace(/\[\[|\]\]/g, "").trim().toLowerCase(),
+    []
+  );
+
+  const getItemTagValues = useCallback(
+    (item: any) => {
+      const itemTags = [...(item.tags || []), ...(item.categories || [])];
+      return itemTags
+        .filter((tag: string) => typeof tag === "string")
+        .map((tag: string) => normalizeTag(tag));
+    },
+    [normalizeTag]
+  );
+
+  const getItemYears = useCallback((item: any) => {
+    const itemYears: string[] = [];
+    const rawYear = item.year ?? item.metadata?.year;
+    const addYear = (value: unknown) => {
+      if (value === null || value === undefined) return;
+      const valueString = String(value).trim();
+      if (!valueString) return;
+      const directMatch = valueString.match(/^\d{4}$/);
+      if (directMatch) {
+        itemYears.push(directMatch[0]);
+        return;
+      }
+      const embeddedMatch = valueString.match(/(\d{4})/);
+      if (embeddedMatch) {
+        itemYears.push(embeddedMatch[1]);
+      }
+    };
+
+    if (Array.isArray(rawYear)) {
+      rawYear.forEach(addYear);
+    } else {
+      addYear(rawYear);
+    }
+
+    if (itemYears.length === 0 && item.publishedAt) {
+      if (typeof item.publishedAt === "string") {
+        addYear(item.publishedAt);
+      } else {
+        const date = new Date(item.publishedAt);
+        if (!Number.isNaN(date.getTime())) {
+          itemYears.push(String(date.getFullYear()));
+        }
+      }
+    }
+
+    return itemYears;
+  }, []);
+
+  const tagOptions = useMemo(() => {
+    const tagMap = new Map<string, string>();
+    data.forEach((item) => {
+      const tags = [...(item.tags || []), ...(item.categories || [])];
+      tags.forEach((tag: string) => {
+        if (!tag || typeof tag !== "string") return;
+        const normalized = normalizeTag(tag);
+        if (!normalized) return;
+        if (showFilters && normalized === "projects") return;
+        if (!tagMap.has(normalized)) {
+          tagMap.set(normalized, tag.replace(/\[\[|\]\]/g, "").trim());
+        }
+      });
+    });
+
+    return Array.from(tagMap.entries())
+      .map(([value, label]) => ({ value, label }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [data, showFilters, normalizeTag]);
+
+  const yearOptions = useMemo(() => {
+    const years = new Set<string>();
+    data.forEach((item) => {
+      getItemYears(item).forEach((year) => years.add(year));
+    });
+
+    return Array.from(years).sort((a, b) => Number(b) - Number(a));
+  }, [data, getItemYears]);
+
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      const itemTagValues = getItemTagValues(item);
+      const itemYears = getItemYears(item);
+
+      if (selectedYear !== "all" && !itemYears.includes(selectedYear)) {
+        return false;
+      }
+
+      if (
+        selectedTags.length > 0 &&
+        !selectedTags.some((tag) => itemTagValues.includes(tag))
+      ) {
+        return false;
+      }
+
+      if (deferredSearchTerm === "") return true;
+
+      const searchLower = deferredSearchTerm.toLowerCase();
+
+      if (item.title && item.title.toLowerCase().includes(searchLower)) {
+        return true;
+      }
+
+      if (
+        item.description &&
+        item.description.toLowerCase().includes(searchLower)
+      ) {
+        return true;
+      }
+
+      if (item.text && item.text.toLowerCase().includes(searchLower)) {
+        return true;
+      }
+
+      if (item.tags && Array.isArray(item.tags)) {
+        if (
+          item.tags.some((tag: string) =>
+            tag.toLowerCase().includes(searchLower)
+          )
+        ) {
+          return true;
+        }
+      }
+
+      if (item.categories && Array.isArray(item.categories)) {
+        if (
+          item.categories.some((cat: string) =>
+            cat.toLowerCase().includes(searchLower)
+          )
+        ) {
+          return true;
+        }
+      }
+
+      if (
+        item.metadata?.description &&
+        item.metadata.description.toLowerCase().includes(searchLower)
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+  }, [
+    data,
+    deferredSearchTerm,
+    selectedYear,
+    selectedTags,
+    getItemTagValues,
+    getItemYears,
+  ]);
+
+  const hasActiveFilters =
+    searchTerm !== "" || selectedYear !== "all" || selectedTags.length > 0;
+
+  const landingMasonryItems = useMemo(() => {
+    if (!landingCardType) return null;
+    return filteredData.map((item) => ({
+      item: item as TabItem,
+      type: landingCardType,
+    }));
+  }, [filteredData, landingCardType]);
+
+  return (
+    <div className="space-y-6">
+      {/* Search and filters */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <FiSearch
+              className={
+                isSearchRefreshing
+                  ? "text-gray-400 animate-pulse opacity-70"
+                  : "text-gray-400"
+              }
+            />
+          </div>
+          <input
+            type="text"
+            className="block w-full rounded-none border border-gray-200/90 bg-transparent py-2 pl-10 pr-10 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-0 dark:border-gray-600/50 dark:text-textDark"
+            placeholder={placeholder}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <button
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              onClick={() => setSearchTerm("")}
+              aria-label="Clear search"
+            >
+              <FiX className="text-gray-400 hover:text-gray-600" />
+            </button>
+          )}
+        </div>
+        {showFilters && (
+          <div className="flex flex-col gap-3 md:flex-row md:items-center">
+            <label className="text-sm text-gray-500 flex items-center gap-2">
+              Year
+              <select
+                className="rounded-none border border-gray-200/90 bg-transparent px-2 py-2 text-sm text-gray-900 dark:border-gray-600/50 dark:text-textDark"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                aria-label="Filter by year"
+              >
+                <option value="all">All</option>
+                {yearOptions.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="text-sm text-gray-500 flex items-center gap-2">
+              <details className="relative">
+                <summary className="min-w-[120px] cursor-pointer select-none rounded-none border border-gray-200/90 bg-transparent px-2 py-2 text-sm text-gray-700 dark:border-gray-600/50 dark:text-gray-200">
+                  Tags
+                  {selectedTags.length > 0 ? ` (${selectedTags.length})` : ""}
+                </summary>
+                <div className="absolute right-0 z-20 mt-2 max-h-56 w-56 overflow-auto border border-gray-200/90 bg-primary-white p-3 shadow-lg dark:border-gray-600/50 dark:bg-[#242424]">
+                  {tagOptions.map((tag) => (
+                    <label
+                      key={tag.value}
+                      className="flex items-center gap-2 py-1 text-sm text-gray-700 dark:text-gray-200"
+                    >
+                      <input
+                        type="checkbox"
+                        className="accent-gray-700"
+                        checked={selectedTags.includes(tag.value)}
+                        onChange={(event) => {
+                          if (event.target.checked) {
+                            setSelectedTags((prev) => [...prev, tag.value]);
+                          } else {
+                            setSelectedTags((prev) =>
+                              prev.filter((value) => value !== tag.value)
+                            );
+                          }
+                        }}
+                      />
+                      <span>{tag.label}</span>
+                    </label>
+                  ))}
+                  {tagOptions.length === 0 && (
+                    <div className="text-xs text-gray-500">
+                      No tags available.
+                    </div>
+                  )}
+                </div>
+              </details>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Results count */}
+      {hasActiveFilters && (
+        <div className="text-sm text-gray-500">
+          Showing <span className="font-medium">{filteredData.length}</span> of{" "}
+          <span className="font-medium">{data.length}</span> items
+        </div>
+      )}
+
+      {/* Results list: brief dim while deferred search catches up */}
+      <div
+        aria-busy={isSearchRefreshing}
+        className={
+          isSearchRefreshing
+            ? "transition-opacity duration-200 ease-out opacity-60 pointer-events-none"
+            : "transition-opacity duration-200 ease-out opacity-100"
+        }
+      >
+      {/* No results message */}
+      {hasActiveFilters && filteredData.length === 0 ? (
+        <div className="border border-gray-200/90 py-12 text-center dark:border-gray-600/50">
+          <p className="text-lg">
+            No results found
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Try adjusting your search terms
+          </p>
+        </div>
+      ) : landingMasonryItems ? (
+        <LandingCardMasonryGrid items={landingMasonryItems} />
+      ) : (
+        <ListView
+          data={filteredData}
+          variant={variant}
+          showProjectImages={showProjectImages}
+        />
+      )}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,61 @@
+{
+  "Design & Prototyping": [
+    "Figma",
+    "Sketch",
+    "Final Cut",
+    "Motion",
+    "Rhino",
+    "Shaper3D",
+    "Blender",
+    "Storyboarding",
+    "Rapid Prototyping",
+    "Design Systems",
+    "Workshops",
+    "UX Research",
+    "Market Research"
+  ],
+  "Front-End Development": [
+    "HTML5",
+    "CSS3/SASS",
+    "JavaScript",
+    "React",
+    "Tailwind",
+    "Shadcn/UI",
+    "Component Libraries",
+    "Responsive Design",
+    "Docker",
+    "Mapbox",
+    "Postgres"
+  ],
+  "Creative Technology": [
+    "Arduino",
+    "Raspberry Pi",
+    "Processing",
+    "TouchDesigner",
+    "Unity",
+    "Generative Design",
+    "Physical Computing"
+  ],
+  "Bio & Sustainable Design Tools": [
+    "Grasshopper",
+    "Lab Prototyping Tools",
+    "Parametric Modeling"
+  ],
+  "AI & Computational Design": [
+    "Python",
+    "OpenAI API",
+    "Vector Databases (ChromaDB)",
+    "LLM Prompt Engineering"
+  ],
+  "Strategy & Consulting": [
+    "Product Strategy",
+    "Design Consulting",
+    "Technical Advising",
+    "Stakeholder Facilitation",
+    "Workshop Design",
+    "Research Synthesis",
+    "Roadmapping",
+    "Interdisciplinary Communication",
+    "Thinking Wrong"
+  ]
+}

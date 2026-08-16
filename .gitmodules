@@ -1,3 +1,4 @@
 [submodule "src/app/db"]
 	path = src/app/db
 	url = https://github.com/gndclouds/db.git
+	branch = main

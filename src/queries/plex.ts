@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 async function getPublicPlexWatchList() {
   const url = "https://rss.plex.tv/97877319-944b-4b49-8504-5e72f7a9cd99";
   try {

@@ -1,3 +1,34 @@
+import { fetchWithRetry, generateCacheKey } from "@/utils/api-utils";
+
+// Define interfaces for book data
+interface ReadwiseBook {
+  id: string;
+  title: string;
+  author: string;
+  cover_image_url?: string;
+  category: string;
+  updated: string;
+  tags?: string[];
+}
+
+interface BookWithTags extends ReadwiseBook {
+  tags: string[];
+}
+
+interface BookSummary {
+  id: string;
+  title: string;
+  author: string;
+  image_url?: string;
+  reading_progress: number;
+  category: string;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+  published_date: string | null;
+  isRecommended: boolean;
+}
+
 const READWISE_TOKEN = process.env.READWISE_ACCESS_TOKEN; // Ensure you have READWISE_ACCESS_TOKEN in your environment variables
 const READWISE_ENDPOINT = "https://readwise.io/api/v3/list/?category=epub";
 
@@ -16,7 +47,11 @@ async function getReadwiseData() {
     }
 
     const data = (await response.json()) as { results: any[] };
-    console.log(data);
+
+    // Log category and tags for each item
+    data.results.forEach((item) => {
+      console.log(`Category: ${item.category}, Tags: ${item.tags}`);
+    });
 
     // Extract relevant data fields
     const formattedData = data.results.map((item) => ({
@@ -50,7 +85,275 @@ async function getReadwiseData() {
   }
 }
 
-async function getReadwiseBooksSummary() {
+async function getReadwiseBooksSummary(
+  options = { recommendedOnly: false }
+): Promise<BookSummary[]> {
+  try {
+    console.log(
+      `getReadwiseBooksSummary called with recommendedOnly=${options.recommendedOnly}`
+    );
+    console.log(`READWISE_TOKEN exists: ${!!READWISE_TOKEN}`);
+
+    if (!READWISE_TOKEN) {
+      console.error(
+        "READWISE_ACCESS_TOKEN is not set in environment variables"
+      );
+      return [];
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Token ${READWISE_TOKEN}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const apiUrl = "https://readwise.io/api/v2/books/";
+    let allItems: any[] = [];
+    let pageCount = 0;
+    const MAX_PAGES = 20;
+    let recommendedCount = 0;
+    let nextUrl: string | null = apiUrl;
+
+    const recommendTagVariations = [
+      "recommend",
+      "Recommend",
+      "RECOMMEND",
+      "recommended",
+      "Recommended",
+    ];
+
+    while (nextUrl && pageCount < MAX_PAGES) {
+      pageCount++;
+      console.log(`Fetching page ${pageCount} from Readwise API: ${nextUrl}`);
+
+      try {
+        // Generate cache key for this page
+        const cacheKey = generateCacheKey(nextUrl, {
+          recommendedOnly: options.recommendedOnly,
+        });
+
+        // Use fetchWithRetry instead of direct fetch
+        const data = (await fetchWithRetry(
+          nextUrl,
+          {
+            method: "GET",
+            headers: myHeaders,
+          },
+          cacheKey
+        )) as {
+          results: ReadwiseBook[];
+          next: string | null;
+        };
+
+        console.log(
+          `Page ${pageCount}: Received ${data.results.length} books from Readwise API`
+        );
+
+        // Process each book to get its tags with rate limiting
+        const booksWithTags = await Promise.all(
+          data.results.map(async (book) => {
+            try {
+              const tagsCacheKey = generateCacheKey(
+                `https://readwise.io/api/v2/books/${book.id}/tags`
+              );
+
+              // Use fetchWithRetry for tags endpoint
+              const tagsData = (await fetchWithRetry(
+                `https://readwise.io/api/v2/books/${book.id}/tags`,
+                {
+                  method: "GET",
+                  headers: myHeaders,
+                },
+                tagsCacheKey
+              )) as {
+                results?: Array<{ name: string }>;
+              };
+
+              let tags: string[] = [];
+              try {
+                if (
+                  tagsData &&
+                  tagsData.results &&
+                  Array.isArray(tagsData.results)
+                ) {
+                  tags = tagsData.results.map((tag) => tag.name || "");
+                }
+              } catch (tagError) {
+                console.error(
+                  `Error processing tags for book ${book.id}:`,
+                  tagError
+                );
+              }
+
+              console.log(
+                `Book ${book.id} (${book.title}) has tags: ${
+                  tags.length > 0 ? tags.join(", ") : "none"
+                }`
+              );
+
+              return { ...book, tags };
+            } catch (error) {
+              console.error(
+                `Error processing tags for book ${book.id}:`,
+                error
+              );
+              return { ...book, tags: [] };
+            }
+          })
+        );
+
+        // Log all tags for debugging
+        console.log("Tags found in this batch:");
+        const allTags = new Set<string>();
+        booksWithTags.forEach((book: BookWithTags) => {
+          try {
+            if (book && book.tags && Array.isArray(book.tags)) {
+              book.tags.forEach((tag: string) => {
+                if (tag) allTags.add(tag);
+              });
+            }
+          } catch (tagError) {
+            console.error("Error processing tags for book summary:", tagError);
+          }
+        });
+        console.log([...allTags]);
+
+        // Count items with any variation of 'recommend' tag before filtering
+        if (options.recommendedOnly) {
+          const recommendedItemsOnPage = booksWithTags.filter((book: any) => {
+            try {
+              if (!book || !book.tags || !Array.isArray(book.tags)) {
+                return false;
+              }
+              return book.tags.some((tag: string) => {
+                if (typeof tag !== "string") return false;
+                return recommendTagVariations.some(
+                  (variation) => tag.toLowerCase() === variation.toLowerCase()
+                );
+              });
+            } catch (error) {
+              console.error("Error filtering recommended items:", error);
+              return false;
+            }
+          }).length;
+          console.log(
+            `Page ${pageCount}: Found ${recommendedItemsOnPage} books with any variation of 'recommend' tag`
+          );
+          recommendedCount += recommendedItemsOnPage;
+        }
+
+        // Extract items with additional fields for sorting and filtering
+        const itemsSummary = booksWithTags
+          .map((book: BookWithTags): BookSummary | null => {
+            // Ensure reading_progress is a number between 0 and 1
+            const progress = 0; // Reading progress not available in this endpoint
+
+            // Determine media type based on category
+            let mediaType = "";
+            if (book.category === "books") {
+              mediaType = "book";
+            } else if (book.category === "articles") {
+              mediaType = "article";
+            } else if (Array.isArray(book.tags)) {
+              if (book.tags.includes("paper")) {
+                mediaType = "paper";
+              } else if (book.tags.includes("video")) {
+                mediaType = "video";
+              }
+            }
+
+            // Ensure tags array includes the media type if determined
+            const tags: string[] = Array.isArray(book.tags)
+              ? [...book.tags]
+              : [];
+            if (mediaType && !tags.includes(mediaType)) {
+              tags.push(mediaType);
+            }
+
+            // Check if the item has any variation of the 'recommend' tag
+            let isRecommended = false;
+            try {
+              if (Array.isArray(tags)) {
+                isRecommended = tags.some((tag: string) => {
+                  if (typeof tag !== "string") return false;
+                  return recommendTagVariations.some(
+                    (variation) => tag.toLowerCase() === variation.toLowerCase()
+                  );
+                });
+              }
+            } catch (tagError) {
+              console.error("Error checking recommendation tags:", tagError);
+            }
+
+            // If we're only looking for recommended items and this isn't one, return null
+            if (options.recommendedOnly && !isRecommended) {
+              return null;
+            }
+
+            return {
+              id: book.id,
+              title: book.title || "Untitled",
+              author: book.author || "Unknown Author",
+              image_url: book.cover_image_url,
+              reading_progress: progress,
+              category: book.category,
+              tags: tags,
+              created_at: book.updated, // Using updated as created_at
+              updated_at: book.updated,
+              published_date: null, // Not available in this endpoint
+              isRecommended,
+            };
+          })
+          .filter(Boolean); // Remove null items (non-recommended when filtering)
+
+        allItems = allItems.concat(itemsSummary);
+
+        // Get the next page URL
+        nextUrl = data.next;
+
+        // Log summary for this page
+        console.log(
+          `Page ${pageCount}: Added ${itemsSummary.length} items after filtering`
+        );
+
+        // If we're only looking for recommended items and we have a decent number, we can stop
+        if (options.recommendedOnly && allItems.length >= 100) {
+          console.log(
+            `Found ${allItems.length} recommended items, stopping pagination`
+          );
+          break;
+        }
+      } catch (error) {
+        console.error(`Error fetching page ${pageCount}:`, error);
+        // The error will be handled by fetchWithRetry's retry logic
+        throw error;
+      }
+    }
+
+    console.log(`Total items found: ${allItems.length}`);
+    if (options.recommendedOnly) {
+      console.log(`Total recommended items found: ${recommendedCount}`);
+    }
+
+    if (allItems.length === 0) {
+      console.log("No items found after filtering.");
+      if (options.recommendedOnly) {
+        console.log(
+          "Check if any items are tagged with variations of 'recommend' in your Readwise account."
+        );
+        console.log(
+          "We checked for these variations: " +
+            recommendTagVariations.join(", ")
+        );
+      }
+    }
+
+    return allItems;
+  } catch (error) {
+    console.error("Error fetching Readwise items summary:", error);
+    return [];
+  }
+}
+
+async function getReadwiseRecommendations() {
   try {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Token ${READWISE_TOKEN}`);
@@ -61,40 +364,66 @@ async function getReadwiseBooksSummary() {
       headers: myHeaders,
     };
 
-    let allBooks: any[] = []; // Explicitly typed as an array of any type
-    let nextPageUrl = "https://readwise.io/api/v3/list/?category=epub";
+    let allRecommendations: any[] = [];
+    let nextPageCursor: string | null = null;
+    const apiUrl = "https://readwise.io/api/v2/export/";
 
-    while (nextPageUrl) {
-      const response = await fetch(nextPageUrl, requestOptions);
+    do {
+      const queryParams = new URLSearchParams();
+      if (nextPageCursor) {
+        queryParams.append("pageCursor", nextPageCursor);
+      }
+
+      const response = await fetch(
+        `${apiUrl}?${queryParams.toString()}`,
+        requestOptions
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = (await response.json()) as { results: any[]; next: string };
+      const data = (await response.json()) as {
+        results: any[];
+        nextPageCursor: string;
+      };
 
-      // Extract only epubs with image, title, author, and reading progress
-      const booksSummary = data.results.map((item) => ({
-        id: item.id, // Ensure each item has an id for key purposes in React components
-        title: item.title,
-        author: item.author,
-        image_url: item.image_url,
-        reading_progress: item.reading_progress,
-      }));
+      // Filter items tagged as "recommend"
+      const recommendations = data.results
+        .filter(
+          (item) => Array.isArray(item.tags) && item.tags.includes("recommend")
+        )
+        .map((item) => ({
+          id: item.id,
+          title: item.title,
+          author: item.author,
+          image_url: item.image_url,
+          reading_progress: item.reading_progress,
+          category: item.category,
+          tags: item.tags,
+        }));
 
-      allBooks = allBooks.concat(booksSummary);
-      nextPageUrl = data.next; // Update nextPageUrl with the next page link
+      allRecommendations = allRecommendations.concat(recommendations);
+      nextPageCursor = data.nextPageCursor || null; // Update the nextPageCursor to the next page
+
+      // Log category and tags for each item
+      recommendations.forEach((item) => {
+        const tags = Array.isArray(item.tags)
+          ? item.tags.join(", ")
+          : "No tags";
+        console.log(`Category: ${item.category}, Tags: ${tags}`);
+      });
+    } while (nextPageCursor);
+
+    console.log(allRecommendations);
+    if (allRecommendations.length === 0) {
+      console.log("No recommendations found.");
     }
-
-    console.log(allBooks);
-    if (allBooks.length === 0) {
-      console.log("No epubs found.");
-    }
-    return allBooks; // Ensure data is returned from the function
+    return allRecommendations;
   } catch (error) {
-    console.error("Error fetching Readwise epubs summary:", error);
-    return []; // Return an empty array in case of an error to maintain the expected data type
+    console.error("Error fetching Readwise recommendations:", error);
+    return [];
   }
 }
 
-export { getReadwiseBooksSummary };
+export { getReadwiseData, getReadwiseBooksSummary, getReadwiseRecommendations };

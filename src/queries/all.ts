@@ -1,7 +1,9 @@
-import { readdir } from "fs/promises";
+import { readdir, stat } from "fs/promises";
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, resolve } from "path";
 import matter from "gray-matter";
+import fetch from "node-fetch";
+import { getContent, getMarkdownFilePaths } from "./content-loader";
 
 export interface Post {
   slug: string;
@@ -70,50 +72,131 @@ interface CombinedItem {
 
 async function getMarkdownFilesRecursively(dir: string): Promise<string[]> {
   let files: string[] = [];
-  const dirents = await readdir(dir, { withFileTypes: true });
-  for (const dirent of dirents) {
-    const res = join(dir, dirent.name);
-    if (dirent.isDirectory()) {
-      files = [...files, ...(await getMarkdownFilesRecursively(res))];
-    } else if (res.endsWith(".md")) {
-      files.push(res);
+  try {
+    const dirents = await readdir(dir, { withFileTypes: true });
+    for (const dirent of dirents) {
+      const res = join(dir, dirent.name);
+      if (dirent.isDirectory()) {
+        files = [...files, ...(await getMarkdownFilesRecursively(res))];
+      } else if (res.endsWith(".md")) {
+        files.push(res);
+      }
     }
+  } catch (error) {
+    console.error(`Error reading directory ${dir}:`, error);
   }
   return files;
 }
 
 export async function getAllMarkdownFiles(): Promise<Post[]> {
-  const contentDir = "./src/app/db/content";
-  const filePaths = await getMarkdownFilesRecursively(contentDir);
+  try {
+    // Get all content types
+    const [
+      projectPaths,
+      notePaths,
+      newsletterPaths,
+      logPaths,
+      journalPaths,
+      studyPaths,
+      systemPaths,
+      fragmentPaths,
+      researchPaths,
+    ] = await Promise.all([
+      getMarkdownFilePaths("artifacts"),
+      getMarkdownFilePaths("notes"),
+      getMarkdownFilePaths("newsletters"),
+      getMarkdownFilePaths("logs"),
+      getMarkdownFilePaths("journals"),
+      getMarkdownFilePaths("studies"),
+      getMarkdownFilePaths("systems"),
+      getMarkdownFilePaths("fragments"),
+      getMarkdownFilePaths("research"),
+    ]);
 
-  const files = await Promise.all(
-    filePaths.map(async (filePath) => {
-      const { data: metadata } = matter(readFileSync(filePath, "utf8"));
-      let slug = filePath
-        .substring(contentDir.length + 1)
-        .replace(/\.md$/, "")
-        .replace(/\//g, "-")
-        .toLowerCase()
-        .replace(/^gs-/, "")
-        .replace(/\s+/g, "-");
-      return {
-        slug,
-        title: metadata.title,
-        categories: metadata.categories || [],
-        tags: metadata.tags || [],
-        type: metadata.type || [],
-        publishedAt: metadata.publishedAt || "",
-        published: metadata.published || false,
-        metadata: metadata,
-      } as Post;
-    })
-  );
+    // Combine all paths and remove any 'default/' prefix
+    const allPaths = [
+      ...projectPaths,
+      ...notePaths,
+      ...newsletterPaths,
+      ...logPaths,
+      ...journalPaths,
+      ...studyPaths,
+      ...systemPaths,
+      ...fragmentPaths,
+      ...researchPaths,
+    ].map((path) => path.replace(/^default\//, ""));
 
-  // Sort posts by newest publishAt date
-  return files.sort(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+    // Process all files
+    const posts = await Promise.all(
+      allPaths.map(async (filePath) => {
+        try {
+          const content = await getContent(filePath);
+          if (!content) return null;
+
+          const { data: metadata, content: markdownContent } = matter(content);
+          // Get the slug from the file path, removing any 'default/' prefix
+          const slug = filePath.split("/").pop()?.replace(".md", "") || "";
+
+          // Determine the type - prefer metadata.type, fallback to directory name
+          // Normalize metadata type by removing Obsidian brackets and converting to array
+          let type: string[] = [];
+          if (metadata.type) {
+            if (Array.isArray(metadata.type)) {
+              type = metadata.type.map((t: string) =>
+                String(t)
+                  .toLowerCase()
+                  .replace(/\[\[/g, "")
+                  .replace(/\]\]/g, "")
+                  .trim()
+              );
+            } else {
+              type = [
+                String(metadata.type)
+                  .toLowerCase()
+                  .replace(/\[\[/g, "")
+                  .replace(/\]\]/g, "")
+                  .trim(),
+              ];
+            }
+          }
+
+          // If no type from metadata, use directory name
+          if (type.length === 0 || (type.length === 1 && type[0] === "")) {
+            const dirType = filePath.split("/")[0];
+            type = [dirType];
+          }
+
+          return {
+            slug,
+            title: metadata.title || "",
+            categories: metadata.categories || [],
+            tags: metadata.tags || [],
+            type,
+            publishedAt: metadata.publishedAt || metadata.created || "",
+            published: metadata.published !== false,
+            metadata: {
+              contentHtml: markdownContent,
+              description: metadata.description || "",
+            },
+          } as Post;
+        } catch (error) {
+          console.error(`Error processing file ${filePath}:`, error);
+          return null;
+        }
+      })
+    );
+
+    // Filter out null values and sort by publishedAt
+    return posts
+      .filter((post): post is Post => post !== null)
+      .sort(
+        (a, b) =>
+          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
+  } catch (error) {
+    console.error("Error getting all markdown files:", error);
+    return [];
+  }
 }
 
 export async function getAllUnsplashImages(
@@ -166,4 +249,22 @@ export async function getAllUnsplashImages(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  try {
+    const formattedSlug = slug
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/^gs-/, "");
+    const response = await fetch(`/api/posts/${formattedSlug}`);
+    if (response.ok) {
+      const post = await response.json();
+      return post as Post;
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch post:", error);
+    return null;
+  }
 }

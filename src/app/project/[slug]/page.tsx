@@ -1,0 +1,147 @@
+import { notFound } from "next/navigation";
+import {
+  encodedDbAssetsUrlSuffixFromRepoPath,
+  resolveArtifactWikiAssetRepoPath,
+} from "@/lib/artifacts-paths";
+import { getProjectBySlug } from "@/queries/project";
+import LandingDetailPage from "@/components/landing/landing-detail-page";
+import MarkdownContent from "@/components/MarkdownContent";
+import { remark } from "remark";
+import remarkGfm from "remark-gfm";
+import { visit } from "unist-util-visit";
+import { Node } from "unist";
+import styles from "@/components/MarkdownContent.module.css";
+
+interface Params {
+  params: {
+    slug: string;
+  };
+}
+
+function normalizeTag(tag: string): string {
+  return tag.replace(/\[\[|\]\]/g, "").replace(/\\/g, "/").trim();
+}
+
+function resolveAssetPath(cleanPath: string, markdownFilePath: string): string {
+  return resolveArtifactWikiAssetRepoPath(cleanPath, markdownFilePath);
+}
+
+async function processMarkdown(content: string, markdownFilePath: string) {
+  const videoExtensions = [".mp4", ".webm", ".mov", ".avi", ".mkv"];
+
+  // Convert Obsidian-style image/video syntax to markdown or HTML
+  const convertedContent = content
+    .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+      const cleanPath = p1.trim();
+      const resolvedPath = resolveAssetPath(cleanPath, markdownFilePath);
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
+
+      const isVideo = videoExtensions.some((ext) =>
+        cleanPath.toLowerCase().endsWith(ext)
+      );
+
+      if (isVideo) {
+        const videoType = cleanPath.toLowerCase().endsWith(".webm")
+          ? "video/webm"
+          : cleanPath.toLowerCase().endsWith(".mov")
+            ? "video/quicktime"
+            : "video/mp4";
+        const videoSrc = `/db-assets/${encodedPath}`;
+        return `\n\n<div class="video-embed-shell">
+  <a href="${videoSrc}" target="_blank" rel="noopener noreferrer" class="video-embed-shell__link">
+    <video controls class="video-embed-shell__video">
+      <source src="${videoSrc}" type="${videoType}">
+      Your browser does not support the video tag.
+    </video>
+  </a>
+</div>\n\n`;
+      }
+
+      return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+    })
+    .replace(/!\[(.*?)\]\((assets\/[^)]+)\)/g, (match, alt, src) => {
+      const resolvedPath = src.trim();
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
+      return `\n\n![${alt}](/db-assets/${encodedPath})\n\n`;
+    });
+
+  const processor = remark().use(remarkGfm);
+  const processedContent = await processor.process(convertedContent);
+  return processedContent.toString();
+}
+
+function extractLinksAndFootnotes(content: string, markdownFilePath: string) {
+  const convertedContent = content
+    .replace(/!\[\[(.*?)\]\]/g, (match, p1) => {
+      const cleanPath = p1.trim();
+      const resolvedPath = resolveAssetPath(cleanPath, markdownFilePath);
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
+      return `\n\n![${cleanPath}](/db-assets/${encodedPath})\n\n`;
+    })
+    .replace(/!\[(.*?)\]\((assets\/[^)]+)\)/g, (match, alt, src) => {
+      const resolvedPath = src.trim();
+      const encodedPath = encodedDbAssetsUrlSuffixFromRepoPath(resolvedPath);
+      return `\n\n![${alt}](/db-assets/${encodedPath})\n\n`;
+    });
+
+  const links: string[] = [];
+  const footnotes: { [key: string]: string } = {};
+
+  const processor = remark()
+    .use(remarkGfm)
+    .use(() => (tree) => {
+      visit(tree, "link", (node: Node & { url: string }) => {
+        links.push(node.url);
+      });
+      visit(
+        tree,
+        "footnoteDefinition",
+        (node: Node & { identifier: string; children: any[] }) => {
+          footnotes[node.identifier] = node.children?.[0]?.value || "";
+        }
+      );
+    });
+
+  processor.processSync(convertedContent);
+  return { links, footnotes };
+}
+
+export default async function ProjectPage({ params }: Params) {
+  const project = await getProjectBySlug(params.slug);
+
+  if (!project) {
+    notFound();
+  }
+
+  const processedContent = await processMarkdown(
+    project.metadata.contentHtml,
+    project.filePath
+  );
+  const { links, footnotes } = extractLinksAndFootnotes(
+    project.metadata.contentHtml,
+    project.filePath
+  );
+  const pageTags = [...(project.categories ?? []), ...(project.tags ?? [])]
+    .map(normalizeTag)
+    .filter((tag) => tag.length > 0)
+    .filter((tag, index, all) => all.findIndex((t) => t.toLowerCase() === tag.toLowerCase()) === index);
+
+  return (
+    <LandingDetailPage
+      kind="project"
+      title={project.title}
+      publishedAt={project.publishedAt || ""}
+      tagList={pageTags}
+    >
+      <div className={styles.markdown}>
+        <MarkdownContent
+          content={processedContent}
+          links={links}
+          footnotes={footnotes}
+          innerPaddingClass="w-full max-w-[600px] text-left px-6 py-8 sm:px-8"
+          hideLeadingMediaBeforeText
+        />
+      </div>
+    </LandingDetailPage>
+  );
+}

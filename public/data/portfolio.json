@@ -1,0 +1,44 @@
+{
+  "roles": [
+    {
+      "slug": "researcher",
+      "title": "Researcher",
+      "description": "Research-focused roles: UX research, design research, ethnography, and strategic insight.",
+      "dotColor": "#fadc4b",
+      "deckUrl": null,
+      "deckHtmlPath": null
+    },
+    {
+      "slug": "design-engineer",
+      "title": "Design Engineer",
+      "description": "Bridge design and development: prototyping, creative coding, and translating concepts into working systems.",
+      "dotColor": "#0068e2",
+      "deckUrl": null,
+      "deckHtmlPath": null
+    },
+    {
+      "slug": "designer",
+      "title": "Designer",
+      "description": "Design-led roles: interaction design, product design, and visual design.",
+      "dotColor": "#ff6622",
+      "deckUrl": null,
+      "deckHtmlPath": null
+    },
+    {
+      "slug": "engineer",
+      "title": "Engineer",
+      "description": "Engineering roles: software development, systems architecture, and technical implementation.",
+      "dotColor": "#04b53b",
+      "deckUrl": null,
+      "deckHtmlPath": null
+    },
+    {
+      "slug": "creative-technologies",
+      "title": "Creative Technologies",
+      "description": "Creative tech roles: installations, generative art, physical computing, and emerging media.",
+      "dotColor": "#d4b8ff",
+      "deckUrl": null,
+      "deckHtmlPath": null
+    }
+  ]
+}

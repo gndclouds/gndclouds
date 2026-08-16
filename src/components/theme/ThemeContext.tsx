@@ -1,0 +1,145 @@
+"use client";
+
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+export type ThemeMode = "system" | "light" | "dark";
+
+export type ThemeStyle = "minimal" | "glass" | "retro";
+
+const STORAGE_KEY_MODE = "theme";
+const STORAGE_KEY_STYLE = "theme-style";
+
+function getSystemDark(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function applyMode(mode: ThemeMode) {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  if (mode === "light") {
+    root.classList.add("light");
+    root.classList.remove("dark");
+    return;
+  }
+  root.classList.remove("light");
+  if (mode === "dark") {
+    root.classList.add("dark");
+    return;
+  }
+  const isDark = getSystemDark();
+  if (isDark) root.classList.add("dark");
+  else root.classList.remove("dark");
+}
+
+function applyStyle(style: ThemeStyle) {
+  if (typeof document === "undefined") return;
+  document.documentElement.setAttribute("data-theme", style);
+}
+
+interface ThemeContextValue {
+  mode: ThemeMode;
+  setMode: (mode: ThemeMode) => void;
+  style: ThemeStyle;
+  setStyle: (style: ThemeStyle) => void;
+  effectiveDark: boolean;
+}
+
+const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+function initialEffectiveDarkForMode(m: ThemeMode): boolean {
+  if (typeof window === "undefined") return false;
+  if (m === "dark") return true;
+  if (m === "light") return false;
+  return getSystemDark();
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mode, setModeState] = useState<ThemeMode>("system");
+  const [style, setStyleState] = useState<ThemeStyle>("minimal");
+  const [effectiveDark, setEffectiveDark] = useState(() =>
+    initialEffectiveDarkForMode("system")
+  );
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const storedMode = localStorage.getItem(STORAGE_KEY_MODE) as ThemeMode | null;
+    const storedStyle = localStorage.getItem(STORAGE_KEY_STYLE) as ThemeStyle | null;
+    if (storedMode && ["system", "light", "dark"].includes(storedMode)) {
+      setModeState(storedMode);
+    }
+    if (storedStyle && ["minimal", "glass", "retro"].includes(storedStyle)) {
+      setStyleState(storedStyle);
+    }
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    applyMode(mode);
+    applyStyle(style);
+    const dark =
+      mode === "dark" || (mode === "system" && getSystemDark());
+    setEffectiveDark(dark);
+    localStorage.setItem(STORAGE_KEY_MODE, mode);
+    localStorage.setItem(STORAGE_KEY_STYLE, style);
+  }, [mounted, mode, style]);
+
+  useEffect(() => {
+    if (mode !== "system") return;
+    const syncFromSystem = () => {
+      applyMode("system");
+      setEffectiveDark(getSystemDark());
+    };
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", syncFromSystem);
+    } else {
+      mq.addListener(syncFromSystem);
+    }
+    const onVisible = () => {
+      if (document.visibilityState === "visible") syncFromSystem();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      if (typeof mq.removeEventListener === "function") {
+        mq.removeEventListener("change", syncFromSystem);
+      } else {
+        mq.removeListener(syncFromSystem);
+      }
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [mode]);
+
+  const setMode = useCallback((next: ThemeMode) => {
+    setModeState(next);
+  }, []);
+
+  const setStyle = useCallback((next: ThemeStyle) => {
+    setStyleState(next);
+  }, []);
+
+  const value = useMemo<ThemeContextValue>(
+    () => ({ mode, setMode, style, setStyle, effectiveDark }),
+    [mode, setMode, style, setStyle, effectiveDark]
+  );
+
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
+}
+
+export function useTheme(): ThemeContextValue {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) {
+    throw new Error("useTheme must be used within ThemeProvider");
+  }
+  return ctx;
+}
