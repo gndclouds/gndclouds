@@ -172,12 +172,13 @@ export async function getAllMarkdownFiles(): Promise<Post[]> {
             categories: metadata.categories || [],
             tags: metadata.tags || [],
             type,
-            publishedAt: metadata.publishedAt || "",
+            publishedAt: metadata.publishedAt || metadata.created || "",
             published: metadata.published !== false,
             metadata: {
               contentHtml: markdownContent,
+              description: metadata.description || "",
             },
-          };
+          } as Post;
         } catch (error) {
           console.error(`Error processing file ${filePath}:`, error);
           return null;
