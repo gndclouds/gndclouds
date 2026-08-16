@@ -1,10 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-// import { categories } from "@/categories";
-// import { Pagination } from "@/components/pagination";
-// import { Posts } from "@/components/posts";
-// import { getPaginatedPosts, postsPerPage } from "@/posts";
 
 export default async function Home() {
   return (
@@ -139,7 +135,7 @@ export default async function Home() {
           <div>
             <span className="font-bold">This site</span> is to be a public
             archive divided into more formal{" "}
-            <Link href="/" className="underline">
+            <Link href="/notes" className="underline">
               notes
             </Link>
             , more rough thoughts in the form of{" "}

@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 const READWISE_TOKEN = process.env.READWISE_ACCESS_TOKEN; // Ensure you have READWISE_ACCESS_TOKEN in your environment variables
 const READWISE_ENDPOINT = "https://readwise.io/api/v3/list/?category=epub";
 
@@ -99,4 +97,4 @@ async function getReadwiseBooksSummary() {
   }
 }
 
-export { getReadwiseData, getReadwiseBooksSummary };
+export { getReadwiseBooksSummary };
